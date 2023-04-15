@@ -70,30 +70,111 @@
   {% endif %}
   {% endif %}
 </div></div>
-<div class="items">
-  {% for article in articles %}
-  <div class="item">
-    {% if article.heroImage != nil %}
-    <!--<div class="item-hero-image"><a href="{{ article.id }}/"><img src="{{ article.id }}/{{ article.heroImage }}"></a></div>-->
-    {% endif %}
-    <div class="item-main">
-      <div class="item-title"><a href=".{{ article.link }}">{{ article.title|escape }}</a></div>
-      <div class="item-info">
-        <div class="item-date">{{ article.created|ymd }}</div>
-        {% if article.hasVideo %}<img src="{{ assets_prefix }}assets/video.svg" width="1em" class="item-video-icon" alt="Video">{% endif %}
-        {% if article.hasAudio %}<img src="{{ assets_prefix }}assets/microphone.svg" width="1em" class="item-audio-icon" alt="Video">{% endif %}
-      </div>
-    </div>
-  </div>
-  {% endfor %}
+<div id="frames">
 </div>
-<div class="pages-container">
-  {% if previous_page %}
-  <a href="./{{ previous_page }}" class="nav-current">Previous Page</a>
-  {% endif %}
-  <div class="pages-info">Page {{ current_page }} of {{ total_pages }}</div>
-  {% if next_page %}
-  <a href="./{{ next_page }}" class="nav-current">Next Page</a>
-  {% endif %}
-</div>
+  <script>
+    const frames = document.getElementById("frames");
+    const horizontalMargin = 24;
+    const verticalMargin = 10;
+    const headerHeight = 60;
+    const transitionDuration = 300;
+    const widths = ["250", "350", "500"];
+    let currentRow = 1;
+    let greatestRightInRow = 0;
+    let rows = [];
+
+    const getRandomWidth = () =>
+      widths[Math.floor(Math.random() * widths.length)];
+
+    const getTopTarget = (frame, row) => {
+      if (row == 1) return frames.offsetTop;
+      let previousRow = rows[row - 2];
+      let candidateFrame;
+      for (let j = 0; j < previousRow.frames.length; j++) {
+        let frameToCheck = previousRow.frames[j];
+        if (
+          frame.left < frameToCheck.right + horizontalMargin &&
+          frame.right + horizontalMargin > frameToCheck.left &&
+          (candidateFrame == null || frameToCheck.bottom > candidateFrame.bottom)
+        ) candidateFrame = frameToCheck;
+        else if (frame.right <= frameToCheck.left) {
+          return candidateFrame ? candidateFrame.bottom : getTopTarget(frame, row - 1);
+        }
+      }
+      return candidateFrame.bottom;
+    };
+
+    const loadFrame = async (frame) => {
+      const img = frame.querySelector('img:first-of-type');
+      return new Promise((resolve) =>
+        img.complete ? resolve() :
+          img.addEventListener('load', () => requestAnimationFrame(resolve))
+      );
+    };
+
+    const frameImage = (src, desc, link) => {
+      const imageFrame = document.createElement("div");
+      imageFrame.classList.add("frame");
+      imageFrame.style.transitionProperty = "opacity, margin-top";
+      imageFrame.style.transitionDuration = `${transitionDuration / 1000}s, ${transitionDuration / 1000}s`;
+      imageFrame.style.transitionTimingFunction = "ease, ease";
+      const imgDescription = document.createElement("div");
+      imgDescription.innerHTML = desc;
+      imgDescription.classList.add("image-description");
+      const img = document.createElement("img");
+      const normalizedWidth = getRandomWidth();
+      img.style.width = normalizedWidth + "px";
+      img.src = src;
+      if (link) {
+        img.addEventListener("click", () => window.open(link, "_blank"));
+        img.style.cursor = "pointer";
+      }
+      imageFrame.appendChild(imgDescription);
+      imageFrame.appendChild(img);
+      frames.appendChild(imageFrame);
+      return imageFrame;
+    };
+    const positionAndShowFrame = async (imageFrame) => {
+      await loadFrame(imageFrame);
+      const rect = imageFrame.getBoundingClientRect();
+      if (rect.left < greatestRightInRow) currentRow++;
+      greatestRightInRow = rect.right;
+      const heightDiff = rect.top - getTopTarget(rect, currentRow);
+      let newFrame = { left: rect.left, right: rect.right, bottom: rect.bottom - heightDiff + verticalMargin };
+      if (currentRow > rows.length) rows.push({ frames: [newFrame] });
+      else rows[rows.length - 1].frames.push(newFrame);
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const marginTop = heightDiff + scrollTop - verticalMargin;
+      imageFrame.classList.add("frame-fade-in");
+      return new Promise((resolve) => {
+        if (marginTop) {
+          const handleEvent = (event) => {
+            if (event.propertyName === "margin-top") {
+              imageFrame.removeEventListener("transitionend", handleEvent);
+              resolve();
+            }
+          };
+          imageFrame.addEventListener("transitionend", handleEvent);
+          imageFrame.style.marginTop = -marginTop + "px";
+        } else setTimeout(resolve, transitionDuration);
+      });
+    }
+
+    const loadImageFrames = async () => {
+      const response = await fetch(
+        `{{ assets_prefix }}planet.json`
+      );
+      const data = await response.json();
+      const frames = data['articles']
+      .filter(item => item.attachments && item.attachments.length > 0)
+      .map((item) => {
+        const randomIndex = Math.floor(Math.random() * item.attachments.length);
+        const randomAttachment = item.attachments[randomIndex];
+        return frameImage('./' + item.id + '/' + randomAttachment, item.title, './' + item.id + '/')}
+        );
+      for (const frame of frames) await positionAndShowFrame(frame);
+    };
+
+    loadImageFrames();
+  </script>
 {% endblock %}

@@ -1,9 +1,9 @@
 {
-  "name": "Plain",
-  "description": "A plain template for Planet",
-  "author": "Planetable Team",
-  "authorWebsite": "https://planetable.xyz",
-  "version": "1.5.0",
+  "name": "Croptop",
+  "description": "For pictures and screenshots",
+  "author": "Jango",
+  "authorWebsite": "https://jango.eth.limo",
+  "version": "1.0.0",
   "idealItemsPerPage": 10,
-  "buildNumber": 88
+  "buildNumber": 92
 }
