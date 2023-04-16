@@ -5,19 +5,19 @@
 <meta property="og:title" content="{{ planet.name|escape }}" />
 <meta property="og:description" content="{{ page_description|escape }}" />
 <meta property="og:site_name" content="{{ planet.name|escape }}" />
-  {% if has_avatar %}
-  <meta property="og:image" content="{{ og_image_url }}" />
-  <meta property="og:image:width" content="72" />
-  <meta property="og:image:height" content="72" />
-  <meta property="og:image:alt" content="{{ planet.name|escape }}" />
-  {% endif %}
+{% if has_avatar %}
+<meta property="og:image" content="{{ og_image_url }}" />
+<meta property="og:image:width" content="72" />
+<meta property="og:image:height" content="72" />
+<meta property="og:image:alt" content="{{ planet.name|escape }}" />
+{% endif %}
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="{{ planet.name|escape }}" />
 <meta name="twitter:title" content="{{ planet.name|escape }}" />
 <meta name="twitter:description" content="{{ page_description|escape }}" />
-  {% if has_avatar %}
-  <meta name="twitter:image" content="{{ og_image_url }}" />
-  {% endif %}
+{% if has_avatar %}
+<meta name="twitter:image" content="{{ og_image_url }}" />
+{% endif %}
 <!-- End Open Graph Tags -->
 <!-- Pagination -->
 {% if previous_page %}
@@ -28,7 +28,7 @@
 {% endif %}
 {% endblock %}
 {% block main %}
-<div class="top">
+<div class="top" style="font-family: 'Inconsolata', monospace;">
   {% if has_avatar %}
   <img src="{{ assets_prefix }}avatar.png" width="72" height="72" class="avatar">
   {% endif %}
@@ -37,9 +37,10 @@
     {% if page_description_html.count > 0 %}<div class="site-about">{{ page_description_html }}</div>{% endif %}
   </div>
 </div>
-<div class="nav-container"><div class="nav">
-  <a href="./" class="nav-current">Home</a>
-  <!-- TODO: Implement Article.kind and Archive
+<div class="nav-container">
+  <div class="nav">
+    <a href="./" class="nav-current">Home</a>
+    <!-- TODO: Implement Article.kind and Archive
 
   <a href="./" class="nav-item">About</a>
   <a href="./" class="nav-item">Archive</a>
@@ -47,134 +48,148 @@
   <a href="./" class="nav-item">Custom Page</a>
 
   -->
-  <a href="{{ assets_prefix }}rss.xml" target="_blank"><img src="{{ assets_prefix }}assets/rss.svg" alt="RSS" class="social-icon" width="1em"></a>
-  {% if has_podcast %}
-  <a href="{{ assets_prefix }}podcast.xml" target="_blank"><img src="{{ assets_prefix }}assets/podcast.svg" alt="Podcast" class="social-icon" width="1em"></a>
-  {% endif %}
-  {% if planet.twitterUsername.count > 0 %}
-  <a href="https://twitter.com/{{ planet.twitterUsername|escapejs }}" target="_blank"><img src="{{ assets_prefix }}assets/twitter.svg" alt="twitter.com/{{ planet.twitterUsername|escapejs }}" class="social-icon" width="1em"></a>
-  {% endif %}
-  {% if planet.githubUsername.count > 0 %}
-  <a href="https://github.com/{{ planet.githubUsername|escapejs }}" target="_blank"><img src="{{ assets_prefix }}assets/github.svg" alt="github.com/{{ planet.githubUsername|escapejs }}" class="social-icon" width="1em"></a>
-  {% endif %}
-  {% if planet.telegramUsername.count > 0 %}
-  <a href="https://t.me/{{ planet.telegramUsername|escapejs }}" target="_blank"><img src="{{ assets_prefix }}assets/telegram.svg" alt="t.me/{{ planet.telegramUsername|escapejs }}" class="social-icon" width="1em"></a>
-  {% endif %}
-  {% if planet.juiceboxEnabled %}
-  {% if planet.juiceboxProjectID != nil %}
-    <a href="https://juicebox.money/v2/p/{{ planet.juiceboxProjectID }}" target="_blank"><img src="{{ assets_prefix }}assets/juicebox.svg" alt="Juicebox Project ID {{ planet.juiceboxProjectID }}" class="social-icon" width="1em"></a>
-  {% else %}
-    {% if planet.juiceboxProjectIDGoerli != nil %}
-    <a href="https://goerli.juicebox.money/v2/p/{{ planet.juiceboxProjectIDGoerli }}" target="_blank"><img src="{{ assets_prefix }}assets/juicebox.svg" alt="Goerli Juicebox Project ID {{ planet.juiceboxProjectIDGoerli }}" class="social-icon" width="1em"></a>
+    <a href="{{ assets_prefix }}rss.xml" target="_blank"><img src="{{ assets_prefix }}assets/rss.svg" alt="RSS"
+        class="social-icon" width="1em"></a>
+    {% if has_podcast %}
+    <a href="{{ assets_prefix }}podcast.xml" target="_blank"><img src="{{ assets_prefix }}assets/podcast.svg"
+        alt="Podcast" class="social-icon" width="1em"></a>
     {% endif %}
-  {% endif %}
-  {% endif %}
-</div></div>
+    {% if planet.twitterUsername.count > 0 %}
+    <a href="https://twitter.com/{{ planet.twitterUsername|escapejs }}" target="_blank"><img
+        src="{{ assets_prefix }}assets/twitter.svg" alt="twitter.com/{{ planet.twitterUsername|escapejs }}"
+        class="social-icon" width="1em"></a>
+    {% endif %}
+    {% if planet.githubUsername.count > 0 %}
+    <a href="https://github.com/{{ planet.githubUsername|escapejs }}" target="_blank"><img
+        src="{{ assets_prefix }}assets/github.svg" alt="github.com/{{ planet.githubUsername|escapejs }}"
+        class="social-icon" width="1em"></a>
+    {% endif %}
+    {% if planet.telegramUsername.count > 0 %}
+    <a href="https://t.me/{{ planet.telegramUsername|escapejs }}" target="_blank"><img
+        src="{{ assets_prefix }}assets/telegram.svg" alt="t.me/{{ planet.telegramUsername|escapejs }}"
+        class="social-icon" width="1em"></a>
+    {% endif %}
+    {% if planet.juiceboxEnabled %}
+    {% if planet.juiceboxProjectID != nil %}
+    <a href="https://juicebox.money/v2/p/{{ planet.juiceboxProjectID }}" target="_blank"><img
+        src="{{ assets_prefix }}assets/juicebox.svg" alt="Juicebox Project ID {{ planet.juiceboxProjectID }}"
+        class="social-icon" width="1em"></a>
+    {% else %}
+    {% if planet.juiceboxProjectIDGoerli != nil %}
+    <a href="https://goerli.juicebox.money/v2/p/{{ planet.juiceboxProjectIDGoerli }}" target="_blank"><img
+        src="{{ assets_prefix }}assets/juicebox.svg"
+        alt="Goerli Juicebox Project ID {{ planet.juiceboxProjectIDGoerli }}" class="social-icon" width="1em"></a>
+    {% endif %}
+    {% endif %}
+    {% endif %}
+  </div>
+</div>
 <div id="frames">
 </div>
-  <script>
-    const frames = document.getElementById("frames");
-    const horizontalMargin = 24;
-    const verticalMargin = 10;
-    const headerHeight = 60;
-    const transitionDuration = 300;
-    const widths = ["250", "350", "500"];
-    let currentRow = 1;
-    let greatestRightInRow = 0;
-    let rows = [];
+<script>
+  const frames = document.getElementById("frames");
+  const horizontalMargin = 24;
+  const verticalMargin = 10;
+  const headerHeight = 60;
+  const transitionDuration = 300;
+  const widths = ["250", "350", "500"];
+  let currentRow = 1;
+  let greatestRightInRow = 0;
+  let rows = [];
 
-    const getRandomWidth = () =>
-      widths[Math.floor(Math.random() * widths.length)];
+  const getRandomWidth = () =>
+    widths[Math.floor(Math.random() * widths.length)];
 
-    const getTopTarget = (frame, row) => {
-      if (row == 1) return frames.offsetTop;
-      let previousRow = rows[row - 2];
-      let candidateFrame;
-      for (let j = 0; j < previousRow.frames.length; j++) {
-        let frameToCheck = previousRow.frames[j];
-        if (
-          frame.left < frameToCheck.right + horizontalMargin &&
-          frame.right + horizontalMargin > frameToCheck.left &&
-          (candidateFrame == null || frameToCheck.bottom > candidateFrame.bottom)
-        ) candidateFrame = frameToCheck;
-        else if (frame.right <= frameToCheck.left) {
-          return candidateFrame ? candidateFrame.bottom : getTopTarget(frame, row - 1);
-        }
+  const getTopTarget = (frame, row) => {
+    if (row == 1) return frames.offsetTop;
+    let previousRow = rows[row - 2];
+    let candidateFrame;
+    for (let j = 0; j < previousRow.frames.length; j++) {
+      let frameToCheck = previousRow.frames[j];
+      if (
+        frame.left < frameToCheck.right + horizontalMargin &&
+        frame.right + horizontalMargin > frameToCheck.left &&
+        (candidateFrame == null || frameToCheck.bottom > candidateFrame.bottom)
+      ) candidateFrame = frameToCheck;
+      else if (frame.right <= frameToCheck.left) {
+        return candidateFrame ? candidateFrame.bottom : getTopTarget(frame, row - 1);
       }
-      return candidateFrame.bottom;
-    };
-
-    const loadFrame = async (frame) => {
-      const img = frame.querySelector('img:first-of-type');
-      return new Promise((resolve) =>
-        img.complete ? resolve() :
-          img.addEventListener('load', () => requestAnimationFrame(resolve))
-      );
-    };
-
-    const frameImage = (src, desc, link) => {
-      const imageFrame = document.createElement("div");
-      imageFrame.classList.add("frame");
-      imageFrame.style.transitionProperty = "opacity, margin-top";
-      imageFrame.style.transitionDuration = `${transitionDuration / 1000}s, ${transitionDuration / 1000}s`;
-      imageFrame.style.transitionTimingFunction = "ease, ease";
-      const imgDescription = document.createElement("div");
-      imgDescription.innerHTML = desc;
-      imgDescription.classList.add("image-description");
-      const img = document.createElement("img");
-      const normalizedWidth = getRandomWidth();
-      img.style.width = normalizedWidth + "px";
-      img.src = src;
-      if (link) {
-        img.addEventListener("click", () => window.open(link, "_blank"));
-        img.style.cursor = "pointer";
-      }
-      imageFrame.appendChild(imgDescription);
-      imageFrame.appendChild(img);
-      frames.appendChild(imageFrame);
-      return imageFrame;
-    };
-    const positionAndShowFrame = async (imageFrame) => {
-      await loadFrame(imageFrame);
-      const rect = imageFrame.getBoundingClientRect();
-      if (rect.left < greatestRightInRow) currentRow++;
-      greatestRightInRow = rect.right;
-      const heightDiff = rect.top - getTopTarget(rect, currentRow);
-      let newFrame = { left: rect.left, right: rect.right, bottom: rect.bottom - heightDiff + verticalMargin };
-      if (currentRow > rows.length) rows.push({ frames: [newFrame] });
-      else rows[rows.length - 1].frames.push(newFrame);
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const marginTop = heightDiff + scrollTop - verticalMargin;
-      imageFrame.classList.add("frame-fade-in");
-      return new Promise((resolve) => {
-        if (marginTop) {
-          const handleEvent = (event) => {
-            if (event.propertyName === "margin-top") {
-              imageFrame.removeEventListener("transitionend", handleEvent);
-              resolve();
-            }
-          };
-          imageFrame.addEventListener("transitionend", handleEvent);
-          imageFrame.style.marginTop = -marginTop + "px";
-        } else setTimeout(resolve, transitionDuration);
-      });
     }
+    return candidateFrame.bottom;
+  };
 
-    const loadImageFrames = async () => {
-      const response = await fetch(
-        `{{ assets_prefix }}planet.json`
-      );
-      const data = await response.json();
-      const frames = data['articles']
+  const loadFrame = async (frame) => {
+    const img = frame.querySelector('img:first-of-type');
+    return new Promise((resolve) =>
+      img.complete ? resolve() :
+        img.addEventListener('load', () => requestAnimationFrame(resolve))
+    );
+  };
+
+  const frameImage = (src, desc, link) => {
+    const imageFrame = document.createElement("div");
+    imageFrame.classList.add("frame");
+    imageFrame.style.transitionProperty = "opacity, margin-top";
+    imageFrame.style.transitionDuration = `${transitionDuration / 1000}s, ${transitionDuration / 1000}s`;
+    imageFrame.style.transitionTimingFunction = "ease, ease";
+    const imgDescription = document.createElement("div");
+    imgDescription.innerHTML = desc;
+    imgDescription.classList.add("image-description");
+    const img = document.createElement("img");
+    const normalizedWidth = getRandomWidth();
+    img.style.width = normalizedWidth + "px";
+    img.src = src;
+    if (link) {
+      img.addEventListener("click", () => window.open(link, "_blank"));
+      img.style.cursor = "pointer";
+    }
+    imageFrame.appendChild(imgDescription);
+    imageFrame.appendChild(img);
+    frames.appendChild(imageFrame);
+    return imageFrame;
+  };
+  const positionAndShowFrame = async (imageFrame) => {
+    await loadFrame(imageFrame);
+    const rect = imageFrame.getBoundingClientRect();
+    if (rect.left < greatestRightInRow) currentRow++;
+    greatestRightInRow = rect.right;
+    const heightDiff = rect.top - getTopTarget(rect, currentRow);
+    let newFrame = { left: rect.left, right: rect.right, bottom: rect.bottom - heightDiff + verticalMargin };
+    if (currentRow > rows.length) rows.push({ frames: [newFrame] });
+    else rows[rows.length - 1].frames.push(newFrame);
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const marginTop = heightDiff + scrollTop - verticalMargin;
+    imageFrame.classList.add("frame-fade-in");
+    return new Promise((resolve) => {
+      if (marginTop) {
+        const handleEvent = (event) => {
+          if (event.propertyName === "margin-top") {
+            imageFrame.removeEventListener("transitionend", handleEvent);
+            resolve();
+          }
+        };
+        imageFrame.addEventListener("transitionend", handleEvent);
+        imageFrame.style.marginTop = -marginTop + "px";
+      } else setTimeout(resolve, transitionDuration);
+    });
+  }
+
+  const loadImageFrames = async () => {
+    const response = await fetch(
+      `{{ assets_prefix }}planet.json`
+    );
+    const data = await response.json();
+    const frames = data['articles']
       .filter(item => item.attachments && item.attachments.length > 0)
       .map((item) => {
         const randomIndex = Math.floor(Math.random() * item.attachments.length);
         const randomAttachment = item.attachments[randomIndex];
-        return frameImage('./' + item.id + '/' + randomAttachment, item.title, './' + item.id + '/')}
-        );
-      for (const frame of frames) await positionAndShowFrame(frame);
-    };
+        return frameImage('./' + item.id + '/' + randomAttachment, item.title, './' + item.id + '/')
+      }
+      );
+    for (const frame of frames) await positionAndShowFrame(frame);
+  };
 
-    loadImageFrames();
-  </script>
+  loadImageFrames();
+</script>
 {% endblock %}
