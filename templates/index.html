@@ -180,12 +180,16 @@
     });
   }
 
-  const formatTimestamp = (unixTimestamp) => {
+  const convertSwiftTimestamp = (timestamp) => {
+    return (timestamp + 978307200)
+  }
+
+  const formatTimestamp = (timestamp) => {
     const months = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
 
-    const dateObj = new Date(unixTimestamp * 1000);
+    const dateObj = new Date((timestamp + 978307200) * 1000);
     const month = months[dateObj.getMonth()];
     const day = dateObj.getDate();
     const year = dateObj.getFullYear();
