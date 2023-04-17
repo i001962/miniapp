@@ -491,19 +491,6 @@ figcaption {
   text-align: center;
 }
 
-@media screen and (max-width: 768px) {
-  :root {
-    --item-gap: 15px;
-    --inner-gap: 10px;
-    --site-title-font-size: 2em;
-    --h1-font-size: 1.75em;
-  }
-
-  .breadcrumb-inner {
-    padding: 0px 20px 0px 20px;
-  }
-}
-
 blockquote {
   display: block;
   margin-block-start: 1em;
@@ -538,6 +525,18 @@ footer {
   text-align: right;
 }
 
+.w1 {
+  width: 250px;
+}
+
+.w2 {
+  width: 350px;
+}
+
+.w3 {
+  width: 500px;
+}
+
 .frame {
   display: inline-block;
   margin-right: 24px;
@@ -560,4 +559,29 @@ footer {
 
 .frame:hover .image-description {
   opacity: 1;
+}
+
+@media screen and (max-width: 768px) {
+  :root {
+    --item-gap: 15px;
+    --inner-gap: 10px;
+    --site-title-font-size: 2em;
+    --h1-font-size: 1.75em;
+  }
+
+  .breadcrumb-inner {
+    padding: 0px 20px 0px 20px;
+  }
+
+  .w1 {
+    width: 100px;
+  }
+
+  .w2 {
+    width: 120px;
+  }
+
+  .w3 {
+    width: 140px;
+  }
 }

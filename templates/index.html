@@ -96,14 +96,13 @@
   const verticalMargin = 10;
   const headerHeight = 60;
   const transitionDuration = 300;
-  // const widths = ["100", "120", "140"];
-  const widths = ["250", "350", "500"];
+  const widthClasses = ["w1", "w2", "w3"];
   let currentRow = 1;
   let greatestRightInRow = 0;
   let rows = [];
 
-  const getRandomWidth = () =>
-    widths[Math.floor(Math.random() * widths.length)];
+  const getRandomWidthClass = () =>
+    widthClasses[Math.floor(Math.random() * widthClasses.length)];
 
   const getTopTarget = (frame, row) => {
     if (row == 1) return frames.offsetTop;
@@ -137,14 +136,18 @@
     imageFrame.style.transitionProperty = "opacity, margin-top";
     imageFrame.style.transitionDuration = `${transitionDuration / 1000}s, ${transitionDuration / 1000}s`;
     imageFrame.style.transitionTimingFunction = "ease, ease";
-    const normalizedWidth = getRandomWidth();
+
+    const widthClass = getRandomWidthClass();
+
     const imgDescription = document.createElement("div");
     imgDescription.innerHTML = desc;
     imgDescription.classList.add("image-description");
-    imgDescription.style.width = normalizedWidth + "px";
+    imgDescription.classList.add(widthClass);
+
     const img = document.createElement("img");
-    img.style.width = normalizedWidth + "px";
+    img.classList.add(widthClass);
     img.src = src;
+
     if (link) {
       img.addEventListener("click", () => window.open(link, "_blank"));
       img.style.cursor = "pointer";
