@@ -36,6 +36,40 @@
     <div class="site-title">{{ page_title|escape }}</div>
     {% if page_description_html.count > 0 %}<div class="site-about">{{ page_description_html }}</div>{% endif %}
   </div>
+  <a href="{{ assets_prefix }}rss.xml" target="_blank"><img src="{{ assets_prefix }}assets/rss.svg" alt="RSS"
+      class="social-icon" width="1em"></a>
+  {% if has_podcast %}
+  <a href="{{ assets_prefix }}podcast.xml" target="_blank"><img src="{{ assets_prefix }}assets/podcast.svg"
+      alt="Podcast" class="social-icon" width="1em"></a>
+  {% endif %}
+  {% if planet.twitterUsername.count > 0 %}
+  <a href="https://twitter.com/{{ planet.twitterUsername|escapejs }}" target="_blank"><img
+      src="{{ assets_prefix }}assets/twitter.svg" alt="twitter.com/{{ planet.twitterUsername|escapejs }}"
+      class="social-icon" width="1em"></a>
+  {% endif %}
+  {% if planet.githubUsername.count > 0 %}
+  <a href="https://github.com/{{ planet.githubUsername|escapejs }}" target="_blank"><img
+      src="{{ assets_prefix }}assets/github.svg" alt="github.com/{{ planet.githubUsername|escapejs }}"
+      class="social-icon" width="1em"></a>
+  {% endif %}
+  {% if planet.telegramUsername.count > 0 %}
+  <a href="https://t.me/{{ planet.telegramUsername|escapejs }}" target="_blank"><img
+      src="{{ assets_prefix }}assets/telegram.svg" alt="t.me/{{ planet.telegramUsername|escapejs }}" class="social-icon"
+      width="1em"></a>
+  {% endif %}
+  {% if planet.juiceboxEnabled %}
+  {% if planet.juiceboxProjectID != nil %}
+  <a href="https://juicebox.money/v2/p/{{ planet.juiceboxProjectID }}" target="_blank"><img
+      src="{{ assets_prefix }}assets/juicebox.svg" alt="Juicebox Project ID {{ planet.juiceboxProjectID }}"
+      class="social-icon" width="1em"></a>
+  {% else %}
+  {% if planet.juiceboxProjectIDGoerli != nil %}
+  <a href="https://goerli.juicebox.money/v2/p/{{ planet.juiceboxProjectIDGoerli }}" target="_blank"><img
+      src="{{ assets_prefix }}assets/juicebox.svg" alt="Goerli Juicebox Project ID {{ planet.juiceboxProjectIDGoerli }}"
+      class="social-icon" width="1em"></a>
+  {% endif %}
+  {% endif %}
+  {% endif %}
 </div>
 <div class="nav-container">
   <div class="nav">
@@ -48,40 +82,6 @@
   <a href="./" class="nav-item">Custom Page</a>
 
   -->
-    <a href="{{ assets_prefix }}rss.xml" target="_blank"><img src="{{ assets_prefix }}assets/rss.svg" alt="RSS"
-        class="social-icon" width="1em"></a>
-    {% if has_podcast %}
-    <a href="{{ assets_prefix }}podcast.xml" target="_blank"><img src="{{ assets_prefix }}assets/podcast.svg"
-        alt="Podcast" class="social-icon" width="1em"></a>
-    {% endif %}
-    {% if planet.twitterUsername.count > 0 %}
-    <a href="https://twitter.com/{{ planet.twitterUsername|escapejs }}" target="_blank"><img
-        src="{{ assets_prefix }}assets/twitter.svg" alt="twitter.com/{{ planet.twitterUsername|escapejs }}"
-        class="social-icon" width="1em"></a>
-    {% endif %}
-    {% if planet.githubUsername.count > 0 %}
-    <a href="https://github.com/{{ planet.githubUsername|escapejs }}" target="_blank"><img
-        src="{{ assets_prefix }}assets/github.svg" alt="github.com/{{ planet.githubUsername|escapejs }}"
-        class="social-icon" width="1em"></a>
-    {% endif %}
-    {% if planet.telegramUsername.count > 0 %}
-    <a href="https://t.me/{{ planet.telegramUsername|escapejs }}" target="_blank"><img
-        src="{{ assets_prefix }}assets/telegram.svg" alt="t.me/{{ planet.telegramUsername|escapejs }}"
-        class="social-icon" width="1em"></a>
-    {% endif %}
-    {% if planet.juiceboxEnabled %}
-    {% if planet.juiceboxProjectID != nil %}
-    <a href="https://juicebox.money/v2/p/{{ planet.juiceboxProjectID }}" target="_blank"><img
-        src="{{ assets_prefix }}assets/juicebox.svg" alt="Juicebox Project ID {{ planet.juiceboxProjectID }}"
-        class="social-icon" width="1em"></a>
-    {% else %}
-    {% if planet.juiceboxProjectIDGoerli != nil %}
-    <a href="https://goerli.juicebox.money/v2/p/{{ planet.juiceboxProjectIDGoerli }}" target="_blank"><img
-        src="{{ assets_prefix }}assets/juicebox.svg"
-        alt="Goerli Juicebox Project ID {{ planet.juiceboxProjectIDGoerli }}" class="social-icon" width="1em"></a>
-    {% endif %}
-    {% endif %}
-    {% endif %}
   </div>
 </div>
 <div id="frames">
@@ -92,6 +92,7 @@
   const verticalMargin = 10;
   const headerHeight = 60;
   const transitionDuration = 300;
+  // const widths = ["100", "120", "140"];
   const widths = ["250", "350", "500"];
   let currentRow = 1;
   let greatestRightInRow = 0;
@@ -132,11 +133,12 @@
     imageFrame.style.transitionProperty = "opacity, margin-top";
     imageFrame.style.transitionDuration = `${transitionDuration / 1000}s, ${transitionDuration / 1000}s`;
     imageFrame.style.transitionTimingFunction = "ease, ease";
+    const normalizedWidth = getRandomWidth();
     const imgDescription = document.createElement("div");
     imgDescription.innerHTML = desc;
     imgDescription.classList.add("image-description");
+    imgDescription.style.width = normalizedWidth + "px";
     const img = document.createElement("img");
-    const normalizedWidth = getRandomWidth();
     img.style.width = normalizedWidth + "px";
     img.src = src;
     if (link) {
@@ -174,6 +176,24 @@
     });
   }
 
+  const formatTimestamp = (unixTimestamp) => {
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+
+    const dateObj = new Date(unixTimestamp * 1000);
+    const month = months[dateObj.getMonth()];
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    const hours = dateObj.getHours();
+    const minutes = ('0' + dateObj.getMinutes()).slice(-2);
+    const seconds = ('0' + dateObj.getSeconds()).slice(-2);
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const hours12 = hours % 12 || 12;
+
+    return `${month} ${day}, ${year} at ${hours12}:${minutes}:${seconds} ${ampm}`;
+  }
+
   const loadImageFrames = async () => {
     const response = await fetch(
       `{{ assets_prefix }}planet.json`
@@ -184,7 +204,9 @@
       .map((item) => {
         const randomIndex = Math.floor(Math.random() * item.attachments.length);
         const randomAttachment = item.attachments[randomIndex];
-        return frameImage('./' + item.id + '/' + randomAttachment, item.title, './' + item.id + '/')
+        console.log({ item, time: formatTimestamp(item.created) });
+        // How do i get .created formatted?
+        return frameImage('./' + item.id + '/' + randomAttachment, formatTimestamp(item.created), item.title);
       }
       );
     for (const frame of frames) await positionAndShowFrame(frame);
