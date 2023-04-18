@@ -192,6 +192,12 @@ hr {
 
 .content>p {
   margin-inline-start: 20px;
+  margin-inline-end: 20px;
+}
+
+.content>p:has(img) {
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
 }
 
 .content>p:has(img) {
