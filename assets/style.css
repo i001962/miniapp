@@ -175,7 +175,11 @@ hr {
   padding: 0px;
 }
 
-.main>h1, .main>.date {
+.main>h1 {
+  padding: 20px 20px 0px 20px;
+}
+
+.main>.date {
   padding: 0px 20px;
 }
 
@@ -188,6 +192,10 @@ hr {
 
 .content>p {
   margin-inline-start: 20px;
+}
+
+.content>p:has(img) {
+  margin-inline-start: 0px;
 }
 
 /* start: table */
