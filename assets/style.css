@@ -430,8 +430,8 @@ img.avatar {
 
 .nav {
   display: inline-flex;
-  gap: 16px;
-  padding: 2px;
+  gap: 20px;
+  padding: 0px;
   box-sizing: border-box;
   margin: 0px auto 0px auto;
   align-items: center;
@@ -440,13 +440,10 @@ img.avatar {
 
 .nav-current:link,
 .nav-current:visited {
-  /* background-color: var(--nav-current-background-color); */
-  /* color: var(--nav-current-foreground-color); */
   border-radius: 2em;
   font-size: 1em;
   line-height: 1;
   display: inline-block;
-  /* padding: 5px 10px 5px 10px; */
 }
 
 .nav-current:hover {
@@ -455,11 +452,9 @@ img.avatar {
 
 .nav-item:link,
 .nav-item:visited {
-  /* color: var(--foreground-color); */
   font-size: 1em;
   line-height: 1;
   display: inline-block;
-  padding: 5px 10px 5px 10px;
 }
 
 .nav-item:hover {
