@@ -433,7 +433,8 @@ img.avatar {
 }
 
 .nav {
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   padding: 0px;
   box-sizing: border-box;
