@@ -92,10 +92,10 @@
     const img = document.createElement("img");
     img.classList.add(widthClass);
     img.src = src;
+    img.style.cursor = "pointer";
 
     if (link) {
       img.addEventListener("click", () => window.open(link, "_blank"));
-      img.style.cursor = "pointer";
     } else {
       img.addEventListener("click", () => {
         const modal = document.getElementById("modal");
@@ -174,8 +174,7 @@
         const randomIndex = Math.floor(Math.random() * item.attachments.length);
         const randomAttachment = item.attachments[randomIndex];
         console.log({ item, time: formatTimestamp(item.created) });
-        // How do i get .created formatted?
-        return frameImage('./' + item.id + '/' + randomAttachment, formatTimestamp(item.created), item.title);
+        return frameImage('./' + item.id + '/' + randomAttachment, formatTimestamp(item.created), item.title, item.externalLink);
       }
       );
     for (const frame of frames) await positionAndShowFrame(frame);
