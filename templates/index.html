@@ -11,7 +11,7 @@
 {% endblock %}
 {% block main %}
 <div class="top">
-  {% if has_avatar %}
+  {% if has_avatar == true %}
   <img src="{{ assets_prefix }}avatar.png" width="72" height="72" class="avatar">
   {% endif %}
   <div class="site-info">
