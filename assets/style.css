@@ -596,6 +596,7 @@ footer {
   background-color: var(--modal-background-color-fallback); /* Fallback color */
   background-color: var(--modal-background-color); /* White w/ opacity */
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 /* Modal Content (image) */
