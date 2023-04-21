@@ -18,16 +18,18 @@
     <div class="site-title">{{ page_title|escape }}</div>
     {% if page_description_html.count > 0 %}<div class="site-about">{{ page_description_html }}</div>{% endif %}
   </div>
+  <div class="site-detail"><span>source</span></div>
   {% include 'modules/social_icons.html' %}
 </div>
+{% if site_navigation.count > 0 %}
 <div class="nav-container">
   <div class="nav">
-    <a href="{{ assets_prefix }}" class="{% if current_item_type == 'index' %}nav-current{% else %}nav-item{% endif %}">Home</a>
     {% for item in site_navigation %}
     <a href="{% if item.externalLink.count > 0 %}{{ item.externalLink }}{% else %}{{ assets_prefix }}{{ item.slug }}/{% endif %}" class="{% if article.slug == item.slug %}nav-current{% else %}nav-item{% endif %}"{% if item.externalLink.count > 0 %} target="_blank"{% endif %}>{{ item.title }}</a>
     {% endfor %}
   </div>
 </div>
+{% endif %}
 <div id="frames">
 </div>
 <div id="modal" class="modal">
@@ -86,6 +88,7 @@
 
     const imgDescription = document.createElement("div");
     imgDescription.innerHTML = desc;
+    imgDescription.classList.add("image-detail");
     imgDescription.classList.add("image-description");
     imgDescription.classList.add(widthClass);
 
@@ -94,6 +97,12 @@
     img.loading = "lazy";
     img.src = src;
     img.style.cursor = "pointer";
+
+    const imgCta = document.createElement("div");
+    imgCta.innerHTML = "[bestmost]";
+    imgCta.classList.add("image-detail");
+    imgCta.classList.add("image-cta");
+    imgCta.classList.add(widthClass);
 
     if (link) {
       img.addEventListener("click", () => window.open(link, "_blank"));
@@ -113,6 +122,7 @@
     }
     imageFrame.appendChild(imgDescription);
     imageFrame.appendChild(img);
+    imageFrame.appendChild(imgCta);
     frames.appendChild(imageFrame);
     return imageFrame;
   };
@@ -174,7 +184,6 @@
       .map((item) => {
         const randomIndex = Math.floor(Math.random() * item.attachments.length);
         const randomAttachment = item.attachments[randomIndex];
-        console.log({ item, time: formatTimestamp(item.created) });
         return frameImage('./' + item.id + '/' + randomAttachment, formatTimestamp(item.created), item.title, item.externalLink);
       }
       );

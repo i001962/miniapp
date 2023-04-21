@@ -1,6 +1,7 @@
 :root {
   --background-color: #fff;
   --foreground-color: #000;
+  --subtle-text-color: #aaa;
   --link-color: #f056c1;
   --foreground-secondary-color: #666;
   --nav-current-background-color: #000;
@@ -27,6 +28,7 @@
   :root {
     --background-color: #111;
     --foreground-color: #fff;
+    --subtle-text-color: #777;
     --link-color: #f056c1;
     --foreground-secondary-color: #adadaf;
     --nav-current-background-color: #3d3d3f;
@@ -393,7 +395,7 @@ hr {
   max-width: var(--content-max-width);
   margin-left: auto;
   margin-right: auto;
-  align-items: center;
+  align-items: top;
   display: flex;
   gap: var(--inner-gap);
   padding: 10px 20px 10px 20px;
@@ -463,6 +465,14 @@ img.avatar {
 
 .nav-item:hover {
   text-decoration: underline;
+}
+
+.site-detail {
+    color: var(--subtle-text-color); 
+}
+
+.site-detail span:hover {
+    color: var(--foreground-color); 
 }
 
 p,
@@ -543,6 +553,7 @@ footer {
 
 #frames {
   text-align: right;
+  margin-left: 24px;
 }
 
 .w1 {
@@ -566,18 +577,30 @@ footer {
   font-size: 0;
 }
 
-.image-description {
+.image-detail {
   font-size: 12px;
-  padding-bottom: 3px;
   opacity: 0;
   transition: opacity 0.3s ease;
+  color: var(--subtle-text-color);
+}
+
+.image-description {
+  padding-bottom: 3px;
+}
+
+.image-cta {
+  padding-top: 3px;
+}
+
+.image-cta:hover {
+  color: var(--foreground-color);
 }
 
 .frame-fade-in {
   opacity: 1;
 }
 
-.frame:hover .image-description {
+.frame:hover .image-detail {
   opacity: 1;
 }
 
