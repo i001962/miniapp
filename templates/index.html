@@ -69,12 +69,21 @@
     return candidateFrame.bottom;
   };
 
+
   const loadFrame = async (frame) => {
     const img = frame.querySelector('img:first-of-type');
-    return new Promise((resolve) =>
-      img.complete ? resolve() :
-        img.addEventListener('load', () => requestAnimationFrame(resolve))
-    );
+    return new Promise((resolve) => {
+      // Resolve if the image if done.
+      if (img.complete) return resolve();
+      const checkForDimensions = () => {
+        // Resolve if the img has dimensions.
+        if (img.width > 0 && img.height > 0) return resolve();
+        // Otherwise wait until the image has dimensions.
+        else
+          return requestAnimationFrame(checkDimensions);
+      }
+      checkForDimensions();
+    });
   };
 
   const frameImage = (src, desc, title, link) => {
@@ -152,10 +161,6 @@
     });
   }
 
-  const convertSwiftTimestamp = (timestamp) => {
-    return (timestamp + 978307200)
-  }
-
   const formatTimestamp = (timestamp) => {
     const months = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
@@ -164,7 +169,7 @@
     const dateObj = new Date((timestamp + 978307200) * 1000);
     const month = months[dateObj.getMonth()];
     const day = dateObj.getDate();
-    const year = dateObj.getFullYear();
+    const year = dateObj.getFullYear() - 30; // rewind 30 years for fun.
     const hours = dateObj.getHours();
     const minutes = ('0' + dateObj.getMinutes()).slice(-2);
     const seconds = ('0' + dateObj.getSeconds()).slice(-2);
