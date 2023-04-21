@@ -80,7 +80,7 @@
         if (img.width > 0 && img.height > 0) return resolve();
         // Otherwise wait until the image has dimensions.
         else
-          return requestAnimationFrame(checkDimensions);
+          return requestAnimationFrame(checkForDimensions);
       }
       checkForDimensions();
     });
