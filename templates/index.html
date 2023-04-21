@@ -17,6 +17,7 @@
   <div class="site-info">
     <div class="site-title">{{ page_title|escape }}</div>
     {% if page_description_html.count > 0 %}<div class="site-about">{{ page_description_html }}</div>{% endif %}
+    <div id="loading-animation"></div>
   </div>
   <div class="site-detail"><span>source</span></div>
   {% include 'modules/social_icons.html' %}
@@ -30,8 +31,7 @@
   </div>
 </div>
 {% endif %}
-<div id="frames">
-</div>
+<div id="frames"></div>
 <div id="modal" class="modal">
   <span class="close">&times;</span>
   <img class="modal-content" id="modal-image">
@@ -44,6 +44,8 @@
   const headerHeight = 60;
   const transitionDuration = 300;
   const widthClasses = ["w1", "w2", "w3"];
+  const loadingAnimationPace = 100;
+  let loadingAnimationInterval;
   let currentRow = 1;
   let greatestRightInRow = 0;
   let rows = [];
@@ -51,12 +53,35 @@
   const getRandomWidthClass = () =>
     widthClasses[Math.floor(Math.random() * widthClasses.length)];
 
+  const startLoadingAnimation = () => {
+    const loadingAnimation = document.getElementById('loading-animation');
+    const loadingAnimationFrames = ['-', '\\', '|', '/'];
+    let currentFrame = 0;
+
+    const animate = () => {
+      loadingAnimation.textContent = loadingAnimationFrames[currentFrame];
+      currentFrame = (currentFrame + 1) % loadingAnimationFrames.length;
+      loadingAnimationInterval = setTimeout(animate, loadingAnimationPace);
+    }
+
+    animate();
+  }
+
+  const stopLoadingAnimation = () => {
+    const loadingAnimation = document.getElementById('loading-animation');
+    loadingAnimationInterval = clearTimeout(loadingAnimationInterval);
+    loadingAnimation.style.display = "none";
+  }
+
   const getTopTarget = (frame, row) => {
     if (row == 1) return frames.offsetTop;
+
     let previousRow = rows[row - 2];
     let candidateFrame;
+
     for (let j = 0; j < previousRow.frames.length; j++) {
       let frameToCheck = previousRow.frames[j];
+
       if (
         frame.left < frameToCheck.right + horizontalMargin &&
         frame.right + horizontalMargin > frameToCheck.left &&
@@ -66,6 +91,7 @@
         return candidateFrame ? candidateFrame.bottom : getTopTarget(frame, row - 1);
       }
     }
+
     return candidateFrame.bottom;
   };
 
@@ -75,6 +101,7 @@
     return new Promise((resolve) => {
       // Resolve if the image if done.
       if (img.complete) return resolve();
+
       const checkForDimensions = () => {
         // Resolve if the img has dimensions.
         if (img.width > 0 && img.height > 0) return resolve();
@@ -82,6 +109,7 @@
         else
           return requestAnimationFrame(checkForDimensions);
       }
+
       checkForDimensions();
     });
   };
@@ -108,7 +136,7 @@
     img.style.cursor = "pointer";
 
     const imgCta = document.createElement("div");
-    imgCta.innerHTML = "[bestmost]";
+    imgCta.innerHTML = "[record]";
     imgCta.classList.add("image-detail");
     imgCta.classList.add("image-cta");
     imgCta.classList.add(widthClass);
@@ -129,24 +157,34 @@
         }
       });
     }
+
     imageFrame.appendChild(imgDescription);
     imageFrame.appendChild(img);
     imageFrame.appendChild(imgCta);
     frames.appendChild(imageFrame);
+
     return imageFrame;
   };
+
   const positionAndShowFrame = async (imageFrame) => {
     await loadFrame(imageFrame);
+
+    if (loadingAnimationInterval) stopLoadingAnimation();
+
     const rect = imageFrame.getBoundingClientRect();
     if (rect.left < greatestRightInRow) currentRow++;
     greatestRightInRow = rect.right;
+
     const heightDiff = rect.top - getTopTarget(rect, currentRow);
     let newFrame = { left: rect.left, right: rect.right, bottom: rect.bottom - heightDiff + verticalMargin };
+
     if (currentRow > rows.length) rows.push({ frames: [newFrame] });
     else rows[rows.length - 1].frames.push(newFrame);
+
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const marginTop = heightDiff + scrollTop - verticalMargin;
     imageFrame.classList.add("frame-fade-in");
+
     return new Promise((resolve) => {
       if (marginTop) {
         const handleEvent = (event) => {
@@ -194,7 +232,8 @@
       );
     for (const frame of frames) await positionAndShowFrame(frame);
   };
-
-  loadImageFrames();
+  
+  loadImageFrames(); 
+  startLoadingAnimation();
 </script>
 {% endblock %}
