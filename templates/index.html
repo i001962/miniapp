@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% block head %}
+{% include 'modules/ethers.html' %}
+{% include 'modules/siwe.html' %}
 {% include 'modules/planet_seo.html' %}
 <!-- Pagination -->
 {% if previous_page %}
@@ -19,18 +21,13 @@
     {% if page_description_html.count > 0 %}<div class="site-about">{{ page_description_html }}</div>{% endif %}
     <div id="loading-animation"></div>
   </div>
-  <div class="site-detail"><span>source</span></div>
+  <div class="site-detail">
+    <span><a href="javascript:connectWallet();" id="connectWallet">connect wallet</a></span>
+    <span>source</span>
+  </div>
   {% include 'modules/social_icons.html' %}
 </div>
-{% if site_navigation.count > 0 %}
-<div class="nav-container">
-  <div class="nav">
-    {% for item in site_navigation %}
-    <a href="{% if item.externalLink.count > 0 %}{{ item.externalLink }}{% else %}{{ assets_prefix }}{{ item.slug }}/{% endif %}" class="{% if article.slug == item.slug %}nav-current{% else %}nav-item{% endif %}"{% if item.externalLink.count > 0 %} target="_blank"{% endif %}>{{ item.title }}</a>
-    {% endfor %}
-  </div>
-</div>
-{% endif %}
+{% include 'modules/nav.html' %}
 <div id="frames"></div>
 <div id="modal" class="modal">
   <span class="close">&times;</span>
@@ -232,8 +229,8 @@
       );
     for (const frame of frames) await positionAndShowFrame(frame);
   };
-  
-  loadImageFrames(); 
+
+  loadImageFrames();
   startLoadingAnimation();
 </script>
 {% endblock %}
