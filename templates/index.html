@@ -32,6 +32,7 @@
 <div id="modal" class="modal">
   <span class="close">&times;</span>
   <img class="modal-content" id="modal-image">
+  <video class="modal-content" id="modal-video"></video>
   <div id="modal-caption"></div>
 </div>
 <script>
@@ -111,7 +112,7 @@
     });
   };
 
-  const frameImage = (src, desc, title, link) => {
+  const frameImage = (src, desc, title, link, video) => {
     const imageFrame = document.createElement("div");
     imageFrame.classList.add("frame");
     imageFrame.style.transitionProperty = "opacity, margin-top";
@@ -143,13 +144,33 @@
     } else {
       img.addEventListener("click", () => {
         const modal = document.getElementById("modal");
-        const modalImage = document.getElementById("modal-image");
-        const modalCaption = document.getElementById("modal-caption");
         modal.style.display = "block";
-        modalImage.src = src;
+        const modalImage = document.getElementById("modal-image");
+        const modalVideo = document.getElementById("modal-video");
+
+        if (video) {
+          modalImage.style.display = "none"
+          modalVideo.style.display = "block"
+          modalVideo.autoplay = true;
+          modalVideo.loop = true;
+          modalVideo.muted = true;
+          modalVideo.controls = true;
+          modalImage.src = "";
+          modalVideo.src = video;
+        } else {
+          modalImage.style.display = "block"
+          modalVideo.style.display = "none"
+
+          modalVideo.src = "";
+          modalImage.src = src;
+        }
+        const modalCaption = document.getElementById("modal-caption");
         modalCaption.innerHTML = desc;
         const span = document.getElementsByClassName("close")[0];
         span.onclick = function () {
+          if (video) {
+            modalVideo.pause();
+          }
           modal.style.display = "none";
         }
       });
@@ -220,11 +241,15 @@
     );
     const data = await response.json();
     const frames = data['articles']
-      .filter(item => item.attachments && item.attachments.length > 0)
+      // Only if attachments have file extensions like ".jpg" ".png" ".gif"
+      .filter(item => item.hasVideo === true || item.attachments.some(attachment => attachment.match(/\.(jpg|png|gif)$/i)))
       .map((item) => {
-        const randomIndex = Math.floor(Math.random() * item.attachments.length);
-        const randomAttachment = item.attachments[randomIndex];
-        return frameImage('./' + item.id + '/' + randomAttachment, formatTimestamp(item.created), item.title, item.externalLink);
+        console.log(item)
+        // if item.hasVideo, use _videoThumbnail.png
+        // else use a random attachment
+        const imageName = item.hasVideo ? '_videoThumbnail.png' : item.attachments[Math.floor(Math.random() * item.attachments.length)];
+        const videoName = item.hasVideo ? './' + item.id + '/' + item.videoFilename : null;
+        return frameImage('./' + item.id + '/' + imageName, formatTimestamp(item.created), item.title, item.externalLink, videoName);
       }
       );
     for (const frame of frames) await positionAndShowFrame(frame);
