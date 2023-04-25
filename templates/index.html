@@ -43,7 +43,6 @@
   const transitionDuration = 300;
   const widthClasses = ["w1", "w2", "w3"];
   const loadingAnimationPace = 100;
-  let zIndex = 0;
   let loadingAnimationInterval;
   let currentRow = 1;
   let greatestRightInRow = 0;
@@ -115,18 +114,19 @@
   const frameImage = (src, desc, title, link, video) => {
     const imageFrame = document.createElement("div");
     imageFrame.classList.add("frame");
-    image.style.zIndex = 100000 - (zIndex++ % 100000); // make the imgCta of an img go on top of the imgDescription of the frame beneath. 100000 is just a rendom large number.
     imageFrame.style.transitionProperty = "opacity, margin-top";
     imageFrame.style.transitionDuration = `${transitionDuration / 1000}s, ${transitionDuration / 1000}s`;
     imageFrame.style.transitionTimingFunction = "ease, ease";
 
     const widthClass = getRandomWidthClass();
 
+    const imgHeader = document.createElement("div");
+    imgHeader.classList.add("image-header");
+    imgHeader.classList.add(widthClass);
+
     const imgDescription = document.createElement("div");
     imgDescription.innerHTML = desc;
     imgDescription.classList.add("image-detail");
-    imgDescription.classList.add("image-description");
-    imgDescription.classList.add(widthClass);
 
     const img = document.createElement("img");
     img.classList.add(widthClass);
@@ -136,9 +136,7 @@
 
     const imgCta = document.createElement("div");
     imgCta.innerHTML = "[record]";
-    imgCta.classList.add("image-detail");
     imgCta.classList.add("image-cta");
-    imgCta.classList.add(widthClass);
 
     if (link) {
       img.addEventListener("click", () => window.open(link, "_blank"));
@@ -177,9 +175,10 @@
       });
     }
 
-    imageFrame.appendChild(imgDescription);
+    imgHeader.appendChild(imgDescription);
+    imgHeader.appendChild(imgCta);
+    imageFrame.appendChild(imgHeader);
     imageFrame.appendChild(img);
-    imageFrame.appendChild(imgCta);
     frames.appendChild(imageFrame);
 
     return imageFrame;
@@ -195,13 +194,13 @@
     greatestRightInRow = rect.right;
 
     const heightDiff = rect.top - getTopTarget(rect, currentRow);
-      let newFrame = { left: rect.left, right: rect.right, bottom: rect.bottom - heightDiff - verticalMargin };
+      let newFrame = { left: rect.left, right: rect.right, bottom: rect.bottom - heightDiff + verticalMargin };
 
     if (currentRow > rows.length) rows.push({ frames: [newFrame] });
     else rows[rows.length - 1].frames.push(newFrame);
 
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const marginTop = heightDiff + scrollTop + verticalMargin;
+    const marginTop = heightDiff + scrollTop - verticalMargin;
     imageFrame.classList.add("frame-fade-in");
 
     return new Promise((resolve) => {
@@ -227,13 +226,8 @@
     const month = months[dateObj.getMonth()];
     const day = dateObj.getDate();
     const year = dateObj.getFullYear() - 30; // rewind 30 years for fun.
-    const hours = dateObj.getHours();
-    const minutes = ('0' + dateObj.getMinutes()).slice(-2);
-    const seconds = ('0' + dateObj.getSeconds()).slice(-2);
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const hours12 = hours % 12 || 12;
 
-    return `${month} ${day}, ${year} at ${hours12}:${minutes}:${seconds} ${ampm}`;
+    return `${month} ${day}, ${year}`; // at ${hours12}:${minutes}:${seconds} ${ampm}`;
   }
 
   const loadImageFrames = async () => {
@@ -245,14 +239,13 @@
       // Only if attachments have file extensions like ".jpg" ".png" ".gif"
       .filter(item => item.hasVideo === true || item.attachments.some(attachment => attachment.match(/\.(jpg|png|gif)$/i)))
       .map((item) => {
-        console.log(item)
         // if item.hasVideo, use _videoThumbnail.png
         // else use a random attachment
         const imageName = item.hasVideo ? '_videoThumbnail.png' : item.attachments[Math.floor(Math.random() * item.attachments.length)];
         const videoName = item.hasVideo ? './' + item.id + '/' + item.videoFilename : null;
         return frameImage('./' + item.id + '/' + imageName, formatTimestamp(item.created), item.title, item.externalLink, videoName);
       }
-      );
+    );
     for (const frame of frames) await positionAndShowFrame(frame);
   };
 
