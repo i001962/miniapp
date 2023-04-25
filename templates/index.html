@@ -19,7 +19,6 @@
   <div class="site-info">
     <div class="site-title">{{ page_title|escape }}</div>
     {% if page_description_html.count > 0 %}<div class="site-about">{{ page_description_html }}</div>{% endif %}
-    <div id="loading-animation"></div>
   </div>
   <div class="site-detail">
     <span>source</span>
@@ -27,6 +26,7 @@
   {% include 'modules/social_icons.html' %}
 </div>
 {% include 'modules/nav.html' %}
+<div id="loading-animation"></div>
 <div id="frames"></div>
 <div id="modal" class="modal">
   <span class="close">&times;</span>
