@@ -22,7 +22,6 @@
     <div id="loading-animation"></div>
   </div>
   <div class="site-detail">
-    <span><a href="javascript:connectWallet();" id="connectWallet">connect wallet</a></span>
     <span>source</span>
   </div>
   {% include 'modules/social_icons.html' %}
@@ -135,7 +134,10 @@
     img.style.cursor = "pointer";
 
     const imgCta = document.createElement("div");
-    imgCta.innerHTML = "[record]";
+    const anchor = document.createElement('a');
+    anchor.href = "javascript:connectWallet();";
+    anchor.textContent = '[record]';
+    imgCta.appendChild(anchor);
     imgCta.classList.add("image-cta");
 
     if (link) {

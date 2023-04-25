@@ -594,10 +594,6 @@ footer {
   text-align: left;
 }
 
-.image-cta:hover {
-  color: var(--foreground-color);
-}
-
 .frame-fade-in {
   opacity: 1;
 }
