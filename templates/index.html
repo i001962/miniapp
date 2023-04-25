@@ -93,7 +93,6 @@
     return candidateFrame.bottom;
   };
 
-
   const loadFrame = async (frame) => {
     const img = frame.querySelector('img:first-of-type');
     return new Promise((resolve) => {
@@ -101,8 +100,8 @@
       if (img.complete) return resolve();
 
       const checkForDimensions = () => {
-        // Resolve if the img has dimensions.
-        if (img.width > 0 && img.height > 0) return resolve();
+        // Resolve if the img has dimensions. Small delay to let more of the img load for a smoother slide in.
+        if (img.width > 0 && img.height > 0) return setTimeout(resolve, 1000);
         // Otherwise wait until the image has dimensions.
         else
           return requestAnimationFrame(checkForDimensions);
@@ -194,13 +193,13 @@
     greatestRightInRow = rect.right;
 
     const heightDiff = rect.top - getTopTarget(rect, currentRow);
-    let newFrame = { left: rect.left, right: rect.right, bottom: rect.bottom - heightDiff + verticalMargin };
+      let newFrame = { left: rect.left, right: rect.right, bottom: rect.bottom - heightDiff - verticalMargin };
 
     if (currentRow > rows.length) rows.push({ frames: [newFrame] });
     else rows[rows.length - 1].frames.push(newFrame);
 
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const marginTop = heightDiff + scrollTop - verticalMargin;
+    const marginTop = heightDiff + scrollTop + verticalMargin;
     imageFrame.classList.add("frame-fade-in");
 
     return new Promise((resolve) => {
