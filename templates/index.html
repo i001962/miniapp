@@ -43,6 +43,7 @@
   const transitionDuration = 300;
   const widthClasses = ["w1", "w2", "w3"];
   const loadingAnimationPace = 100;
+  let zIndex = 0;
   let loadingAnimationInterval;
   let currentRow = 1;
   let greatestRightInRow = 0;
@@ -114,6 +115,7 @@
   const frameImage = (src, desc, title, link, video) => {
     const imageFrame = document.createElement("div");
     imageFrame.classList.add("frame");
+    image.style.zIndex = 100000 - (zIndex++ % 100000); // make the imgCta of an img go on top of the imgDescription of the frame beneath. 100000 is just a rendom large number.
     imageFrame.style.transitionProperty = "opacity, margin-top";
     imageFrame.style.transitionDuration = `${transitionDuration / 1000}s, ${transitionDuration / 1000}s`;
     imageFrame.style.transitionTimingFunction = "ease, ease";

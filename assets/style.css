@@ -575,6 +575,7 @@ footer {
   vertical-align: top;
   opacity: 0;
   font-size: 0;
+  position: relative;
 }
 
 .image-detail {
