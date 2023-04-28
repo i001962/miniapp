@@ -1,9 +1,12 @@
 async function connectWallet() {
     let signer = null;
-    let provider;
     let address;
+    let croptopContract = "0x";
+    let contractABI = "";
 
-    provider = new ethers.BrowserProvider(window.ethereum);
+    const provider = new ethers.providers.JsonRpcProvider('https://mainnet.infura.io/v3/YOUR-INFURA-API-KEY');
+ 
+    const contract = new ethers.Contract(contractAddress, contractABI, provider);
 
     provider.send('eth_requestAccounts', [])
     .then(async (accounts) => {
@@ -16,35 +19,8 @@ async function connectWallet() {
 
     signer = await provider.getSigner();
 
-    // message to sign
-
-    const domain = window.location.host;
-    const origin = window.location.origin;
-    // get the address from provider
-
     const version = '1';
     const chainId = '1';
-
-    const statement = 'Sign in with Ethereum';
-
-    // Generate a random string contains 17 characters
-    const nonce = Math.random().toString(36).substring(2, 11) + Math.random().toString(36).substring(2, 12);
-
-    const issuedAt = new Date().toISOString();
-
-    const messageTemplate = `${domain} wants you to sign in with your Ethereum account:
-${address}
-
-${statement}
-
-URI: ${origin}
-Version: ${version}
-Chain ID: ${chainId}
-Nonce: ${nonce}
-Issued At: ${issuedAt}`;
-
-    // sign the message
-    const signature = await signer.signMessage(messageTemplate);
 
     if (signature) {
         const successMessage = 'Successfully signed the request: ' + signature;
