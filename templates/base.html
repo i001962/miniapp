@@ -61,6 +61,11 @@
         let main = document.querySelector('.wrapper');
         main.insertAdjacentElement('afterbegin', container);
       }
+
+      window.addEventListener('DOMContentLoaded', e => {
+        {% block dom_ready %}
+        {% endblock %}
+      });
     </script>
     {% if has_avatar == true %}
     <link rel="icon" href="{{ assets_prefix }}avatar.png" sizes="144x144">

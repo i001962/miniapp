@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
+
 {% block head %}
+{% include 'modules/deps.html' %}
 {% include 'modules/ethers.html' %}
 {% include 'modules/siwe.html' %}
 {% include 'modules/planet_seo.html' %}
@@ -11,6 +13,11 @@
 <link rel="next" href="./{{ next_page }}">
 {% endif %}
 {% endblock %}
+
+{% block dom_ready %}
+console.log(bs58);
+{% endblock %}
+
 {% block main %}
 <div class="top">
   {% if has_avatar == true %}
