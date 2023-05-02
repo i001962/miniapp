@@ -400,7 +400,7 @@ hr {
 }
 
 #loading-animation {
-    padding-left: 20px; 
+  padding-left: 20px;
 }
 
 img.avatar {
@@ -470,11 +470,11 @@ img.avatar {
 }
 
 .site-detail {
-    color: var(--subtle-text-color); 
+  color: var(--subtle-text-color);
 }
 
 .site-detail span:hover {
-    color: var(--foreground-color); 
+  color: var(--foreground-color);
 }
 
 p,
@@ -621,6 +621,7 @@ footer {
   background-color: var(--modal-background-color); /* White w/ opacity */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  transition: display 0.15s ease-in-out;
 }
 
 /* Modal Content (image) */

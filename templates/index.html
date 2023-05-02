@@ -154,6 +154,12 @@ console.log(bs58);
       img.addEventListener("click", () => {
         const modal = document.getElementById("modal");
         modal.style.display = "block";
+        modal.addEventListener("click", () => {
+          if (video) {
+            modalVideo.pause();
+          }
+          modal.style.display = "none";
+        });
         const modalImage = document.getElementById("modal-image");
         const modalVideo = document.getElementById("modal-video");
 
@@ -166,12 +172,20 @@ console.log(bs58);
           modalVideo.controls = true;
           modalImage.src = "";
           modalVideo.src = video;
+
+          modalVideo.addEventListener('click', (event) => {
+            event.stopPropagation();
+          });
         } else {
           modalImage.style.display = "block"
           modalVideo.style.display = "none"
 
           modalVideo.src = "";
           modalImage.src = src;
+
+          modalImage.addEventListener('click', (event) => {
+            event.stopPropagation();
+          });
         }
         const modalCaption = document.getElementById("modal-caption");
         modalCaption.innerHTML = desc;
