@@ -117,7 +117,7 @@ console.log(bs58);
     });
   };
 
-  const frameImage = (src, desc, title, link, video) => {
+  const frameImage = (itemID, src, desc, title, link, video) => {
     const imageFrame = document.createElement("div");
     imageFrame.classList.add("frame");
     imageFrame.style.transitionProperty = "opacity, margin-top";
@@ -186,6 +186,21 @@ console.log(bs58);
           modalImage.addEventListener('click', (event) => {
             event.stopPropagation();
           });
+
+          // try fetch NFT metadata and console.log it
+          const metadataUrl = `{{ assets_prefix }}${itemID}/nft.json`;
+          fetch(metadataUrl)
+            .then(response => response.json())
+            .then(data => {
+              console.log(data);
+            });
+          // try fetch nft.json.cid.txt and console.log it
+          const cidUrl = `{{ assets_prefix }}${itemID}/nft.json.cid.txt`;
+          fetch(cidUrl)
+            .then(response => response.text())
+            .then(data => {
+              console.log(data);
+            });
         }
         const modalCaption = document.getElementById("modal-caption");
         modalCaption.innerHTML = desc;
@@ -267,7 +282,7 @@ console.log(bs58);
         // else use a random attachment
         const imageName = item.hasVideo ? '_videoThumbnail.png' : item.attachments[Math.floor(Math.random() * item.attachments.length)];
         const videoName = item.hasVideo ? './' + item.id + '/' + item.videoFilename : null;
-        return frameImage('./' + item.id + '/' + imageName, formatTimestamp(item.created), item.title, item.externalLink, videoName);
+        return frameImage(item.id, './' + item.id + '/' + imageName, formatTimestamp(item.created), item.title, item.externalLink, videoName);
       }
     );
     for (const frame of frames) await positionAndShowFrame(frame);
