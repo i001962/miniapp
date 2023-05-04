@@ -109,10 +109,10 @@
   const decorateFrame = async (frame, itemId, src, desc, link, video) => {
 
     const ctaAnchor = frame.querySelector('a');;
-    const description = frame.querySelector('div.image-detail');
+    const description = frame.querySelector('div.image-description');
     const img = frame.querySelector('img');
 
-    ctaAnchor.textContent = '[record]';
+    ctaAnchor.textContent = '[collect]';
     description.innerHTML = desc;
 
     const projectId = 654;
@@ -131,9 +131,7 @@
         const modal = document.getElementById("modal");
         modal.style.display = "block";
         modal.addEventListener("click", () => {
-          if (video) {
-            modalVideo.pause();
-          }
+          if (video) modalVideo.pause();
           modal.style.display = "none";
         });
         const modalImage = document.getElementById("modal-image");
@@ -149,27 +147,19 @@
           modalImage.src = "";
           modalVideo.src = video;
 
-          modalVideo.addEventListener('click', (event) => {
-            event.stopPropagation();
-          });
+          modalVideo.addEventListener('click', (event) => event.stopPropagation());
         } else {
           modalImage.style.display = "block"
           modalVideo.style.display = "none"
-
           modalVideo.src = "";
           modalImage.src = src;
-
-          modalImage.addEventListener('click', (event) => {
-            event.stopPropagation();
-          });
+          modalImage.addEventListener('click', (event) => event.stopPropagation());
         }
         const modalCaption = document.getElementById("modal-caption");
         modalCaption.innerHTML = desc;
         const span = document.getElementsByClassName("close")[0];
-        span.onclick = function () {
-          if (video) {
-            modalVideo.pause();
-          }
+          span.onclick = () => {
+          if (video) modalVideo.pause(); 
           modal.style.display = "none";
         }
       });
@@ -190,7 +180,7 @@
     frame.style.transitionTimingFunction = "ease, ease";
     header.classList.add("image-header");
     cta.classList.add("image-cta");
-    description.classList.add("image-detail");
+    description.classList.add("image-description");
     img.loading = "lazy";
     img.style.cursor = "pointer"; 
 
