@@ -15,7 +15,6 @@
 {% endblock %}
 
 {% block dom_ready %}
-console.log(bs58);
 {% endblock %}
 
 {% block main %}
@@ -142,11 +141,20 @@ console.log(bs58);
 
     const imgCta = document.createElement("div");
     const anchor = document.createElement('a');
-    anchor.href = "javascript:connectWallet();";
+    // anchor.href = `javascript:connectWallet("${itemID}");`;
     anchor.textContent = '[record]';
     anchor.style.textDecoration = "line-through";
     imgCta.appendChild(anchor);
     imgCta.classList.add("image-cta");
+
+    const cidUrl = `{{ assets_prefix }}${itemID}/nft.json.cid.txt`;
+    fetch(cidUrl)
+      .then(response => response.text())
+      .then(data => {
+        const encodedIPFSUri = encodeIPFSUri(data);
+        console.log(`encodedIPFSUri from ${data} to ${encodedIPFSUri}`);
+        anchor.href = `javascript:connectWallet("${encodedIPFSUri}");`;
+      });
 
     if (link) {
       img.addEventListener("click", () => window.open(link, "_blank"));

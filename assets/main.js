@@ -1,7 +1,18 @@
-async function connectWallet() {
+function encodeIPFSUri(cid) {
+  const decodedCID = base32.decode.asBytes(cid.toUpperCase());
+  const slicedCID = decodedCID.slice(3);
+  const uint8Array = new Uint8Array(slicedCID);
+  let hex = '0x';
+  for (let i = 0; i < uint8Array.length; i++) {
+    hex += uint8Array[i].toString(16).padStart(2, '0');
+  }
+  return hex;
+}
+
+async function connectWallet(encodedIPFSUri) {
     const croptopContract = "0xa079c8fcecd912e005410a065c6346c5501f4527";
     const projectId = 654;
-    const encodedIPFSUri = "0x9618af14f80eb618f518b749ea55610aaf0c671a481fdd36eee6854c4a548ef2";
+    // const encodedIPFSUri = "0x9618af14f80eb618f518b749ea55610aaf0c671a481fdd36eee6854c4a548ef2";
     const category = 2;
     const price = BigInt("100000000000000000");
     const quantity = 3;
@@ -288,6 +299,6 @@ async function connectWallet() {
     const contract = new ethers.Contract(croptopContract, contractABI, signer);
     const post = {quantity, price, category, encodedIPFSUri};
     const result = await contract.mint(projectId, [post], beneficiary, {
-      value: price + (price / 20) 
+      value: price + (price / 20n) 
     });
 }
