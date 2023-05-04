@@ -7,6 +7,7 @@
 {% include 'modules/tx.html' %}
 {% include 'modules/record_and_collect.html' %}
 {% include 'modules/planet_seo.html' %}
+{% endblock %}
 
 {% block dom_ready %}
 {% endblock %}
@@ -159,7 +160,7 @@
         modalCaption.innerHTML = desc;
         const span = document.getElementsByClassName("close")[0];
           span.onclick = () => {
-          if (video) modalVideo.pause(); 
+          if (video) modalVideo.pause();
           modal.style.display = "none";
         }
       });
@@ -182,7 +183,7 @@
     cta.classList.add("image-cta");
     description.classList.add("image-description");
     img.loading = "lazy";
-    img.style.cursor = "pointer"; 
+    img.style.cursor = "pointer";
 
     // Get random width.
     const widthClass = widthClasses[Math.floor(Math.random() * widthClasses.length)];
@@ -254,7 +255,7 @@
       }
     );
 
-    for (const frame of frames) 
+    for (const frame of frames)
       await positionAndShowFrame(frame);
   };
 

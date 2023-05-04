@@ -1,6 +1,6 @@
 const encodeIPFSUri = (cid) => {
-  const decodedCID = base32.decode.asBytes(cid.toUpperCase());
-  const slicedCID = decodedCID.slice(3);
+  const decodedCID = bs58.decode(cid);
+  const slicedCID = decodedCID.slice(2);
   const uint8Array = new Uint8Array(slicedCID);
   let hex = '0x';
   for (let i = 0; i < uint8Array.length; i++) 
@@ -20,4 +20,12 @@ const formatTimestamp = (timestamp) => {
   const year = dateObj.getFullYear();
 
   return `${month} ${day}, ${year}`;
+}
+
+const {CID} = Multiformats;
+
+function convertCIDv1toCIDv0(cid) {
+  const cidv1 = CID.parse(cid);
+  const v0 = cidv1.toV0();
+  return v0.toString();
 }
