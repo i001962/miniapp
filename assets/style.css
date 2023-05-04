@@ -1,7 +1,7 @@
 :root {
   --background-color: #fff;
   --foreground-color: #000;
-  --subtle-text-color: #aaa;
+  --subtle-text-color: #e2e2e2;
   --link-color: #f056c1;
   --foreground-secondary-color: #666;
   --nav-current-background-color: #000;
@@ -28,7 +28,7 @@
   :root {
     --background-color: #111;
     --foreground-color: #fff;
-    --subtle-text-color: #777;
+    --subtle-text-color: #3f3f3f;
     --link-color: #f056c1;
     --foreground-secondary-color: #adadaf;
     --nav-current-background-color: #3d3d3f;
