@@ -46,9 +46,6 @@
   let greatestRightInRow = 0;
   let rows = [];
 
-  const getRandomWidthClass = () =>
-    widthClasses[Math.floor(Math.random() * widthClasses.length)];
-
   const startLoadingAnimation = () => {
     const loadingAnimation = document.getElementById('loading-animation');
     const loadingAnimationFrames = ['-', '\\', '|', '/'];
@@ -109,48 +106,23 @@
     });
   };
 
-  const frameImage = (itemID, src, desc, title, link, video) => {
-    const imageFrame = document.createElement("div");
-    imageFrame.classList.add("frame");
-    imageFrame.style.transitionProperty = "opacity, margin-top";
-    imageFrame.style.transitionDuration = `${transitionDuration / 1000}s, ${transitionDuration / 1000}s`;
-    imageFrame.style.transitionTimingFunction = "ease, ease";
+  const decorateFrame = async (frame, itemId, src, desc, link, video) => {
 
-    const widthClass = getRandomWidthClass();
+    const ctaAnchor = frame.querySelector('a');;
+    const description = frame.querySelector('div.image-detail');
+    const img = frame.querySelector('img');
 
-    const imgHeader = document.createElement("div");
-    imgHeader.classList.add("image-header");
-    imgHeader.classList.add(widthClass);
-
-    const imgDescription = document.createElement("div");
-    imgDescription.innerHTML = desc;
-    imgDescription.classList.add("image-detail");
-
-    const img = document.createElement("img");
-    img.classList.add(widthClass);
-    img.loading = "lazy";
-    img.src = src;
-    img.style.cursor = "pointer";
-
-    const imgCta = document.createElement("div");
-    const anchor = document.createElement('a');
-    anchor.textContent = '[record]';
-    anchor.style.textDecoration = "line-through";
-    imgCta.appendChild(anchor);
-    imgCta.classList.add("image-cta");
+    ctaAnchor.textContent = '[record]';
+    description.innerHTML = desc;
 
     const projectId = 654;
     const category = 2;
     const quantity = 3;
     const price = 100000000000000000;
-    const cidUrl = `{{ assets_prefix }}${itemID}/nft.json.cid.txt`;
-    fetch(cidUrl)
-      .then(response => response.text())
-      .then(data => {
-        const encodedIPFSUri = encodeIPFSUri(data);
-        anchor.href = `javascript:recordAndCollect(${projectId}, ${category}, ${quantity}, "${price}", "${encodedIPFSUri}");`;
-      }
-    );
+    const cidUrl = `{{ assets_prefix }}${itemId}/nft.json.cid.txt`;
+    const cid = await (await fetch(cidUrl)).text();
+    const encodedIPFSUri = encodeIPFSUri(cid);
+    ctaAnchor.href = `javascript:recordAndCollect(${projectId}, ${category}, ${quantity}, "${price}", "${encodedIPFSUri}");`;
 
     if (link) {
       img.addEventListener("click", () => window.open(link, "_blank"));
@@ -190,21 +162,6 @@
           modalImage.addEventListener('click', (event) => {
             event.stopPropagation();
           });
-
-          // try fetch NFT metadata and console.log it
-          const metadataUrl = `{{ assets_prefix }}${itemID}/nft.json`;
-          fetch(metadataUrl)
-            .then(response => response.json())
-            .then(data => {
-              console.log(data);
-            });
-          // try fetch nft.json.cid.txt and console.log it
-          const cidUrl = `{{ assets_prefix }}${itemID}/nft.json.cid.txt`;
-          fetch(cidUrl)
-            .then(response => response.text())
-            .then(data => {
-              console.log(data);
-            });
         }
         const modalCaption = document.getElementById("modal-caption");
         modalCaption.innerHTML = desc;
@@ -217,14 +174,41 @@
         }
       });
     }
+  }
 
-    imgHeader.appendChild(imgCta);
-    imgHeader.appendChild(imgDescription);
-    imageFrame.appendChild(imgHeader);
-    imageFrame.appendChild(img);
-    frames.appendChild(imageFrame);
+  const frameImage = (src) => {
+    const frame = document.createElement("div");
+    const header = document.createElement("div");
+    const description = document.createElement("div");
+    const img = document.createElement("img");
+    const cta = document.createElement("div");
+    const ctaAnchor = document.createElement('a');
 
-    return imageFrame;
+    frame.classList.add("frame");
+    frame.style.transitionProperty = "opacity, margin-top";
+    frame.style.transitionDuration = `${transitionDuration / 1000}s, ${transitionDuration / 1000}s`;
+    frame.style.transitionTimingFunction = "ease, ease";
+    header.classList.add("image-header");
+    cta.classList.add("image-cta");
+    description.classList.add("image-detail");
+    img.loading = "lazy";
+    img.style.cursor = "pointer"; 
+
+    // Get random width.
+    const widthClass = widthClasses[Math.floor(Math.random() * widthClasses.length)];
+    header.classList.add(widthClass);
+    img.classList.add(widthClass);
+
+    img.src = src;
+
+    cta.appendChild(ctaAnchor);
+    header.appendChild(cta);
+    header.appendChild(description);
+    frame.appendChild(header);
+    frame.appendChild(img);
+    frames.appendChild(frame);
+
+    return frame;
   };
 
   const positionAndShowFrame = async (imageFrame) => {
@@ -273,9 +257,13 @@
         // else use a random attachment
         const imageName = item.hasVideo ? '_videoThumbnail.png' : item.attachments[Math.floor(Math.random() * item.attachments.length)];
         const videoName = item.hasVideo ? './' + item.id + '/' + item.videoFilename : null;
-        return frameImage(item.id, './' + item.id + '/' + imageName, formatTimestamp(item.created), item.title, item.externalLink, videoName);
+        const src = './' + item.id + '/' + imageName;
+        const frame = frameImage(src);
+        decorateFrame(frame, item.id, src, formatTimestamp(item.created), item.externalLink, videoName);
+        return frame;
       }
     );
+
     for (const frame of frames) 
       await positionAndShowFrame(frame);
   };
