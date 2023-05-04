@@ -3,16 +3,10 @@
 {% block head %}
 {% include 'modules/deps.html' %}
 {% include 'modules/ethers.html' %}
-{% include 'modules/siwe.html' %}
+{% include 'modules/utils.html' %}
+{% include 'modules/tx.html' %}
+{% include 'modules/record_and_collect.html' %}
 {% include 'modules/planet_seo.html' %}
-<!-- Pagination -->
-{% if previous_page %}
-<link rel="prev" href="./{{ previous_page }}">
-{% endif %}
-{% if next_page %}
-<link rel="next" href="./{{ next_page }}">
-{% endif %}
-{% endblock %}
 
 {% block dom_ready %}
 {% endblock %}
@@ -44,7 +38,6 @@
   const frames = document.getElementById("frames");
   const horizontalMargin = 24;
   const verticalMargin = 10;
-  const headerHeight = 60;
   const transitionDuration = 300;
   const widthClasses = ["w1", "w2", "w3"];
   const loadingAnimationPace = 100;
@@ -141,20 +134,23 @@
 
     const imgCta = document.createElement("div");
     const anchor = document.createElement('a');
-    // anchor.href = `javascript:connectWallet("${itemID}");`;
     anchor.textContent = '[record]';
     anchor.style.textDecoration = "line-through";
     imgCta.appendChild(anchor);
     imgCta.classList.add("image-cta");
 
+    const projectId = 654;
+    const category = 2;
+    const quantity = 3;
+    const price = 100000000000000000;
     const cidUrl = `{{ assets_prefix }}${itemID}/nft.json.cid.txt`;
     fetch(cidUrl)
       .then(response => response.text())
       .then(data => {
         const encodedIPFSUri = encodeIPFSUri(data);
-        console.log(`encodedIPFSUri from ${data} to ${encodedIPFSUri}`);
-        anchor.href = `javascript:connectWallet("${encodedIPFSUri}");`;
-      });
+        anchor.href = `javascript:recordAndCollect(${projectId}, ${category}, ${quantity}, "${price}", "${encodedIPFSUri}");`;
+      }
+    );
 
     if (link) {
       img.addEventListener("click", () => window.open(link, "_blank"));
@@ -264,19 +260,6 @@
     });
   }
 
-  const formatTimestamp = (timestamp) => {
-    const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-
-    const dateObj = new Date((timestamp + 978307200) * 1000);
-    const month = months[dateObj.getMonth()];
-    const day = dateObj.getDate();
-    const year = dateObj.getFullYear() - 30; // rewind 30 years for fun.
-
-    return `${month} ${day}, ${year}`; // at ${hours12}:${minutes}:${seconds} ${ampm}`;
-  }
-
   const loadImageFrames = async () => {
     const response = await fetch(
       `{{ assets_prefix }}planet.json`
@@ -293,7 +276,8 @@
         return frameImage(item.id, './' + item.id + '/' + imageName, formatTimestamp(item.created), item.title, item.externalLink, videoName);
       }
     );
-    for (const frame of frames) await positionAndShowFrame(frame);
+    for (const frame of frames) 
+      await positionAndShowFrame(frame);
   };
 
   loadImageFrames();

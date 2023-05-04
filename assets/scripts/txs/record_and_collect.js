@@ -1,22 +1,5 @@
-function encodeIPFSUri(cid) {
-  const decodedCID = base32.decode.asBytes(cid.toUpperCase());
-  const slicedCID = decodedCID.slice(3);
-  const uint8Array = new Uint8Array(slicedCID);
-  let hex = '0x';
-  for (let i = 0; i < uint8Array.length; i++) {
-    hex += uint8Array[i].toString(16).padStart(2, '0');
-  }
-  return hex;
-}
-
-async function connectWallet(encodedIPFSUri) {
+const recordAndCollect = async (projectId, category, quantity, price, encodedIPFSUri) => {
     const croptopContract = "0xa079c8fcecd912e005410a065c6346c5501f4527";
-    const projectId = 654;
-    // const encodedIPFSUri = "0x9618af14f80eb618f518b749ea55610aaf0c671a481fdd36eee6854c4a548ef2";
-    const category = 2;
-    const price = BigInt("100000000000000000");
-    const quantity = 3;
-
     const contractABI = [
     {
       "inputs": [
@@ -292,13 +275,13 @@ async function connectWallet(encodedIPFSUri) {
       "type": "function"
     }
   ];
-    
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
-    const beneficiary = signer.address;
-    const contract = new ethers.Contract(croptopContract, contractABI, signer);
-    const post = {quantity, price, category, encodedIPFSUri};
-    const result = await contract.mint(projectId, [post], beneficiary, {
-      value: price + (price / 20n) 
-    });
+
+
+  const beneficiary = (await getSigner()).address;
+  const bigIntPrice = BigInt(price);
+  const post = {quantity, price: bigIntPrice, category, encodedIPFSUri};
+  const divisor = BigInt("20");
+  return await sign(croptopContract, contractABI, "mint", [projectId, [post], beneficiary, {
+      value: bigIntPrice + (bigIntPrice / divisor) 
+  }]);
 }
