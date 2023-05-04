@@ -403,6 +403,7 @@ hr {
 
 #loading-animation {
   padding-left: 20px;
+  color: var(--foreground-color);
 }
 
 img.avatar {
@@ -434,7 +435,7 @@ img.avatar {
   max-width: var(--content-max-width);
   margin-left: auto;
   margin-right: auto;
-  padding: 0px 20px 0px 20px;
+  padding: 0px 20px 10px 20px;
 }
 
 .nav {
