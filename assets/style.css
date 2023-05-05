@@ -22,6 +22,8 @@
   --code-background-color: #f8f8f8;
   --modal-background-color: rgba(255, 255, 255, 0.9);
   --modal-background-color-fallback: #fff;
+  --margin-inline-start: 20px;
+  --margin-inline-end: 20px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -197,8 +199,8 @@ hr {
 }
 
 .content>p {
-  margin-inline-start: 20px;
-  margin-inline-end: 20px;
+  margin-inline-start: var(--margin-inline-start);
+  margin-inline-end: var(--margin-inline-end);
 }
 
 .content>p:has(img) {
@@ -213,9 +215,12 @@ hr {
 /* start: table */
 
 .content table {
+  box-sizing: border-box;
   table-layout: fixed;
-  width: 100%;
+  max-width: 100%;
   padding: 0;
+  margin-inline-start: var(--margin-inline-start);
+  margin-inline-end: var(--margin-inline-start);
   border-collapse: collapse;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02),
     0 2px 4px rgba(0, 0, 0, 0.02),
@@ -495,6 +500,13 @@ hr {
   max-width: var(--content-max-width);
   margin-left: auto;
   margin-right: auto;
+  margin-inline-start: var(--margin-inline-start);
+  margin-inline-end: var(--margin-inline-end);
+}
+
+h1,.date {
+  margin-inline-start: initial;
+  margin-inline-end: initial;
 }
 
 ul,
