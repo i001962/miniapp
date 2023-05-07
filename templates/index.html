@@ -122,8 +122,8 @@
     const price = 100000000000000000;
     const cidUrl = `{{ assets_prefix }}${itemId}/nft.json.cid.txt`;
     const cid = await (await fetch(cidUrl)).text();
-    { const encodedIPFSUri = cid ? encodeIPFSUri(cid) : ""; }
-    { ctaAnchor.href = `javascript:recordAndCollect(${projectId}, ${category}, ${quantity}, "${price}", "${encodedIPFSUri}");`; }
+    const encodedIPFSUri = cid ? encodeIPFSUri(cid) : "";
+    ctaAnchor.href = `javascript:recordAndCollect(${projectId}, ${category}, ${quantity}, "${price}", "${encodedIPFSUri}");`;
 
     if (link) {
       img.addEventListener("click", () => window.open(link, "_blank"));
