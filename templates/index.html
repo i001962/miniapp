@@ -110,7 +110,7 @@
   const decorateFrame = async (frame, itemId, src, desc, link, video) => {
 
     const ctaAnchor = frame.querySelector('a');;
-    const description = frame.querySelector('div.image-description');
+    const description = frame.querySelector('div.image-detail');
     const img = frame.querySelector('img');
 
     ctaAnchor.textContent = '[collect]';
@@ -122,8 +122,8 @@
     const price = 100000000000000000;
     const cidUrl = `{{ assets_prefix }}${itemId}/nft.json.cid.txt`;
     const cid = await (await fetch(cidUrl)).text();
-    const encodedIPFSUri = encodeIPFSUri(cid);
-    ctaAnchor.href = `javascript:recordAndCollect(${projectId}, ${category}, ${quantity}, "${price}", "${encodedIPFSUri}");`;
+    {# const encodedIPFSUri = cid ? encodeIPFSUri(cid) : ""; #}
+    {# ctaAnchor.href = `javascript:recordAndCollect(${projectId}, ${category}, ${quantity}, "${price}", "${encodedIPFSUri}");`; #}
 
     if (link) {
       img.addEventListener("click", () => window.open(link, "_blank"));
@@ -181,7 +181,7 @@
     frame.style.transitionTimingFunction = "ease, ease";
     header.classList.add("image-header");
     cta.classList.add("image-cta");
-    description.classList.add("image-description");
+    description.classList.add("image-detail");
     img.loading = "lazy";
     img.style.cursor = "pointer";
 

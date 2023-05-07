@@ -1,13 +1,12 @@
 const encodeIPFSUri = (cid) => {
-  const decodedCID = bs58.decode(cid);
-  const slicedCID = decodedCID.slice(2);
+  const decodedCID = base58.decode.asBytes(cid.toUpperCase());
+  const slicedCID = decodedCID.slice(3);
   const uint8Array = new Uint8Array(slicedCID);
   let hex = '0x';
   for (let i = 0; i < uint8Array.length; i++) 
     hex += uint8Array[i].toString(16).padStart(2, '0');
   return hex;
 }
-
 
 const formatTimestamp = (timestamp) => {
   const months = [
