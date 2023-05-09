@@ -660,7 +660,16 @@ footer {
   text-align: center;
   color: var(--foreground-secondary-color);
   padding: 10px 0;
-  height: 150px;
+}
+
+#modal-link {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: var(--link-color);
+  padding: 10px 0;
 }
 
 /* Add Animation */

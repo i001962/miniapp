@@ -5,7 +5,7 @@
 {% include 'modules/ethers.html' %}
 {% include 'modules/utils.html' %}
 {% include 'modules/tx.html' %}
-{% include 'modules/record_and_collect.html' %}
+{% include 'modules/collect.html' %}
 {% include 'modules/planet_seo.html' %}
 {% endblock %}
 
@@ -34,6 +34,7 @@
   <img class="modal-content" id="modal-image">
   <video class="modal-content" id="modal-video"></video>
   <div id="modal-caption"></div>
+  <div id="modal-link"></div>
 </div>
 <script>
   const frames = document.getElementById("frames");
@@ -125,46 +126,44 @@
     const encodedIPFSUri = cid ? encodeIPFSUri(cid) : "";
     ctaAnchor.href = `javascript:recordAndCollect(${projectId}, ${category}, ${quantity}, "${price}", "${encodedIPFSUri}");`;
 
-    if (link) {
-      img.addEventListener("click", () => window.open(link, "_blank"));
-    } else {
-      img.addEventListener("click", () => {
-        const modal = document.getElementById("modal");
-        modal.style.display = "block";
-        modal.addEventListener("click", () => {
-          if (video) modalVideo.pause();
-          modal.style.display = "none";
-        });
-        const modalImage = document.getElementById("modal-image");
-        const modalVideo = document.getElementById("modal-video");
-
-        if (video) {
-          modalImage.style.display = "none"
-          modalVideo.style.display = "block"
-          modalVideo.autoplay = true;
-          modalVideo.loop = true;
-          modalVideo.muted = true;
-          modalVideo.controls = true;
-          modalImage.src = "";
-          modalVideo.src = video;
-
-          modalVideo.addEventListener('click', (event) => event.stopPropagation());
-        } else {
-          modalImage.style.display = "block"
-          modalVideo.style.display = "none"
-          modalVideo.src = "";
-          modalImage.src = src;
-          modalImage.addEventListener('click', (event) => event.stopPropagation());
-        }
-        const modalCaption = document.getElementById("modal-caption");
-        modalCaption.innerHTML = desc;
-        const span = document.getElementsByClassName("close")[0];
-          span.onclick = () => {
-          if (video) modalVideo.pause();
-          modal.style.display = "none";
-        }
+    img.addEventListener("click", () => {
+      const modal = document.getElementById("modal");
+      modal.style.display = "block";
+      modal.addEventListener("click", () => {
+        if (video) modalVideo.pause();
+        modal.style.display = "none";
       });
-    }
+      const modalImage = document.getElementById("modal-image");
+      const modalVideo = document.getElementById("modal-video");
+
+      if (video) {
+        modalImage.style.display = "none"
+        modalVideo.style.display = "block"
+        modalVideo.autoplay = true;
+        modalVideo.loop = true;
+        modalVideo.muted = true;
+        modalVideo.controls = true;
+        modalImage.src = "";
+        modalVideo.src = video;
+
+        modalVideo.addEventListener('click', (event) => event.stopPropagation());
+      } else {
+        modalImage.style.display = "block"
+        modalVideo.style.display = "none"
+        modalVideo.src = "";
+        modalImage.src = src;
+        modalImage.addEventListener('click', (event) => event.stopPropagation());
+      }
+      const modalCaption = document.getElementById("modal-caption");
+      const modalLink = document.getElementById("modal-link");
+      modalCaption.innerHTML = desc;
+      modalLink.innerHTML = `<a href="${link} target="_blank">${ link}</a>`;
+      const span = document.getElementsByClassName("close")[0];
+      span.onclick = () => {
+        if (video) modalVideo.pause();
+        modal.style.display = "none";
+      }
+    });
   }
 
   const frameImage = (src) => {

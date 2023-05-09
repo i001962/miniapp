@@ -394,7 +394,7 @@ const recordAndCollect = async (projectId, category, quantity, price, encodedIPF
   const bigIntPrice = BigInt(price);
   const post = {quantity, price: bigIntPrice, category, encodedIPFSUri};
   const divisor = BigInt("20");
-  return await sign(croptopContract, contractABI, "mint", [projectId, [post], beneficiary, {
+  return await sign(croptopContract, contractABI, "collect", [projectId, [post], beneficiary, {
       value: bigIntPrice + (bigIntPrice / divisor) 
   }]);
 }
