@@ -1,5 +1,5 @@
 const recordAndCollect = async (projectId, category, quantity, price, encodedIPFSUri) => {
-    const croptopContract = "0xa079c8fcecd912e005410a065c6346c5501f4527";
+    const croptopContract = "0x7183805a74997f32c1f4e2122869b034526ea02a";
     const contractABI = [
     {
       "inputs": [
@@ -12,11 +12,6 @@ const recordAndCollect = async (projectId, category, quantity, price, encodedIPF
           "internalType": "uint256",
           "name": "_feeProjectId",
           "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "_owner",
-          "type": "address"
         }
       ],
       "stateMutability": "nonpayable",
@@ -30,6 +25,11 @@ const recordAndCollect = async (projectId, category, quantity, price, encodedIPF
     {
       "inputs": [],
       "name": "INSUFFICIENT_AMOUNT",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "INSUFFICIENT_QUANTITY",
       "type": "error"
     },
     {
@@ -48,30 +48,16 @@ const recordAndCollect = async (projectId, category, quantity, price, encodedIPF
       "type": "error"
     },
     {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "previousOwner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "OwnershipTransferred",
-      "type": "event"
-    },
-    {
       "inputs": [
         {
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
         },
         {
           "internalType": "uint256",
@@ -94,13 +80,45 @@ const recordAndCollect = async (projectId, category, quantity, price, encodedIPF
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "_percent",
+          "name": "_projectId",
           "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "encodedIPFSUri",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint40",
+              "name": "quantity",
+              "type": "uint40"
+            },
+            {
+              "internalType": "uint88",
+              "name": "price",
+              "type": "uint88"
+            },
+            {
+              "internalType": "uint16",
+              "name": "category",
+              "type": "uint16"
+            }
+          ],
+          "internalType": "struct Post[]",
+          "name": "_posts",
+          "type": "tuple[]"
+        },
+        {
+          "internalType": "address",
+          "name": "_beneficiary",
+          "type": "address"
         }
       ],
-      "name": "changeFee",
+      "name": "collect",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -113,6 +131,11 @@ const recordAndCollect = async (projectId, category, quantity, price, encodedIPF
         {
           "components": [
             {
+              "internalType": "address",
+              "name": "nft",
+              "type": "address"
+            },
+            {
               "internalType": "uint256",
               "name": "category",
               "type": "uint256"
@@ -120,6 +143,11 @@ const recordAndCollect = async (projectId, category, quantity, price, encodedIPF
             {
               "internalType": "uint256",
               "name": "minimumPrice",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minimumQuantity",
               "type": "uint256"
             }
           ],
@@ -180,6 +208,11 @@ const recordAndCollect = async (projectId, category, quantity, price, encodedIPF
           "type": "uint256"
         },
         {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
@@ -200,82 +233,162 @@ const recordAndCollect = async (projectId, category, quantity, price, encodedIPF
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "_projectId",
+          "name": "",
           "type": "uint256"
         },
-        {
-          "components": [
-            {
-              "internalType": "bytes32",
-              "name": "encodedIPFSUri",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "uint40",
-              "name": "quantity",
-              "type": "uint40"
-            },
-            {
-              "internalType": "uint88",
-              "name": "price",
-              "type": "uint88"
-            },
-            {
-              "internalType": "uint16",
-              "name": "category",
-              "type": "uint16"
-            }
-          ],
-          "internalType": "struct Post[]",
-          "name": "_posts",
-          "type": "tuple[]"
-        },
-        {
-          "internalType": "address",
-          "name": "_beneficiary",
-          "type": "address"
-        }
-      ],
-      "name": "mint",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "owner",
-      "outputs": [
         {
           "internalType": "address",
           "name": "",
           "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "minPostQuantityFor",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "renounceOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "tierIdForEncodedIPFSUriOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
         {
+          "internalType": "uint256",
+          "name": "_projectId",
+          "type": "uint256"
+        },
+        {
           "internalType": "address",
-          "name": "newOwner",
+          "name": "_nft",
           "type": "address"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "_encodedIPFSUris",
+          "type": "bytes32[]"
         }
       ],
-      "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "name": "tiersFor",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "contributionFloor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lockedUntil",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "remainingQuantity",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "initialQuantity",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "votingUnits",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "reservedRate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "reservedTokenBeneficiary",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "royaltyRate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "royaltyBeneficiary",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "encodedIPFSUri",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint256",
+              "name": "category",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "allowManualMint",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "transfersPausable",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct JB721Tier[]",
+          "name": "tiers",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     }
   ];
-
 
   const beneficiary = (await getSigner()).address;
   const bigIntPrice = BigInt(price);
