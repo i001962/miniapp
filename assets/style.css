@@ -708,6 +708,73 @@ footer {
   cursor: pointer;
 }
 
+/* Mint Form */
+
+#mint-form {
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  max-width: 80vw;
+}
+
+#mint-quantity-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 150px;
+  gap: 10px;
+}
+
+.mint-quantity-label {
+  text-align: center;
+}
+
+.mint-quantity {
+  width: 150px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mint-quantity input {
+  width: 50px;
+  border: 0;
+  line-height: 30px;
+  font-size: 20px;
+  text-align: center;
+  background: #0052cc;
+  color: #fff;
+  appearance: none;
+  outline: 0;
+}
+
+.mint-quantity span {
+  display: block;
+  font-size: 25px;
+  padding: 0 10px;
+  cursor: pointer;
+  color: #0052cc;
+  user-select: none;
+}
+
+#mint-to-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 10px;
+}
+
+.sl {
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid var(--border-color);
+  padding: 4px;
+  border-radius: 4px;
+}
+
 @media screen and (max-width: 768px) {
   :root {
     --item-gap: 15px;

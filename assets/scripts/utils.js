@@ -23,8 +23,22 @@ const formatTimestamp = (timestamp) => {
 
 const {CID} = Multiformats;
 
-function convertCIDv1toCIDv0(cid) {
-  const cidv1 = CID.parse(cid);
-  const v0 = cidv1.toV0();
-  return v0.toString();
+const increaseQuantity = (a, b) => {
+  let input = b.previousElementSibling;
+  let value = parseInt(input.value, 10);
+  value = isNaN(value) ? 0 : value;
+  value++;
+  input.value = value;
+  a.stopPropagation();
+}
+
+const decreaseQuantity = (a, b) => {
+  let input = b.nextElementSibling;
+  let value = parseInt(input.value, 10);
+  if (value > 1) {
+    value = isNaN(value) ? 0 : value;
+    value--;
+    input.value = value;
+  }
+  a.stopPropagation();
 }

@@ -33,6 +33,22 @@
   <span class="close">&times;</span>
   <img class="modal-content" id="modal-image">
   <video class="modal-content" id="modal-video"></video>
+  <div class="modal-content" id="mint-form">
+    <div id="mint-quantity-container">
+      <div class="mint-quantity-label">Quantity</div>
+      <div class="mint-quantity">
+        <span class="mint-quantity-down" onClick='decreaseQuantity(event, this)'>-</span>
+        <input type="text" value="1">
+        <span class="mint-quantity-up" onClick='increaseQuantity(event, this)'>+</span>
+      </div>
+    </div>
+    <div id="mint-to-container">
+      <div class="mint-to-label">Beneficiary</div>
+      <div class="mint-to">
+        <input type="text" placeholder="Enter address" class="sl">
+      </div>
+    </div>
+  </div>
   <div id="modal-caption"></div>
   <div id="modal-link"></div>
 </div>
@@ -129,7 +145,8 @@
     img.addEventListener("click", () => {
       const modal = document.getElementById("modal");
       modal.style.display = "block";
-      modal.addEventListener("click", () => {
+      modal.addEventListener("click", (e) => {
+        if (e.target !== modal) return;
         if (video) modalVideo.pause();
         modal.style.display = "none";
       });
