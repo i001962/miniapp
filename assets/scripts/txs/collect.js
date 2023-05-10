@@ -1,4 +1,55 @@
-const recordAndCollect = async (projectId, category, quantity, price, encodedIPFSUri) => {
+const mint = async (encodedIPFSUri) => {
+  const modal = document.getElementById("modal");
+  modal.style.display = "block";
+
+  const modalImage = document.getElementById("modal-image");
+  const modalVideo = document.getElementById("modal-video");
+
+  modalImage.style.display = "none";
+  modalVideo.style.display = "none";
+
+  const modalCaption = document.getElementById("modal-caption");
+  const modalLink = document.getElementById("modal-link");
+      
+  modalCaption.innerHTML = "";
+  modalLink.innerHTML = "";
+
+  const mintForm = document.getElementById("mint-form");
+  mintForm.style.display = "flex";
+
+  const connectedAddress = (await getSigner()).address;
+  const mintBeneficiary = document.getElementById("mint-beneficiary");
+  mintBeneficiary.value = connectedAddress;
+
+  const mintQuantity = document.getElementById("mint-quantity");
+
+  const mintButton = document.getElementById("mint-button");
+  mintButton.onclick = async () => {
+    const projectId = 670;
+    const category = 2;
+    const quantity = parseInt(mintQuantity.value, 10) || 1;
+    const price = "100000000000000000"; // 0.1 ETH
+    const beneficiary = mintBeneficiary.value;
+    
+    console.log("Minting with the following parameters:")
+    console.log(`Project ID: ${projectId}`);
+    console.log(`Category: ${category}`);
+    console.log(`Quantity: ${quantity}`);
+    console.log(`Price: ${price}`);
+    console.log(`Encoded IPFS URI: ${encodedIPFSUri}`);
+    console.log(`Beneficiary: ${beneficiary}`);
+
+    return await recordAndCollect(projectId, category, quantity, price, encodedIPFSUri, beneficiary);
+  }
+
+  const closeButton = document.getElementsByClassName("close")[0];
+  closeButton.onclick = () => {
+    modal.style.display = "none";
+    mintForm.style.display = "none";
+  }
+}
+
+const recordAndCollect = async (projectId, category, quantity, price, encodedIPFSUri, receiver) => {
     const croptopContract = "0x7183805a74997f32c1f4e2122869b034526ea02a";
     const contractABI = [
     {
@@ -390,7 +441,8 @@ const recordAndCollect = async (projectId, category, quantity, price, encodedIPF
     }
   ];
 
-  const beneficiary = (await getSigner()).address;
+  const beneficiary = receiver || (await getSigner()).address;
+
   const bigIntPrice = BigInt(price);
   const post = {quantity, price: bigIntPrice, category, encodedIPFSUri};
   const divisor = BigInt("20");
