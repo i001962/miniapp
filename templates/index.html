@@ -33,6 +33,27 @@
   <span class="close">&times;</span>
   <img class="modal-content" id="modal-image">
   <video class="modal-content" id="modal-video"></video>
+  <div class="modal-content" id="mint-form">
+    <div class="mint-form-top">
+      <div id="mint-quantity-container">
+        <div class="mint-quantity-label">Quantity</div>
+        <div class="mint-quantity-control">
+          <span class="mint-quantity-down" onClick='decreaseQuantity(event, this)'>-</span>
+          <input type="text" value="3" id="mint-quantity">
+          <span class="mint-quantity-up" onClick='increaseQuantity(event, this)'>+</span>
+        </div>
+      </div>
+      <div id="mint-to-container">
+        <div class="mint-to-label">Beneficiary</div>
+        <div class="mint-to">
+          <input type="text" placeholder="Enter address" class="sl" id="mint-beneficiary">
+        </div>
+      </div>
+    </div>
+    <div class="mint-form-bottom">
+      <button class="mint-button" id="mint-button">Mint</button>
+    </div>
+  </div>
   <div id="modal-caption"></div>
   <div id="modal-link"></div>
 </div>
@@ -124,12 +145,14 @@
     const cidUrl = `{{ assets_prefix }}${itemId}/nft.json.cid.txt`;
     const cid = await (await fetch(cidUrl)).text();
     const encodedIPFSUri = cid ? encodeIPFSUri(cid) : "";
-    ctaAnchor.href = `javascript:recordAndCollect(${projectId}, ${category}, ${quantity}, "${price}", "${encodedIPFSUri}");`;
+    // ctaAnchor.href = `javascript:recordAndCollect(${projectId}, ${category}, ${quantity}, "${price}", "${encodedIPFSUri}");`;
+    ctaAnchor.href = `javascript:mint("${encodedIPFSUri}");`;
 
     img.addEventListener("click", () => {
       const modal = document.getElementById("modal");
       modal.style.display = "block";
-      modal.addEventListener("click", () => {
+      modal.addEventListener("click", (e) => {
+        if (e.target !== modal) return;
         if (video) modalVideo.pause();
         modal.style.display = "none";
       });
@@ -158,8 +181,8 @@
       const modalLink = document.getElementById("modal-link");
       modalCaption.innerHTML = desc;
       modalLink.innerHTML = `<a href="${link} target="_blank">${ link}</a>`;
-      const span = document.getElementsByClassName("close")[0];
-      span.onclick = () => {
+      const closeButton = document.getElementsByClassName("close")[0];
+      closeButton.onclick = () => {
         if (video) modalVideo.pause();
         modal.style.display = "none";
       }
