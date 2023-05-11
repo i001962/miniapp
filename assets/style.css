@@ -754,7 +754,9 @@ footer {
   border: none;
   padding: 0px;
   outline: none;
+  cursor: pointer;
 }
+
 #collect-prompt-advanced {
   margin-top: 8px;
   background: none;
@@ -766,6 +768,7 @@ footer {
   padding: 0px;
   outline: none;
   text-align: left;
+  cursor: pointer;
 }
 
 #collect-button {
@@ -777,6 +780,7 @@ footer {
   border: none;
   padding: 4px 0px;
   outline: none;
+  cursor: pointer;
 }
 
 #collect-button:hover #collect-button-text {

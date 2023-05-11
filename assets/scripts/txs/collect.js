@@ -62,7 +62,7 @@ const collect = async (encodedIPFSUri) => {
   // }
 }
 
-const tx_collect = async (projectId, category, quantity, price, encodedIPFSUri, receiver) => {
+const tx_collect = async (projectId, category, quantity, price, encodedIPFSUri, beneficiary) => {
     const croptopContract = "0x7183805a74997f32c1f4e2122869b034526ea02a";
     const contractABI = [
     {
@@ -113,8 +113,7 @@ const tx_collect = async (projectId, category, quantity, price, encodedIPFSUri, 
     },
     {
       "inputs": [
-        {
-          "internalType": "uint256",
+        { "internalType": "uint256",
           "name": "",
           "type": "uint256"
         },
@@ -457,6 +456,7 @@ const tx_collect = async (projectId, category, quantity, price, encodedIPFSUri, 
   const bigIntPrice = BigInt(price);
   const post = {quantity, price: bigIntPrice, category, encodedIPFSUri};
   const divisor = BigInt("20");
+  if (!beneficiary) beneficiary = (await getSigner()).address;
   return await sign(croptopContract, contractABI, "collect", [projectId, [post], beneficiary, {
       value: bigIntPrice + (bigIntPrice / divisor) 
   }]);

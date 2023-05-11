@@ -216,16 +216,13 @@
       const collectPrice = document.getElementById("collect-price");
       const collectButton = document.getElementById("collect-button");
       
-      // Prefill values.
-      {# collectBeneficiary.value = connectedAddress; #}
-      
       // Submit the form.
       collectButton.onclick = async () => {
         const projectId = collectProjectID.value || 670;
         const category = collectCategory.value || 2;
         const quantity = parseInt(collectQuantity.value, 10) || 3;
         const price = `${Number(collectPrice.value) * 1_000_000_000_000_000_000}` || "100000000000000000"; // number * 1 ETH, default is 0.1 ETH
-        const beneficiary = collectBeneficiary.value;
+        const beneficiary = collectBeneficiary.value; 
         
         console.log("Collecting with the following parameters:")
         console.log(`Project ID: ${projectId}`);
