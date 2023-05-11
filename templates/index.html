@@ -30,51 +30,54 @@
 <div id="loading-animation"></div>
 <div id="frames"></div>
 <div id="modal" class="modal">
-  <span class="close">&times;</span>
-  <img class="modal-content" id="modal-image">
-  <video class="modal-content" id="modal-video"></video>
-  <div class="modal-content" id="mint-form">
-    <div class="mint-form-top">
-      <div id="mint-quantity-container">
-        <div class="mint-quantity-label">Quantity</div>
-        <div class="mint-quantity-control">
-          <span class="mint-quantity-down" onClick='decreaseQuantity(event, this)'>-</span>
-          <input type="text" value="3" id="mint-quantity">
-          <span class="mint-quantity-up" onClick='increaseQuantity(event, this)'>+</span>
-        </div>
+  <div class="modal-content">
+    <div id="modal-caption"></div>
+    <div id="modal-link"></div>
+    <div id="collect-form">
+      <span id="collect-prompt">This file isn't yet onchain. Record onchain to collect a first copy.</span>
+      <div class="collect-form-middle">
+        <details>
+          <summary id="collect-prompt-options">options</summary>
+          <div class="collect-form-top">
+            <div id="collect-quantity-container">
+              <div class="collect-quantity-label">Total supply</div>
+              <div class="collect-quantity-control">
+                <input type="number" placeholder="10" value="10" class="sl" id="collect-quantity" style="width: 100%; flex: 1;">
+              </div>
+            </div>
+            <div class="collect-form-advanced-item">
+              <div class="collect-form-advanced-label">Price</div>
+              <div class="collect-form-advanced-value"><span class="ether">Ξ</span><input type="text" class="sl" value="0.1" id="collect-price" style="width: 100%;"></div>
+            </div>
+            <div id="collect-to-container">
+              <div class="collect-to-label">Which address gets the first copy</div>
+              <div class="collect-to">
+                <input type="text" placeholder="Defaults to you" class="sl" id="collect-beneficiary" style="width: 100%; flex: 2;">
+              </div>
+            </div>
+          </div>
+            <details>
+              <summary id="collect-prompt-advanced">advanced</summary>
+              <div class="collect-form-advanced">
+                <div class="collect-form-advanced-item">
+                  <div class="collect-form-advanced-label">Project ID</div>
+                  <div class="collect-form-advanced-value"><input type="text" class="sl" value="670" id="collect-project-id" style="width: 100%;"></div>
+                </div>
+                <div class="collect-form-advanced-item">
+                  <div class="collect-form-advanced-label">NFT Category</div>
+                  <div class="collect-form-advanced-value"><input type="text" class="sl" value="2" id="collect-category" style="width: 100%;"></div>
+                </div>
+            </details>
+        </details>
       </div>
-      <div id="mint-to-container">
-        <div class="mint-to-label">Beneficiary</div>
-        <div class="mint-to">
-          <input type="text" placeholder="Enter address" class="sl" id="mint-beneficiary" style="width: 100%; flex: 1;">
-        </div>
+      <div class="collect-form-bottom">
+        <div id="collect-message"></div>
+        <div><button id="collect-button">[<span id="collect-button-text">record & collect</span>]</button></div>
       </div>
     </div>
-    <div class="mint-form-middle">
-      <details>
-        <summary>advanced options</summary>
-        <div class="mint-form-advanced">
-          <div class="mint-form-advanced-item">
-            <div class="mint-form-advanced-label">Project ID</div>
-            <div class="mint-form-advanced-value"><input type="text" class="sl" value="670" id="mint-project-id" style="width: 100%;"></div>
-          </div>
-          <div class="mint-form-advanced-item">
-            <div class="mint-form-advanced-label">Category</div>
-            <div class="mint-form-advanced-value"><input type="text" class="sl" value="2" id="mint-category" style="width: 100%;"></div>
-          </div>
-          <div class="mint-form-advanced-item">
-            <div class="mint-form-advanced-label">Price</div>
-            <div class="mint-form-advanced-value"><span class="ether">Ξ</span><input type="text" class="sl" value="0.1" id="mint-price" style="width: 100%;"></div>
-          </div>
-      </details>
-    </div>
-    <div class="mint-form-bottom">
-      <div id="mint-message"></div>
-      <div><button class="mint-button" id="mint-button">Collect</button></div>
-    </div>
+    <img id="modal-image"></img> 
+    <video id="modal-video"></video>
   </div>
-  <div id="modal-caption"></div>
-  <div id="modal-link"></div>
 </div>
 <script>
   const frames = document.getElementById("frames");
@@ -160,8 +163,7 @@
     const cidUrl = `{{ assets_prefix }}${itemId}/nft.json.cid.txt`;
     const cid = await (await fetch(cidUrl)).text();
     const encodedIPFSUri = cid ? encodeIPFSUri(cid) : "";
-    // ctaAnchor.href = `javascript:recordAndCollect(${projectId}, ${category}, ${quantity}, "${price}", "${encodedIPFSUri}");`;
-    ctaAnchor.href = `javascript:mint("${encodedIPFSUri}");`;
+    ctaAnchor.href = `javascript:collect("${encodedIPFSUri}");`;
 
     img.addEventListener("click", () => {
       const modal = document.getElementById("modal");
@@ -173,10 +175,8 @@
       });
       const modalImage = document.getElementById("modal-image");
       const modalVideo = document.getElementById("modal-video");
-      const mintForm = document.getElementById("mint-form");
 
       if (video) {
-        mintForm.style.display = "none";
         modalImage.style.display = "none"
         modalVideo.style.display = "block"
         modalVideo.autoplay = true;
@@ -185,24 +185,55 @@
         modalVideo.controls = true;
         modalImage.src = "";
         modalVideo.src = video;
-
         modalVideo.addEventListener('click', (event) => event.stopPropagation());
       } else {
-        mintForm.style.display = "none";
         modalImage.style.display = "block"
         modalVideo.style.display = "none"
         modalVideo.src = "";
         modalImage.src = src;
         modalImage.addEventListener('click', (event) => event.stopPropagation());
       }
+
       const modalCaption = document.getElementById("modal-caption");
       const modalLink = document.getElementById("modal-link");
       modalCaption.innerHTML = desc;
       modalLink.innerHTML = `<a href="${link} target="_blank">${ link}</a>`;
-      const closeButton = document.getElementsByClassName("close")[0];
-      closeButton.onclick = () => {
-        if (video) modalVideo.pause();
-        modal.style.display = "none";
+      {# const closeButton = document.getElementsByClassName("close")[0]; #}
+      {# closeButton.onclick = () => { #}
+      {#   if (video) modalVideo.pause(); #}
+      {#   modal.style.display = "none"; #}
+      {# } #}
+
+      // Get the form info.
+      const collectForm = document.getElementById("collect-form");
+      collectForm.style.display = "block";
+      const collectBeneficiary = document.getElementById("collect-beneficiary");
+      const collectQuantity = document.getElementById("collect-quantity");
+      const collectCategory = document.getElementById("collect-category");
+      const collectProjectID = document.getElementById("collect-project-id");
+      const collectPrice = document.getElementById("collect-price");
+      const collectButton = document.getElementById("collect-button");
+      
+      // Prefill values.
+      {# collectBeneficiary.value = connectedAddress; #}
+      
+      // Submit the form.
+      collectButton.onclick = async () => {
+        const projectId = collectProjectID.value || 670;
+        const category = collectCategory.value || 2;
+        const quantity = parseInt(collectQuantity.value, 10) || 3;
+        const price = `${Number(collectPrice.value) * 1_000_000_000_000_000_000}` || "100000000000000000"; // number * 1 ETH, default is 0.1 ETH
+        const beneficiary = collectBeneficiary.value;
+        
+        console.log("Collecting with the following parameters:")
+        console.log(`Project ID: ${projectId}`);
+        console.log(`Category: ${category}`);
+        console.log(`Quantity: ${quantity}`);
+        console.log(`Price: ${price}`);
+        console.log(`Encoded IPFS URI: ${encodedIPFSUri}`);
+        console.log(`Beneficiary: ${beneficiary}`);
+
+        return await tx_collect(projectId, category, quantity, price, encodedIPFSUri, beneficiary);
       }
     });
   }
@@ -280,7 +311,7 @@
       `{{ assets_prefix }}planet.json`
     );
     const data = await response.json();
-    const frames = data['articles']
+    const frames = data['articles'].slice(0, 5)
       // Only if attachments have file extensions like ".jpg" ".png" ".gif"
       .filter(item => item.hasVideo === true || item.attachments.some(attachment => attachment.match(/\.(jpg|png|gif)$/i)))
       .map((item) => {
