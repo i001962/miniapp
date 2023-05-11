@@ -163,18 +163,20 @@
     const cidUrl = `{{ assets_prefix }}${itemId}/nft.json.cid.txt`;
     const cid = await (await fetch(cidUrl)).text();
     const encodedIPFSUri = cid ? encodeIPFSUri(cid) : "";
-    ctaAnchor.href = `javascript:collect("${encodedIPFSUri}");`;
-
-    img.addEventListener("click", () => {
+    
+    const clickHandler = (e) => {
+      e.preventDefault();
       const modal = document.getElementById("modal");
       modal.style.display = "block";
-      modal.addEventListener("click", (e) => {
+      const closeHandler = (e) => {
         if (e.target !== modal) return;
         if (video) modalVideo.pause();
         modal.style.display = "none";
-      });
+      }
       const modalImage = document.getElementById("modal-image");
       const modalVideo = document.getElementById("modal-video");
+
+      modal.addEventListener("click", closeHandler);
 
       if (video) {
         modalImage.style.display = "none"
@@ -235,7 +237,9 @@
 
         return await tx_collect(projectId, category, quantity, price, encodedIPFSUri, beneficiary);
       }
-    });
+    }
+    img.addEventListener("click", clickHandler);
+    ctaAnchor.addEventListener("click", clickHandler);
   }
 
   const frameImage = (src) => {
