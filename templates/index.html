@@ -311,7 +311,7 @@
       `{{ assets_prefix }}planet.json`
     );
     const data = await response.json();
-    const frames = data['articles'].slice(0, 5)
+    const frames = data['articles']
       // Only if attachments have file extensions like ".jpg" ".png" ".gif"
       .filter(item => item.hasVideo === true || item.attachments.some(attachment => attachment.match(/\.(jpg|png|gif)$/i)))
       .map((item) => {
