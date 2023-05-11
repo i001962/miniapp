@@ -46,12 +46,31 @@
       <div id="mint-to-container">
         <div class="mint-to-label">Beneficiary</div>
         <div class="mint-to">
-          <input type="text" placeholder="Enter address" class="sl" id="mint-beneficiary">
+          <input type="text" placeholder="Enter address" class="sl" id="mint-beneficiary" style="width: 100%; flex: 1;">
         </div>
       </div>
     </div>
+    <div class="mint-form-middle">
+      <details>
+        <summary>advanced options</summary>
+        <div class="mint-form-advanced">
+          <div class="mint-form-advanced-item">
+            <div class="mint-form-advanced-label">Project ID</div>
+            <div class="mint-form-advanced-value"><input type="text" class="sl" value="670" id="mint-project-id" style="width: 100%;"></div>
+          </div>
+          <div class="mint-form-advanced-item">
+            <div class="mint-form-advanced-label">Category</div>
+            <div class="mint-form-advanced-value"><input type="text" class="sl" value="2" id="mint-category" style="width: 100%;"></div>
+          </div>
+          <div class="mint-form-advanced-item">
+            <div class="mint-form-advanced-label">Price</div>
+            <div class="mint-form-advanced-value"><span class="ether">Ξ</span><input type="text" class="sl" value="0.1" id="mint-price" style="width: 100%;"></div>
+          </div>
+      </details>
+    </div>
     <div class="mint-form-bottom">
-      <button class="mint-button" id="mint-button">Mint</button>
+      <div id="mint-message"></div>
+      <div><button class="mint-button" id="mint-button">Collect</button></div>
     </div>
   </div>
   <div id="modal-caption"></div>
@@ -138,10 +157,6 @@
     ctaAnchor.textContent = '[collect]';
     description.innerHTML = desc;
 
-    const projectId = 670;
-    const category = 2;
-    const quantity = 3;
-    const price = 100000000000000000;
     const cidUrl = `{{ assets_prefix }}${itemId}/nft.json.cid.txt`;
     const cid = await (await fetch(cidUrl)).text();
     const encodedIPFSUri = cid ? encodeIPFSUri(cid) : "";
@@ -158,8 +173,10 @@
       });
       const modalImage = document.getElementById("modal-image");
       const modalVideo = document.getElementById("modal-video");
+      const mintForm = document.getElementById("mint-form");
 
       if (video) {
+        mintForm.style.display = "none";
         modalImage.style.display = "none"
         modalVideo.style.display = "block"
         modalVideo.autoplay = true;
@@ -171,6 +188,7 @@
 
         modalVideo.addEventListener('click', (event) => event.stopPropagation());
       } else {
+        mintForm.style.display = "none";
         modalImage.style.display = "block"
         modalVideo.style.display = "none"
         modalVideo.src = "";

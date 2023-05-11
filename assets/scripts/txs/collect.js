@@ -23,12 +23,16 @@ const mint = async (encodedIPFSUri) => {
 
   const mintQuantity = document.getElementById("mint-quantity");
 
+  const mintCategory = document.getElementById("mint-category");
+  const mintProjectID = document.getElementById("mint-project-id");
+  const mintPrice = document.getElementById("mint-price");
+
   const mintButton = document.getElementById("mint-button");
   mintButton.onclick = async () => {
-    const projectId = 670;
-    const category = 2;
-    const quantity = parseInt(mintQuantity.value, 10) || 1;
-    const price = "100000000000000000"; // 0.1 ETH
+    const projectId = mintProjectID.value || 670;
+    const category = mintCategory.value || 2;
+    const quantity = parseInt(mintQuantity.value, 10) || 3;
+    const price = `${Number(mintPrice.value) * 1_000_000_000_000_000_000}` || "100000000000000000"; // number * 1 ETH, default is 0.1 ETH
     const beneficiary = mintBeneficiary.value;
     
     console.log("Minting with the following parameters:")
