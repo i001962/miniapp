@@ -29,51 +29,56 @@
 {% include 'modules/nav.html' %}
 <div id="loading-animation"></div>
 <div id="frames"></div>
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <div id="modal-caption"></div>
-    <div id="modal-link"></div>
-    <div id="collect-form">
-      <span id="collect-prompt">This file isn't yet onchain. Record onchain to collect a first copy.</span>
-      <div class="collect-form-middle">
+<div id="modal">
+  <div id="modal-content">
+    <div id="modal-header">
+        <span id="frame-date"></span><span id="frame-name"></span>
+        <div id="modal-subtitle">
+            <span id="frame-link"></span>
+        </div>
+    </div>
+    <div id="form">
+      <span id="form-header">This file isn't yet onchain. Record onchain to collect a first copy.</span>
+      <div id="form-body">
         <details>
-          <summary id="collect-prompt-options">options</summary>
-          <div class="collect-form-top">
-            <div id="collect-quantity-container">
-              <div class="collect-quantity-label">Total supply</div>
-              <div class="collect-quantity-control">
-                <input type="number" placeholder="10" value="10" class="sl" id="collect-quantity" style="width: 100%; flex: 1;">
+          <summary id="form-options-toggle">options</summary>
+          <div class="form-section">
+            <div class="form-item" style="flex: 1;">
+              <div class="form-label">Price</div>
+              <div class="form-value">
+                <span class="ether">Ξ</span><input type="text" value="0.1" id="form-price-input">
               </div>
             </div>
-            <div class="collect-form-advanced-item">
-              <div class="collect-form-advanced-label">Price</div>
-              <div class="collect-form-advanced-value"><span class="ether">Ξ</span><input type="text" class="sl" value="0.1" id="collect-price" style="width: 100%;"></div>
-            </div>
-            <div id="collect-to-container">
-              <div class="collect-to-label">Which address gets the first copy</div>
-              <div class="collect-to">
-                <input type="text" placeholder="Defaults to you" class="sl" id="collect-beneficiary" style="width: 100%; flex: 2;">
+            <div class="form-item" style="flex: 3;">
+              <div class="form-label">Who gets the first copy <button id="load-address-button">[<span id="load-address-button-text">connect wallet</span>]</button></div>
+              <div class="form-value">
+                <input type="text" placeholder="Defaults to your address" id="form-beneficiary-input">
               </div>
             </div>
           </div>
-            <details>
-              <summary id="collect-prompt-advanced">advanced</summary>
-              <div class="collect-form-advanced">
-                <div class="collect-form-advanced-item">
-                  <div class="collect-form-advanced-label">Project ID</div>
-                  <div class="collect-form-advanced-value"><input type="text" class="sl" value="670" id="collect-project-id" style="width: 100%;"></div>
+          <details>
+            <summary id="form-advanced-toggle">advanced</summary>
+            <div class="form-section">
+              <div class="form-item" style="flex: 1;">
+                <div class="form-label">Project ID</div>
+                <div class="form-value"><input type="text" value="670" id="form-project-id-input"></div>
+              </div>
+              <div class="form-item" style="flex: 1;">
+                <div class="form-label">NFT Category</div>
+                <div class="form-value"><input type="text" value="2" id="form-nft-category-input"></div>
+              </div>
+              <div class="form-item" style="flex: 1;">
+                <div class="form-label">Total supply</div>
+                <div class="form-value">
+                  <input type="number" placeholder="10" value="10" id="form-total-supply-input">
                 </div>
-                <div class="collect-form-advanced-item">
-                  <div class="collect-form-advanced-label">NFT Category</div>
-                  <div class="collect-form-advanced-value"><input type="text" class="sl" value="2" id="collect-category" style="width: 100%;"></div>
-                </div>
-            </details>
+              </div>
+            </div>
+          </details>
         </details>
       </div>
-      <div class="collect-form-bottom">
-        <div id="collect-message"></div>
-        <div><button id="collect-button">[<span id="collect-button-text">record & collect</span>]</button></div>
-      </div>
+      <div id="form-message"></div>
+      <button id="form-button">[<span id="form-button-text">record & collect</span>]</button>
     </div>
     <img id="modal-image"></img>
     <video id="modal-video"></video>
@@ -151,14 +156,14 @@
     });
   };
 
-  const decorateFrame = async (frame, itemId, src, desc, link, video) => {
+  const decorateFrame = async (frame, itemId, src, date, name, link, video) => {
 
     const ctaAnchor = frame.querySelector('a');;
-    const description = frame.querySelector('div.image-detail');
+    const title = frame.querySelector('div.image-title');
     const img = frame.querySelector('img');
 
     ctaAnchor.textContent = '[collect]';
-    description.innerHTML = desc;
+    title.innerHTML = `<span><span class="image-date">${date} | </span>${ name }<span>`;
 
     const cidUrl = `{{ assets_prefix }}${itemId}/nft.json.cid.txt`;
     const cid = await (await fetch(cidUrl)).text();
@@ -167,16 +172,20 @@
     const clickHandler = (e) => {
       e.preventDefault();
       const modal = document.getElementById("modal");
+      const modalHeader = document.getElementById("modal-header");
+      const modalSubtitle = document.getElementById("modal-subtitle");
+      const modalContent = document.getElementById("modal-content");
+      const form = document.getElementById("form");
       modal.style.display = "block";
       const closeHandler = (e) => {
-        if (e.target !== modal) return;
+        if (e.target !== modal && e.target !== modalHeader && e.target !== modalSubtitle && e.target !== modalContent && e.target !== form) return; 
         if (video) modalVideo.pause();
         modal.style.display = "none";
       }
+      modal.addEventListener("click", closeHandler);
+
       const modalImage = document.getElementById("modal-image");
       const modalVideo = document.getElementById("modal-video");
-
-      modal.addEventListener("click", closeHandler);
 
       if (video) {
         modalImage.style.display = "none"
@@ -196,43 +205,41 @@
         modalImage.addEventListener('click', (event) => event.stopPropagation());
       }
 
-      const modalCaption = document.getElementById("modal-caption");
-      const modalLink = document.getElementById("modal-link");
-      modalCaption.innerHTML = desc;
+      const frameName = document.getElementById("frame-name");
+      const frameDate = document.getElementById("frame-date");
+      frameName.innerHTML = name;
+      frameDate.innerHTML = `${date} | `;
+    
       if (link) {
-        modalLink.style.display = "block";
-        modalLink.innerHTML = `<a href="${link} target="_blank">${link}</a>`;
+        modalSubtitle.style.display = "block";
+        const frameLink = document.getElementById("frame-link");
+        frameLink.innerHTML = `<a href="${link} target="_blank">${ link}</a>`;
       } else {
-        modalLink.innerHTML = "";
-        modalLink.style.display = "none";
+        modalSubtitle.style.display = "none";
       }
 
       // Get the form info.
-      const collectForm = document.getElementById("collect-form");
-      collectForm.style.display = "block";
-      const collectBeneficiary = document.getElementById("collect-beneficiary");
-      const collectQuantity = document.getElementById("collect-quantity");
-      const collectCategory = document.getElementById("collect-category");
-      const collectProjectID = document.getElementById("collect-project-id");
-      const collectPrice = document.getElementById("collect-price");
-      const collectButton = document.getElementById("collect-button");
+      form.style.display = "block";
+      const formBeneficiaryInput = document.getElementById("form-beneficiary-input");
+      const formTotalSupplyInput = document.getElementById("form-total-supply-input");
+      const formNftCategoryInput = document.getElementById("form-nft-category-input");
+      const formProjectIdInput = document.getElementById("form-project-id-input");
+      const formPriceInput = document.getElementById("form-price-input");
+      const formButton = document.getElementById("form-button");
 
+      const loadAddressButton = document.getElementById("load-address-button");
+      loadAddressButton.onclick = async () => {
+       formBeneficiaryInput.value = (await getSigner()).address;           
+      };
+      
       // Submit the form.
-      collectButton.onclick = async () => {
-        const projectId = collectProjectID.value || 670;
-        const category = collectCategory.value || 2;
-        const quantity = parseInt(collectQuantity.value, 10) || 3;
-        const price = `${Number(collectPrice.value) * 1_000_000_000_000_000_000}` || "100000000000000000"; // number * 1 ETH, default is 0.1 ETH
-        const beneficiary = collectBeneficiary.value;
-
-        console.log("Collecting with the following parameters:")
-        console.log(`Project ID: ${projectId}`);
-        console.log(`Category: ${category}`);
-        console.log(`Quantity: ${quantity}`);
-        console.log(`Price: ${price}`);
-        console.log(`Encoded IPFS URI: ${encodedIPFSUri}`);
-        console.log(`Beneficiary: ${beneficiary}`);
-
+      formButton.onclick = async () => {
+        const projectId = formProjectIdInput.value || 670;
+        const category = formNftCategoryInput.value || 2;
+        const quantity = parseInt(formTotalSupplyInput.value, 10) || 3;
+        const price = `${Number(formPriceInput.value) * 1_000_000_000_000_000_000}` || "100000000000000000"; // number * 1 ETH, default is 0.1 ETH
+        const beneficiary = formBeneficiaryInput.value; 
+        
         return await tx_collect(projectId, category, quantity, price, encodedIPFSUri, beneficiary);
       }
     }
@@ -243,7 +250,7 @@
   const frameImage = (src) => {
     const frame = document.createElement("div");
     const header = document.createElement("div");
-    const description = document.createElement("div");
+    const title = document.createElement("div");
     const img = document.createElement("img");
     const cta = document.createElement("div");
     const ctaAnchor = document.createElement('a');
@@ -254,7 +261,7 @@
     frame.style.transitionTimingFunction = "ease, ease";
     header.classList.add("image-header");
     cta.classList.add("image-cta");
-    description.classList.add("image-detail");
+    title.classList.add("image-title");
     img.loading = "lazy";
     img.style.cursor = "pointer";
 
@@ -267,7 +274,7 @@
 
     cta.appendChild(ctaAnchor);
     header.appendChild(cta);
-    header.appendChild(description);
+    header.appendChild(title);
     frame.appendChild(header);
     frame.appendChild(img);
     frames.appendChild(frame);
@@ -323,7 +330,7 @@
         const videoName = item.hasVideo ? './' + item.id + '/' + item.videoFilename : null;
         const src = './' + item.id + '/' + imageName;
         const frame = frameImage(src);
-        decorateFrame(frame, item.id, src, formatTimestamp(item.created), item.externalLink, videoName);
+        decorateFrame(frame, item.id, src, formatTimestamp(item.created), item.title, item.externalLink, videoName);
         return frame;
       }
     );
