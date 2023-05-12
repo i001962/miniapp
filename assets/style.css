@@ -706,24 +706,6 @@ footer {
   to {transform:scale(1)}
 }
 
-/* The Close Button */
-.close {
-  position: absolute;
-  top: 15px;
-  right: 35px;
-  color: var(--foreground-color);
-  font-size: 40px;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.close:hover,
-.close:focus {
-  color: var(--foreground-secondary-color);
-  text-decoration: none;
-  cursor: pointer;
-}
-
 /* Collect Form */
 
 #collect-form {
@@ -742,7 +724,7 @@ footer {
 
 #collect-prompt {
   color: var(--subtle-text-color);
-  font-size: 12px;     
+  font-size: 12px;
 }
 
 #collect-prompt-options {
@@ -784,7 +766,7 @@ footer {
 }
 
 #collect-button:hover #collect-button-text {
-  text-decoration: underline; 
+  text-decoration: underline;
 }
 
 .collect-form-middle {

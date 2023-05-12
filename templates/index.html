@@ -75,7 +75,7 @@
         <div><button id="collect-button">[<span id="collect-button-text">record & collect</span>]</button></div>
       </div>
     </div>
-    <img id="modal-image"></img> 
+    <img id="modal-image"></img>
     <video id="modal-video"></video>
   </div>
 </div>
@@ -163,7 +163,7 @@
     const cidUrl = `{{ assets_prefix }}${itemId}/nft.json.cid.txt`;
     const cid = await (await fetch(cidUrl)).text();
     const encodedIPFSUri = cid ? encodeIPFSUri(cid) : "";
-    
+
     const clickHandler = (e) => {
       e.preventDefault();
       const modal = document.getElementById("modal");
@@ -199,12 +199,13 @@
       const modalCaption = document.getElementById("modal-caption");
       const modalLink = document.getElementById("modal-link");
       modalCaption.innerHTML = desc;
-      modalLink.innerHTML = `<a href="${link} target="_blank">${ link}</a>`;
-      {# const closeButton = document.getElementsByClassName("close")[0]; #}
-      {# closeButton.onclick = () => { #}
-      {#   if (video) modalVideo.pause(); #}
-      {#   modal.style.display = "none"; #}
-      {# } #}
+      if (link) {
+        modalLink.style.display = "block";
+        modalLink.innerHTML = `<a href="${link} target="_blank">${link}</a>`;
+      } else {
+        modalLink.innerHTML = "";
+        modalLink.style.display = "none";
+      }
 
       // Get the form info.
       const collectForm = document.getElementById("collect-form");
@@ -215,15 +216,15 @@
       const collectProjectID = document.getElementById("collect-project-id");
       const collectPrice = document.getElementById("collect-price");
       const collectButton = document.getElementById("collect-button");
-      
+
       // Submit the form.
       collectButton.onclick = async () => {
         const projectId = collectProjectID.value || 670;
         const category = collectCategory.value || 2;
         const quantity = parseInt(collectQuantity.value, 10) || 3;
         const price = `${Number(collectPrice.value) * 1_000_000_000_000_000_000}` || "100000000000000000"; // number * 1 ETH, default is 0.1 ETH
-        const beneficiary = collectBeneficiary.value; 
-        
+        const beneficiary = collectBeneficiary.value;
+
         console.log("Collecting with the following parameters:")
         console.log(`Project ID: ${projectId}`);
         console.log(`Category: ${category}`);
