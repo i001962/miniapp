@@ -142,6 +142,10 @@ a:hover {
   color: var(--foreground-secondary-color);
   cursor: pointer;
 }
+.form-section-description {
+  margin-top: 12px;
+  color: var(--foreground-secondary-color);
+}
 .form-section {
   margin-top: 12px;
   display: flex;
