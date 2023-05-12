@@ -180,7 +180,7 @@
       const form = document.getElementById("form");
       modal.style.display = "block";
       const closeHandler = (e) => {
-        if (e.target !== modal && e.target !== modalHeader && e.target !== modalSubtitle && e.target !== modalContent && e.target !== form) return; 
+        if (e.target !== modal && e.target !== modalHeader && e.target !== modalSubtitle && e.target !== modalContent && e.target !== form) return;
         if (video) modalVideo.pause();
         modal.style.display = "none";
       }
@@ -211,11 +211,11 @@
       const frameDate = document.getElementById("frame-date");
       frameName.innerHTML = name;
       frameDate.innerHTML = `${date} | `;
-    
+
       if (link) {
         modalSubtitle.style.display = "block";
         const frameLink = document.getElementById("frame-link");
-        frameLink.innerHTML = `<a href="${link} target="_blank">${ link}</a>`;
+        frameLink.innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
       } else {
         modalSubtitle.style.display = "none";
       }
@@ -231,17 +231,17 @@
 
       const loadAddressButton = document.getElementById("load-address-button");
       loadAddressButton.onclick = async () => {
-       formBeneficiaryInput.value = (await getSigner()).address;           
+       formBeneficiaryInput.value = (await getSigner()).address;
       };
-      
+
       // Submit the form.
       formButton.onclick = async () => {
         const projectId = formProjectIdInput.value || 670;
         const category = formNftCategoryInput.value || 2;
         const quantity = parseInt(formTotalSupplyInput.value, 10) || 3;
         const price = `${Number(formPriceInput.value) * 1_000_000_000_000_000_000}` || "100000000000000000"; // number * 1 ETH, default is 0.1 ETH
-        const beneficiary = formBeneficiaryInput.value; 
-        
+        const beneficiary = formBeneficiaryInput.value;
+
         return await tx_collect(projectId, category, quantity, price, encodedIPFSUri, beneficiary);
       }
     }
