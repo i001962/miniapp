@@ -22,7 +22,7 @@
     {% if page_description_html.count > 0 %}<div class="site-about">{{ page_description_html }}</div>{% endif %}
   </div>
   <div class="site-detail">
-    <span>source</span>
+      <span><a href="https://croptop.eth.limo" target="_blank">source</a></span>
   </div>
   {% include 'modules/social_icons.html' %}
 </div>
@@ -38,11 +38,11 @@
         </div>
     </div>
     <div id="form">
-      <span id="form-header">This file isn't yet onchain. Record onchain to collect a first copy.</span>
+      <span id="form-header">This file isn't yet onchain. Record it onchain to collect a first copy.</span>
       <div id="form-body">
         <details>
           <summary id="form-options-toggle">options</summary>
-          <div class="form-section-description">Set the NFTs price and the address that will be sent its first copy that you are paying for.</div>
+          <div class="form-section-description">Set the NFT's price and the address that will be sent its first copy that you are paying for.</div>
           <div class="form-section">
             <div class="form-item" style="flex: 1;">
               <div class="form-label">Price</div>
@@ -57,9 +57,21 @@
               </div>
             </div>
           </div>
+          <div class="form-section-disclaimer">A network tax of 5% will be sent to the <a href="https://goerli.juicebox.money/v2/p/669" target="_blank">Croptop Publishing Network</a> in exchange for $CPN that goes to the author of this site.</div>
+            <details>
+              <summary id="form-disclaimer-toggle">Override $CPN beneficiary.</summary>
+              <div class="form-section">
+                <div class="form-item" style="flex: 1;">
+                  <div class="form-label">$CPN Beneficiary</div>
+                  <div class="form-value">
+                    <input type="text" placeholder="Defaults to the author of this site" id="form-cpn-beneficiary-input">
+                  </div>
+                </div>
+              </div>
+          </details>
           <details>
             <summary id="form-advanced-toggle">advanced</summary>
-            <div class="form-section-description">Specify the Juicebox project that is being funded from this NFT sale and the category under which it will appear. You can also customize how many editions of this NFT will be made available for collecting alongside yours.</div>
+            <div class="form-section-description">Specify the Juicebox project that is being funded from this NFT sale and the category under which it will appear. You can also customize how many editions of this NFT will be made available for collecting.</div>
             <div class="form-section">
               <div class="form-item" style="flex: 1;">
                 <div class="form-label">Project ID</div>
@@ -159,6 +171,7 @@
   };
 
   const decorateFrame = async (frame, itemId, src, date, name, link, video) => {
+    if (name === undefined || name === null || name === "") name = "✃";
 
     const ctaAnchor = frame.querySelector('a');;
     const title = frame.querySelector('div.image-title');
@@ -223,6 +236,7 @@
       // Get the form info.
       form.style.display = "block";
       const formBeneficiaryInput = document.getElementById("form-beneficiary-input");
+      const formCpnBeneficiaryInput = document.getElementById("form-cpn-beneficiary-input");
       const formTotalSupplyInput = document.getElementById("form-total-supply-input");
       const formNftCategoryInput = document.getElementById("form-nft-category-input");
       const formProjectIdInput = document.getElementById("form-project-id-input");
@@ -241,8 +255,9 @@
         const quantity = parseInt(formTotalSupplyInput.value, 10) || 3;
         const price = `${Number(formPriceInput.value) * 1_000_000_000_000_000_000}` || "100000000000000000"; // number * 1 ETH, default is 0.1 ETH
         const beneficiary = formBeneficiaryInput.value;
+        const cpnBeneficiary = formCpnBeneficiaryInput.value;
 
-        return await tx_collect(projectId, category, quantity, price, encodedIPFSUri, beneficiary);
+        return await tx_collect(projectId, category, quantity, price, encodedIPFSUri, beneficiary, cpnBeneficiary);
       }
     }
     img.addEventListener("click", clickHandler);

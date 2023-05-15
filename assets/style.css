@@ -84,6 +84,25 @@ a:hover {
   text-decoration: underline;
 }
 
+details > summary {
+  list-style: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details > summary:before {
+  content: '▶';
+  display: inline-block;
+  margin-right: 4px;
+  transition: transform 0.2s linear;
+}
+
+details[open] > summary:before {
+  transform: rotate(90deg);
+}
+
 /* The Modal (background) */
 #modal {
   display: none; /* Hidden by default */
@@ -137,10 +156,22 @@ a:hover {
 #form-body {
   margin-top: 4px;
 }
-#form-options-toggle, #form-advanced-toggle {
-  margin-top: 12px;
+#form-options-toggle, #form-advanced-toggle, #form-disclaimer-toggle {
   color: var(--foreground-secondary-color);
   cursor: pointer;
+}
+#form-options-toggle, #form-advanced-toggle {
+  margin-top: 12px;
+}
+details > summary:before {
+  color: var(--foreground-secondary-color);
+}
+#form-disclaimer-toggle > summary:before {
+  color: var(--foreground-tertiary-color);
+}
+#form-disclaimer-toggle {
+  font-style: italic;
+  font-weight: 200;
 }
 .form-section-description {
   margin-top: 12px;
@@ -151,6 +182,19 @@ a:hover {
   display: flex;
   flex-direction: row;
   gap: 20px;
+}
+.form-section-disclaimer {
+  margin-top: 12px;
+  color: var(--foreground-secondary-color);
+  font-style: italic;
+  font-weight: 200;
+}
+.form-section-disclaimer a {
+  color: var(--foreground-secondary-color);
+  text-decoration: underline;
+}
+.form-section-disclaimer a:hover {
+  font-weight: 400;
 }
 .form-item {
   display: flex;
@@ -195,7 +239,7 @@ a:hover {
   padding: 4px 0px;
   cursor: pointer;
 }
-#collect-button:hover #collect-button-text {
+#form-button:hover #form-button-text {
   text-decoration: underline; 
 }
 .ether {
@@ -630,12 +674,13 @@ img.avatar {
   text-decoration: underline;
 }
 
-.site-detail {
-  color: var(--subtle-text-color);
+.site-detail a {
+  color: var(--foreground-secondary-color);
+  cursor: pointer;
 }
 
-.site-detail span:hover {
-  color: var(--foreground-color);
+.site-detail a:hover {
+  color: var(--link-color);
 }
 
 p,

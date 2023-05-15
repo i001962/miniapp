@@ -1,68 +1,4 @@
-const collect = async (encodedIPFSUri) => {
-  //
-  // // Get a signer.
-  // const connectedAddress = (await getSigner()).address;
-  //
-  // // Show the modal.
-  // const modal = document.getElementById("modal");
-  // modal.style.display = "block";
-  //   
-  // // Hide unused stuff.
-  // const modalImage = document.getElementById("modal-image");
-  // const modalVideo = document.getElementById("modal-video");
-  // const modalCaption = document.getElementById("modal-caption");
-  // const modalLink = document.getElementById("modal-link");
-  // modalImage.style.display = "none";
-  // modalVideo.style.display = "none";
-  // modalCaption.innerHTML = "";
-  // modalLink.innerHTML = "";
-  //
-  // // Make sure the modal is exitable.
-  // modal.addEventListener("click", (e) => {
-  //   if (e.target !== modal) return;
-  //   modal.style.display = "none";
-  //   collectForm.style.display = "none";
-  // });
-  // const closeButton = document.getElementsByClassName("close")[0];
-  // closeButton.onclick = () => {
-  //   modal.style.display = "none";
-  //   collectForm.style.display = "none";
-  // }
-  //
-  // // Get the form info.
-  // const collectForm = document.getElementById("collect-form");
-  // collectForm.style.display = "flex";
-  // const collectBeneficiary = document.getElementById("collect-beneficiary");
-  // const collectQuantity = document.getElementById("collect-quantity");
-  // const collectCategory = document.getElementById("collect-category");
-  // const collectProjectID = document.getElementById("collect-project-id");
-  // const collectPrice = document.getElementById("collect-price");
-  // const collectButton = document.getElementById("collect-button");
-  //
-  // // Prefill values.
-  // collectBeneficiary.value = connectedAddress;
-  //
-  // // Submit the form.
-  // collectButton.onclick = async () => {
-  //   const projectId = collectProjectID.value || 670;
-  //   const category = collectCategory.value || 2;
-  //   const quantity = parseInt(collectQuantity.value, 10) || 3;
-  //   const price = `${Number(collectPrice.value) * 1_000_000_000_000_000_000}` || "100000000000000000"; // number * 1 ETH, default is 0.1 ETH
-  //   const beneficiary = collectBeneficiary.value;
-  //   
-  //   console.log("Collecting with the following parameters:")
-  //   console.log(`Project ID: ${projectId}`);
-  //   console.log(`Category: ${category}`);
-  //   console.log(`Quantity: ${quantity}`);
-  //   console.log(`Price: ${price}`);
-  //   console.log(`Encoded IPFS URI: ${encodedIPFSUri}`);
-  //   console.log(`Beneficiary: ${beneficiary}`);
-  //
-  //   return await tx_collect(projectId, category, quantity, price, encodedIPFSUri, beneficiary);
-  // }
-}
-
-const tx_collect = async (projectId, category, quantity, price, encodedIPFSUri, beneficiary) => {
+const tx_collect = async (projectId, category, quantity, price, encodedIPFSUri, beneficiary, cpnBeneficiary) => {
     const croptopContract = "0x7183805a74997f32c1f4e2122869b034526ea02a";
     const contractABI = [
     {
@@ -457,6 +393,7 @@ const tx_collect = async (projectId, category, quantity, price, encodedIPFSUri, 
   const post = {quantity, price: bigIntPrice, category, encodedIPFSUri};
   const divisor = BigInt("20");
   if (!beneficiary) beneficiary = (await getSigner()).address;
+  // TODO add cpnBeneficiary;
   return await sign(croptopContract, contractABI, "collect", [projectId, [post], beneficiary, {
       value: bigIntPrice + (bigIntPrice / divisor) 
   }]);
