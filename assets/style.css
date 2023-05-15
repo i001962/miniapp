@@ -97,6 +97,7 @@ details > summary:before {
   display: inline-block;
   margin-right: 4px;
   transition: transform 0.2s linear;
+  font-style: normal;
 }
 
 details[open] > summary:before {
@@ -166,12 +167,6 @@ details[open] > summary:before {
 details > summary:before {
   color: var(--foreground-secondary-color);
 }
-#form-disclaimer-toggle > summary:before {
-  color: var(--foreground-tertiary-color);
-}
-#form-disclaimer-toggle {
-  font-weight: 200;
-}
 .form-section-description {
   margin-top: 12px;
   color: var(--foreground-secondary-color);
@@ -187,6 +182,10 @@ details > summary:before {
   color: var(--foreground-secondary-color);
   font-style: italic;
   font-weight: 200;
+}
+#form-disclaimer-toggle {
+  font-weight: 200;
+  font-style: italic;
 }
 .form-section-disclaimer a {
   color: var(--foreground-secondary-color);
