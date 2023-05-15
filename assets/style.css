@@ -170,7 +170,6 @@ details > summary:before {
   color: var(--foreground-tertiary-color);
 }
 #form-disclaimer-toggle {
-  font-style: italic;
   font-weight: 200;
 }
 .form-section-description {
