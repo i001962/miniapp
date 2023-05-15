@@ -191,10 +191,10 @@ details > summary:before {
 }
 .form-section-disclaimer a {
   color: var(--foreground-secondary-color);
-  text-decoration: underline;
 }
 .form-section-disclaimer a:hover {
   font-weight: 400;
+  text-decoration: underline;
 }
 .form-item {
   display: flex;
