@@ -40,7 +40,7 @@
     <div id="form">
       <span id="form-header">This file isn't yet onchain. Record it onchain to collect a first copy.</span>
       <div id="form-body">
-        <details>
+        <details id="form-options-reveal">
           <summary id="form-options-toggle">options</summary>
           <div class="form-section-description">Set the NFT's price and the address that will be sent its first copy that you are paying for.</div>
           <div class="form-section">
@@ -58,7 +58,7 @@
             </div>
           </div>
           <div class="form-section-disclaimer">5% is sent to the <a href="https://goerli.juicebox.money/v2/p/669" target="_blank">Croptop Publishing Network</a> in exchange for $CPN to this site's author.</div>
-            <details>
+            <details id="form-disclaimer-reveal">
               <summary id="form-disclaimer-toggle">Override $CPN beneficiary.</summary>
               <div class="form-section">
                 <div class="form-item" style="flex: 1;">
@@ -69,7 +69,7 @@
                 </div>
               </div>
           </details>
-          <details>
+          <details id="form-advanced-reveal">
             <summary id="form-advanced-toggle">advanced</summary>
             <div class="form-section-description">Specify the Juicebox project that is being funded from this NFT sale and the category under which it will appear. You can also customize how many editions of this NFT will be made available for collecting.</div>
             <div class="form-section">
@@ -184,20 +184,34 @@
     const cid = await (await fetch(cidUrl)).text();
     const encodedIPFSUri = cid ? encodeIPFSUri(cid) : "";
 
-    const clickHandler = (e) => {
-      e.preventDefault();
+    const clickHandler = (clickEvent) => {
+      clickEvent.preventDefault();
       const modal = document.getElementById("modal");
       const modalHeader = document.getElementById("modal-header");
       const modalSubtitle = document.getElementById("modal-subtitle");
       const modalContent = document.getElementById("modal-content");
       const form = document.getElementById("form");
+      const formOptionsReveal = document.getElementById('form-options-reveal');
+      const formDisclaimerReveal = document.getElementById('form-disclaimer-reveal');
+      const formAdvancedReveal = document.getElementById('form-advanced-reveal');
+
       modal.style.display = "block";
-      const closeHandler = (e) => {
-        if (e.target !== modal && e.target !== modalHeader && e.target !== modalSubtitle && e.target !== modalContent && e.target !== form) return;
+
+      let activeElementOnClose;
+      const mouseDownHandler = (mouseDownEvent) => {
+          activeElementOnClose = document.activeElement;
+      }
+      const closeHandler = (closeEvent) => {
+        if (closeEvent.target !== modal && closeEvent.target !== modalHeader && closeEvent.target !== modalSubtitle && closeEvent.target !== modalContent && closeEvent.target !== form) return;
+        if (activeElementOnClose.tagName === 'INPUT') return;
         if (video) modalVideo.pause();
         modal.style.display = "none";
+        formOptionsReveal.open = false;
+        formDisclaimerReveal.open = false;
+        formAdvancedReveal.open = false;
       }
       modal.addEventListener("click", closeHandler);
+      modal.addEventListener("mousedown", mouseDownHandler);
 
       const modalImage = document.getElementById("modal-image");
       const modalVideo = document.getElementById("modal-video");
