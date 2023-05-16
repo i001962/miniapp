@@ -184,6 +184,13 @@
     const cid = await (await fetch(cidUrl)).text();
     const encodedIPFSUri = cid ? encodeIPFSUri(cid) : "";
 
+    if (video) {
+      const overlay = document.createElement("div");
+      overlay.classList.add("overlay-icon");
+      overlay.classList.add("video-icon");
+      frame.appendChild(overlay);
+    }
+
     const clickHandler = (clickEvent) => {
       clickEvent.preventDefault();
       const modal = document.getElementById("modal");
