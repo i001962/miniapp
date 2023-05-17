@@ -6,5 +6,13 @@
   "version": "1.0.1",
   "idealItemsPerPage": 10,
   "buildNumber": 136,
-  "generateNFTMetadata": true
+  "generateNFTMetadata": true,
+  "settings": {
+    "juiceboxProjectID": {
+      "name": "Juicebox Project ID",
+      "type": "int",
+      "defaultValue": "670",
+      "description": "The ID of the Juicebox project to use for this Croptop website."
+    }
+  }
 }
