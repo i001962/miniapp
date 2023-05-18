@@ -359,8 +359,8 @@
     );
     const data = await response.json();
     const frames = data['articles']
-      // Only if attachments have file extensions like ".jpg" ".png" ".gif"
-      .filter(item => item.hasVideo === true || item.attachments.some(attachment => attachment.match(/\.(jpg|png|gif)$/i)))
+      // Only if attachments have file extensions like ".jpg" ".jpeg" ".png" ".gif" ".webp" ".svg" ".avif"
+      .filter(item => item.hasVideo === true || item.attachments.some(attachment => attachment.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)$/i)))
       .map((item) => {
         // if item.hasVideo, use _videoThumbnail.png
         // else use a random attachment
