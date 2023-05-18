@@ -895,6 +895,11 @@ footer {
     width: 240px;
   }
 
+  #form, #modal-header {
+    margin-inline-start: 20px;
+    margin-inline-end: 20px;
+  }
+
   #modal-content {
     width: 100%;
   }
