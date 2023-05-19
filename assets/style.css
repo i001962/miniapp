@@ -127,6 +127,7 @@ details[open] > summary:before {
   width: 88vw; /* 88% of the viewport width */
   max-width: 1000px;
   float: center;
+  padding-bottom: 100px;
 }
 
 #modal-header {
@@ -175,6 +176,7 @@ details > summary:before {
   margin-top: 12px;
   display: flex;
   flex-direction: row;
+  align-items: end;
   gap: 20px;
 }
 .form-section-disclaimer {
@@ -884,15 +886,15 @@ footer {
   }
 
   .w1 {
-    width: 140px;
+    width: 90vw;
   }
 
   .w2 {
-    width: 190px;
+    width: 95vw;
   }
 
   .w3 {
-    width: 240px;
+    width: 100vw;
   }
 
   #form, #modal-header {
