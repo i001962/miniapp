@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block dom_ready %}
+fetchSettings();
 {% endblock %}
 
 {% block main %}
@@ -109,6 +110,25 @@
   let currentRow = 1;
   let greatestRightInRow = 0;
   let rows = [];
+
+  var juiceboxProjectID = 670;
+  var ownerEthereumAddress = "";
+
+  const fetchSettings = () => {
+    fetch("{{ assets_prefix }}templateSettings.json")
+      .then(response => response.json())
+      .then(data => {
+        // only if the settings are found, update the global variables
+        if (data.juiceboxProjectID) {
+          juiceboxProjectID = Number(data.juiceboxProjectID) || 670;
+          console.log("Set GLOBAL: juiceboxProjectID to " + juiceboxProjectID);
+        }
+        if (data.ethAddress) {
+          ownerEthereumAddress = data.ethAddress;
+          console.log("Set GLOBAL: ownerEthereumAddress to " + ownerEthereumAddress);
+        }
+      });
+  }
 
   const startLoadingAnimation = () => {
     const loadingAnimation = document.getElementById('loading-animation');
@@ -271,7 +291,7 @@
 
       // Submit the form.
       formButton.onclick = async () => {
-        const projectId = formProjectIdInput.value || 670;
+        const projectId = formProjectIdInput.value || juiceboxProjectID;
         const category = formNftCategoryInput.value || 2;
         const quantity = parseInt(formTotalSupplyInput.value, 10) || 3;
         const price = `${Number(formPriceInput.value) * 1_000_000_000_000_000_000}` || "100000000000000000"; // number * 1 ETH, default is 0.1 ETH

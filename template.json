@@ -12,7 +12,13 @@
       "name": "Juicebox Project ID",
       "type": "int",
       "defaultValue": "670",
-      "description": "The ID of the Juicebox project to use for this Croptop website."
+      "description": "ID of the Juicebox project to use for this Croptop website."
+    },
+    "ethAddress": {
+      "name": "ETH Address",
+      "type": "string",
+      "defaultValue": "",
+      "description": "Ethereum address of the owner of this Croptop website."
     }
   }
 }
