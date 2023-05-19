@@ -122,6 +122,8 @@ fetchSettings();
         if (data.juiceboxProjectID) {
           juiceboxProjectID = Number(data.juiceboxProjectID) || 670;
           console.log("Set GLOBAL: juiceboxProjectID to " + juiceboxProjectID);
+          const formProjectIdInput = document.getElementById("form-project-id-input");
+          formProjectIdInput.value = juiceboxProjectID;
         }
         if (data.ethAddress) {
           ownerEthereumAddress = data.ethAddress;
