@@ -13,18 +13,11 @@
 fetchSettings();
 
 window.onpopstate = function(event) {
-    if (event.state && event.state.modalOpened) {
-        const modal = document.getElementById("modal");
-        modal.style.display = "none";
-    }
+  if (event.state) {
+    const modal = document.getElementById("modal");
+    modal.style.display = "none";
+  }
 };
-
-// if there is ?id= in the url, open the modal
-const urlParams = new URLSearchParams(window.location.search);
-const id = urlParams.get('id');
-if (id) {
-  // TODO: find the frame and open the modal
-}
 {% endblock %}
 
 {% block main %}
@@ -114,6 +107,7 @@ if (id) {
   </div>
 </div>
 <script>
+  var items = Array();
   const frames = document.getElementById("frames");
   const horizontalMargin = 24;
   const verticalMargin = 10;
@@ -209,9 +203,12 @@ if (id) {
   const decorateFrame = async (frame, itemId, src, date, name, link, video) => {
     if (name === undefined || name === null || name === "") name = "✃";
 
+    frame.id = 'frame-' + itemId;
+
     const ctaAnchor = frame.querySelector('a');;
     const title = frame.querySelector('div.image-title');
     const img = frame.querySelector('img');
+    img.id = 'img-' + itemId;
 
     ctaAnchor.textContent = '[collect]';
     title.innerHTML = `<span><span class="image-date">${date} | </span>${ name }<span>`;
@@ -251,7 +248,7 @@ if (id) {
         if (activeElementOnClose.tagName === 'INPUT') return;
         if (video) modalVideo.pause();
         modal.style.display = "none";
-        history.pushState({ modalOpened: false }, '', window.location.pathname);
+        history.pushState({}, '', window.location.pathname);
         formOptionsReveal.open = false;
         formDisclaimerReveal.open = false;
         formAdvancedReveal.open = false;
@@ -401,6 +398,7 @@ if (id) {
       // Only if attachments have file extensions like ".jpg" ".jpeg" ".png" ".gif" ".webp" ".svg" ".avif"
       .filter(item => item.hasVideo === true || item.attachments.some(attachment => attachment.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)$/i)))
       .map((item) => {
+        items.push(item);
         // if item.hasVideo, use _videoThumbnail.png
         // else use a random attachment
         const imageName = item.hasVideo ? '_videoThumbnail.png' : item.attachments[Math.floor(Math.random() * item.attachments.length)];
@@ -411,6 +409,18 @@ if (id) {
         return frame;
       }
     );
+
+    // if there is ?id= in the url, open the modal
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    if (id) {
+      // TODO: find the frame and open the modal
+      item = items.find(item => item.id == id);
+      if (item) {
+        const img = document.getElementById('img-' + item.id);
+        setTimeout(() => img.click(), 200);
+      }
+    }
 
     for (const frame of frames)
       await positionAndShowFrame(frame);
