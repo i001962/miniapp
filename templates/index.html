@@ -342,10 +342,8 @@ window.onpopstate = function(event) {
         
         const formattedTotalSupply = parseInt(allowance[1].toString());
 
-          console.log("sup ", { formattedTotalSupply });
         // Show an error message if needed.
         if (formattedTotalSupply == 0) {
-            console.log("sup");
             formMessage.innerHTML = `Project ${projectId} isn't accepting posts on category ${category}.`;
             formMessage.style.display = "block"; 
             formButton.disabled = true;
