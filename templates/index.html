@@ -5,7 +5,7 @@
 {% include 'modules/ethers.html' %}
 {% include 'modules/utils.html' %}
 {% include 'modules/tx.html' %}
-{% include 'modules/collect.html' %}
+{% include 'modules/croptop_publisher.html' %}
 {% include 'modules/planet_seo.html' %}
 {% endblock %}
 
@@ -55,7 +55,7 @@ window.onpopstate = function(event) {
             <div class="form-item" style="flex: 1;">
               <div class="form-label">Price</div>
               <div class="form-value">
-                <span class="ether">Ξ</span><input type="text" value="0.1" id="form-price-input">
+                <span class="ether">Ξ</span><input type="text" value="" id="form-price-input">
               </div>
             </div>
             <div class="form-item" style="flex: 3;">
@@ -83,16 +83,16 @@ window.onpopstate = function(event) {
             <div class="form-section">
               <div class="form-item" style="flex: 1;">
                 <div class="form-label">Project ID</div>
-                <div class="form-value"><input type="text" value="670" id="form-project-id-input"></div>
+                <div class="form-value"><input type="text" value="748" id="form-project-id-input"></div>
               </div>
               <div class="form-item" style="flex: 1;">
                 <div class="form-label">NFT Category</div>
-                <div class="form-value"><input type="text" value="2" id="form-nft-category-input"></div>
+                <div class="form-value"><input type="text" value="0" id="form-nft-category-input"></div>
               </div>
               <div class="form-item" style="flex: 1;">
                 <div class="form-label">Total supply</div>
                 <div class="form-value">
-                  <input type="number" placeholder="10" value="10" id="form-total-supply-input">
+                  <input type="number" placeholder="10" value="" id="form-total-supply-input">
                 </div>
               </div>
             </div>
@@ -114,13 +114,11 @@ window.onpopstate = function(event) {
   const transitionDuration = 300;
   const widthClasses = ["w1", "w2", "w3"];
   const loadingAnimationPace = 100;
+  const allowanceCache = {};
   let loadingAnimationInterval;
   let currentRow = 1;
   let greatestRightInRow = 0;
   let rows = [];
-
-  var juiceboxProjectID = 670;
-  var ownerEthereumAddress = "";
 
   const fetchSettings = () => {
     fetch("{{ assets_prefix }}templateSettings.json")
@@ -128,14 +126,16 @@ window.onpopstate = function(event) {
       .then(data => {
         // only if the settings are found, update the global variables
         if (data.juiceboxProjectID) {
-          juiceboxProjectID = Number(data.juiceboxProjectID) || 670;
-          console.log("Set GLOBAL: juiceboxProjectID to " + juiceboxProjectID);
           const formProjectIdInput = document.getElementById("form-project-id-input");
-          formProjectIdInput.value = juiceboxProjectID;
+          formProjectIdInput.value = Number(data.juiceboxProjectID);
         }
         if (data.ethAddress) {
-          ownerEthereumAddress = data.ethAddress;
-          console.log("Set GLOBAL: ownerEthereumAddress to " + ownerEthereumAddress);
+          const formCpnBeneficiaryInput = document.getElementById("form-cpn-beneficiary-input");
+          formCpnBeneficiaryInput.value = data.ethAddress;
+        }
+        if (data.nftCategory) {
+          const formNftCategoryInput = document.getElementById("form-nft-category-input");
+          formNftCategoryInput.value = data.nftCategory;
         }
       });
   }
@@ -224,7 +224,7 @@ window.onpopstate = function(event) {
       frame.appendChild(overlay);
     }
 
-    const clickHandler = (clickEvent) => {
+    const clickHandler = async (clickEvent) => {
       clickEvent.preventDefault();
       const modal = document.getElementById("modal");
       const modalHeader = document.getElementById("modal-header");
@@ -234,16 +234,20 @@ window.onpopstate = function(event) {
       const formOptionsReveal = document.getElementById('form-options-reveal');
       const formDisclaimerReveal = document.getElementById('form-disclaimer-reveal');
       const formAdvancedReveal = document.getElementById('form-advanced-reveal');
-
-      modal.style.display = "block";
+      const formMessage = document.getElementById('form-message');
 
       history.pushState({ modalOpened: true, itemId: itemId }, '', '?id=' + itemId);
 
+      modal.style.display = "block";
+
+      formMessage.style.display = "none";
+
       let activeElementOnClose;
-      const mouseDownHandler = (mouseDownEvent) => {
+      modal.addEventListener("mousedown", (mouseDownEvent) => {
           activeElementOnClose = document.activeElement;
-      }
-      const closeHandler = (closeEvent) => {
+      });
+
+      modal.addEventListener("click", (closeEvent) => {
         if (closeEvent.target !== modal && closeEvent.target !== modalHeader && closeEvent.target !== modalSubtitle && closeEvent.target !== modalContent && closeEvent.target !== form) return;
         if (activeElementOnClose.tagName === 'INPUT') return;
         if (video) modalVideo.pause();
@@ -252,9 +256,7 @@ window.onpopstate = function(event) {
         formOptionsReveal.open = false;
         formDisclaimerReveal.open = false;
         formAdvancedReveal.open = false;
-      }
-      modal.addEventListener("click", closeHandler);
-      modal.addEventListener("mousedown", mouseDownHandler);
+      });
 
       const modalImage = document.getElementById("modal-image");
       const modalVideo = document.getElementById("modal-video");
@@ -304,19 +306,97 @@ window.onpopstate = function(event) {
       loadAddressButton.onclick = async () => {
        formBeneficiaryInput.value = (await getSigner()).address;
       };
+      
+      const checkDefaultAllowance = async () => {
+        // Get the allowance for the project ID and category preset.
+        const projectId = formProjectIdInput.value;
+        const category = formNftCategoryInput.value;
+        
+        // Nothing to check if project ID and category not set.
+        if (!projectId || !category) return;
+      
+        // Look in the cache.
+        const allowanceProjectId = allowanceCache[projectId];
+        
+        // If there's no cache for the project ID, set it to an empty object.
+        if (!allowanceProjectId) allowanceCache[projectId] = {};
+        
+        let allowance = allowanceCache[projectId][category]; 
+      
+        // If nothing is cached, load from the contract.
+        if (!allowance) {
+          // Disable the fields being set.
+          formPriceInput.disabled = true;
+          formTotalSupplyInput.disabled = true;
 
+          // Get the allowance.
+          allowance = await tx_view_allowance(projectId, category);
+        
+          // Enable the fields being set.
+          formPriceInput.disabled = false;
+          formTotalSupplyInput.disabled = false;
+
+          // Cache the values.
+          allowanceCache[projectId][category] = allowance;
+        }
+        
+        const formattedTotalSupply = parseInt(allowance[1].toString());
+
+          console.log("sup ", { formattedTotalSupply });
+        // Show an error message if needed.
+        if (formattedTotalSupply == 0) {
+            console.log("sup");
+            formMessage.innerHTML = `Project ${projectId} isn't accepting posts on category ${category}.`;
+            formMessage.style.display = "block"; 
+            formButton.disabled = true;
+        } else {
+            const formattedPrice = ethers.formatEther(allowance[0]);
+
+            // Set default values.
+            if (!formPriceInput.value) formPriceInput.value = formattedPrice; 
+            if (!formTotalSupplyInput.value) formTotalSupplyInput.value = formattedTotalSupply; 
+            
+            // Set error messages if the inputted values are too small.
+            if (formPriceInput.value < formattedPrice || formTotalSupplyInput.value < formattedTotalSupply) {
+              formMessage.innerHTML = `Project ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedPrice} and total supply of ${formattedTotalSupply} to record on category ${category}.`;
+              formMessage.style.display = "block"; 
+              formButton.disabled = true;
+            } else {
+              formMessage.style.display = "none"; 
+              formButton.disabled = false;
+            }
+        }
+      }
+      
+      // Prevent excessive calls.
+      let checkDefaultAllowanceTimer;
+      const queueCheckDefaultAllowance = async () => {
+        clearTimeout(checkDefaultAllowanceTimer);  
+        checkDefaultAllowanceTimer = setTimeout(checkDefaultAllowance, 1000);
+      }
+
+      // Update the allowance each time the projectId or the category changes.
+      formProjectIdInput.addEventListener('input', queueCheckDefaultAllowance);
+      formNftCategoryInput.addEventListener('input', queueCheckDefaultAllowance);
+      formPriceInput.addEventListener('input', queueCheckDefaultAllowance);
+      formTotalSupplyInput.addEventListener('input', queueCheckDefaultAllowance);
+      
       // Submit the form.
       formButton.onclick = async () => {
-        const projectId = formProjectIdInput.value || juiceboxProjectID;
-        const category = formNftCategoryInput.value || 2;
-        const quantity = parseInt(formTotalSupplyInput.value, 10) || 3;
-        const price = `${Number(formPriceInput.value) * 1_000_000_000_000_000_000}` || "100000000000000000"; // number * 1 ETH, default is 0.1 ETH
+        await checkDefaultAllowance();
+        if (formButton.disabled) return;
+        const projectId = formProjectIdInput.value;
+        const category = formNftCategoryInput.value;
+        const quantity = formTotalSupplyInput.value;
+        const price = `${Number(formPriceInput.value) * 1_000_000_000_000_000_000}`;
         const beneficiary = formBeneficiaryInput.value;
         const cpnBeneficiary = formCpnBeneficiaryInput.value;
-
         return await tx_collect(projectId, category, quantity, price, encodedIPFSUri, beneficiary, cpnBeneficiary);
       }
+
+      await checkDefaultAllowance();
     }
+
     img.addEventListener("click", clickHandler);
     ctaAnchor.addEventListener("click", clickHandler);
   }
