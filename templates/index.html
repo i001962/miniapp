@@ -11,6 +11,20 @@
 
 {% block dom_ready %}
 fetchSettings();
+
+window.onpopstate = function(event) {
+    if (event.state && event.state.modalOpened) {
+        const modal = document.getElementById("modal");
+        modal.style.display = "none";
+    }
+};
+
+// if there is ?id= in the url, open the modal
+const urlParams = new URLSearchParams(window.location.search);
+const id = urlParams.get('id');
+if (id) {
+  // TODO: find the frame and open the modal
+}
 {% endblock %}
 
 {% block main %}
@@ -226,6 +240,8 @@ fetchSettings();
 
       modal.style.display = "block";
 
+      history.pushState({ modalOpened: true, itemId: itemId }, '', '?id=' + itemId);
+
       let activeElementOnClose;
       const mouseDownHandler = (mouseDownEvent) => {
           activeElementOnClose = document.activeElement;
@@ -235,6 +251,7 @@ fetchSettings();
         if (activeElementOnClose.tagName === 'INPUT') return;
         if (video) modalVideo.pause();
         modal.style.display = "none";
+        history.pushState({ modalOpened: false }, '', window.location.pathname);
         formOptionsReveal.open = false;
         formDisclaimerReveal.open = false;
         formAdvancedReveal.open = false;
