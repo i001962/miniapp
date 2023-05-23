@@ -33,7 +33,7 @@ window.onpopstate = function(event) {
   {% include 'modules/social_icons.html' %}
 </div>
 {% include 'modules/nav.html' %}
-<div id="loading-animation"></div>
+<div id="main-loading-animation" class="loading-animation"></div>
 <div id="frames"></div>
 <div id="modal" class="closes-modal">
   <div id="modal-content" class="closes-modal">
@@ -135,6 +135,7 @@ window.onpopstate = function(event) {
           </details>
       </div>
     </div>
+    <div id="modal-loading-animation" class="loading-animation"></div>
     <div id="form-error-message"></div>
     <button id="form-submit-button" class="form-button">[<span id="form-submit-button-text">collect</span>]</button>
     <img id="modal-image"></img>
@@ -157,7 +158,7 @@ window.onpopstate = function(event) {
 
   // Layout variables.
   let items = Array();
-  let loadingAnimationInterval;
+  let loadingAnimationIntervals = {};
   let currentRow = 1;
   let greatestRightInRow = 0;
   let rows = [];
@@ -192,24 +193,25 @@ window.onpopstate = function(event) {
   }
   
   /// Animate the loading ticker.
-  const startLoadingAnimation = () => {
-    const loadingAnimation = document.getElementById('loading-animation');
+  const startLoadingAnimation = (loadingAnimationId) => {
+    const loadingAnimation = document.getElementById(loadingAnimationId);
+    loadingAnimation.style.display = "block";
     const loadingAnimationFrames = ['-', '\\', '|', '/'];
     let currentFrame = 0;
 
     const animate = () => {
       loadingAnimation.textContent = loadingAnimationFrames[currentFrame];
       currentFrame = (currentFrame + 1) % loadingAnimationFrames.length;
-      loadingAnimationInterval = setTimeout(animate, loadingAnimationPace);
+      loadingAnimationIntervals[loadingAnimationId] = setTimeout(animate, loadingAnimationPace);
     }
 
     animate();
   }
   
   /// Stop animating the loading ticker.
-  const stopLoadingAnimation = () => {
-    const loadingAnimation = document.getElementById('loading-animation');
-    loadingAnimationInterval = clearTimeout(loadingAnimationInterval);
+  const stopLoadingAnimation = (loadingAnimationId) => {
+    const loadingAnimation = document.getElementById(loadingAnimationId);
+    loadingAnimationIntervals[loadingAnimationId] = clearTimeout(loadingAnimationIntervals[loadingAnimationId]);
     loadingAnimation.style.display = "none";
   }
   
@@ -517,6 +519,7 @@ window.onpopstate = function(event) {
     const formErrorMessage= document.getElementById("form-error-message");
     const recordForm = document.getElementById("record-form");
     const collectForm = document.getElementById("collect-form");
+    const modalLoadingAnimation = document.getElementById("modal-loading-animation");
     
     // Track the modal in browse history.
     history.pushState({ modalOpened: true, itemId: itemId }, "", "?id=" + itemId);
@@ -588,9 +591,6 @@ window.onpopstate = function(event) {
       modalImage.src = imageSrc;
       modalImage.addEventListener('click', (e) => e.stopPropagation());
     }
-
-    // Show the form.
-    decorateAndShowForm(itemId);
     
     // Hide the state when the state form is open.
     formStateReveal.addEventListener('toggle', (e) => {
@@ -601,6 +601,15 @@ window.onpopstate = function(event) {
     formStateItem.addEventListener('click', (e) => {
       formStateReveal.open = true;     
     });
+
+    // Show the loading animation.
+    startLoadingAnimation('modal-loading-animation');
+
+    // Show the form.
+    await decorateAndShowForm(itemId);
+
+    // Hide the loading animation.
+    stopLoadingAnimation('modal-loading-animation');
   }
   
   const decorateFrame = async (frame, itemId, imageSrc, date, name, link, videoSrc) => {
@@ -632,11 +641,11 @@ window.onpopstate = function(event) {
     frame.addEventListener("click", async (e) => {
       e.preventDefault();
 
-      // Make the modal look right.
-      await decorateModal(itemId, name, date, link, imageSrc, videoSrc);
-
       // Show the modal.
       modal.style.display = "block";
+
+      // Make the modal look right.
+      await decorateModal(itemId, name, date, link, imageSrc, videoSrc);
     });
   }
 
@@ -720,7 +729,7 @@ window.onpopstate = function(event) {
   const positionAndShowFrame = async (imageFrame) => {
     await loadFrame(imageFrame);
 
-    if (loadingAnimationInterval) stopLoadingAnimation();
+    if (loadingAnimationIntervals['main-loading-animation']) stopLoadingAnimation('main-loading-animation');
 
     const rect = imageFrame.getBoundingClientRect();
     if (rect.left < greatestRightInRow) currentRow++;
@@ -789,6 +798,6 @@ window.onpopstate = function(event) {
 
   fetchSettings();
   loadImageFrames();
-  startLoadingAnimation();
+  startLoadingAnimation('main-loading-animation');
 </script>
 {% endblock %}

@@ -635,9 +635,11 @@ hr {
   padding: 10px 20px 10px 20px;
 }
 
-#loading-animation {
-  padding-left: 20px;
+.loading-animation {
   color: var(--foreground-color);
+}
+#main-loading-animation {
+  padding-left: 20px;
 }
 
 img.avatar {
