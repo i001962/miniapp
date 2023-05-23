@@ -3,9 +3,9 @@
   "description": "For pictures and screenshots",
   "author": "Jango",
   "authorWebsite": "https://jango.eth.limo",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "idealItemsPerPage": 10,
-  "buildNumber": 180,
+  "buildNumber": 183,
   "generateNFTMetadata": true,
   "settings": {
     "juiceboxProjectID": {
@@ -19,6 +19,12 @@
       "type": "string",
       "defaultValue": "",
       "description": "Ethereum address of the owner of this Croptop website."
+    },
+    "defaultNFTCategory": {
+      "name": "Default NFT Category",
+      "type": "int",
+      "defaultValue": "0",
+      "description": "Default category of the NFTs"
     }
   }
 }
