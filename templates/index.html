@@ -356,8 +356,14 @@ window.onpopstate = function(event) {
       // Close the state change form.
       formStateReveal.open = false;
 
+      // Show the loading animation.
+      startLoadingAnimation('modal-loading-animation');
+
       // Update the form's state.
-      updateFormState();
+      await updateFormState();
+
+      // Show the loading animation.
+      stopLoadingAnimation('modal-loading-animation');
     }  
 
     updateFormState();
