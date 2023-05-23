@@ -122,22 +122,29 @@ window.onpopstate = function(event) {
 
   const fetchSettings = () => {
     fetch("{{ assets_prefix }}templateSettings.json")
-      .then(response => response.json())
-      .then(data => {
-        // only if the settings are found, update the global variables
-        if (data.juiceboxProjectID) {
-          const formProjectIdInput = document.getElementById("form-project-id-input");
-          formProjectIdInput.value = Number(data.juiceboxProjectID);
-        }
-        if (data.ethAddress) {
-          const formCpnBeneficiaryInput = document.getElementById("form-cpn-beneficiary-input");
-          formCpnBeneficiaryInput.value = data.ethAddress;
-        }
-        if (data.nftCategory) {
-          const formNftCategoryInput = document.getElementById("form-nft-category-input");
-          formNftCategoryInput.value = data.nftCategory;
-        }
-      });
+    // only if response is 200 OK, parse the JSON
+    .then(response => {
+      if (!response.ok) {
+        throw Error(response.statusText); // Throw an error if response is not OK.
+      }
+      return response.json();
+    })
+    .then(data => {
+      // only if the settings are found, update the global variables
+      if (data.juiceboxProjectID) {
+        const formProjectIdInput = document.getElementById("form-project-id-input");
+        formProjectIdInput.value = Number(data.juiceboxProjectID);
+      }
+      if (data.ethAddress) {
+        const formCpnBeneficiaryInput = document.getElementById("form-cpn-beneficiary-input");
+        formCpnBeneficiaryInput.value = data.ethAddress;
+      }
+      if (data.defaultNFTCategory) {
+        const formNftCategoryInput = document.getElementById("form-nft-category-input");
+        formNftCategoryInput.value = Number(data.defaultNFTCategory);
+      }
+    })
+    .catch(error => console.error('Fetch templateSettings.json error:', error));
   }
 
   const startLoadingAnimation = () => {
@@ -306,23 +313,23 @@ window.onpopstate = function(event) {
       loadAddressButton.onclick = async () => {
        formBeneficiaryInput.value = (await getSigner()).address;
       };
-      
+
       const checkDefaultAllowance = async () => {
         // Get the allowance for the project ID and category preset.
         const projectId = formProjectIdInput.value;
         const category = formNftCategoryInput.value;
-        
+
         // Nothing to check if project ID and category not set.
         if (!projectId || !category) return;
-      
+
         // Look in the cache.
         const allowanceProjectId = allowanceCache[projectId];
-        
+
         // If there's no cache for the project ID, set it to an empty object.
         if (!allowanceProjectId) allowanceCache[projectId] = {};
-        
-        let allowance = allowanceCache[projectId][category]; 
-      
+
+        let allowance = allowanceCache[projectId][category];
+
         // If nothing is cached, load from the contract.
         if (!allowance) {
           // Disable the fields being set.
@@ -331,7 +338,7 @@ window.onpopstate = function(event) {
 
           // Get the allowance.
           allowance = await tx_view_allowance(projectId, category);
-        
+
           // Enable the fields being set.
           formPriceInput.disabled = false;
           formTotalSupplyInput.disabled = false;
@@ -339,37 +346,37 @@ window.onpopstate = function(event) {
           // Cache the values.
           allowanceCache[projectId][category] = allowance;
         }
-        
+
         const formattedTotalSupply = parseInt(allowance[1].toString());
 
         // Show an error message if needed.
         if (formattedTotalSupply == 0) {
             formMessage.innerHTML = `Project ${projectId} isn't accepting posts on category ${category}.`;
-            formMessage.style.display = "block"; 
+            formMessage.style.display = "block";
             formButton.disabled = true;
         } else {
             const formattedPrice = ethers.formatEther(allowance[0]);
 
             // Set default values.
-            if (!formPriceInput.value) formPriceInput.value = formattedPrice; 
-            if (!formTotalSupplyInput.value) formTotalSupplyInput.value = formattedTotalSupply; 
-            
+            if (!formPriceInput.value) formPriceInput.value = formattedPrice;
+            if (!formTotalSupplyInput.value) formTotalSupplyInput.value = formattedTotalSupply;
+
             // Set error messages if the inputted values are too small.
             if (formPriceInput.value < formattedPrice || formTotalSupplyInput.value < formattedTotalSupply) {
               formMessage.innerHTML = `Project ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedPrice} and total supply of ${formattedTotalSupply} to record on category ${category}.`;
-              formMessage.style.display = "block"; 
+              formMessage.style.display = "block";
               formButton.disabled = true;
             } else {
-              formMessage.style.display = "none"; 
+              formMessage.style.display = "none";
               formButton.disabled = false;
             }
         }
       }
-      
+
       // Prevent excessive calls.
       let checkDefaultAllowanceTimer;
       const queueCheckDefaultAllowance = async () => {
-        clearTimeout(checkDefaultAllowanceTimer);  
+        clearTimeout(checkDefaultAllowanceTimer);
         checkDefaultAllowanceTimer = setTimeout(checkDefaultAllowance, 1000);
       }
 
@@ -378,7 +385,7 @@ window.onpopstate = function(event) {
       formNftCategoryInput.addEventListener('input', queueCheckDefaultAllowance);
       formPriceInput.addEventListener('input', queueCheckDefaultAllowance);
       formTotalSupplyInput.addEventListener('input', queueCheckDefaultAllowance);
-      
+
       // Submit the form.
       formButton.onclick = async () => {
         await checkDefaultAllowance();
