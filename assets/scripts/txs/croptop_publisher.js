@@ -413,7 +413,6 @@ const tx_collect = async (projectId, category, totalSupply, price, encodedIPFSUr
   const divisor = BigInt("20");
   if (!beneficiary) beneficiary = (await getSigner()).address;
   if (!cpnBeneficiary) cpnBeneficiary = beneficiary; 
-  console.log({ projectId, posts: [post], beneficiary, cpnBeneficiary});
   return await sign(await croptopContract(), contractABI, "collect", [projectId, [post], beneficiary, cpnBeneficiary, {
       value: bigIntPrice + (projectId == 758 ? BigInt(0) : (bigIntPrice / divisor)) 
   }]);

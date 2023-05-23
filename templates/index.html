@@ -513,6 +513,9 @@ window.onpopstate = function(event) {
     const modalContent = document.getElementById("modal-content");
     const formStateItem = document.getElementById("form-state-item"); 
     const formStateReveal = document.getElementById("form-state-reveal");
+    const formErrorMessage= document.getElementById("form-error-message");
+    const recordForm = document.getElementById("record-form");
+    const collectForm = document.getElementById("collect-form");
     
     // Track the modal in browse history.
     history.pushState({ modalOpened: true, itemId: itemId }, "", "?id=" + itemId);
@@ -532,6 +535,15 @@ window.onpopstate = function(event) {
       
       // If there's a video, pause it.
       if (videoSrc) modalVideo.pause();
+
+      // Hide the RECORD form.
+      recordForm.style.display = "none";
+      // Hide the COLLECT form.
+      collectForm.style.display = "none";
+      // Hide the error message.
+      formErrorMessage.style.display = "none"; 
+      // Close the state reveal.
+      formStateReveal.open = false;
 
       // Hide the modal.
       modal.style.display = "none";
