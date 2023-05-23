@@ -10,8 +10,6 @@
 {% endblock %}
 
 {% block dom_ready %}
-fetchSettings();
-
 window.onpopstate = function(event) {
   if (event.state) {
     const modal = document.getElementById("modal");
@@ -37,116 +35,163 @@ window.onpopstate = function(event) {
 {% include 'modules/nav.html' %}
 <div id="loading-animation"></div>
 <div id="frames"></div>
-<div id="modal">
-  <div id="modal-content">
-    <div id="modal-header">
-        <span id="frame-date"></span><span id="frame-name"></span>
-        <div id="modal-subtitle">
-            <span id="frame-link"></span>
-        </div>
+<div id="modal" class="closes-modal">
+  <div id="modal-content" class="closes-modal">
+    <div id="modal-header" class="closes-modal">
+      <span id="frame-date"></span><span id="frame-name"></span>
+      <div id="modal-subtitle" class="closes-modal">
+          <span id="frame-link"></span>
+      </div>
+      <div id="form-state" class="closes-modal">
+        <details id="form-state-reveal">
+          <summary id="form-state-toggle" class="toggle"></summary>
+          <div class="form-section-description">Specify the Juicebox project that is being funded from this NFT sale and the category under which it will appear. Changing these values will change the availability of this NFT.</div>
+          <div class="form-section">
+            <div class="form-item" style="flex: 1;">
+              <div class="form-label">Project ID</div>
+              <div class="form-value"><input type="text" value="758" id="form-state-project-id-input"></div>
+            </div>
+            <div class="form-item" style="flex: 1;">
+              <div class="form-label">NFT category ID</div>
+              <div class="form-value"><input type="text" value="0" id="form-state-nft-category-input"></div>
+            </div>
+          </div>
+          <button id="form-state-button" class="form-button">[<span id="form-state-button-text" class="form-button-text">update</span>]</button>
+         </details>
+         <div id="form-state-item">Project ID: <span id="form-state-project-id" class="form-state-item-value"></span>, NFT category ID <span id="form-state-nft-category" class="form-state-item-value"></span></div>
+      </div>
     </div>
-    <div id="form">
-      <span id="form-header">This file isn't yet onchain. Record it onchain to collect a first copy.</span>
-      <div id="form-body">
-        <details id="form-options-reveal">
-          <summary id="form-options-toggle">options</summary>
-          <div class="form-section-description">Set the NFT's price and the address that will be sent its first copy that you are paying for.</div>
+    <div id="collect-form" class="form closes-modal">
+      <span id="collect-form-header" class="form-header"></span>
+      <div class="form-body">
+        <details id="collect-form-options-reveal">
+          <summary id="collect-form-options-toggle" class="toggle main-toggle">options</summary>
+          <div class="form-section-description">Determine the price you want to pay and the address that will be sent the copy you are paying for.</div>
           <div class="form-section">
             <div class="form-item" style="flex: 1;">
               <div class="form-label">Price</div>
               <div class="form-value">
-                <span class="ether">Ξ</span><input type="text" value="" id="form-price-input">
+                <span class="ether">Ξ</span><input type="text" value="" id="collect-form-price-input">
               </div>
             </div>
-            <div class="form-item" style="flex: 3;">
-              <div class="form-label">Address <button id="load-address-button">[<span id="load-address-button-text">connect wallet</span>]</button></div>
+            <div class="form-item" style="flex: 2;">
+              <div class="form-label">Address <button id="collect-form-load-address-button" class="load-address-button">[<span id="collect-form-load-address-button-text" class="load-address-button-text">connect wallet</span>]</button></div>
               <div class="form-value">
-                <input type="text" placeholder="Defaults to your address" id="form-beneficiary-input">
+                <input type="text" placeholder="Defaults to your address" id="collect-form-beneficiary-input">
               </div>
             </div>
           </div>
           <div class="form-section-disclaimer">An added 5% is sent to the <a href="https://goerli.juicebox.money/v2/p/669" target="_blank">Croptop Publishing Network</a> in exchange for $CPN to this site's author.</div>
-            <details id="form-disclaimer-reveal">
-              <summary id="form-disclaimer-toggle">override $CPN beneficiary.</summary>
+            <details id="collect-form-disclaimer-reveal">
+              <summary id="collect-form-disclaimer-toggle" class="toggle disclaimer-toggle">override $CPN beneficiary.</summary>
               <div class="form-section">
                 <div class="form-item" style="flex: 1;">
                   <div class="form-label">$CPN Beneficiary Address</div>
                   <div class="form-value">
-                    <input type="text" placeholder="Defaults to the address of this site's author" id="form-cpn-beneficiary-input">
+                    <input type="text" placeholder="Defaults to the address of this site's author" id="collect-form-cpn-beneficiary-input">
                   </div>
                 </div>
               </div>
           </details>
-          <details id="form-advanced-reveal">
-            <summary id="form-advanced-toggle">advanced</summary>
-            <div class="form-section-description">Specify the Juicebox project that is being funded from this NFT sale and the category under which it will appear. You can also customize how many editions of this NFT will be made available for collecting.</div>
-            <div class="form-section">
-              <div class="form-item" style="flex: 1;">
-                <div class="form-label">Project ID</div>
-                <div class="form-value"><input type="text" value="748" id="form-project-id-input"></div>
-              </div>
-              <div class="form-item" style="flex: 1;">
-                <div class="form-label">NFT Category</div>
-                <div class="form-value"><input type="text" value="0" id="form-nft-category-input"></div>
-              </div>
-              <div class="form-item" style="flex: 1;">
-                <div class="form-label">Total supply</div>
-                <div class="form-value">
-                  <input type="number" placeholder="10" value="" id="form-total-supply-input">
-                </div>
+      </div>
+    </div>
+    <div id="record-form" class="form closes-modal">
+      <span class="form-header">This file isn't yet onchain. Record it onchain to collect a first copy.</span>
+      <div class="form-body">
+        <details id="record-form-options-reveal">
+          <summary id="record-form-options-toggle" class="toggle main-toggle">options</summary>
+          <div class="form-section-description">Set the NFT's price, how many editions of this NFT will be made available for collecting, and the address that will be sent its first copy that you are paying for.</div>
+          <div class="form-section">
+            <div class="form-item" style="flex: 1;">
+              <div class="form-label">Price</div>
+              <div class="form-value">
+                <span class="ether">Ξ</span><input type="text" value="" id="record-form-price-input">
               </div>
             </div>
+            <div class="form-item" style="flex: 1;">
+              <div class="form-label">Total supply</div>
+              <div class="form-value">
+                <input type="number" placeholder="10" value="" id="record-form-total-supply-input">
+              </div>
+            </div>
+            <div class="form-item" style="flex: 2;">
+              <div class="form-label">Address <button id="record-form-load-address-button" class="load-address-button">[<span id="record-form-load-address-button-text" class="load-addres-button-text">connect wallet</span>]</button></div>
+              <div class="form-value">
+                <input type="text" placeholder="Defaults to your address" id="record-form-beneficiary-input">
+              </div>
+            </div>
+          </div>
+          <div class="form-section-disclaimer">An added 5% is sent to the <a href="https://goerli.juicebox.money/v2/p/669" target="_blank">Croptop Publishing Network</a> in exchange for $CPN to this site's author.</div>
+            <details id="record-form-disclaimer-reveal">
+              <summary id="record-form-disclaimer-toggle" class="toggle disclaimer-toggle">override $CPN beneficiary.</summary>
+              <div class="form-section">
+                <div class="form-item" style="flex: 1;">
+                  <div class="form-label">$CPN Beneficiary Address</div>
+                  <div class="form-value">
+                    <input type="text" placeholder="Defaults to the address of this site's author" id="record-form-cpn-beneficiary-input">
+                  </div>
+                </div>
+              </div>
           </details>
-        </details>
       </div>
-      <div id="form-message"></div>
-      <button id="form-button">[<span id="form-button-text">record & collect</span>]</button>
     </div>
+    <div id="form-error-message"></div>
+    <button id="form-submit-button" class="form-button">[<span id="form-submit-button-text">collect</span>]</button>
     <img id="modal-image"></img>
     <video id="modal-video"></video>
   </div>
 </div>
 <script>
-  var items = Array();
+  // Layout constants.
   const frames = document.getElementById("frames");
   const horizontalMargin = 24;
   const verticalMargin = 10;
   const transitionDuration = 300;
   const widthClasses = ["w1", "w2", "w3"];
   const loadingAnimationPace = 100;
+  const formInputReactionTimeDelay = 1000;
+
+  // State constants.
   const allowanceCache = {};
+  const tiersCache = {};
+
+  // Layout variables.
+  let items = Array();
   let loadingAnimationInterval;
   let currentRow = 1;
   let greatestRightInRow = 0;
   let rows = [];
 
+  // State variables.
+  let defaultProjectId = 758;
+  let defaultNftCategory = 0;
+  let defaultEthAddress;
+  let formState;
+  
+  /// Get admin settings.
   const fetchSettings = () => {
-    fetch("{{ assets_prefix }}templateSettings.json")
-    // only if response is 200 OK, parse the JSON
-    .then(response => {
-      if (!response.ok) {
-        throw Error(response.statusText); // Throw an error if response is not OK.
-      }
-      return response.json();
-    })
-    .then(data => {
-      // only if the settings are found, update the global variables
-      if (data.juiceboxProjectID) {
-        const formProjectIdInput = document.getElementById("form-project-id-input");
-        formProjectIdInput.value = Number(data.juiceboxProjectID);
-      }
-      if (data.ethAddress) {
-        const formCpnBeneficiaryInput = document.getElementById("form-cpn-beneficiary-input");
-        formCpnBeneficiaryInput.value = data.ethAddress;
-      }
-      if (data.defaultNFTCategory) {
-        const formNftCategoryInput = document.getElementById("form-nft-category-input");
-        formNftCategoryInput.value = Number(data.defaultNFTCategory);
-      }
-    })
-    .catch(error => console.error('Fetch templateSettings.json error:', error));
-  }
+    const formStateProjectId = document.getElementById("form-state-project-id");
+    const formStateNftCategory = document.getElementById("form-state-nft-category");
+    
+    formStateProjectId.innerHTML = defaultProjectId;
+    formStateNftCategory.innerHTML = defaultNftCategory;
 
+    fetch("{{ assets_prefix }}templateSettings.json")
+      // only if response is 200 OK, parse the JSON
+      .then(response => {
+        if (!response.ok) {
+          throw Error(response.statusText); // Throw an error if response is not OK.
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.juiceboxProjectID != null) formStateProjectId.innerHTML = Number(data.juiceboxProjectID);
+        if (data.nftCategory != null) formStateNftCategory.innerHTML = Number(data.nftCategory);
+        if (data.ethAddress) defaultEthAddress = data.ethAddress;
+      });
+  }
+  
+  /// Animate the loading ticker.
   const startLoadingAnimation = () => {
     const loadingAnimation = document.getElementById('loading-animation');
     const loadingAnimationFrames = ['-', '\\', '|', '/'];
@@ -160,13 +205,448 @@ window.onpopstate = function(event) {
 
     animate();
   }
-
+  
+  /// Stop animating the loading ticker.
   const stopLoadingAnimation = () => {
     const loadingAnimation = document.getElementById('loading-animation');
     loadingAnimationInterval = clearTimeout(loadingAnimationInterval);
     loadingAnimation.style.display = "none";
   }
+  
+  // Re-decorate the form depending on if the provided content has already been recorded onchain, and if it's sold out.
+  const decorateAndShowForm = async (itemId) => {
+    // Get references to the form state.
+    const formStateProjectId = document.getElementById("form-state-project-id");
+    const formStateNftCategory = document.getElementById("form-state-nft-category");
+    const formStateButton = document.getElementById("form-state-button");
+    const formErrorMessage = document.getElementById("form-error-message");
+    const formSubmitButton = document.getElementById("form-submit-button");
 
+    // Get references to the two possible forms.
+    const recordForm = document.getElementById("record-form");
+    const collectForm = document.getElementById("collect-form");
+
+    // Create the content's encoded IPFS URL.
+    const cidUrl = `{{ assets_prefix }}${itemId}/nft.json.cid.txt`;
+    const cid = await (await fetch(cidUrl)).text();
+    const encodedIPFSUri = cid ? encodeIPFSUri(cid) : "";
+
+    const updateFormState = async () => {
+      // Get a reference to the project ID field.
+      const projectId = formStateProjectId.innerHTML;
+      const category = formStateNftCategory.innerHTML;
+
+      // Look in the cache for tiers within the project ID.
+      const projectIdTiers = tiersCache[projectId];
+      
+      // If there's no cache for the project ID, set it to an empty object.
+      if (!projectIdTiers) tiersCache[projectId] = {};
+
+      // Look in the cache for a tier for the project ID and encodedIPFSUri.
+      let tier = tiersCache[projectId][encodedIPFSUri]; 
+      
+      // If nothing is cached, load from the contract.
+      if (!tier) {
+        // Check to see if there's a tier for this content.
+        [tier] = await tx_view_tier(projectId, encodedIPFSUri);
+
+        // Cache the value.
+        tiersCache[projectId][encodedIPFSUri] = tier;
+      }
+            
+      // Get a reference to the tier's ID.
+      const formattedTierId = parseInt(tier[0].toString());
+            
+      // If there is no tier, the form's state is in RECORD mode, meaning the content must be recorded onchain before it can be collected.
+      if (formattedTierId != 0) {
+        // The form's state is in COLLECT mode, meaning new editions can be minted from an already-recorded NFT tier.    
+
+        // Get a reference to the tier's remaining supply.
+        const formattedRemainingSupply = parseInt(tier[2].toString());
+
+        // If there's no remaining supply, the form's state is in SOLD_OUT mode, meaning it can't be minted anymore.
+        if (formattedRemainingSupply == 0) {
+          // Show the error message.
+          formErrorMessage.innerHTML = "This NFT is sold out";
+          formErrorMessage.style.display = "block"; 
+          // Hide the forms.
+          recordForm.style.display = "none";
+          collectForm.style.display = "none";
+          // Disable the button.
+          formSubmitButton.disabled = true;
+          return;
+        }
+        
+        // Show the COLLECT form.
+        collectForm.style.display = "block";
+        // Hide the RECORD form.
+        recordForm.style.display = "none";
+        // Hide the error message.
+        formErrorMessage.style.display = "none"; 
+          
+        // Get a reference to the tier's price.
+        const formattedPrice = ethers.formatEther(tier[1]);
+        
+        // Show the form.
+        await decorateCollectForm(projectId, category, encodedIPFSUri, formattedRemainingSupply, formattedPrice);
+      } else {
+        // Check to see if the project and category allow posting.
+    
+        // Look in the cache for allowances within the project ID.
+        const projectIdAllowances = allowanceCache[projectId];
+      
+        // If there's no cache for the project ID, set it to an empty object.
+        if (!projectIdAllowances) allowanceCache[projectId] = {};
+      
+        // Look in the cache for an allowance for the category within the allowances for the project ID.
+        let allowance = allowanceCache[projectId][category]; 
+      
+        // If nothing is cached, load from the contract.
+        if (!allowance) {
+          // Get the allowance.
+          allowance = await tx_view_allowance(projectId, category);
+
+          // Cache the value.
+          allowanceCache[projectId][category] = allowance;
+        }
+      
+        // Get a reference to the allowance min total supply.
+        const formattedMinTotalSupply = parseInt(allowance[1].toString());
+
+        // Show an error message if there's no allowance set.
+        if (formattedMinTotalSupply == 0) {
+          // Show the error message.
+          formErrorMessage.innerHTML = `Project ${projectId} isn't accepting posts on category ${category}.`;
+          formErrorMessage.style.display = "block"; 
+          // Hide forms.
+          recordForm.style.display = "none";
+          collectForm.style.display = "none";
+          // Disable the button.
+          formSubmitButton.disabled = true;
+        } 
+
+        // Show the RECORD form.
+        recordForm.style.display = "block";
+        // Hide the COLLECT form.
+        collectForm.style.display = "none";
+        // Hide the error message.
+        formErrorMessage.style.display = "none"; 
+
+        // Get a reference to the allowance min price.
+        const formattedMinPrice = ethers.formatEther(allowance[0]);
+
+        await decorateRecordForm(projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMinPrice);
+      }
+    }
+
+    // Submit the state change form.
+    formStateButton.onclick = async () => {
+      // Get the state values from the form fields.
+      const formStateProjectIdInput = document.getElementById("form-state-project-id-input");
+      const formStateNftCategoryInput = document.getElementById("form-state-nft-category-input");
+      const formStateReveal = document.getElementById("form-state-reveal");
+
+      // Set the state.
+      formStateProjectId.innerHTML = formStateProjectIdInput.value;
+      formStateNftCategory.innerHTML = formStateNftCategoryInput.value;
+
+      // Close the state change form.
+      formStateReveal.open = false;
+
+      // Update the form's state.
+      updateFormState();
+    }  
+
+    updateFormState();
+  }
+
+  const decorateRecordForm = (projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMinPrice) => {
+    // Get references to record form elements that need decorating.    
+    const recordFormBeneficiaryInput = document.getElementById("record-form-beneficiary-input");
+    const recordFormCpnBeneficiaryInput = document.getElementById("record-form-cpn-beneficiary-input");
+    const recordFormTotalSupplyInput = document.getElementById("record-form-total-supply-input");
+    const recordFormPriceInput = document.getElementById("record-form-price-input");
+    const formErrorMessage = document.getElementById("form-error-message");
+    const formSubmitButtonText = document.getElementById("form-submit-button-text");
+    const formSubmitButton = document.getElementById("form-submit-button");
+    const recordFormOptionsReveal = document.getElementById('record-form-options-reveal');
+    const recordFormDisclaimerReveal = document.getElementById('record-form-disclaimer-reveal');
+    
+    // Toggle off the sections.
+    recordFormOptionsReveal.open = false;
+    recordFormDisclaimerReveal.open = false;
+    
+    // Change the button text.
+    formSubmitButtonText.innerHTML = "record & collect";
+    
+    // Allow connecting wallet to prefill beneficiary input field.
+    const loadAddressButton = document.getElementById("record-form-load-address-button");
+    loadAddressButton.onclick = async () => {
+      recordFormBeneficiaryInput.value = (await getSigner()).address;
+    };
+    
+    // Re-decorate some input fields depending on the allowances set for the project and category.
+    const checkState = async () => {
+      // Show an error message if there's no allowance set.
+      // Set allowance values in the form if the fields are not yet set.
+      if (!recordFormPriceInput.value) recordFormPriceInput.value = formattedMinPrice; 
+      if (!recordFormTotalSupplyInput.value) recordFormTotalSupplyInput.value = formattedMinTotalSupply; 
+            
+      // Set error messages if the currently inputted values are too small.
+      if (recordFormPriceInput.value < formattedMinPrice || recordFormTotalSupplyInput.value < formattedMinTotalSupply) {
+        formErrorMessage.innerHTML = `Project ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedMinPrice} and total supply of ${formattedMinTotalSupply} to record on category ${category}.`;
+        formErrorMessage.style.display = "block"; 
+        formSubmitButton.disabled = true;
+      } else {
+        // Hide the error message.
+        formErrorMessage.style.display = "none"; 
+        formSubmitButton.disabled = false;
+      }
+    }
+      
+    // Prevent excessive calls.
+    let checkStateTimer;
+    const queueCheckState = async () => {
+      clearTimeout(checkStateTimer);  
+      checkStateTimer = setTimeout(checkState, formInputReactionTimeDelay);
+    }
+
+    // Update the form's state each time the category, price, or total supply change.
+    recordFormPriceInput.addEventListener('input', queueCheckState);
+    recordFormTotalSupplyInput.addEventListener('input', queueCheckState);
+    
+    // Check the state.
+    checkState();
+      
+    // Submit the form.
+    formSubmitButton.onclick = async () => {
+      await checkState();
+      if (formSubmitButton.disabled) return;
+      const totalSupply = recordFormTotalSupplyInput.value;
+      const price = `${Number(recordFormPriceInput.value) * 1_000_000_000_000_000_000}`;
+      const beneficiary = recordFormBeneficiaryInput.value;
+      const cpnBeneficiary = recordFormCpnBeneficiaryInput.value;
+      return await tx_collect(projectId, category, totalSupply, price, encodedIPFSUri, beneficiary, cpnBeneficiary);
+    }  
+  };
+
+  const decorateCollectForm = (projectId, category, encodedIPFSUri, formattedRemainingSupply, formattedPrice) => {
+    // Get references to record form elements that need decorating.    
+    const collectFormHeader = document.getElementById("collect-form-header");
+    const collectFormBeneficiaryInput = document.getElementById("collect-form-beneficiary-input");
+    const collectFormCpnBeneficiaryInput = document.getElementById("collect-form-cpn-beneficiary-input");
+    const collectFormPriceInput = document.getElementById("collect-form-price-input");
+    const formErrorMessage = document.getElementById("form-error-message");
+    const formSubmitButtonText = document.getElementById("form-submit-button-text");
+    const formSubmitButton = document.getElementById("form-submit-button");
+    const collectFormOptionsReveal = document.getElementById('collect-form-options-reveal');
+    const collectFormDisclaimerReveal = document.getElementById('collect-form-disclaimer-reveal');
+    
+    // Toggle off the sections.
+    collectFormOptionsReveal.open = false;
+    collectFormDisclaimerReveal.open = false;
+    
+    // Set the header text.
+    if (formattedRemainingSupply == 1) {
+      collectFormHeader.innerHTML = `There is only 1 edition of this file available to be collected for <span class="ether">Ξ</span>${formattedPrice}.`; 
+    } else {
+      collectFormHeader.innerHTML = `There are still ${formattedRemainingSupply > 1000000 ? infinite : formattedRemainingSupply } editions of this file available to be collected for <span class="ether">Ξ</span>${formattedPrice} each.`; 
+    }
+
+    // Change the button text.
+    formSubmitButtonText.innerHTML = "collect";
+    
+    // Allow connecting wallet to prefill beneficiary input field.
+    const loadAddressButton = document.getElementById("collect-form-load-address-button");
+    loadAddressButton.onclick = async () => {
+      collectFormBeneficiaryInput.value = (await getSigner()).address;
+    };
+    
+    // Re-decorate some input fields depending on the allowances set for the project and category.
+    const checkState = async () => {
+      // Set allowance values in the form if the fields are not yet set.
+      if (!collectFormPriceInput.value) collectFormPriceInput.value = formattedPrice; 
+            
+      // Set error messages if the currently inputted values are too small.
+      if (collectFormPriceInput.value < formattedPrice) {
+        formErrorMessage.innerHTML = `This NFT has a minimum price of <span class="ether">Ξ</span>${formattedPrice}.`;
+        formErrorMessage.style.display = "block"; 
+        formSubmitButton.disabled = true;
+      } else {
+        // Hide the error message.
+        formErrorMessage.style.display = "none"; 
+        formSubmitButton.disabled = false;
+      }
+    }
+      
+    // Prevent excessive calls.
+    let checkStateTimer;
+    const queueCheckState = async () => {
+      clearTimeout(checkStateTimer);  
+      checkStateTimer = setTimeout(checkState, formInputReactionTimeDelay);
+    }
+
+    // Update the form's state each time the price changes.
+    collectFormPriceInput.addEventListener('input', queueCheckState);
+    
+    // Check the state.
+    checkState();
+
+    // Submit the form.
+    formSubmitButton.onclick = async () => {
+      await checkState();
+      if (formSubmitButton.disabled) return;
+      const totalSupply = 1;
+      const price = `${Number(collectFormPriceInput.value) * 1_000_000_000_000_000_000}`;
+      const beneficiary = collectFormBeneficiaryInput.value;
+      const cpnBeneficiary = collectFormCpnBeneficiaryInput.value;
+      return await tx_collect(projectId, category, totalSupply, price, encodedIPFSUri, beneficiary, cpnBeneficiary);
+    }  
+  };
+  
+  // Get the modal set up.
+  const decorateModal = async (itemId, name, date, link, imageSrc, videoSrc) => {
+    // Get references to modal elements that need decorating.    
+    const modal = document.getElementById("modal");
+    const modalHeader = document.getElementById("modal-header");
+    const modalSubtitle = document.getElementById("modal-subtitle");
+    const modalContent = document.getElementById("modal-content");
+    const formStateItem = document.getElementById("form-state-item"); 
+    const formStateReveal = document.getElementById("form-state-reveal");
+    
+    // Track the modal in browse history.
+    history.pushState({ modalOpened: true, itemId: itemId }, "", "?id=" + itemId);
+   
+    // Make sure the modal is closeable when clicking on empty space.
+    let activeElementOnClose;
+    modal.addEventListener("mousedown", () => {
+      activeElementOnClose = document.activeElement;
+    });
+
+    modal.addEventListener("click", (e) => {
+      // Ignore if the clicked view shouldn't close the modal.
+      if (!e.target.classList.contains("closes-modal")) return;
+
+      // Ignore if the clicked view comes while an input field is selected.
+      if (activeElementOnClose.tagName === "INPUT") return;
+      
+      // If there's a video, pause it.
+      if (videoSrc) modalVideo.pause();
+
+      // Hide the modal.
+      modal.style.display = "none";
+
+      // Reset the view stack browsing state.
+      history.pushState({}, "", window.location.pathname);
+    });
+    
+    // Decorate the frame's title.
+    const frameName = document.getElementById("frame-name");
+    const frameDate = document.getElementById("frame-date");
+    frameName.innerHTML = name;
+    frameDate.innerHTML = `${date} | `;
+    
+    // Show and populate the frame's subtitle if there's a link.
+    if (link) {
+      const frameLink = document.getElementById("frame-link");
+      modalSubtitle.style.display = "block";
+      frameLink.innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
+    } else {
+      modalSubtitle.style.display = "none";
+    }
+    
+    // Decordate the image or video content.
+    const modalImage = document.getElementById("modal-image");
+    const modalVideo = document.getElementById("modal-video");
+    if (videoSrc) {
+      modalImage.style.display = "none"
+      modalVideo.style.display = "block"
+      modalVideo.autoplay = true;
+      modalVideo.loop = true;
+      modalVideo.muted = true;
+      modalVideo.controls = true;
+      modalImage.src = "";
+      modalVideo.src = videoSrc;
+      modalVideo.addEventListener('click', (e) => e.stopPropagation());
+    } else {
+      modalImage.style.display = "block"
+      modalVideo.style.display = "none"
+      modalVideo.src = "";
+      modalImage.src = imageSrc;
+      modalImage.addEventListener('click', (e) => e.stopPropagation());
+    }
+
+    // Show the form.
+    decorateAndShowForm(itemId);
+    
+    // Hide the state when the state form is open.
+    formStateReveal.addEventListener('toggle', (e) => {
+      formStateItem.style.display = e.target.open ? 'none' : 'flex';
+    });
+    
+    // Toggle the state form when clicked.
+    formStateItem.addEventListener('click', (e) => {
+      formStateReveal.open = true;     
+    });
+  }
+  
+  const decorateFrame = async (frame, itemId, imageSrc, date, name, link, videoSrc) => {
+    // Set a default name if needed.
+    if (name === undefined || name === null || name === "") name = "✃";
+    
+    // Get references to frame elements that need decorating.    
+    const ctaAnchor = frame.querySelector('a');;
+    const title = frame.querySelector('div.image-title');
+    const img = frame.querySelector('img');
+
+    // Set the frame and img's ID.
+    frame.id = 'frame-' + itemId;
+    img.id = 'img-' + itemId;
+    
+    // Set the content.
+    ctaAnchor.textContent = '[collect]';
+    title.innerHTML = `<span><span class="image-date">${date} | </span>${ name }<span>`;
+    
+    // Mark videos with an icon.
+    if (videoSrc) {
+      const overlay = document.createElement("div");
+      overlay.classList.add("overlay-icon");
+      overlay.classList.add("video-icon");
+      frame.appendChild(overlay);
+    }
+    
+    // Summon a modal when the frame is clicked.
+    frame.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      // Make the modal look right.
+      await decorateModal(itemId, name, date, link, imageSrc, videoSrc);
+
+      // Show the modal.
+      modal.style.display = "block";
+    });
+  }
+
+  /// Load the frame contents.
+  const loadFrame = async (frame) => {
+    const img = frame.querySelector('img:first-of-type');
+    return new Promise((resolve) => {
+      // Resolve if the image if done.
+      if (img.complete) return resolve();
+
+      const checkForDimensions = () => {
+        // Resolve if the img has dimensions. Small delay to let more of the img load for a smoother slide in.
+        if (img.width > 0 && img.height > 0) return setTimeout(resolve, 1000);
+        // Otherwise wait until the image has dimensions.
+        else
+          return requestAnimationFrame(checkForDimensions);
+      }
+      
+      checkForDimensions();
+    });
+  };
+
+  /// Get the top.
   const getTopTarget = (frame, row) => {
     if (row == 1) return frames.offsetTop;
 
@@ -187,223 +667,6 @@ window.onpopstate = function(event) {
     }
 
     return candidateFrame.bottom;
-  };
-
-  const loadFrame = async (frame) => {
-    const img = frame.querySelector('img:first-of-type');
-    return new Promise((resolve) => {
-      // Resolve if the image if done.
-      if (img.complete) return resolve();
-
-      const checkForDimensions = () => {
-        // Resolve if the img has dimensions. Small delay to let more of the img load for a smoother slide in.
-        if (img.width > 0 && img.height > 0) return setTimeout(resolve, 1000);
-        // Otherwise wait until the image has dimensions.
-        else
-          return requestAnimationFrame(checkForDimensions);
-      }
-
-      checkForDimensions();
-    });
-  };
-
-  const decorateFrame = async (frame, itemId, src, date, name, link, video) => {
-    if (name === undefined || name === null || name === "") name = "✃";
-
-    frame.id = 'frame-' + itemId;
-
-    const ctaAnchor = frame.querySelector('a');;
-    const title = frame.querySelector('div.image-title');
-    const img = frame.querySelector('img');
-    img.id = 'img-' + itemId;
-
-    ctaAnchor.textContent = '[collect]';
-    title.innerHTML = `<span><span class="image-date">${date} | </span>${ name }<span>`;
-
-    const cidUrl = `{{ assets_prefix }}${itemId}/nft.json.cid.txt`;
-    const cid = await (await fetch(cidUrl)).text();
-    const encodedIPFSUri = cid ? encodeIPFSUri(cid) : "";
-
-    if (video) {
-      const overlay = document.createElement("div");
-      overlay.classList.add("overlay-icon");
-      overlay.classList.add("video-icon");
-      frame.appendChild(overlay);
-    }
-
-    const clickHandler = async (clickEvent) => {
-      clickEvent.preventDefault();
-      const modal = document.getElementById("modal");
-      const modalHeader = document.getElementById("modal-header");
-      const modalSubtitle = document.getElementById("modal-subtitle");
-      const modalContent = document.getElementById("modal-content");
-      const form = document.getElementById("form");
-      const formOptionsReveal = document.getElementById('form-options-reveal');
-      const formDisclaimerReveal = document.getElementById('form-disclaimer-reveal');
-      const formAdvancedReveal = document.getElementById('form-advanced-reveal');
-      const formMessage = document.getElementById('form-message');
-
-      history.pushState({ modalOpened: true, itemId: itemId }, '', '?id=' + itemId);
-
-      modal.style.display = "block";
-
-      formMessage.style.display = "none";
-
-      let activeElementOnClose;
-      modal.addEventListener("mousedown", (mouseDownEvent) => {
-          activeElementOnClose = document.activeElement;
-      });
-
-      modal.addEventListener("click", (closeEvent) => {
-        if (closeEvent.target !== modal && closeEvent.target !== modalHeader && closeEvent.target !== modalSubtitle && closeEvent.target !== modalContent && closeEvent.target !== form) return;
-        if (activeElementOnClose.tagName === 'INPUT') return;
-        if (video) modalVideo.pause();
-        modal.style.display = "none";
-        history.pushState({}, '', window.location.pathname);
-        formOptionsReveal.open = false;
-        formDisclaimerReveal.open = false;
-        formAdvancedReveal.open = false;
-      });
-
-      const modalImage = document.getElementById("modal-image");
-      const modalVideo = document.getElementById("modal-video");
-
-      if (video) {
-        modalImage.style.display = "none"
-        modalVideo.style.display = "block"
-        modalVideo.autoplay = true;
-        modalVideo.loop = true;
-        modalVideo.muted = true;
-        modalVideo.controls = true;
-        modalImage.src = "";
-        modalVideo.src = video;
-        modalVideo.addEventListener('click', (event) => event.stopPropagation());
-      } else {
-        modalImage.style.display = "block"
-        modalVideo.style.display = "none"
-        modalVideo.src = "";
-        modalImage.src = src;
-        modalImage.addEventListener('click', (event) => event.stopPropagation());
-      }
-
-      const frameName = document.getElementById("frame-name");
-      const frameDate = document.getElementById("frame-date");
-      frameName.innerHTML = name;
-      frameDate.innerHTML = `${date} | `;
-
-      if (link) {
-        modalSubtitle.style.display = "block";
-        const frameLink = document.getElementById("frame-link");
-        frameLink.innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
-      } else {
-        modalSubtitle.style.display = "none";
-      }
-
-      // Get the form info.
-      form.style.display = "block";
-      const formBeneficiaryInput = document.getElementById("form-beneficiary-input");
-      const formCpnBeneficiaryInput = document.getElementById("form-cpn-beneficiary-input");
-      const formTotalSupplyInput = document.getElementById("form-total-supply-input");
-      const formNftCategoryInput = document.getElementById("form-nft-category-input");
-      const formProjectIdInput = document.getElementById("form-project-id-input");
-      const formPriceInput = document.getElementById("form-price-input");
-      const formButton = document.getElementById("form-button");
-
-      const loadAddressButton = document.getElementById("load-address-button");
-      loadAddressButton.onclick = async () => {
-       formBeneficiaryInput.value = (await getSigner()).address;
-      };
-
-      const checkDefaultAllowance = async () => {
-        // Get the allowance for the project ID and category preset.
-        const projectId = formProjectIdInput.value;
-        const category = formNftCategoryInput.value;
-
-        // Nothing to check if project ID and category not set.
-        if (!projectId || !category) return;
-
-        // Look in the cache.
-        const allowanceProjectId = allowanceCache[projectId];
-
-        // If there's no cache for the project ID, set it to an empty object.
-        if (!allowanceProjectId) allowanceCache[projectId] = {};
-
-        let allowance = allowanceCache[projectId][category];
-
-        // If nothing is cached, load from the contract.
-        if (!allowance) {
-          // Disable the fields being set.
-          formPriceInput.disabled = true;
-          formTotalSupplyInput.disabled = true;
-
-          // Get the allowance.
-          allowance = await tx_view_allowance(projectId, category);
-
-          // Enable the fields being set.
-          formPriceInput.disabled = false;
-          formTotalSupplyInput.disabled = false;
-
-          // Cache the values.
-          allowanceCache[projectId][category] = allowance;
-        }
-
-        const formattedTotalSupply = parseInt(allowance[1].toString());
-
-        // Show an error message if needed.
-        if (formattedTotalSupply == 0) {
-            formMessage.innerHTML = `Project ${projectId} isn't accepting posts on category ${category}.`;
-            formMessage.style.display = "block";
-            formButton.disabled = true;
-        } else {
-            const formattedPrice = ethers.formatEther(allowance[0]);
-
-            // Set default values.
-            if (!formPriceInput.value) formPriceInput.value = formattedPrice;
-            if (!formTotalSupplyInput.value) formTotalSupplyInput.value = formattedTotalSupply;
-
-            // Set error messages if the inputted values are too small.
-            if (formPriceInput.value < formattedPrice || formTotalSupplyInput.value < formattedTotalSupply) {
-              formMessage.innerHTML = `Project ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedPrice} and total supply of ${formattedTotalSupply} to record on category ${category}.`;
-              formMessage.style.display = "block";
-              formButton.disabled = true;
-            } else {
-              formMessage.style.display = "none";
-              formButton.disabled = false;
-            }
-        }
-      }
-
-      // Prevent excessive calls.
-      let checkDefaultAllowanceTimer;
-      const queueCheckDefaultAllowance = async () => {
-        clearTimeout(checkDefaultAllowanceTimer);
-        checkDefaultAllowanceTimer = setTimeout(checkDefaultAllowance, 1000);
-      }
-
-      // Update the allowance each time the projectId or the category changes.
-      formProjectIdInput.addEventListener('input', queueCheckDefaultAllowance);
-      formNftCategoryInput.addEventListener('input', queueCheckDefaultAllowance);
-      formPriceInput.addEventListener('input', queueCheckDefaultAllowance);
-      formTotalSupplyInput.addEventListener('input', queueCheckDefaultAllowance);
-
-      // Submit the form.
-      formButton.onclick = async () => {
-        await checkDefaultAllowance();
-        if (formButton.disabled) return;
-        const projectId = formProjectIdInput.value;
-        const category = formNftCategoryInput.value;
-        const quantity = formTotalSupplyInput.value;
-        const price = `${Number(formPriceInput.value) * 1_000_000_000_000_000_000}`;
-        const beneficiary = formBeneficiaryInput.value;
-        const cpnBeneficiary = formCpnBeneficiaryInput.value;
-        return await tx_collect(projectId, category, quantity, price, encodedIPFSUri, beneficiary, cpnBeneficiary);
-      }
-
-      await checkDefaultAllowance();
-    }
-
-    img.addEventListener("click", clickHandler);
-    ctaAnchor.addEventListener("click", clickHandler);
   }
 
   const frameImage = (src) => {
@@ -511,6 +774,7 @@ window.onpopstate = function(event) {
       await positionAndShowFrame(frame);
   };
 
+  fetchSettings();
   loadImageFrames();
   startLoadingAnimation();
 </script>

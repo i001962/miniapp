@@ -131,7 +131,6 @@ details[open] > summary:before {
   float: center;
   padding-bottom: 100px;
 }
-
 #modal-header {
   padding-bottom: 12px;
 }
@@ -147,25 +146,52 @@ details[open] > summary:before {
 #frame-link {
   color: var(--foreground-secondary-color);
 }
-#form {
+#form-state {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+#form-state-item {
+  color: var(--foreground-secondary-color);
+  font-size: 12px;
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+}
+#form-state-button {
+  color: var(--foreground-primary-color);
+}
+.form-state-item-value {
+  margin-left: 4px; 
+}
+#form-state-toggle {
+ font-weight: 200;
+}
+.form {
   display: flex;
   flex-direction: row;
   display: none;
 }
-#form-header {
+.form-header {
   color: var(--foreground-secondary-color);
   font-style: italic;
   font-weight: 200;
 }
-#form-body {
+.form-body {
   margin-top: 4px;
 }
-#form-options-toggle, #form-advanced-toggle, #form-disclaimer-toggle {
+.toggle {
   color: var(--foreground-secondary-color);
   cursor: pointer;
 }
-#form-options-toggle, #form-advanced-toggle {
+.main-toggle {
   margin-top: 12px;
+}
+.disclaimer-toggle {
+  font-weight: 200;
+  font-style: italic;
 }
 details > summary:before {
   color: var(--foreground-secondary-color);
@@ -187,10 +213,6 @@ details > summary:before {
   font-style: italic;
   font-weight: 200;
 }
-#form-disclaimer-toggle {
-  font-weight: 200;
-  font-style: italic;
-}
 .form-section-disclaimer a {
   color: var(--foreground-secondary-color);
 }
@@ -201,7 +223,7 @@ details > summary:before {
 .form-item {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 .form-label {
   color: var(--foreground-color);
@@ -219,7 +241,7 @@ details > summary:before {
   color: var(--foreground-color);
   background-color: var(--background-color);
 }
-#load-address-button {
+.load-address-button {
   float: right;
   background: none;
   border: none;
@@ -228,14 +250,14 @@ details > summary:before {
   line-height: 1;
   cursor: pointer;
 }
-#load-address-button:hover #load-address-button-text {
+.load-address-button:hover .load-address-button-text {
   text-decoration: underline;
 }
-#form-message {
+#form-error-message {
   margin-top: 12px;
   color: var(--alert-color);
 }
-#form-button {
+.form-button {
   background: none;
   margin: 12px 0;
   color: var(--link-color);
@@ -245,10 +267,10 @@ details > summary:before {
   padding: 4px 0px;
   cursor: pointer;
 }
-#form-button:hover #form-button-text {
+.form-button:hover .form-button-text {
   text-decoration: underline;
 }
-#form-button:disabled {
+.form-button:disabled {
   color: var(--foreground-secondary-color); 
 }
 .ether {
@@ -906,7 +928,7 @@ footer {
     width: 100vw;
   }
 
-  #form, #modal-header {
+  .form, #modal-header {
     margin-inline-start: 20px;
     margin-inline-end: 20px;
   }
