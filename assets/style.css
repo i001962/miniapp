@@ -157,7 +157,7 @@ details[open] > summary:before {
   color: var(--foreground-primary-color);
 }
 .form-state-item-value {
-  margin-left: 4px; 
+  margin-left: 4px;
 }
 #form-state-toggle {
  /* font-weight: 200; */
@@ -269,7 +269,7 @@ details > summary:before {
   text-decoration: underline;
 }
 .form-button:disabled {
-  color: var(--foreground-tertiary-color); 
+  color: var(--foreground-tertiary-color);
   cursor: crosshair;
 }
 .ether {
@@ -277,8 +277,14 @@ details > summary:before {
   font-weight: 500;
 }
 #modal img, #modal video {
-  width: 100%;
   border: 1px solid var(--foreground-tertiary-color);
+
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(100vh - 240px);
+  object-fit: contain;
+  margin: 0px auto;
 }
 
 /* Add Animation */
@@ -918,23 +924,27 @@ footer {
   }
 
   .w1 {
-    width: 90vw;
+    width: calc(80vw - 60px);
   }
 
   .w2 {
-    width: 95vw;
+    width: calc(90vw - 60px);
   }
 
   .w3 {
-    width: 100vw;
+    width: calc(100vw - 60px);
   }
 
-  .form, #modal-header {
+  .form, #modal-header, #form-submit-button {
     margin-inline-start: 20px;
     margin-inline-end: 20px;
   }
 
   #modal-content {
     width: 100%;
+  }
+
+  #modal img, #modal video {
+    max-height: calc(100vh - 160px);
   }
 }
