@@ -1,5 +1,14 @@
 const croptopContract = async () => {
-    return "0xea28cb5405d05abe0a87b16e26fb709f55341cf6";
+  switch (await getChainId()) {
+    case 5:
+      return "0xea28cb5405d05abe0a87b16e26fb709f55341cf6";
+  }
+}
+const feeProjectId = async () => {
+  switch (await getChainId()) {
+    case 5:
+      return 758;
+  }
 }
 const contractABI = [
     {
@@ -407,13 +416,12 @@ const tx_view_tier = async (projectId, encodedIPFSUri) => {
   return await view(await croptopContract(), contractABI, "tiersFor", [projectId, "0x0000000000000000000000000000000000000000", [encodedIPFSUri]]);
 }
 
-const tx_collect = async (projectId, category, totalSupply, price, encodedIPFSUri, beneficiary, cpnBeneficiary) => {
-  const bigIntPrice = BigInt(price);
-  const post = {totalSupply, price: bigIntPrice, category, encodedIPFSUri};
-  const divisor = BigInt("20");
+const tx_collect = async (projectId, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value) => {
+  const post = {totalSupply, price, category, encodedIPFSUri};
+  const posts = new Array(quantity).fill(post);
   if (!beneficiary) beneficiary = (await getSigner()).address;
   if (!cpnBeneficiary) cpnBeneficiary = beneficiary; 
-  return await sign(await croptopContract(), contractABI, "collect", [projectId, [post], beneficiary, cpnBeneficiary, {
-      value: bigIntPrice + (projectId == 758 ? BigInt(0) : (bigIntPrice / divisor)) 
+  return await sign(await croptopContract(), contractABI, "collect", [projectId, posts, beneficiary, cpnBeneficiary, {
+      value 
   }]);
 }

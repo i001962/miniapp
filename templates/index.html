@@ -47,11 +47,11 @@ window.onpopstate = function(event) {
           <summary id="form-state-toggle" class="toggle">Project ID: <span id="form-state-project-id" class="form-state-item-value"></span>, NFT category ID: <span id="form-state-nft-category" class="form-state-item-value"></span>.</summary>
           <div class="form-section-description">Specify the Juicebox project that is being funded from this NFT sale and the category under which it will appear. Changing these values will change the availability of this NFT.</div>
           <div class="form-section">
-            <div class="form-item" style="flex: 1;">
+            <div class="form-item">
               <div class="form-label">Project ID</div>
               <div class="form-value"><input type="text" value="758" id="form-state-project-id-input"></div>
             </div>
-            <div class="form-item" style="flex: 1;">
+            <div class="form-item">
               <div class="form-label">NFT category ID</div>
               <div class="form-value"><input type="text" value="0" id="form-state-nft-category-input"></div>
             </div>
@@ -67,13 +67,19 @@ window.onpopstate = function(event) {
           <summary id="collect-form-options-toggle" class="toggle main-toggle">options</summary>
           <div class="form-section-description">Determine the price you want to pay and the address that will be sent the copy you are paying for.</div>
           <div class="form-section">
-            <div class="form-item" style="flex: 1;">
+            <div class="form-item">
               <div class="form-label">Price</div>
               <div class="form-value">
-                <span class="ether">Ξ</span><input type="text" value="" id="collect-form-price-input">
+                <span class="ether">Ξ</span><input type="number" value="" id="collect-form-price-input">
               </div>
             </div>
-            <div class="form-item" style="flex: 2;">
+            <div class="form-item">
+              <div class="form-label">Quantity to mint</div>
+              <div class="form-value">
+                <input type="number" value="1" id="collect-form-quantity-input">
+              </div>
+            </div>
+            <div class="form-item form-item-large">
               <div class="form-label">Address <button id="collect-form-load-address-button" class="load-address-button">[<span id="collect-form-load-address-button-text" class="load-address-button-text">connect wallet</span>]</button></div>
               <div class="form-value">
                 <input type="text" placeholder="Defaults to your address" id="collect-form-beneficiary-input">
@@ -84,7 +90,7 @@ window.onpopstate = function(event) {
             <details id="collect-form-disclaimer-reveal">
               <summary id="collect-form-disclaimer-toggle" class="toggle disclaimer-toggle">override $CPN beneficiary.</summary>
               <div class="form-section">
-                <div class="form-item" style="flex: 1;">
+                <div class="form-item form-item-large">
                   <div class="form-label">$CPN Beneficiary Address</div>
                   <div class="form-value">
                     <input type="text" placeholder="Defaults to the address of this site's author" id="collect-form-cpn-beneficiary-input">
@@ -99,21 +105,27 @@ window.onpopstate = function(event) {
       <div class="form-body">
         <details id="record-form-options-reveal">
           <summary id="record-form-options-toggle" class="toggle main-toggle">options</summary>
-          <div class="form-section-description">Set the NFT's price, how many editions of this NFT will be made available for collecting, and the address that will be sent its first copy that you are paying for.</div>
+          <div class="form-section-description">Set the NFT's price, how many editions of this NFT will be made available for collecting, and the address that will be sent its first copies that you are paying for.</div>
           <div class="form-section">
-            <div class="form-item" style="flex: 1;">
+            <div class="form-item">
               <div class="form-label">Price</div>
               <div class="form-value">
                 <span class="ether">Ξ</span><input type="text" value="" id="record-form-price-input">
               </div>
             </div>
-            <div class="form-item" style="flex: 1;">
+            <div class="form-item">
               <div class="form-label">Total supply</div>
               <div class="form-value">
                 <input type="number" placeholder="10" value="" id="record-form-total-supply-input">
               </div>
             </div>
-            <div class="form-item" style="flex: 2;">
+            <div class="form-item">
+              <div class="form-label">Quantity to mint</div>
+              <div class="form-value">
+                <input type="number" value="1" id="record-form-quantity-input">
+              </div>
+            </div>
+            <div class="form-item form-item-large">
               <div class="form-label">Address <button id="record-form-load-address-button" class="load-address-button">[<span id="record-form-load-address-button-text" class="load-addres-button-text">connect wallet</span>]</button></div>
               <div class="form-value">
                 <input type="text" placeholder="Defaults to your address" id="record-form-beneficiary-input">
@@ -124,7 +136,7 @@ window.onpopstate = function(event) {
             <details id="record-form-disclaimer-reveal">
               <summary id="record-form-disclaimer-toggle" class="toggle disclaimer-toggle">override $CPN beneficiary.</summary>
               <div class="form-section">
-                <div class="form-item" style="flex: 1;">
+                <div class="form-item form-item-large">
                   <div class="form-label">$CPN Beneficiary Address</div>
                   <div class="form-value">
                     <input type="text" placeholder="Defaults to the address of this site's author" id="record-form-cpn-beneficiary-input">
@@ -136,7 +148,7 @@ window.onpopstate = function(event) {
     </div>
     <div id="modal-loading-animation" class="loading-animation"></div>
     <div id="form-error-message"></div>
-    <button id="form-submit-button" class="form-button">[<span id="form-submit-button-text">collect</span>]</button>
+    <button id="form-submit-button" class="form-button">[<span id="form-submit-button-text">collect</span>]<span id="button-loading-animation" class="loading-animation"></span></button> 
     <img id="modal-image"></img>
     <video id="modal-video"></video>
   </div>
@@ -154,6 +166,7 @@ window.onpopstate = function(event) {
   // State constants.
   const allowanceCache = {};
   const tiersCache = {};
+  const feeDivisor = 20;
 
   // Layout variables.
   let items = Array();
@@ -195,7 +208,7 @@ window.onpopstate = function(event) {
   /// Animate the loading ticker.
   const startLoadingAnimation = (loadingAnimationId) => {
     const loadingAnimation = document.getElementById(loadingAnimationId);
-    loadingAnimation.style.display = "block";
+    loadingAnimation.style.display = "inherit";
     const loadingAnimationFrames = ['-', '\\', '|', '/'];
     let currentFrame = 0;
 
@@ -375,6 +388,7 @@ window.onpopstate = function(event) {
     const recordFormCpnBeneficiaryInput = document.getElementById("record-form-cpn-beneficiary-input");
     const recordFormTotalSupplyInput = document.getElementById("record-form-total-supply-input");
     const recordFormPriceInput = document.getElementById("record-form-price-input");
+    const recordFormQuantityInput = document.getElementById("record-form-quantity-input");
     const formErrorMessage = document.getElementById("form-error-message");
     const formSubmitButtonText = document.getElementById("form-submit-button-text");
     const formSubmitButton = document.getElementById("form-submit-button");
@@ -396,14 +410,13 @@ window.onpopstate = function(event) {
 
     // Re-decorate some input fields depending on the allowances set for the project and category.
     const checkState = async () => {
-      // Show an error message if there's no allowance set.
-      // Set allowance values in the form if the fields are not yet set.
-      if (!recordFormPriceInput.value) recordFormPriceInput.value = formattedMinPrice;
-      if (!recordFormTotalSupplyInput.value) recordFormTotalSupplyInput.value = formattedMinTotalSupply;
-
       // Set error messages if the currently inputted values are too small.
       if (recordFormPriceInput.value < formattedMinPrice || recordFormTotalSupplyInput.value < formattedMinTotalSupply) {
         formErrorMessage.innerHTML = `Project ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedMinPrice} and total supply of ${formattedMinTotalSupply} to record on category ${category}.`;
+        formErrorMessage.style.display = "block";
+        formSubmitButton.disabled = true;
+      } else if (recordFormQuantityInput.value > recordFormTotalSupplyInput.value) {
+        formErrorMessage.innerHTML = `Can't mint ${recordFormQuantityInput.value} if the total supply is ${recordFormTotalSupplyInput.value}.`;
         formErrorMessage.style.display = "block";
         formSubmitButton.disabled = true;
       } else {
@@ -423,19 +436,45 @@ window.onpopstate = function(event) {
     // Update the form's state each time the category, price, or total supply change.
     recordFormPriceInput.addEventListener('input', queueCheckState);
     recordFormTotalSupplyInput.addEventListener('input', queueCheckState);
+    recordFormQuantityInput.addEventListener('input', queueCheckState);
+
+    // Set allowance values in the form if the fields are not yet set.
+    if (!recordFormPriceInput.value) recordFormPriceInput.value = formattedMinPrice;
+    if (!recordFormTotalSupplyInput.value) recordFormTotalSupplyInput.value = formattedMinTotalSupply;
 
     // Check the state.
     checkState();
 
     // Submit the form.
     formSubmitButton.onclick = async () => {
+      // Make sure the form contents make sense.
       await checkState();
       if (formSubmitButton.disabled) return;
+
+      // Show the loading animation.
+      startLoadingAnimation('button-loading-animation');
+      
+      // Normalize values from the form.
       const totalSupply = recordFormTotalSupplyInput.value;
+      const quantity = recordFormQuantityInput.value;
       const price = `${Number(recordFormPriceInput.value) * 1_000_000_000_000_000_000}`;
       const beneficiary = recordFormBeneficiaryInput.value;
       const cpnBeneficiary = recordFormCpnBeneficiaryInput.value;
-      return await tx_collect(projectId, category, totalSupply, price, encodedIPFSUri, beneficiary, cpnBeneficiary);
+      const value = BigInt(price) + ((projectId == await feeProjectId()) ? BigInt(0) : (BigInt(price) / BigInt(feeDivisor)));
+      
+      try {
+        // Add a fee if the project being paid isn't the fee project ID.
+        await tx_collect(projectId, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value);
+
+        // Hide the loading animation.
+        stopLoadingAnimation('button-loading-animation');
+      } catch (e) {
+        // Hide the loading animation.
+        stopLoadingAnimation('button-loading-animation');
+
+        formErrorMessage.innerHTML = e;
+        formErrorMessage.style.display = "block";
+      }
     }
   };
 
@@ -444,6 +483,7 @@ window.onpopstate = function(event) {
     const collectFormHeader = document.getElementById("collect-form-header");
     const collectFormBeneficiaryInput = document.getElementById("collect-form-beneficiary-input");
     const collectFormCpnBeneficiaryInput = document.getElementById("collect-form-cpn-beneficiary-input");
+    const collectFormQuantityInput = document.getElementById("collect-form-quantity-input");
     const collectFormPriceInput = document.getElementById("collect-form-price-input");
     const formErrorMessage = document.getElementById("form-error-message");
     const formSubmitButtonText = document.getElementById("form-submit-button-text");
@@ -481,6 +521,14 @@ window.onpopstate = function(event) {
         formErrorMessage.innerHTML = `This NFT has a minimum price of <span class="ether">Ξ</span>${formattedPrice}.`;
         formErrorMessage.style.display = "block";
         formSubmitButton.disabled = true;
+      } else if (recordFormQuantityInput.value > formattedRemainingSupply) {
+        if (formattedRemainingSupply == 1) {
+          formErrorMessage.innerHTML = `Can't mint ${recordFormQuantityInput.value} if there is only ${formattedRemainingSupply} copy remaining.`;
+        } else {
+          formErrorMessage.innerHTML = `Can't mint ${recordFormQuantityInput.value} if there are only ${formattedRemainingSupply} copies remaining.`;
+        }
+        formErrorMessage.style.display = "block";
+        formSubmitButton.disabled = true;
       } else {
         // Hide the error message.
         formErrorMessage.style.display = "none";
@@ -503,13 +551,34 @@ window.onpopstate = function(event) {
 
     // Submit the form.
     formSubmitButton.onclick = async () => {
+      // Make sure the form contents make sense.
       await checkState();
       if (formSubmitButton.disabled) return;
+
+      // Show the loading animation.
+      startLoadingAnimation('button-loading-animation');
+
+      // Normalize values from the form.
       const totalSupply = 1;
       const price = `${Number(collectFormPriceInput.value) * 1_000_000_000_000_000_000}`;
+      const quantity = recordFormQuantityInput.value;
       const beneficiary = collectFormBeneficiaryInput.value;
       const cpnBeneficiary = collectFormCpnBeneficiaryInput.value;
-      return await tx_collect(projectId, category, totalSupply, price, encodedIPFSUri, beneficiary, cpnBeneficiary);
+      // Add a fee if the project being paid isn't the fee project ID.
+      const value = BigInt(price) + ((projectId == await feeProjectId()) ? BigInt(0) : (BigInt(price) / BigInt(feeDivisor)));
+        
+      try {
+        await tx_collect(projectId, category, totalSupply, BigInt(price), quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value);
+
+        // Hide the loading animation.
+        stopLoadingAnimation('button-loading-animation');
+      } catch (e) {
+        // Hide the loading animation.
+        stopLoadingAnimation('button-loading-animation');
+
+        formErrorMessage.innerHTML = e;
+        formErrorMessage.style.display = "block";
+      }
     }
   };
 
@@ -682,7 +751,10 @@ window.onpopstate = function(event) {
         return candidateFrame ? candidateFrame.bottom : getTopTarget(frame, row - 1);
       }
     }
-
+    
+    if (!candidateFrame) {
+      console.log({ frame, row, previousRow });
+    }
     return candidateFrame.bottom;
   }
 

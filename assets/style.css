@@ -202,6 +202,7 @@ details > summary:before {
   margin-top: 12px;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: end;
   gap: 20px;
 }
@@ -219,9 +220,13 @@ details > summary:before {
   text-decoration: underline;
 }
 .form-item {
+  flex: 1 0 10%;
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+.form-item-large {
+  flex: 1 0 40%;     
 }
 .form-label {
   color: var(--foreground-color);
@@ -637,9 +642,11 @@ hr {
   color: var(--foreground-color);
 }
 #main-loading-animation {
-  padding-left: 20px;
+  margin-left: 20px;
 }
-
+#button-loading-animation {
+  margin-left: 12px;
+}
 img.avatar {
   width: 72px;
   height: 72px;
@@ -932,6 +939,10 @@ footer {
   .form, #modal-header, #form-submit-button {
     margin-inline-start: 20px;
     margin-inline-end: 20px;
+  }
+
+  .form-item, .form-item-large {
+    flex: 1 0 100%;
   }
 
   #modal-content {
