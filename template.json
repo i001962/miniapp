@@ -5,14 +5,20 @@
   "authorWebsite": "https://jango.eth.limo",
   "version": "1.0.2",
   "idealItemsPerPage": 10,
-  "buildNumber": 184,
+  "buildNumber": 190,
   "generateNFTMetadata": true,
   "settings": {
     "juiceboxProjectID": {
       "name": "Juicebox Project ID",
       "type": "int",
-      "defaultValue": "670",
+      "defaultValue": "758",
       "description": "ID of the Juicebox project to use for this Croptop website."
+    },
+    "juiceboxProjectIDGoerli": {
+      "name": "Juicebox Project ID (Goerli)",
+      "type": "int",
+      "defaultValue": "758",
+      "description": "ID of the Juicebox project on the test net."
     },
     "ethAddress": {
       "name": "ETH Address",
