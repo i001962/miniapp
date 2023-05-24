@@ -153,13 +153,6 @@ details[open] > summary:before {
   align-items: center;
   gap: 4px;
 }
-#form-state-item {
-  color: var(--foreground-secondary-color);
-  font-size: 12px;
-  display: flex;
-  flex-direction: row;
-  cursor: pointer;
-}
 #form-state-button {
   color: var(--foreground-primary-color);
 }
@@ -167,7 +160,12 @@ details[open] > summary:before {
   margin-left: 4px; 
 }
 #form-state-toggle {
- font-weight: 200;
+ /* font-weight: 200; */
+ color: var(--foreground-secondary-color);
+ font-size: 12px;
+ display: flex;
+ flex-direction: row;
+ cursor: pointer;
 }
 .form {
   display: flex;

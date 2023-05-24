@@ -44,7 +44,7 @@ window.onpopstate = function(event) {
       </div>
       <div id="form-state" class="closes-modal">
         <details id="form-state-reveal">
-          <summary id="form-state-toggle" class="toggle"></summary>
+          <summary id="form-state-toggle" class="toggle">Project ID: <span id="form-state-project-id" class="form-state-item-value"></span>, NFT category ID: <span id="form-state-nft-category" class="form-state-item-value"></span>.</summary>
           <div class="form-section-description">Specify the Juicebox project that is being funded from this NFT sale and the category under which it will appear. Changing these values will change the availability of this NFT.</div>
           <div class="form-section">
             <div class="form-item" style="flex: 1;">
@@ -58,7 +58,6 @@ window.onpopstate = function(event) {
           </div>
           <button id="form-state-button" class="form-button">[<span id="form-state-button-text" class="form-button-text">update</span>]</button>
          </details>
-         <div id="form-state-item">Project ID: <span id="form-state-project-id" class="form-state-item-value"></span>, NFT category ID <span id="form-state-nft-category" class="form-state-item-value"></span></div>
       </div>
     </div>
     <div id="collect-form" class="form closes-modal">
@@ -521,7 +520,6 @@ window.onpopstate = function(event) {
     const modalHeader = document.getElementById("modal-header");
     const modalSubtitle = document.getElementById("modal-subtitle");
     const modalContent = document.getElementById("modal-content");
-    const formStateItem = document.getElementById("form-state-item");
     const formStateReveal = document.getElementById("form-state-reveal");
     const formErrorMessage= document.getElementById("form-error-message");
     const recordForm = document.getElementById("record-form");
@@ -598,16 +596,6 @@ window.onpopstate = function(event) {
       modalImage.src = imageSrc;
       modalImage.addEventListener('click', (e) => e.stopPropagation());
     }
-
-    // Hide the state when the state form is open.
-    formStateReveal.addEventListener('toggle', (e) => {
-      formStateItem.style.display = e.target.open ? 'none' : 'flex';
-    });
-
-    // Toggle the state form when clicked.
-    formStateItem.addEventListener('click', (e) => {
-      formStateReveal.open = true;
-    });
 
     // Show the loading animation.
     startLoadingAnimation('modal-loading-animation');
