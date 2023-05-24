@@ -4,12 +4,6 @@ const croptopContract = async () => {
       return "0xea28cb5405d05abe0a87b16e26fb709f55341cf6";
   }
 }
-const feeProjectId = async () => {
-  switch (await getChainId()) {
-    case 5:
-      return 758;
-  }
-}
 const contractABI = [
     {
       "inputs": [
@@ -411,14 +405,14 @@ const tx_view_allowance = async (projectId, category) => {
   return await view(await croptopContract(), contractABI, "allowanceFor", [projectId, "0x0000000000000000000000000000000000000000", category]);
 }
 
-const tx_view_tier = async (projectId, encodedIPFSUri) => {
-  console.log({  projectId, encodedIPFSUri});
-  return await view(await croptopContract(), contractABI, "tiersFor", [projectId, "0x0000000000000000000000000000000000000000", [encodedIPFSUri]]);
+const tx_view_tiers = async (projectId, encodedIPFSUris) => {
+  return await view(await croptopContract(), contractABI, "tiersFor", [projectId, "0x0000000000000000000000000000000000000000", encodedIPFSUris]);
 }
 
 const tx_collect = async (projectId, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value) => {
-  const post = {totalSupply, price, category, encodedIPFSUri};
-  const posts = new Array(quantity).fill(post);
+  const post = {totalSupply, price, quantity, category, encodedIPFSUri};
+  const posts = Array.from({length: quantity}, () => post);
+  console.log({  quantity, posts });
   if (!beneficiary) beneficiary = (await getSigner()).address;
   if (!cpnBeneficiary) cpnBeneficiary = beneficiary; 
   return await sign(await croptopContract(), contractABI, "collect", [projectId, posts, beneficiary, cpnBeneficiary, {

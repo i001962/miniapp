@@ -10,8 +10,15 @@ const getSigner = async () => {
 const getChainId = async () => {
   const provider = getProvider(); 
   let network = await provider.getNetwork();
-  console.log({ chainId: network.chainId });
-  return parseInt(network.chainId) || 1;
+  return parseInt(network.chainId);
+}
+
+const switchNetwork = async (id) => {
+  const provider = getProvider(); 
+  return await provider.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{ chainId: `0x${id.toString(16)}`}],
+  });
 }
 
 const view = async (contractAddress, contractAbi, fn, params) => {

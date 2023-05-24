@@ -2,7 +2,7 @@
   --background-color: #fff;
   --background-color-alt: rgba(255, 255, 255, 0.7);
   --foreground-color: #000;
-  --foreground-secondary-color: #666;
+  --foreground-secondary-color: #888;
   --foreground-tertiary-color: #e2e2e2;
   --link-color: #f056c1;
   --alert-color: #efab1d;
@@ -69,7 +69,7 @@ body {
   text-align: left;
 }
 
-body, button, input {
+body, button, input, select {
   font-family: "Capsules", "Inconsolata", monospace;
 }
 
@@ -136,6 +136,7 @@ details[open] > summary:before {
 }
 #frame-name {
   color: var(--foreground-color);
+  font-weight: 500;
 }
 #frame-date {
   color: var(--foreground-secondary-color);
@@ -174,8 +175,7 @@ details[open] > summary:before {
 }
 .form-header {
   color: var(--foreground-secondary-color);
-  font-style: italic;
-  font-weight: 200;
+  font-weight: 300;
 }
 .form-body {
   margin-top: 4px;
@@ -234,16 +234,31 @@ details > summary:before {
 .form-value {
   display: flex;
   flex-direction: row;
-  gap: 4px;
   align-items: center;
 }
-.form-value input {
+.form-value input, .form-value select {
   width: 100%;
   padding: 4px;
   border: 1px solid var(--border-color);
   color: var(--foreground-color);
   background-color: var(--background-color);
 }
+.form-select-value select {
+  width: 100%;
+  padding-right: 30px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.form-select-value::after {
+  content: '▼';
+  color: var(--foreground-primary-color);
+  position: relative;
+  right: 20px;
+  width: 0;
+}
+
 .load-address-button {
   float: right;
   background: none;
@@ -279,7 +294,6 @@ details > summary:before {
 }
 .ether {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  font-weight: 500;
 }
 #modal img, #modal video {
   width: 100%;
@@ -867,6 +881,10 @@ footer {
   text-align: left;
 }
 
+.sold-out {
+  color: var(--alert-color); 
+}
+
 .frame-fade-in {
   opacity: 1;
 }
@@ -925,18 +943,18 @@ footer {
   }
 
   .w1 {
-    width: calc(80vw - 60px);
+    width: calc(94vw - 60px);
   }
 
   .w2 {
-    width: calc(90vw - 60px);
+    width: calc(97vw - 60px);
   }
 
   .w3 {
     width: calc(100vw - 60px);
   }
 
-  .form, #modal-header, #form-submit-button {
+  .form, #modal-header, #form-submit-button, .form-error-message {
     margin-inline-start: 20px;
     margin-inline-end: 20px;
   }
@@ -948,4 +966,16 @@ footer {
   #modal-content {
     width: 100%;
   }
-}
+
+  .image-header {
+    opacity: 1;
+  }
+
+  .image-cta {
+    display: none; 
+  }
+
+  .image-title {
+    width: 100%; 
+    max-width: 100%; 
+  }

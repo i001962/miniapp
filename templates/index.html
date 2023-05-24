@@ -44,16 +44,26 @@ window.onpopstate = function(event) {
       </div>
       <div id="form-state" class="closes-modal">
         <details id="form-state-reveal">
-          <summary id="form-state-toggle" class="toggle">Project ID: <span id="form-state-project-id" class="form-state-item-value"></span>, NFT category ID: <span id="form-state-nft-category" class="form-state-item-value"></span>.</summary>
+          <summary id="form-state-toggle" class="toggle"><span id="form-state-chain" class="form-state-item-value"></span>, project ID: <a id="form-state-project-id" class="form-state-item-value" target="_blank"></a>, NFT category ID: <span id="form-state-nft-category" class="form-state-item-value"></span></summary>
           <div class="form-section-description">Specify the Juicebox project that is being funded from this NFT sale and the category under which it will appear. Changing these values will change the availability of this NFT.</div>
           <div class="form-section">
             <div class="form-item">
+              <div class="form-label">Chain</div>
+              <div class="form-value form-select-value">
+                <select id="form-state-chain-input" name="chain">
+                  <option value="Mainnet">Mainnet</option>
+                  <option value="Goerli">Goerli</option>
+                  <option value="Polygon">Polygon</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-item">
               <div class="form-label">Project ID</div>
-              <div class="form-value"><input type="text" value="758" id="form-state-project-id-input"></div>
+              <div class="form-value"><input type="number" value="" id="form-state-project-id-input"></div>
             </div>
             <div class="form-item">
               <div class="form-label">NFT category ID</div>
-              <div class="form-value"><input type="text" value="0" id="form-state-nft-category-input"></div>
+              <div class="form-value"><input type="number" value="" id="form-state-nft-category-input"></div>
             </div>
           </div>
           <button id="form-state-button" class="form-button">[<span id="form-state-button-text" class="form-button-text">update</span>]</button>
@@ -155,13 +165,12 @@ window.onpopstate = function(event) {
 </div>
 <script>
   // Layout constants.
-  const frames = document.getElementById("frames");
   const horizontalMargin = 24;
   const verticalMargin = 10;
   const transitionDuration = 300;
   const widthClasses = ["w1", "w2", "w3"];
   const loadingAnimationPace = 100;
-  const formInputReactionTimeDelay = 1000;
+  const formInputReactionTimeDelay = 600;
 
   // State constants.
   const allowanceCache = {};
@@ -176,17 +185,64 @@ window.onpopstate = function(event) {
   let rows = [];
 
   // State variables.
-  let defaultProjectId = 758;
+  let defaultChain = "Goerli";  
   let defaultNftCategory = 0;
   let defaultEthAddress;
   let formState;
+  let encodedIPFSUris;
+    
+  const resolveChainId = (value) => {
+    switch (value) {
+      case "Mainnet": return 1; 
+      case "Goerli": return 5; 
+    }
+  };
+
+  const resolveChainSelectIndex = (chain) => {
+    switch (chain) {
+      case "Mainnet": return 0; 
+      case "Goerli": return 1; 
+      case "Polygon": return 2; 
+    }
+  };
+
+  const resolveChain = (chainId) => {
+    switch (chainId) {
+      case 1: return "Mainnet"; 
+      case 5: return "Goerli"; 
+    }
+  };
+
+  const cpnProjectId = (chain) => {
+    switch (chain) {
+      case "Mainnet":
+        return 500;
+      case "Goerli":
+        return 758;
+      case "Polygon":
+        return 78;
+    }
+  }
+
+  const projectLinkBase = (chain) => {
+    switch (chain) {
+      case "Mainnet": 
+        return "https://juicebox.money/v2/p/";
+      case "Goerli": 
+        return "https://goerli.juicebox.money/v2/p/";
+      case "Polygon": 
+        return "https://beta.polygon.juicebox.money/v2/p/";
+    }
+  }
 
   /// Get admin settings.
   const fetchSettings = () => {
+    const formStateChain = document.getElementById("form-state-chain");
     const formStateProjectId = document.getElementById("form-state-project-id");
     const formStateNftCategory = document.getElementById("form-state-nft-category");
 
-    formStateProjectId.innerHTML = defaultProjectId;
+    formStateChain.innerHTML = defaultChain;
+    formStateProjectId.innerHTML = cpnProjectId(defaultChain);
     formStateNftCategory.innerHTML = defaultNftCategory;
 
     fetch("{{ assets_prefix }}templateSettings.json")
@@ -198,6 +254,7 @@ window.onpopstate = function(event) {
         return response.json();
       })
       .then(data => {
+        if (data.chain != null) formStateProjectId.innerHTML = Number(data.juiceboxProjectID);
         if (data.juiceboxProjectID != null) formStateProjectId.innerHTML = Number(data.juiceboxProjectID);
         // data.juiceboxProjectIDGoerli is also available if you need it
         if (data.nftCategory != null) formStateNftCategory.innerHTML = Number(data.nftCategory);
@@ -229,10 +286,15 @@ window.onpopstate = function(event) {
   }
 
   // Re-decorate the form depending on if the provided content has already been recorded onchain, and if it's sold out.
-  const decorateAndShowForm = async (itemId) => {
+  const decorateAndShowForm = async (itemId, encodedIPFSUri) => {
     // Get references to the form state.
+    const formStateChain = document.getElementById("form-state-chain");
     const formStateProjectId = document.getElementById("form-state-project-id");
     const formStateNftCategory = document.getElementById("form-state-nft-category");
+    const formStateChainInput = document.getElementById("form-state-chain-input");
+    const formStateProjectIdInput = document.getElementById("form-state-project-id-input");
+    const formStateNftCategoryInput = document.getElementById("form-state-nft-category-input");
+    const formStateReveal = document.getElementById("form-state-reveal");
     const formStateButton = document.getElementById("form-state-button");
     const formErrorMessage = document.getElementById("form-error-message");
     const formSubmitButton = document.getElementById("form-submit-button");
@@ -241,15 +303,14 @@ window.onpopstate = function(event) {
     const recordForm = document.getElementById("record-form");
     const collectForm = document.getElementById("collect-form");
 
-    // Create the content's encoded IPFS URL.
-    const cidUrl = `{{ assets_prefix }}${itemId}/nft.json.cid.txt`;
-    const cid = await (await fetch(cidUrl)).text();
-    const encodedIPFSUri = cid ? encodeIPFSUri(cid) : "";
-
     const updateFormState = async () => {
-      // Get a reference to the project ID field.
-      const projectId = formStateProjectId.innerHTML;
-      const category = formStateNftCategory.innerHTML;
+      // Get a reference to the chain, project ID, and category fields.
+      const chain = formStateChain.innerHTML;
+      const projectId = parseInt(formStateProjectId.innerHTML);
+      const category = parseInt(formStateNftCategory.innerHTML);
+      
+      // Set the project ID href.
+      formStateProjectId.setAttribute('href', `${projectLinkBase(chain)}${formStateProjectId.innerHTML}`);
 
       // Look in the cache for tiers within the project ID.
       const projectIdTiers = tiersCache[projectId];
@@ -263,7 +324,7 @@ window.onpopstate = function(event) {
       // If nothing is cached, load from the contract.
       if (!tier) {
         // Check to see if there's a tier for this content.
-        [tier] = await tx_view_tier(projectId, encodedIPFSUri);
+        [tier] = await tx_view_tiers(projectId, [encodedIPFSUri]);
 
         // Cache the value.
         tiersCache[projectId][encodedIPFSUri] = tier;
@@ -303,7 +364,7 @@ window.onpopstate = function(event) {
         const formattedPrice = ethers.formatEther(tier[1]);
 
         // Show the form.
-        await decorateCollectForm(projectId, category, encodedIPFSUri, formattedRemainingSupply, formattedPrice);
+        await decorateCollectForm(chain, projectId, category, encodedIPFSUri, formattedRemainingSupply, formattedPrice);
       } else {
         // Check to see if the project and category allow posting.
 
@@ -328,6 +389,9 @@ window.onpopstate = function(event) {
         // Get a reference to the allowance min total supply.
         const formattedMinTotalSupply = parseInt(allowance[1].toString());
 
+        // Get a reference to the allowance max total supply.
+        const formattedMaxTotalSupply = parseInt(allowance[2].toString());
+
         // Show an error message if there's no allowance set.
         if (formattedMinTotalSupply == 0) {
           // Show the error message.
@@ -351,20 +415,35 @@ window.onpopstate = function(event) {
         // Get a reference to the allowance min price.
         const formattedMinPrice = ethers.formatEther(allowance[0]);
 
-        await decorateRecordForm(projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMinPrice);
+        await decorateRecordForm(chain, projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice);
       }
     }
+    
+    // Populate the state input values when opened.
+    formStateReveal.addEventListener("toggle", () => {
+      if (!this.open) return;
+      formStateChainInput.selectedIndex = resolveChainSelectIndex(formStateChain.innerHTML);
+      formStateProjectIdInput.value = formStateProjectId.innerHTML;
+      formStateNftCategoryInput.value = formStateNftCategory.innerHTML;
+    });
+
+    // Change the project ID input on network change to the default.
+    formStateChainInput.addEventListener("change", () => {
+      formStateProjectIdInput.value = cpnProjectId(formStateChainInput.value);
+    });
 
     // Submit the state change form.
     formStateButton.onclick = async () => {
       // Get the state values from the form fields.
+      const formStateChainInput = document.getElementById("form-state-chain-input");
       const formStateProjectIdInput = document.getElementById("form-state-project-id-input");
       const formStateNftCategoryInput = document.getElementById("form-state-nft-category-input");
       const formStateReveal = document.getElementById("form-state-reveal");
-
-      // Set the state.
+      
+      formStateChain.innerHTML = formStateChainInput.value; 
       formStateProjectId.innerHTML = formStateProjectIdInput.value;
-      formStateNftCategory.innerHTML = formStateNftCategoryInput.value;
+      formStateProjectId.setAttribute('href', `${projectLinkBase(chain)}${formStateProjectId.innerHTML}`);
+      formStateNftCategory.innerHTML = formStateNftCategoryInput.value; 
 
       // Close the state change form.
       formStateReveal.open = false;
@@ -382,7 +461,7 @@ window.onpopstate = function(event) {
     updateFormState();
   }
 
-  const decorateRecordForm = (projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMinPrice) => {
+  const decorateRecordForm = (chain, projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice) => {
     // Get references to record form elements that need decorating.
     const recordFormBeneficiaryInput = document.getElementById("record-form-beneficiary-input");
     const recordFormCpnBeneficiaryInput = document.getElementById("record-form-cpn-beneficiary-input");
@@ -411,12 +490,12 @@ window.onpopstate = function(event) {
     // Re-decorate some input fields depending on the allowances set for the project and category.
     const checkState = async () => {
       // Set error messages if the currently inputted values are too small.
-      if (recordFormPriceInput.value < formattedMinPrice || recordFormTotalSupplyInput.value < formattedMinTotalSupply) {
-        formErrorMessage.innerHTML = `Project ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedMinPrice} and total supply of ${formattedMinTotalSupply} to record on category ${category}.`;
+        if (recordFormPriceInput.value < formattedMinPrice || recordFormTotalSupplyInput.value < formattedMinTotalSupply || recordFormTotalSupplyInput.value > formattedMaxTotalSupply) {
+          formErrorMessage.innerHTML = `Project ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedMinPrice}, a minimum total supply of ${formattedMinTotalSupply}, and a maximum total supply of ${formattedMaxTotalSupply} to record on category ${category}.`;
         formErrorMessage.style.display = "block";
         formSubmitButton.disabled = true;
       } else if (recordFormQuantityInput.value > recordFormTotalSupplyInput.value) {
-        formErrorMessage.innerHTML = `Can't mint ${recordFormQuantityInput.value} if the total supply is ${recordFormTotalSupplyInput.value}.`;
+        formErrorMessage.innerHTML = `The total supply is ${recordFormTotalSupplyInput.value}. Can't mint ${recordFormQuantityInput.value}.`;
         formErrorMessage.style.display = "block";
         formSubmitButton.disabled = true;
       } else {
@@ -433,7 +512,7 @@ window.onpopstate = function(event) {
       checkStateTimer = setTimeout(checkState, formInputReactionTimeDelay);
     }
 
-    // Update the form's state each time the category, price, or total supply change.
+    // Update the form's state each time the price, total supply, or quantity changes.
     recordFormPriceInput.addEventListener('input', queueCheckState);
     recordFormTotalSupplyInput.addEventListener('input', queueCheckState);
     recordFormQuantityInput.addEventListener('input', queueCheckState);
@@ -453,6 +532,22 @@ window.onpopstate = function(event) {
 
       // Show the loading animation.
       startLoadingAnimation('button-loading-animation');
+
+      // Make sure the client is connected to the right network.
+      const chainId = await getChainId();
+      const expectedChainId = resolveChainId(chain);
+      if (chainId != expectedChainId) {
+          try {
+            await switchChain(expectedChainId); 
+          } catch (e) {
+            // Hide the loading animation.
+            stopLoadingAnimation('button-loading-animation');
+
+            formErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
+            formErrorMessage.style.display = "block";
+            return;
+          }
+      }
       
       // Normalize values from the form.
       const totalSupply = recordFormTotalSupplyInput.value;
@@ -460,7 +555,8 @@ window.onpopstate = function(event) {
       const price = `${Number(recordFormPriceInput.value) * 1_000_000_000_000_000_000}`;
       const beneficiary = recordFormBeneficiaryInput.value;
       const cpnBeneficiary = recordFormCpnBeneficiaryInput.value;
-      const value = BigInt(price) + ((projectId == await feeProjectId()) ? BigInt(0) : (BigInt(price) / BigInt(feeDivisor)));
+      const totalPrice = BigInt(price) * BigInt(quantity);
+      const value = totalPrice + ((projectId == await cpnProjectId(chain)) ? BigInt(0) : (totalPrice / BigInt(feeDivisor)));
       
       try {
         // Add a fee if the project being paid isn't the fee project ID.
@@ -478,7 +574,7 @@ window.onpopstate = function(event) {
     }
   };
 
-  const decorateCollectForm = (projectId, category, encodedIPFSUri, formattedRemainingSupply, formattedPrice) => {
+  const decorateCollectForm = (chain, projectId, category, encodedIPFSUri, formattedRemainingSupply, formattedPrice) => {
     // Get references to record form elements that need decorating.
     const collectFormHeader = document.getElementById("collect-form-header");
     const collectFormBeneficiaryInput = document.getElementById("collect-form-beneficiary-input");
@@ -497,9 +593,9 @@ window.onpopstate = function(event) {
 
     // Set the header text.
     if (formattedRemainingSupply == 1) {
-      collectFormHeader.innerHTML = `There is only 1 edition of this file available to be collected for <span class="ether">Ξ</span>${formattedPrice}.`;
+      collectFormHeader.innerHTML = `There is only 1 remaining edition of this file available to be collected for <span class="ether">Ξ</span>${formattedPrice}.`;
     } else {
-      collectFormHeader.innerHTML = `There are still ${formattedRemainingSupply > 1000000 ? infinite : formattedRemainingSupply } editions of this file available to be collected for <span class="ether">Ξ</span>${formattedPrice} each.`;
+      collectFormHeader.innerHTML = `There are still ${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } remaining editions of this file available to be collected for <span class="ether">Ξ</span>${formattedPrice} each.`;
     }
 
     // Change the button text.
@@ -521,11 +617,11 @@ window.onpopstate = function(event) {
         formErrorMessage.innerHTML = `This NFT has a minimum price of <span class="ether">Ξ</span>${formattedPrice}.`;
         formErrorMessage.style.display = "block";
         formSubmitButton.disabled = true;
-      } else if (recordFormQuantityInput.value > formattedRemainingSupply) {
+      } else if (collectFormQuantityInput.value > formattedRemainingSupply) {
         if (formattedRemainingSupply == 1) {
-          formErrorMessage.innerHTML = `Can't mint ${recordFormQuantityInput.value} if there is only ${formattedRemainingSupply} copy remaining.`;
+          formErrorMessage.innerHTML = `There is only 1 copy remaining. Can't mint ${collectFormQuantityInput.value}.`;
         } else {
-          formErrorMessage.innerHTML = `Can't mint ${recordFormQuantityInput.value} if there are only ${formattedRemainingSupply} copies remaining.`;
+          formErrorMessage.innerHTML = `There are only ${formattedRemainingSupply} copies remaining. Can't mint ${collectFormQuantityInput.value}.`;
         }
         formErrorMessage.style.display = "block";
         formSubmitButton.disabled = true;
@@ -543,8 +639,9 @@ window.onpopstate = function(event) {
       checkStateTimer = setTimeout(checkState, formInputReactionTimeDelay);
     }
 
-    // Update the form's state each time the price changes.
+    // Update the form's state each time the price or quantity changes.
     collectFormPriceInput.addEventListener('input', queueCheckState);
+    collectFormQuantityInput.addEventListener('input', queueCheckState);
 
     // Check the state.
     checkState();
@@ -558,14 +655,31 @@ window.onpopstate = function(event) {
       // Show the loading animation.
       startLoadingAnimation('button-loading-animation');
 
+      // Make sure the client is connected to the right network.
+      const chainId = await getChainId();
+      const expectedChainId = resolveChainId(chain);
+      if (chainId != expectedChainId) {
+          try {
+            await switchChain(expectedChainId); 
+          } catch (e) {
+            // Hide the loading animation.
+            stopLoadingAnimation('button-loading-animation');
+
+            formErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
+            formErrorMessage.style.display = "block";
+            return;
+          }
+      }
+
       // Normalize values from the form.
       const totalSupply = 1;
       const price = `${Number(collectFormPriceInput.value) * 1_000_000_000_000_000_000}`;
-      const quantity = recordFormQuantityInput.value;
+      const quantity = collectFormQuantityInput.value;
       const beneficiary = collectFormBeneficiaryInput.value;
       const cpnBeneficiary = collectFormCpnBeneficiaryInput.value;
       // Add a fee if the project being paid isn't the fee project ID.
-      const value = BigInt(price) + ((projectId == await feeProjectId()) ? BigInt(0) : (BigInt(price) / BigInt(feeDivisor)));
+      const totalPrice = BigInt(price) * BigInt(quantity);
+      const value = totalPrice + ((projectId == await cpnProjectId(chain)) ? BigInt(0) : (totalPrice / BigInt(feeDivisor)));
         
       try {
         await tx_collect(projectId, category, totalSupply, BigInt(price), quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value);
@@ -583,7 +697,7 @@ window.onpopstate = function(event) {
   };
 
   // Get the modal set up.
-  const decorateModal = async (itemId, name, date, link, imageSrc, videoSrc) => {
+  const decorateModal = async (itemId, encodedIPFSUri, name, date, link, imageSrc, videoSrc) => {
     // Get references to modal elements that need decorating.
     const modal = document.getElementById("modal");
     const modalHeader = document.getElementById("modal-header");
@@ -628,6 +742,10 @@ window.onpopstate = function(event) {
 
       // Reset the view stack browsing state.
       history.pushState({}, "", window.location.pathname);
+      
+      // Reset the cache.
+      allowanceCache = {};
+      tiersCache = {};
     });
 
     // Decorate the frame's title.
@@ -670,13 +788,22 @@ window.onpopstate = function(event) {
     startLoadingAnimation('modal-loading-animation');
 
     // Show the form.
-    await decorateAndShowForm(itemId);
+    await decorateAndShowForm(itemId, encodedIPFSUri);
 
     // Hide the loading animation.
     stopLoadingAnimation('modal-loading-animation');
   }
+    
+  const encodeIPFSUriFrom = async (itemId) => {
+    // Create the content's encoded IPFS URL.
+    const cidUrl = `{{ assets_prefix }}${itemId}/nft.json.cid.txt`;
+    const cid = await (await fetch(cidUrl)).text();
+    return cid ? encodeIPFSUri(cid) : "";
+  }
 
   const decorateFrame = async (frame, itemId, imageSrc, date, name, link, videoSrc) => {
+    const encodedIPFSUri = await encodeIPFSUriFrom(itemId);
+
     // Set a default name if needed.
     if (name === undefined || name === null || name === "") name = "✃";
 
@@ -690,7 +817,7 @@ window.onpopstate = function(event) {
     img.id = 'img-' + itemId;
 
     // Set the content.
-    ctaAnchor.textContent = '[collect]';
+    ctaAnchor.textContent = '[record]';
     title.innerHTML = `<span><span class="image-date">${date} | </span>${ name }<span>`;
 
     // Mark videos with an icon.
@@ -709,7 +836,7 @@ window.onpopstate = function(event) {
       modal.style.display = "block";
 
       // Make the modal look right.
-      await decorateModal(itemId, name, date, link, imageSrc, videoSrc);
+      await decorateModal(itemId, encodedIPFSUri, name, date, link, imageSrc, videoSrc);
     });
   }
 
@@ -734,7 +861,10 @@ window.onpopstate = function(event) {
 
   /// Get the top.
   const getTopTarget = (frame, row) => {
-    if (row == 1) return frames.offsetTop;
+      if (row == 1) {
+        const frames = document.getElementById("frames");
+        return frames.offsetTop;
+      } 
 
     let previousRow = rows[row - 2];
     let candidateFrame;
@@ -759,6 +889,7 @@ window.onpopstate = function(event) {
   }
 
   const frameImage = (src) => {
+    const frames = document.getElementById("frames");
     const frame = document.createElement("div");
     const header = document.createElement("div");
     const title = document.createElement("div");
@@ -831,6 +962,7 @@ window.onpopstate = function(event) {
       `{{ assets_prefix }}planet.json`
     );
     const data = await response.json();
+    const itemIds = [];
     const frames = data['articles']
       // Only if attachments have file extensions like ".jpg" ".jpeg" ".png" ".gif" ".webp" ".svg" ".avif"
       .filter(item => item.hasVideo === true || item.attachments.some(attachment => attachment.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)$/i)))
@@ -842,6 +974,7 @@ window.onpopstate = function(event) {
         const videoName = item.hasVideo ? './' + item.id + '/' + item.videoFilename : null;
         const src = './' + item.id + '/' + imageName;
         const frame = frameImage(src);
+        itemIds.push(item.id);
         decorateFrame(frame, item.id, src, formatTimestamp(item.created), item.title, item.externalLink, videoName);
         return frame;
       }
@@ -851,7 +984,6 @@ window.onpopstate = function(event) {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     if (id) {
-      // TODO: find the frame and open the modal
       item = items.find(item => item.id == id);
       if (item) {
         const img = document.getElementById('img-' + item.id);
@@ -859,8 +991,39 @@ window.onpopstate = function(event) {
       }
     }
 
-    for (const frame of frames)
-      await positionAndShowFrame(frame);
+    encodedIPFSUris = await Promise.all(itemIds.map(async (itemId) => await encodeIPFSUriFrom(itemId)));
+
+    const positionAndShowFrames = async () => {
+      for (const frame of frames)
+        await positionAndShowFrame(frame);
+    };
+
+    const loadFrameState = async () => { 
+      // Load tiers.
+      const formStateProjectId = document.getElementById("form-state-project-id");
+      const projectId = parseInt(formStateProjectId.innerHTML);
+      const tiers = await tx_view_tiers(projectId, encodedIPFSUris);
+
+      for (let i in tiers) {
+        const tier = tiers[i];
+        if (tier.id != 0) {
+          // Get a reference to the tier's remaining supply.
+          const formattedRemainingSupply = parseInt(tier[2].toString());
+          const frame = frames[i]; 
+          const ctaAnchor = frame.querySelector('a');
+
+          // Set the content.
+          if (formattedRemainingSupply == 0) {
+            ctaAnchor.textContent = '[sold out]';
+            ctaAnchor.classList.add("sold-out");
+          } else {
+            ctaAnchor.textContent = `[${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } left]`;
+          }
+        } 
+      }
+    }
+
+    await Promise.all([loadFrameState(), positionAndShowFrames()]);
   };
 
   fetchSettings();
