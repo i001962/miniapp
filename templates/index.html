@@ -173,8 +173,6 @@ window.onpopstate = function(event) {
   const formInputReactionTimeDelay = 600;
 
   // State constants.
-  const allowanceCache = {};
-  const tiersCache = {};
   const feeDivisor = 20;
 
   // Layout variables.
@@ -185,6 +183,8 @@ window.onpopstate = function(event) {
   let rows = [];
 
   // State variables.
+  let allowanceCache = {};
+  let tiersCache = {};
   let defaultChain = "Goerli";  
   let defaultNftCategory = 0;
   let defaultEthAddress;
@@ -390,12 +390,13 @@ window.onpopstate = function(event) {
         const formattedMinTotalSupply = parseInt(allowance[1].toString());
 
         // Get a reference to the allowance max total supply.
-        const formattedMaxTotalSupply = parseInt(allowance[2].toString());
+        // TODO
+        const formattedMaxTotalSupply = 10000; //parseInt(allowance[2].toString());
 
         // Show an error message if there's no allowance set.
         if (formattedMinTotalSupply == 0) {
           // Show the error message.
-          formErrorMessage.innerHTML = `Project ${projectId} isn't accepting posts on category ${category}.`;
+          formErrorMessage.innerHTML = `Project ${projectId} isn't accepting posts on category ${category} yet.`;
           formErrorMessage.style.display = "block";
           // Hide forms.
           recordForm.style.display = "none";
@@ -442,7 +443,7 @@ window.onpopstate = function(event) {
       
       formStateChain.innerHTML = formStateChainInput.value; 
       formStateProjectId.innerHTML = formStateProjectIdInput.value;
-      formStateProjectId.setAttribute('href', `${projectLinkBase(chain)}${formStateProjectId.innerHTML}`);
+      formStateProjectId.setAttribute('href', `${projectLinkBase(formStateChain.innerHTML)}${formStateProjectId.innerHTML}`);
       formStateNftCategory.innerHTML = formStateNftCategoryInput.value; 
 
       // Close the state change form.
@@ -987,7 +988,7 @@ window.onpopstate = function(event) {
       item = items.find(item => item.id == id);
       if (item) {
         const img = document.getElementById('img-' + item.id);
-        setTimeout(() => img.click(), 200);
+        if (img) setTimeout(() => img.click(), 200);
       }
     }
 
