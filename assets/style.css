@@ -277,14 +277,8 @@ details > summary:before {
   font-weight: 500;
 }
 #modal img, #modal video {
+  width: 100%;
   border: 1px solid var(--foreground-tertiary-color);
-
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: calc(100vh - 240px);
-  object-fit: contain;
-  margin: 0px auto;
 }
 
 /* Add Animation */
@@ -942,9 +936,5 @@ footer {
 
   #modal-content {
     width: 100%;
-  }
-
-  #modal img, #modal video {
-    max-height: calc(100vh - 160px);
   }
 }
