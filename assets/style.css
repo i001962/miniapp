@@ -646,7 +646,7 @@ hr {
   max-width: var(--content-max-width);
   margin-left: auto;
   margin-right: auto;
-  align-items: top;
+  align-items: center;
   display: flex;
   gap: var(--inner-gap);
   padding: 10px 20px 10px 20px;
@@ -725,6 +725,10 @@ img.avatar {
 
 .nav-item:hover {
   text-decoration: underline;
+}
+
+.site-detail {
+  margin-top: 4px;
 }
 
 .site-detail a {
