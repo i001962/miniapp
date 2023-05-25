@@ -175,6 +175,7 @@ window.onpopstate = function(event) {
   const feeDivisor = 20;
 
   // Layout variables.
+  let frames;
   let items = Array();
   let loadingAnimationIntervals = {};
   let currentRow = 1;
@@ -182,7 +183,7 @@ window.onpopstate = function(event) {
   let rows = [];
 
   // State variables.
-  let frames;
+  let signer;
   let encodedIPFSUris;
   let allowanceCache = {};
   let tiersCache = {};
@@ -237,13 +238,24 @@ window.onpopstate = function(event) {
 
   const loadFrameState = async () => { 
     // Load tiers.
+    const formStateChain = document.getElementById("form-state-chain");
     const formStateProjectId = document.getElementById("form-state-project-id");
+    const chain = formStateChain.innerHTML;
     const projectId = parseInt(formStateProjectId.innerHTML);
-    const tiers = await tx_view_tiers(projectId, encodedIPFSUris);
+    
+    const contract = await croptopPublisherContract(resolveChainId(chain));
+    if (!contract) return;
+
+    const tiers = await tx_view_tiers(projectId, encodedIPFSUris, contract);
 
     for (let i in tiers) {
       const tier = tiers[i];
       if (tier.id != 0) {
+
+        // Cache the value.
+        if (!tiersCache[projectId]) tiersCache[projectId] = {};
+        tiersCache[projectId][encodedIPFSUris[i]] = tier;
+
         // Get a reference to the tier's remaining supply.
         const formattedRemainingSupply = parseInt(tier[2].toString());
         const frame = frames[i]; 
@@ -259,7 +271,6 @@ window.onpopstate = function(event) {
       } 
     }
   }
-
 
   /// Get admin settings.
   const fetchSettings = () => {
@@ -346,11 +357,15 @@ window.onpopstate = function(event) {
 
       // Look in the cache for a tier for the project ID and encodedIPFSUri.
       let tier = tiersCache[projectId][encodedIPFSUri];
+        
+      // Get a reference to the croptop contract.
+      const contract = await croptopPublisherContract(resolveChainId(chain));
 
       // If nothing is cached, load from the contract.
       if (!tier) {
+
         // Check to see if there's a tier for this content.
-        [tier] = await tx_view_tiers(projectId, [encodedIPFSUri]);
+        [tier] = contract ? await tx_view_tiers(projectId, [encodedIPFSUri], contract) : [[0, 0, 0]];
 
         // Cache the value.
         tiersCache[projectId][encodedIPFSUri] = tier;
@@ -406,7 +421,7 @@ window.onpopstate = function(event) {
         // If nothing is cached, load from the contract.
         if (!allowance) {
           // Get the allowance.
-          allowance = await tx_view_allowance(projectId, category);
+          allowance = contract ? await tx_view_allowance(projectId, category, contract) : [0, 0, 0];
 
           // Cache the value.
           allowanceCache[projectId][category] = allowance;
@@ -414,10 +429,6 @@ window.onpopstate = function(event) {
 
         // Get a reference to the allowance min total supply.
         const formattedMinTotalSupply = parseInt(allowance[1].toString());
-
-        // Get a reference to the allowance max total supply.
-        // TODO
-        const formattedMaxTotalSupply = 10000; //parseInt(allowance[2].toString());
 
         // Show an error message if there's no allowance set.
         if (formattedMinTotalSupply == 0) {
@@ -442,7 +453,13 @@ window.onpopstate = function(event) {
         // Get a reference to the allowance min price.
         const formattedMinPrice = ethers.formatEther(allowance[0]);
 
-        await decorateRecordForm(chain, projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice);
+        // Get a reference to the allowance max total supply.
+        const formattedMaxTotalSupply = parseInt(allowance[2].toString());
+
+        // Get a reference to the allowance max total supply.
+        const formattedAllowedAddresses = allowance[3];
+
+        await decorateRecordForm(chain, projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice, formattedAllowedAddresses);
       }
     }
     
@@ -474,6 +491,7 @@ window.onpopstate = function(event) {
 
         ormStateChain.innerHTML = formStateChainInput.value; 
       }
+
       formStateProjectId.innerHTML = formStateProjectIdInput.value;
       formStateProjectId.setAttribute('href', `${projectLinkBase(formStateChain.innerHTML)}${formStateProjectId.innerHTML}`);
       formStateNftCategory.innerHTML = formStateNftCategoryInput.value; 
@@ -495,7 +513,7 @@ window.onpopstate = function(event) {
     updateFormState();
   }
 
-  const decorateRecordForm = (chain, projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice) => {
+  const decorateRecordForm = async (chain, projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice, formattedAllowedAddresses) => {
     // Get references to record form elements that need decorating.
     const recordFormBeneficiaryInput = document.getElementById("record-form-beneficiary-input");
     const recordFormCpnBeneficiaryInput = document.getElementById("record-form-cpn-beneficiary-input");
@@ -515,17 +533,16 @@ window.onpopstate = function(event) {
     // Change the button text.
     formSubmitButtonText.innerHTML = "record & collect";
 
-    // Allow connecting wallet to prefill beneficiary input field.
-    const loadAddressButton = document.getElementById("record-form-load-address-button");
-    loadAddressButton.onclick = async () => {
-      recordFormBeneficiaryInput.value = (await getSigner()).address;
-    };
-
     // Re-decorate some input fields depending on the allowances set for the project and category.
     const checkState = async () => {
+      // Set error message if not allowed.
+      if (signer && formattedAllowedAddresses.length && !formattedAllowedAddresses.includes(signer)) {
+        formErrorMessage.innerHTML = `Project ${projectId} has reserved posting to category ${category} for these addresses: ${formattedAllowedAddresses}.`;
+        formErrorMessage.style.display = "block";
+        formSubmitButton.disabled = true;
       // Set error messages if the currently inputted values are too small.
-        if (recordFormPriceInput.value < formattedMinPrice || recordFormTotalSupplyInput.value < formattedMinTotalSupply || recordFormTotalSupplyInput.value > formattedMaxTotalSupply) {
-          formErrorMessage.innerHTML = `Project ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedMinPrice}, a minimum total supply of ${formattedMinTotalSupply}, and a maximum total supply of ${formattedMaxTotalSupply} to record on category ${category}.`;
+      } else if (recordFormPriceInput.value < formattedMinPrice || recordFormTotalSupplyInput.value < formattedMinTotalSupply || recordFormTotalSupplyInput.value > formattedMaxTotalSupply) {
+        formErrorMessage.innerHTML = `Project ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedMinPrice}, a minimum total supply of ${formattedMinTotalSupply}, and a maximum total supply of ${formattedMaxTotalSupply} to record on category ${category}.`;
         formErrorMessage.style.display = "block";
         formSubmitButton.disabled = true;
       } else if (recordFormQuantityInput.value > recordFormTotalSupplyInput.value) {
@@ -551,21 +568,35 @@ window.onpopstate = function(event) {
     recordFormTotalSupplyInput.addEventListener('input', queueCheckState);
     recordFormQuantityInput.addEventListener('input', queueCheckState);
 
-    // Set allowance values in the form if the fields are not yet set.
+    // Set values in the form if the fields are not yet set.
+    if (!recordFormBeneficiaryInput.value && signer) recordFormBeneficiaryInput.value = signer;
     if (!recordFormPriceInput.value) recordFormPriceInput.value = formattedMinPrice;
     if (!recordFormTotalSupplyInput.value) recordFormTotalSupplyInput.value = formattedMinTotalSupply;
 
-    // Check the state.
-    checkState();
-
+    // Allow connecting wallet to prefill beneficiary input field.
+    const loadAddressButton = document.getElementById("record-form-load-address-button");
+    loadAddressButton.onclick = async () => {
+      signer = (await getSigner()).address;
+      recordFormBeneficiaryInput.value = signer;
+      await checkState();
+    };
+    
     // Submit the form.
     formSubmitButton.onclick = async () => {
-      // Make sure the form contents make sense.
-      await checkState();
-      if (formSubmitButton.disabled) return;
-
       // Show the loading animation.
       startLoadingAnimation('button-loading-animation');
+        
+      // Get the signer.
+      signer = (await getSigner()).address;
+
+      // Make sure the form contents make sense.
+      await checkState();
+
+      if (formSubmitButton.disabled) {
+        // Hide the loading animation.
+        stopLoadingAnimation('button-loading-animation');
+        return;
+      }
 
       // Make sure the client is connected to the right network.
       const chainId = await getChainId();
@@ -574,13 +605,32 @@ window.onpopstate = function(event) {
           try {
             await switchChain(expectedChainId); 
           } catch (e) {
+            formErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
+            formErrorMessage.style.display = "block";
+
             // Hide the loading animation.
             stopLoadingAnimation('button-loading-animation');
 
-            formErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
-            formErrorMessage.style.display = "block";
             return;
           }
+      }
+
+      // Get a reference to the croptop contract.
+      const contract = await croptopPublisherContract(resolveChainId(chain));
+      
+      // Show incompatible network if needed.
+      if (!contract) { 
+        // Show the error message.
+        formErrorMessage.innerHTML = "The connected network isn't supported.";
+        formErrorMessage.style.display = "block";
+
+        // Disable the button.
+        formSubmitButton.disabled = true;
+
+        // Hide the loading animation.
+        stopLoadingAnimation('button-loading-animation');
+
+        return;
       }
       
       // Normalize values from the form.
@@ -591,24 +641,27 @@ window.onpopstate = function(event) {
       const cpnBeneficiary = recordFormCpnBeneficiaryInput.value;
       const totalPrice = BigInt(price) * BigInt(quantity);
       const value = totalPrice + ((projectId == await cpnProjectId(chain)) ? BigInt(0) : (totalPrice / BigInt(feeDivisor)));
-      
+
       try {
         // Add a fee if the project being paid isn't the fee project ID.
-        await tx_collect(projectId, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value);
+        await tx_collect(projectId, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, contract);
 
         // Hide the loading animation.
         stopLoadingAnimation('button-loading-animation');
       } catch (e) {
-        // Hide the loading animation.
-        stopLoadingAnimation('button-loading-animation');
-
         formErrorMessage.innerHTML = e;
         formErrorMessage.style.display = "block";
+
+        // Hide the loading animation.
+        stopLoadingAnimation('button-loading-animation');
       }
     }
+
+    // Check the state.
+    await checkState();
   };
 
-  const decorateCollectForm = (chain, projectId, category, encodedIPFSUri, formattedRemainingSupply, formattedPrice) => {
+  const decorateCollectForm = async (chain, projectId, category, encodedIPFSUri, formattedRemainingSupply, formattedPrice) => {
     // Get references to record form elements that need decorating.
     const collectFormHeader = document.getElementById("collect-form-header");
     const collectFormBeneficiaryInput = document.getElementById("collect-form-beneficiary-input");
@@ -635,17 +688,8 @@ window.onpopstate = function(event) {
     // Change the button text.
     formSubmitButtonText.innerHTML = "collect";
 
-    // Allow connecting wallet to prefill beneficiary input field.
-    const loadAddressButton = document.getElementById("collect-form-load-address-button");
-    loadAddressButton.onclick = async () => {
-      collectFormBeneficiaryInput.value = (await getSigner()).address;
-    };
-
     // Re-decorate some input fields depending on the allowances set for the project and category.
     const checkState = async () => {
-      // Set allowance values in the form if the fields are not yet set.
-      if (!collectFormPriceInput.value) collectFormPriceInput.value = formattedPrice;
-
       // Set error messages if the currently inputted values are too small.
       if (collectFormPriceInput.value < formattedPrice) {
         formErrorMessage.innerHTML = `This NFT has a minimum price of <span class="ether">Ξ</span>${formattedPrice}.`;
@@ -677,32 +721,69 @@ window.onpopstate = function(event) {
     collectFormPriceInput.addEventListener('input', queueCheckState);
     collectFormQuantityInput.addEventListener('input', queueCheckState);
 
-    // Check the state.
-    checkState();
+    // Set values in the form if the fields are not yet set.
+    if (!collectFormBeneficiaryInput.value && signer) collectFormBeneficiaryInput.value = signer;
+    if (!collectFormPriceInput.value) collectFormPriceInput.value = formattedPrice;
+
+    // Allow connecting wallet to prefill beneficiary input field.
+    const loadAddressButton = document.getElementById("collect-form-load-address-button");
+    loadAddressButton.onclick = async () => {
+      signer = (await getSigner()).address;
+      collectFormBeneficiaryInput.value = signer;
+      await checkState();
+    };
 
     // Submit the form.
     formSubmitButton.onclick = async () => {
-      // Make sure the form contents make sense.
-      await checkState();
-      if (formSubmitButton.disabled) return;
-
       // Show the loading animation.
       startLoadingAnimation('button-loading-animation');
+
+      // Get the signer.
+      signer = (await getSigner()).address;
+
+      // Make sure the form contents make sense.
+      await checkState();
+
+      if (formSubmitButton.disabled) {
+        // Hide the loading animation.
+        stopLoadingAnimation('button-loading-animation');
+
+        return;
+      }
 
       // Make sure the client is connected to the right network.
       const chainId = await getChainId();
       const expectedChainId = resolveChainId(chain);
       if (chainId != expectedChainId) {
-          try {
-            await switchChain(expectedChainId); 
-          } catch (e) {
-            // Hide the loading animation.
-            stopLoadingAnimation('button-loading-animation');
+        try {
+          await switchChain(expectedChainId); 
+        } catch (e) {
+          formErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
+          formErrorMessage.style.display = "block";
 
-            formErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
-            formErrorMessage.style.display = "block";
-            return;
-          }
+          // Hide the loading animation.
+          stopLoadingAnimation('button-loading-animation');
+
+          return;
+        }
+      }
+
+      // Get a reference to the croptop contract.
+      const contract = await croptopPublisherContract(resolveChainId(chain));
+      
+      // Show incompatible network if needed.
+      if (!contract) { 
+        // Show the error message.
+        formErrorMessage.innerHTML = "The connected network isn't supported.";
+        formErrorMessage.style.display = "block";
+
+        // Disable the button.
+        formSubmitButton.disabled = true;
+
+        // Hide the loading animation.
+        stopLoadingAnimation('button-loading-animation');
+
+        return;
       }
 
       // Normalize values from the form.
@@ -714,20 +795,23 @@ window.onpopstate = function(event) {
       // Add a fee if the project being paid isn't the fee project ID.
       const totalPrice = BigInt(price) * BigInt(quantity);
       const value = totalPrice + ((projectId == await cpnProjectId(chain)) ? BigInt(0) : (totalPrice / BigInt(feeDivisor)));
-        
+
       try {
-        await tx_collect(projectId, category, totalSupply, BigInt(price), quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value);
+        await tx_collect(projectId, category, totalSupply, BigInt(price), quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, contract);
 
         // Hide the loading animation.
         stopLoadingAnimation('button-loading-animation');
       } catch (e) {
-        // Hide the loading animation.
-        stopLoadingAnimation('button-loading-animation');
-
         formErrorMessage.innerHTML = e;
         formErrorMessage.style.display = "block";
+
+        // Hide the loading animation.
+        stopLoadingAnimation('button-loading-animation');
       }
     }
+
+    // Check the state.
+    await checkState();
   };
 
   // Get the modal set up.
@@ -776,10 +860,6 @@ window.onpopstate = function(event) {
 
       // Reset the view stack browsing state.
       history.pushState({}, "", window.location.pathname);
-      
-      // Reset the cache.
-      allowanceCache = {};
-      tiersCache = {};
     });
 
     // Decorate the frame's title.
@@ -1031,7 +1111,7 @@ window.onpopstate = function(event) {
 
     const positionAndShowFrames = async () => {
       for (const frame of frames)
-        await positionAndShowFrame(frame, currentMaxRow + rowPageSize);
+        await positionAndShowFrame(frame);
     };
 
     await Promise.all([loadFrameState(), positionAndShowFrames()]);

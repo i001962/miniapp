@@ -1,146 +1,300 @@
-const croptopContract = async () => {
-  switch (await getChainId()) {
+const croptopPublisherContract = async (chainId) => {
+  switch (chainId) {
     case 5:
-      return "0xea28cb5405d05abe0a87b16e26fb709f55341cf6";
+      return "0x19ca78b53934f7c3b5d719a377883e03614003de";
   }
 }
-const contractABI = [
+
+const contractABI = [{
+  "inputs": [
     {
-      "inputs": [
+      "internalType": "contract IJBController3_1",
+      "name": "_controller",
+      "type": "address"
+    },
+    {
+      "internalType": "uint256",
+      "name": "_feeProjectId",
+      "type": "uint256"
+    }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "constructor"
+},
+{
+  "inputs": [
+    {
+      "internalType": "uint256",
+      "name": "projectId",
+      "type": "uint256"
+    },
+    {
+      "internalType": "address",
+      "name": "dataSource",
+      "type": "address"
+    }
+  ],
+  "name": "INCOMPATIBLE_PROJECT",
+  "type": "error"
+},
+{
+  "inputs": [
+    {
+      "internalType": "uint256",
+      "name": "expected",
+      "type": "uint256"
+    },
+    {
+      "internalType": "uint256",
+      "name": "sent",
+      "type": "uint256"
+    }
+  ],
+  "name": "INSUFFICIENT_ETH_SENT",
+  "type": "error"
+},
+{
+  "inputs": [],
+  "name": "MAX_TOTAL_SUPPLY_LESS_THAN_MIN",
+  "type": "error"
+},
+{
+  "inputs": [
+    {
+      "internalType": "address[]",
+      "name": "allowedAddresses",
+      "type": "address[]"
+    }
+  ],
+  "name": "NOT_IN_ALLOW_LIST",
+  "type": "error"
+},
+{
+  "inputs": [
+    {
+      "internalType": "uint256",
+      "name": "minimumPrice",
+      "type": "uint256"
+    }
+  ],
+  "name": "PRICE_TOO_SMALL",
+  "type": "error"
+},
+{
+  "inputs": [
+    {
+      "internalType": "uint256",
+      "name": "maximumTotalSupply",
+      "type": "uint256"
+    }
+  ],
+  "name": "TOTAL_SUPPLY_TOO_BIG",
+  "type": "error"
+},
+{
+  "inputs": [
+    {
+      "internalType": "uint256",
+      "name": "minimumTotalSupply",
+      "type": "uint256"
+    }
+  ],
+  "name": "TOTAL_SUPPLY_TOO_SMALL",
+  "type": "error"
+},
+{
+  "inputs": [],
+  "name": "TOTAL_SUPPY_MUST_BE_POSITIVE",
+  "type": "error"
+},
+{
+  "inputs": [],
+  "name": "UNAUTHORIZED",
+  "type": "error"
+},
+{
+  "inputs": [],
+  "name": "UNAUTHORIZED_TO_POST_IN_CATEGORY",
+  "type": "error"
+},
+{
+  "anonymous": false,
+  "inputs": [
+    {
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "projectId",
+      "type": "uint256"
+    },
+    {
+      "components": [
         {
-          "internalType": "contract IJBController3_1",
-          "name": "_controller",
-          "type": "address"
+          "internalType": "bytes32",
+          "name": "encodedIPFSUri",
+          "type": "bytes32"
         },
         {
-          "internalType": "uint256",
-          "name": "_feeProjectId",
-          "type": "uint256"
+          "internalType": "uint32",
+          "name": "totalSupply",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint88",
+          "name": "price",
+          "type": "uint88"
+        },
+        {
+          "internalType": "uint16",
+          "name": "category",
+          "type": "uint16"
         }
       ],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
+      "indexed": false,
+      "internalType": "struct Post[]",
+      "name": "posts",
+      "type": "tuple[]"
     },
     {
-      "inputs": [],
-      "name": "INCOMPATIBLE_DATA_SOURCE",
-      "type": "error"
+      "indexed": false,
+      "internalType": "address",
+      "name": "nftBeneficiary",
+      "type": "address"
     },
     {
-      "inputs": [],
-      "name": "INSUFFICIENT_AMOUNT",
-      "type": "error"
+      "indexed": false,
+      "internalType": "address",
+      "name": "feeBeneficiary",
+      "type": "address"
     },
     {
-      "inputs": [],
-      "name": "INSUFFICIENT_TOTAL_SUPPLY",
-      "type": "error"
+      "indexed": false,
+      "internalType": "uint256",
+      "name": "fee",
+      "type": "uint256"
     },
     {
-      "inputs": [],
-      "name": "INVALID_FEE_PERCENT",
-      "type": "error"
+      "indexed": false,
+      "internalType": "address",
+      "name": "caller",
+      "type": "address"
+    }
+  ],
+  "name": "Collected",
+  "type": "event"
+},
+{
+  "inputs": [
+    {
+      "internalType": "uint256",
+      "name": "_projectId",
+      "type": "uint256"
     },
     {
-      "inputs": [],
-      "name": "INVALID_MINIMUM_TOTAL_SUPPY",
-      "type": "error"
+      "internalType": "address",
+      "name": "_nft",
+      "type": "address"
     },
     {
-      "inputs": [],
-      "name": "UNAUTHORIZED",
-      "type": "error"
+      "internalType": "uint256",
+      "name": "_category",
+      "type": "uint256"
+    }
+  ],
+  "name": "allowanceFor",
+  "outputs": [
+    {
+      "internalType": "uint256",
+      "name": "minimumPrice",
+      "type": "uint256"
     },
     {
-      "inputs": [],
-      "name": "UNAUTHORIZED_CATEGORY",
-      "type": "error"
+      "internalType": "uint256",
+      "name": "minimumTotalSupply",
+      "type": "uint256"
     },
     {
-      "anonymous": false,
-      "inputs": [
+      "internalType": "uint256",
+      "name": "maximumTotalSupply",
+      "type": "uint256"
+    },
+    {
+      "internalType": "address[]",
+      "name": "allowedAddresses",
+      "type": "address[]"
+    }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+},
+{
+  "inputs": [
+    {
+      "internalType": "uint256",
+      "name": "_projectId",
+      "type": "uint256"
+    },
+    {
+      "components": [
         {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "projectId",
-          "type": "uint256"
+          "internalType": "bytes32",
+          "name": "encodedIPFSUri",
+          "type": "bytes32"
         },
         {
-          "components": [
-            {
-              "internalType": "bytes32",
-              "name": "encodedIPFSUri",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "uint32",
-              "name": "totalSupply",
-              "type": "uint32"
-            },
-            {
-              "internalType": "uint88",
-              "name": "price",
-              "type": "uint88"
-            },
-            {
-              "internalType": "uint16",
-              "name": "category",
-              "type": "uint16"
-            }
-          ],
-          "indexed": false,
-          "internalType": "struct Post[]",
-          "name": "posts",
-          "type": "tuple[]"
+          "internalType": "uint32",
+          "name": "totalSupply",
+          "type": "uint32"
         },
         {
-          "indexed": false,
-          "internalType": "address",
-          "name": "nftBeneficiary",
-          "type": "address"
+          "internalType": "uint88",
+          "name": "price",
+          "type": "uint88"
         },
         {
-          "indexed": false,
-          "internalType": "address",
-          "name": "feeBeneficiary",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "fee",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "caller",
-          "type": "address"
+          "internalType": "uint16",
+          "name": "category",
+          "type": "uint16"
         }
       ],
-      "name": "Collected",
-      "type": "event"
+      "internalType": "struct Post[]",
+      "name": "_posts",
+      "type": "tuple[]"
     },
     {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_projectId",
-          "type": "uint256"
-        },
+      "internalType": "address",
+      "name": "_nftBeneficiary",
+      "type": "address"
+    },
+    {
+      "internalType": "address",
+      "name": "_feeBeneficiary",
+      "type": "address"
+    }
+  ],
+  "name": "collect",
+  "outputs": [],
+  "stateMutability": "payable",
+  "type": "function"
+},
+{
+  "inputs": [
+    {
+      "internalType": "uint256",
+      "name": "_projectId",
+      "type": "uint256"
+    },
+    {
+      "components": [
         {
           "internalType": "address",
-          "name": "_nft",
+          "name": "nft",
           "type": "address"
         },
         {
           "internalType": "uint256",
-          "name": "_category",
+          "name": "category",
           "type": "uint256"
-        }
-      ],
-      "name": "allowanceFor",
-      "outputs": [
+        },
         {
           "internalType": "uint256",
           "name": "minimumPrice",
@@ -150,272 +304,197 @@ const contractABI = [
           "internalType": "uint256",
           "name": "minimumTotalSupply",
           "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
+        },
         {
           "internalType": "uint256",
-          "name": "_projectId",
+          "name": "maximumTotalSupply",
           "type": "uint256"
         },
         {
-          "components": [
-            {
-              "internalType": "bytes32",
-              "name": "encodedIPFSUri",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "uint32",
-              "name": "totalSupply",
-              "type": "uint32"
-            },
-            {
-              "internalType": "uint88",
-              "name": "price",
-              "type": "uint88"
-            },
-            {
-              "internalType": "uint16",
-              "name": "category",
-              "type": "uint16"
-            }
-          ],
-          "internalType": "struct Post[]",
-          "name": "_posts",
-          "type": "tuple[]"
+          "internalType": "address[]",
+          "name": "allowedAddresses",
+          "type": "address[]"
+        }
+      ],
+      "internalType": "struct AllowedPost[]",
+      "name": "_allowedPosts",
+      "type": "tuple[]"
+    }
+  ],
+  "name": "configure",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+},
+{
+  "inputs": [],
+  "name": "controller",
+  "outputs": [
+    {
+      "internalType": "contract IJBController3_1",
+      "name": "",
+      "type": "address"
+    }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+},
+{
+  "inputs": [],
+  "name": "feeDivisor",
+  "outputs": [
+    {
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+},
+{
+  "inputs": [],
+  "name": "feeProjectId",
+  "outputs": [
+    {
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+},
+{
+  "inputs": [
+    {
+      "internalType": "uint256",
+      "name": "_projectId",
+      "type": "uint256"
+    },
+    {
+      "internalType": "bytes32",
+      "name": "_encodedIPFSUri",
+      "type": "bytes32"
+    }
+  ],
+  "name": "tierIdForEncodedIPFSUriOf",
+  "outputs": [
+    {
+      "internalType": "uint256",
+      "name": "",
+      "type": "uint256"
+    }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+},
+{
+  "inputs": [
+    {
+      "internalType": "uint256",
+      "name": "_projectId",
+      "type": "uint256"
+    },
+    {
+      "internalType": "address",
+      "name": "_nft",
+      "type": "address"
+    },
+    {
+      "internalType": "bytes32[]",
+      "name": "_encodedIPFSUris",
+      "type": "bytes32[]"
+    }
+  ],
+  "name": "tiersFor",
+  "outputs": [
+    {
+      "components": [
+        {
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "remainingQuantity",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "initialQuantity",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "votingUnits",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "reservedRate",
+          "type": "uint256"
         },
         {
           "internalType": "address",
-          "name": "_nftBeneficiary",
+          "name": "reservedTokenBeneficiary",
           "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_feeBeneficiary",
-          "type": "address"
-        }
-      ],
-      "name": "collect",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_projectId",
-          "type": "uint256"
-        },
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "nft",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "category",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "minimumPrice",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "minimumTotalSupply",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct AllowedPost[]",
-          "name": "_allowedPosts",
-          "type": "tuple[]"
-        }
-      ],
-      "name": "configure",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "controller",
-      "outputs": [
-        {
-          "internalType": "contract IJBController3_1",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "feeDivisor",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "feeProjectId",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_projectId",
-          "type": "uint256"
         },
         {
           "internalType": "bytes32",
-          "name": "_encodedIPFSUri",
+          "name": "encodedIPFSUri",
           "type": "bytes32"
-        }
-      ],
-      "name": "tierIdForEncodedIPFSUriOf",
-      "outputs": [
+        },
         {
           "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_projectId",
+          "name": "category",
           "type": "uint256"
         },
         {
-          "internalType": "address",
-          "name": "_nft",
-          "type": "address"
+          "internalType": "bool",
+          "name": "allowManualMint",
+          "type": "bool"
         },
         {
-          "internalType": "bytes32[]",
-          "name": "_encodedIPFSUris",
-          "type": "bytes32[]"
-        }
-      ],
-      "name": "tiersFor",
-      "outputs": [
+          "internalType": "bool",
+          "name": "transfersPausable",
+          "type": "bool"
+        },
         {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "id",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "remainingQuantity",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "initialQuantity",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "votingUnits",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "reservedRate",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "reservedTokenBeneficiary",
-              "type": "address"
-            },
-            {
-              "internalType": "bytes32",
-              "name": "encodedIPFSUri",
-              "type": "bytes32"
-            },
-            {
-              "internalType": "uint256",
-              "name": "category",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bool",
-              "name": "allowManualMint",
-              "type": "bool"
-            },
-            {
-              "internalType": "bool",
-              "name": "transfersPausable",
-              "type": "bool"
-            },
-            {
-              "internalType": "string",
-              "name": "resolvedUri",
-              "type": "string"
-            }
-          ],
-          "internalType": "struct JB721Tier[]",
-          "name": "tiers",
-          "type": "tuple[]"
+          "internalType": "string",
+          "name": "resolvedUri",
+          "type": "string"
         }
       ],
-      "stateMutability": "view",
-      "type": "function"
+      "internalType": "struct JB721Tier[]",
+      "name": "tiers",
+      "type": "tuple[]"
     }
-  ];
+  ],
+  "stateMutability": "view",
+  "type": "function"
+}];
 
-const tx_view_allowance = async (projectId, category) => {
-  return await view(await croptopContract(), contractABI, "allowanceFor", [projectId, "0x0000000000000000000000000000000000000000", category]);
+const tx_view_allowance = async (projectId, category, contract) => {
+  return await view(contract, contractABI, "allowanceFor", [projectId, "0x0000000000000000000000000000000000000000", category]);
 }
 
-const tx_view_tiers = async (projectId, encodedIPFSUris) => {
-  return await view(await croptopContract(), contractABI, "tiersFor", [projectId, "0x0000000000000000000000000000000000000000", encodedIPFSUris]);
+const tx_view_tiers = async (projectId, encodedIPFSUris, contract) => {
+  return await view(contract, contractABI, "tiersFor", [projectId, "0x0000000000000000000000000000000000000000", encodedIPFSUris]);
 }
 
-const tx_collect = async (projectId, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value) => {
+const tx_collect = async (projectId, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, contract) => {
   const post = {totalSupply, price, quantity, category, encodedIPFSUri};
   const posts = Array.from({length: quantity}, () => post);
-  console.log({  quantity, posts });
   if (!beneficiary) beneficiary = (await getSigner()).address;
   if (!cpnBeneficiary) cpnBeneficiary = beneficiary; 
-  return await sign(await croptopContract(), contractABI, "collect", [projectId, posts, beneficiary, cpnBeneficiary, {
+  return await sign(contract, contractABI, "collect", [projectId, posts, beneficiary, cpnBeneficiary, {
       value 
   }]);
 }

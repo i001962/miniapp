@@ -974,12 +974,4 @@ footer {
   .image-header {
     opacity: 1;
   }
-
-  .image-cta {
-    display: none; 
-  }
-
-  .image-title {
-    width: 100%; 
-    max-width: 100%; 
-  }
+}
