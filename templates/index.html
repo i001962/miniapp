@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block head %}
 {% include 'modules/deps.html' %}
 {% include 'modules/ethers.html' %}
@@ -183,13 +182,14 @@ window.onpopstate = function(event) {
   let rows = [];
 
   // State variables.
+  let frames;
+  let encodedIPFSUris;
   let allowanceCache = {};
   let tiersCache = {};
   let defaultChain = "Goerli";  
   let defaultNftCategory = 0;
   let defaultEthAddress;
   let formState;
-  let encodedIPFSUris;
     
   const resolveChainId = (value) => {
     switch (value) {
@@ -234,6 +234,32 @@ window.onpopstate = function(event) {
         return "https://beta.polygon.juicebox.money/v2/p/";
     }
   }
+
+  const loadFrameState = async () => { 
+    // Load tiers.
+    const formStateProjectId = document.getElementById("form-state-project-id");
+    const projectId = parseInt(formStateProjectId.innerHTML);
+    const tiers = await tx_view_tiers(projectId, encodedIPFSUris);
+
+    for (let i in tiers) {
+      const tier = tiers[i];
+      if (tier.id != 0) {
+        // Get a reference to the tier's remaining supply.
+        const formattedRemainingSupply = parseInt(tier[2].toString());
+        const frame = frames[i]; 
+        const ctaAnchor = frame.querySelector('a');
+
+        // Set the content.
+        if (formattedRemainingSupply == 0) {
+          ctaAnchor.textContent = '[sold out]';
+          ctaAnchor.classList.add("sold-out");
+        } else {
+          ctaAnchor.textContent = `[${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } left]`;
+        }
+      } 
+    }
+  }
+
 
   /// Get admin settings.
   const fetchSettings = () => {
@@ -441,7 +467,13 @@ window.onpopstate = function(event) {
       const formStateNftCategoryInput = document.getElementById("form-state-nft-category-input");
       const formStateReveal = document.getElementById("form-state-reveal");
       
-      formStateChain.innerHTML = formStateChainInput.value; 
+      // Reload the mint state if the chain changed.
+      if (formStateChain.innerHTML != formStateChainInput.value) {
+        // Reload the state.
+        await loadFrameState();
+
+        ormStateChain.innerHTML = formStateChainInput.value; 
+      }
       formStateProjectId.innerHTML = formStateProjectIdInput.value;
       formStateProjectId.setAttribute('href', `${projectLinkBase(formStateChain.innerHTML)}${formStateProjectId.innerHTML}`);
       formStateNftCategory.innerHTML = formStateNftCategoryInput.value; 
@@ -457,6 +489,7 @@ window.onpopstate = function(event) {
 
       // Show the loading animation.
       stopLoadingAnimation('modal-loading-animation');
+        
     }
 
     updateFormState();
@@ -507,10 +540,10 @@ window.onpopstate = function(event) {
     }
 
     // Prevent excessive calls.
-    let checkStateTimer;
-    const queueCheckState = async () => {
-      clearTimeout(checkStateTimer);
-      checkStateTimer = setTimeout(checkState, formInputReactionTimeDelay);
+    let checkStateTimer; 
+      const queueCheckState = async () => { 
+        clearTimeout(checkStateTimer); 
+        checkStateTimer = setTimeout(checkState, formInputReactionTimeDelay);
     }
 
     // Update the form's state each time the price, total supply, or quantity changes.
@@ -862,10 +895,10 @@ window.onpopstate = function(event) {
 
   /// Get the top.
   const getTopTarget = (frame, row) => {
-      if (row == 1) {
-        const frames = document.getElementById("frames");
-        return frames.offsetTop;
-      } 
+    if (row == 1) {
+      const frames = document.getElementById("frames");
+      return frames.offsetTop;
+    } 
 
     let previousRow = rows[row - 2];
     let candidateFrame;
@@ -924,6 +957,7 @@ window.onpopstate = function(event) {
 
     return frame;
   };
+    
 
   const positionAndShowFrame = async (imageFrame) => {
     await loadFrame(imageFrame);
@@ -932,6 +966,7 @@ window.onpopstate = function(event) {
 
     const rect = imageFrame.getBoundingClientRect();
     if (rect.left < greatestRightInRow) currentRow++;
+    
     greatestRightInRow = rect.right;
 
     const heightDiff = rect.top - getTopTarget(rect, currentRow);
@@ -964,7 +999,7 @@ window.onpopstate = function(event) {
     );
     const data = await response.json();
     const itemIds = [];
-    const frames = data['articles']
+    frames = data['articles']
       // Only if attachments have file extensions like ".jpg" ".jpeg" ".png" ".gif" ".webp" ".svg" ".avif"
       .filter(item => item.hasVideo === true || item.attachments.some(attachment => attachment.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)$/i)))
       .map((item) => {
@@ -996,33 +1031,8 @@ window.onpopstate = function(event) {
 
     const positionAndShowFrames = async () => {
       for (const frame of frames)
-        await positionAndShowFrame(frame);
+        await positionAndShowFrame(frame, currentMaxRow + rowPageSize);
     };
-
-    const loadFrameState = async () => { 
-      // Load tiers.
-      const formStateProjectId = document.getElementById("form-state-project-id");
-      const projectId = parseInt(formStateProjectId.innerHTML);
-      const tiers = await tx_view_tiers(projectId, encodedIPFSUris);
-
-      for (let i in tiers) {
-        const tier = tiers[i];
-        if (tier.id != 0) {
-          // Get a reference to the tier's remaining supply.
-          const formattedRemainingSupply = parseInt(tier[2].toString());
-          const frame = frames[i]; 
-          const ctaAnchor = frame.querySelector('a');
-
-          // Set the content.
-          if (formattedRemainingSupply == 0) {
-            ctaAnchor.textContent = '[sold out]';
-            ctaAnchor.classList.add("sold-out");
-          } else {
-            ctaAnchor.textContent = `[${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } left]`;
-          }
-        } 
-      }
-    }
 
     await Promise.all([loadFrameState(), positionAndShowFrames()]);
   };
