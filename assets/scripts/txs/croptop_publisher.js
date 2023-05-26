@@ -1,11 +1,11 @@
-const croptopPublisherContract = async (chainId) => {
+const croptopPublisherContract = (chainId) => {
   switch (chainId) {
     case 5:
-      return "0x19ca78b53934f7c3b5d719a377883e03614003de";
+      return "0x7eb637de63218a75f7504444fcc9d847da1b1f27";
   }
 }
 
-const contractABI = [{
+const croptopPublisherContractABI = [{
   "inputs": [
     {
       "internalType": "contract IJBController3_1",
@@ -271,7 +271,7 @@ const contractABI = [{
       "type": "address"
     }
   ],
-  "name": "collect",
+  "name": "collectFrom",
   "outputs": [],
   "stateMutability": "payable",
   "type": "function"
@@ -321,7 +321,7 @@ const contractABI = [{
       "type": "tuple[]"
     }
   ],
-  "name": "configure",
+  "name": "configureFor",
   "outputs": [],
   "stateMutability": "nonpayable",
   "type": "function"
@@ -481,20 +481,35 @@ const contractABI = [{
   "type": "function"
 }];
 
-const tx_view_allowance = async (projectId, category, contract) => {
-  return await view(contract, contractABI, "allowanceFor", [projectId, "0x0000000000000000000000000000000000000000", category]);
+const tx_view_allowance = async (projectId, category, chainId) => {
+  const contract = croptopPublisherContract(chainId);
+  if (!contract) return [0, 0, 0];
+  return await view(contract, croptopPublisherContractABI, "allowanceFor", [projectId, "0x0000000000000000000000000000000000000000", category]);
 }
 
-const tx_view_tiers = async (projectId, encodedIPFSUris, contract) => {
-  return await view(contract, contractABI, "tiersFor", [projectId, "0x0000000000000000000000000000000000000000", encodedIPFSUris]);
+const tx_view_tiers = async (projectId, encodedIPFSUris, chainId) => {
+  const contract = croptopPublisherContract(chainId);
+  if (!contract) return [[0, 0, 0]];
+  return await view(contract, croptopPublisherContractABI, "tiersFor", [projectId, "0x0000000000000000000000000000000000000000", encodedIPFSUris]);
 }
 
-const tx_collect = async (projectId, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, contract) => {
+const tx_collect = async (projectId, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, chainId) => {
+  const contract = croptopPublisherContract(chainId);
+  if (!contract) return false;
   const post = {totalSupply, price, quantity, category, encodedIPFSUri};
   const posts = Array.from({length: quantity}, () => post);
   if (!beneficiary) beneficiary = (await getSigner()).address;
   if (!cpnBeneficiary) cpnBeneficiary = beneficiary; 
-  return await sign(contract, contractABI, "collect", [projectId, posts, beneficiary, cpnBeneficiary, {
+  await sign(contract, croptopPublisherContractABI, "collectFrom", [projectId, posts, beneficiary, cpnBeneficiary, {
       value 
   }]);
+  return true;
+}
+
+const tx_configure = async (projectId, category, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, chainId) => {
+  const contract = croptopPublisherContract(chainId);
+  if (!contract) return false;
+  const allowedPost = { nft: "0x0000000000000000000000000000000000000000", category, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses};
+  await sign(contract, croptopPublisherContractABI, "configureFor", [projectId, [allowedPost]]);
+  return true;
 }

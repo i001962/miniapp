@@ -69,7 +69,7 @@ body {
   text-align: left;
 }
 
-body, button, input, select {
+body, button, input, select, textarea {
   font-family: "Capsules", "Inconsolata", monospace;
 }
 
@@ -106,8 +106,13 @@ details[open] > summary:before {
   transform: rotate(90deg);
 }
 
+summary div {
+  padding-left: 16px;
+  margin-top: -20px;
+}
+
 /* The Modal (background) */
-#modal {
+.modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 10; /* Sit on top */
@@ -123,7 +128,7 @@ details[open] > summary:before {
 }
 
 /* Modal Content (image) */
-#modal-content {
+.modal-content {
   margin: auto;
   display: block;
   width: 88vw; /* 88% of the viewport width */
@@ -131,7 +136,7 @@ details[open] > summary:before {
   float: center;
   padding-bottom: 100px;
 }
-#modal-header {
+.modal-header {
   padding-bottom: 12px;
 }
 #frame-name {
@@ -141,27 +146,26 @@ details[open] > summary:before {
 #frame-date {
   color: var(--foreground-secondary-color);
 }
-#modal-subtitle {
+.frame-subtitle {
   margin-top: 4px;
 }
 #frame-link {
   color: var(--foreground-secondary-color);
 }
-#form-state {
+#post-form-state {
   margin-top: 12px;
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 4px;
 }
-#form-state-button {
+#post-form-state-button {
   color: var(--foreground-primary-color);
 }
-.form-state-item-value {
+.post-form-state-item-value {
   margin-left: 4px;
 }
-#form-state-toggle {
- /* font-weight: 200; */
+#post-form-state-toggle {
  color: var(--foreground-secondary-color);
  font-size: 12px;
  display: flex;
@@ -171,7 +175,6 @@ details[open] > summary:before {
 .form {
   display: flex;
   flex-direction: row;
-  display: none;
 }
 .form-header {
   color: var(--foreground-secondary-color);
@@ -186,6 +189,9 @@ details[open] > summary:before {
 }
 .main-toggle {
   margin-top: 12px;
+}
+#fork-form .main-toggle {
+  margin-top: 16px;
 }
 .disclaimer-toggle {
   font-weight: 200;
@@ -236,7 +242,7 @@ details > summary:before {
   flex-direction: row;
   align-items: center;
 }
-.form-value input, .form-value select {
+.form-value input, .form-value select, .form-value textarea {
   width: 100%;
   padding: 4px;
   border: 1px solid var(--border-color);
@@ -271,7 +277,7 @@ details > summary:before {
 .load-address-button:hover .load-address-button-text {
   text-decoration: underline;
 }
-#form-error-message {
+.form-error-message {
   margin-top: 12px;
   color: var(--alert-color);
 }
@@ -295,28 +301,17 @@ details > summary:before {
 .ether {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
-#modal img, #modal video {
+.modal img, .modal video {
   width: 100%;
   border: 1px solid var(--foreground-tertiary-color);
 }
 
 /* Add Animation */
-#modal-content, #modal-caption {
+.modal-content {
   -webkit-animation-name: fadein;
   -webkit-animation-duration: 0.3s;
   animation-name: fadein;
 }
-
-
-/* #collect-message { */
-/*   flex: 1; */
-/*   font-size: 14px; */
-/*   text-align: left; */
-/*   width: auto; */
-/* } */
-
-
-
 
 code {
   white-space: pre;
@@ -658,7 +653,7 @@ hr {
 #main-loading-animation {
   margin-left: 20px;
 }
-#button-loading-animation {
+.button-loading-animation {
   margin-left: 12px;
 }
 img.avatar {
@@ -727,17 +722,22 @@ img.avatar {
   text-decoration: underline;
 }
 
-.site-detail {
+#fork {
   margin-top: 4px;
-}
-
-.site-detail a {
   color: var(--foreground-secondary-color);
   cursor: pointer;
 }
 
-.site-detail a:hover {
+#fork:hover {
   color: var(--link-color);
+}
+
+#fork-form {
+  width: 45%; 
+}
+
+#fork-form details .form-item {
+  margin-top: 12px; 
 }
 
 p,
@@ -897,6 +897,10 @@ footer {
   opacity: 1;
 }
 
+.fork-info {
+  margin-top: 20px; 
+}
+
 .overlay-icon {
   width: 32px;
   height: 32px;
@@ -958,7 +962,7 @@ footer {
     width: calc(100vw - 60px);
   }
 
-  .form, #modal-header, #form-submit-button, .form-error-message {
+  .form, .modal-header, #form-post-button, .form-error-message {
     margin-inline-start: 20px;
     margin-inline-end: 20px;
   }
@@ -967,7 +971,11 @@ footer {
     flex: 1 0 100%;
   }
 
-  #modal-content {
+  .fork-form {
+    width: 100%; 
+  }
+
+  .modal-content {
     width: 100%;
   }
 
