@@ -5,6 +5,8 @@
 {% include 'modules/utils.html' %}
 {% include 'modules/tx.html' %}
 {% include 'modules/croptop_publisher.html' %}
+{% include 'modules/croptop_deployer.html' %}
+{% include 'modules/operator_store.html' %}
 {% include 'modules/planet_seo.html' %}
 {% endblock %}
 
@@ -40,7 +42,7 @@ window.onpopstate = function(event) {
         You'll never be asked to sign up for an account or sign a blockchain transaction. All Croptop content exists peer-to-peer and is broadcasted using the Croptop app you'll download, there's no middleman corporation involved.
       </div>
       <div class="fork-info">
-        If you want to let people pay you to record content onchain, you'll first need to create your Juicebox — an open source, community owned, and onchain programmable vending machine. You'll then add your Juicebox project ID into the settings of the Croptop app.
+        If you want to let people pay you to record content onchain, you'll first need to create a Juicebox — an open source, community owned, and onchain programmable vending machine. You'll then add your Juicebox project ID into the settings of the Croptop app.
       </div>
       <div class="fork-info">
         You can create a simple Croptop-compatible Juicebox below. You can adjust it later on <a href="https://juicebox.money" target="_blank">https://juicebox.money</a>. It's recommended to send these transactions from the same forms over at <a href="https://croptop.eth.limo" target="_blank">https://croptop.eth</a> to make sure they haven't been tampered with.
@@ -64,19 +66,54 @@ window.onpopstate = function(event) {
           <div class="form-section">
             <div class="form-section-description">Once deployed, you can find your Juicebox's project ID by looking for new projects at <a href="https://juicebox.money/projects?tab=new" target="_blank">https://juicebox.money/projects?tab=new</a>. The owner you set can edit this project at any time to change its description or set new money rules.</div>
             <div class="form-item">
-              <div class="form-label">Name</div>
+              <div class="form-label">Collection name</div>
               <div class="form-value">
-                <input type="text" placeholder="Your collection name" id="fork-form-project-name-input">
+                <input type="text" placeholder="Your collection name" id="fork-form-new-jb-collection-name-input">
+              </div>
+            </div>
+            <div class="form-item">
+              <div class="form-label">Collection Symbol</div>
+              <div class="form-value">
+                <input type="text" placeholder="RANDOM_POSTS" id="fork-form-new-jb-collection-symbol-input">
               </div>
             </div>
           </div>
           <div class="form-section">
             <div class="form-item form-item-large">
               <div class="form-label">Owner 
-                <button id="fork-form-load-address-button" class="load-address-button">[<span id="fork-form-load-address-button-text" class="load-address-button-text">connect wallet</span>]</button>
+                <button id="fork-form-new-jb-load-address-button" class="load-address-button">[<span class="load-address-button-text">connect wallet</span>]</button>
               </div>
               <div class="form-value">
-                <input type="text" placeholder="Defaults to your address" id="fork-form-project-owner-input">
+                <input type="text" placeholder="Defaults to your address" id="fork-form-new-jb-project-owner-input">
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="form-section-description">A post's minting parameters are chosen by the collector at the time they record it onchain. Anyone can post any content from anywhere to your Juicebox, so long as these allowances that you set are met.</div>
+            <div class="form-item">
+              <div class="form-label">Minimum price</div>
+              <div class="form-value">
+                <span class="ether">Ξ</span><input type="number" placeholder="free" value="0.01" id="fork-form-new-jb-minimum-price-input">
+              </div>
+            </div>
+            <div class="form-item">
+              <div class="form-label">Min total supply</div>
+              <div class="form-value">
+                <input type="number" value="1" id="fork-form-new-jb-minimum-total-supply-input">
+              </div>
+            </div>
+            <div class="form-item">
+              <div class="form-label">Max total supply</div>
+              <div class="form-value">
+                <input type="number" placeholder="unlimited" id="fork-form-new-jb-maximum-total-supply-input">
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="form-item form-item-large">
+              <div class="form-label">Allowed posting addresses (one per line)</div>
+              <div class="form-value">
+                <textarea rows="4" id="fork-form-new-jb-addresses-input" placeholder="leave empty for no restrictions"></textarea>
               </div>
             </div>
           </div>
@@ -97,7 +134,7 @@ window.onpopstate = function(event) {
           <button id="fork-form-permission-submit-button" class="form-button">[<span id="fork-form-permission-submit-button-text" class="form-button-text">give permission</span>]<span id="fork-form-permission-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
         </details>
         <details>
-          <summary class="toggle main-toggle"><div>Set the conditions that Croptop posts must meet when made to your Juicebox</div></summary>
+          <summary class="toggle main-toggle"><div>Set more conditions that Croptop posts must meet when made to your Juicebox</div></summary>
           <div class="form-section">
             <div class="form-item">
               <div class="form-label">Project ID</div>
@@ -205,7 +242,7 @@ window.onpopstate = function(event) {
               </div>
             </div>
             <div class="form-item form-item-large">
-              <div class="form-label">Address <button id="collect-post-form-load-address-button" class="load-address-button">[<span id="collect-post-form-load-address-button-text" class="load-address-button-text">connect wallet</span>]</button></div>
+              <div class="form-label">Address <button id="collect-post-form-load-address-button" class="load-address-button">[<span class="load-address-button-text">connect wallet</span>]</button></div>
               <div class="form-value">
                 <input type="text" placeholder="Defaults to your address" id="collect-post-form-beneficiary-input">
               </div>
@@ -236,7 +273,7 @@ window.onpopstate = function(event) {
             <div class="form-item">
               <div class="form-label">Price</div>
               <div class="form-value">
-                <span class="ether">Ξ</span><input type="text" value="" id="record-post-form-price-input">
+                <span class="ether">Ξ</span><input type="number" value="" id="record-post-form-price-input">
               </div>
             </div>
             <div class="form-item">
@@ -253,7 +290,7 @@ window.onpopstate = function(event) {
             </div>
             <div class="form-item form-item-large">
               <div class="form-label">Address 
-                <button id="record-post-form-load-address-button" class="load-address-button">[<span id="record-post-form-load-address-button-text" class="load-addres-button-text">connect wallet</span>]</button>
+                <button id="record-post-form-load-address-button" class="load-address-button">[<span class="load-addres-button-text">connect wallet</span>]</button>
               </div>
               <div class="form-value">
                 <input type="text" placeholder="Defaults to your address" id="record-post-form-beneficiary-input">
@@ -590,7 +627,7 @@ window.onpopstate = function(event) {
     postFormStateButton.onclick = async () => {
       // Check for empty values.
       if (postFormStateProjectIdInput.value == "" || postFormStateNftCategoryInput.value == "") {
-        postFormStateErrorMessage.innerHTML = `Missing values.`;
+        postFormStateErrorMessage.innerHTML = "Fill out the form.";
         postFormStateErrorMessage.style.display = "block";
         return;
       } else {
@@ -697,7 +734,7 @@ window.onpopstate = function(event) {
     postFormButton.onclick = async () => {
       // Check for empty values.
       if (recordPostFormPriceInput.value == "" || recordPostFormTotalSupplyInput.value == "" || recordPostFormQuantityInput.value == "") {
-        postFormErrorMessage.innerHTML = `Missing values.`;
+        postFormErrorMessage.innerHTML = "Fill out the form.";
         postFormErrorMessage.style.display = "block";
         return;
       } 
@@ -848,7 +885,7 @@ window.onpopstate = function(event) {
     postFormButton.onclick = async () => {
       // Check for empty values.
       if (collectPostFormPriceInput.value == "" || collectPostFormQuantityInput.value == "") {
-        postFormErrorMessage.innerHTML = `Missing values.`;
+        postFormErrorMessage.innerHTML = "Fill out the form.";
         postFormErrorMessage.style.display = "block";
         return;
       } 
@@ -1224,28 +1261,32 @@ window.onpopstate = function(event) {
   }
 
   const decorateNewJbForm = () => {
-    const forkForkChainInput = document.getElementById("fork-form-state-chain-input");
-    const forFormProjectNameInput = document.getElementById("fork-form-project-name-input");
-    const forkFormProjectOwnerInput = document.getElementById("fork-form-project-owner-input");
+    const forkFormChainInput = document.getElementById("fork-form-state-chain-input");
+    const forkFormNewJbCollectionNameInput = document.getElementById("fork-form-new-jb-collection-name-input");
+    const forkFormNewJbCollectionSymbolInput = document.getElementById("fork-form-new-jb-collection-symbol-input");
+    const forkFormNewJbProjectOwnerInput = document.getElementById("fork-form-new-jb-project-owner-input");
+    const forkFormNewJbMinimumPriceInput = document.getElementById("fork-form-new-jb-minimum-price-input");
+    const forkFormNewJbMinimumTotalSupplyInput = document.getElementById("fork-form-new-jb-minimum-total-supply-input");
+    const forkFormNewJbMaximumTotalSupplyInput = document.getElementById("fork-form-new-jb-maximum-total-supply-input");
+    const forkFormNewJbAddressesInput = document.getElementById("fork-form-new-jb-addresses-input");
     const forkFormNewJbErrorMessage = document.getElementById("fork-form-new-jb-error-message");
     const forkFormNewJbSubmitButton = document.getElementById("fork-form-new-jb-submit-button");
 
     // Set values in the form if the fields are not yet set.
-    if (!forkFormProjectOwnerInput.value && signer) forkFormProjectOwnerInput.value = signer;
+    if (!forkFormNewJbProjectOwnerInput.value && signer) forkFormProjectOwnerInput.value = signer;
 
     // Allow connecting wallet to prefill beneficiary input field.
-    const loadAddressButton = document.getElementById("fork-form-load-address-button");
+    const loadAddressButton = document.getElementById("fork-form-new-jb-load-address-button");
     loadAddressButton.onclick = async () => {
       signer = (await getSigner()).address;
-      forkFormBeneficiaryInput.value = signer;
-      await checkState();
+      forkFormNewJbProjectOwnerInput.value = signer;
     };
 
     // Submit the form.
     forkFormNewJbSubmitButton.onclick = async () => {
       // Check for empty values.
-      if (forFormProjectNameInput.value == "" || forkFormProjectOwnerInput.value == "") {
-        forkFormNewJbErrorMessage.innerHTML = `Missing values.`;
+      if (forkFormNewJbCollectionNameInput.value == "" || forkFormNewJbCollectionSymbolInput.value == "" || forkFormNewJbProjectOwnerInput.value == "") {
+        forkFormNewJbErrorMessage.innerHTML = "Fill out the form.";
         forkFormNewJbErrorMessage.style.display = "block";
         return;
       } else {
@@ -1253,26 +1294,24 @@ window.onpopstate = function(event) {
         forkFormNewJbErrorMessage.style.display = "none";
       }
 
+      // Default to max
+      if (forkFormNewJbMaximumTotalSupplyInput.value == "") forkFormNewJbMaximumTotalSupplyInput.value = 1000000000;
+      // Default to 1
+      if (forkFormNewJbMinimumTotalSupplyInput.value == "") forkFormNewJbMinimumTotalSupplyInput.value = 1;
+      // Default to free
+      if (forkFormNewJbMinimumPriceInput.value == "") forkFormNewJbMinimumPriceInput.value = 0;
+
       // Show the loading animation.
       startLoadingAnimation('fork-form-new-jb-button-loading-animation');
 
-      // Get the signer.
-      signer = (await getSigner()).address;
-
-      if (forkFormNewJbSubmitButton.disabled) {
-        // Hide the loading animation.
-        stopLoadingAnimation('fork-form-new-jb-button-loading-animation');
-        return;
-      }
-
       // Make sure the client is connected to the right network.
       const chainId = await getChainId();
-      const expectedChainId = resolveChainId(forkForkChainInput.value);
+      const expectedChainId = resolveChainId(forkFormChainInput.value);
       if (chainId != expectedChainId) {
           try {
             await switchChain(expectedChainId); 
           } catch (e) {
-            forkFormNewJbErrorMessage.innerHTML = `Browser not connected to ${forkForkChainInput.value}.`;
+            forkFormNewJbErrorMessage.innerHTML = `Browser not connected to ${forkFormChainInput.value}.`;
             forkFormNewJbErrorMessage.style.display = "block";
 
             // Hide the loading animation.
@@ -1283,10 +1322,18 @@ window.onpopstate = function(event) {
       }
 
       // Normalize values from the form.
-      const name = forFormProjectNameInput.value;
-      const owner = forkFormProjectOwnerInput.value;
+      const name = forkFormNewJbCollectionNameInput.value;
+      const symbol = forkFormNewJbCollectionSymbolInput.value;
+      const owner = forkFormNewJbProjectOwnerInput.value;
+      const minimumPrice = `${Number(forkFormNewJbMinimumPriceInput.value) * 1_000_000_000_000_000_000}`;
+      const minimumTotalSupply = forkFormNewJbMinimumTotalSupplyInput.value;
+      const maximumTotalSupply = forkFormNewJbMaximumTotalSupplyInput.value;
+      const allowedAddresses = forkFormNewJbAddressesInput.value == "" ? [] : forkFormNewJbAddressesInput.value.split('\n');
 
       try {
+        // Try to process the transaction.
+        const accepted = await tx_deploy_project(name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, expectedChainId);
+
         // Show incompatible network if needed.
         if (!accepted) { 
           // Show the error message.
@@ -1307,7 +1354,7 @@ window.onpopstate = function(event) {
   }
 
   const decoratePermissionForm = () => {
-    const forkForkChainInput = document.getElementById("fork-form-state-chain-input");
+    const forkFormChainInput = document.getElementById("fork-form-state-chain-input");
     const forkFormOperatorProjectIdInput = document.getElementById("fork-form-operator-project-id-input");
     const forkFormPermissionSubmitButton = document.getElementById("fork-form-permission-submit-button");
     const forkFormPermissionErrorMessage = document.getElementById("fork-form-permission-error-message");
@@ -1316,7 +1363,7 @@ window.onpopstate = function(event) {
     forkFormPermissionSubmitButton.onclick = async () => {
       // Check for empty values.
       if (forkFormOperatorProjectIdInput.value == "") {
-        forkFormPermissionErrorMessage.innerHTML = `Missing values.`;
+        forkFormPermissionErrorMessage.innerHTML = "Fill out the form.";
         forkFormPermissionErrorMessage.style.display = "block";
         return;
       } else {
@@ -1327,25 +1374,14 @@ window.onpopstate = function(event) {
       // Show the loading animation.
       startLoadingAnimation('fork-form-permission-button-loading-animation');
 
-      // Get the signer.
-      signer = (await getSigner()).address;
-
-      // Make sure the form contents make sense.
-
-      if (forkFormPermissionSubmitButton.disabled) {
-        // Hide the loading animation.
-        stopLoadingAnimation('fork-form-permission-button-loading-animation');
-        return;
-      }
-
       // Make sure the client is connected to the right network.
       const chainId = await getChainId();
-      const expectedChainId = resolveChainId(forkForkChainInput.value);
+      const expectedChainId = resolveChainId(forkFormChainInput.value);
       if (chainId != expectedChainId) {
           try {
             await switchChain(expectedChainId); 
           } catch (e) {
-            forkFormPermissionErrorMessage.innerHTML = `Browser not connected to ${forkForkChainInput.value}.`;
+            forkFormPermissionErrorMessage.innerHTML = `Browser not connected to ${forkFormChainInput.value}.`;
             forkFormPermissionErrorMessage.style.display = "block";
 
             // Hide the loading animation.
@@ -1359,6 +1395,9 @@ window.onpopstate = function(event) {
       const projectId = forkFormOperatorProjectIdInput.value;
 
       try {
+        // Try to process the transaction.
+        const accepted = await tx_set_operator(projectId, expectedChainId);
+
         // Show incompatible network if needed.
         if (!accepted) { 
           // Show the error message.
@@ -1379,7 +1418,7 @@ window.onpopstate = function(event) {
   }
 
   const decorateAllowanceForm = () => {
-    const forkForkChainInput = document.getElementById("fork-form-state-chain-input");
+    const forkFormChainInput = document.getElementById("fork-form-state-chain-input");
     const forkFormAllowanceSubmitButton = document.getElementById("fork-form-allowance-submit-button");
     const forkFormAllowanceProjectIdInput = document.getElementById("fork-form-allowance-project-id-input");
     const forkFormAllowanceCategoryInput = document.getElementById("fork-form-allowance-nft-category-input");
@@ -1393,7 +1432,7 @@ window.onpopstate = function(event) {
     forkFormAllowanceSubmitButton.onclick = async () => {
       // Check for empty values.
       if (forkFormAllowanceProjectIdInput.value == "" || forkFormAllowanceCategoryInput.value == "") {
-        forkFormAllowanceErrorMessage.innerHTML = `Missing values.`;
+        forkFormAllowanceErrorMessage.innerHTML = "Fill out the form.";
         forkFormAllowanceErrorMessage.style.display = "block";
         return;
       } else {
@@ -1413,21 +1452,14 @@ window.onpopstate = function(event) {
       // Get the signer.
       signer = (await getSigner()).address;
 
-      // Make sure the form contents make sense.
-      if (forkFormAllowanceSubmitButton.disabled) {
-        // Hide the loading animation.
-        stopLoadingAnimation('fork-form-allowance-button-loading-animation');
-        return;
-      }
-
       // Make sure the client is connected to the right network.
       const chainId = await getChainId();
-      const expectedChainId = resolveChainId(forkForkChainInput.value);
+      const expectedChainId = resolveChainId(forkFormChainInput.value);
       if (chainId != expectedChainId) {
           try {
             await switchChain(expectedChainId); 
           } catch (e) {
-            forkFormAllowanceErrorMessage.innerHTML = `Browser not connected to ${forkForkChainInput.value}.`;
+            forkFormAllowanceErrorMessage.innerHTML = `Browser not connected to ${forkFormChainInput.value}.`;
             forkFormAllowanceErrorMessage.style.display = "block";
 
             // Hide the loading animation.
@@ -1443,10 +1475,9 @@ window.onpopstate = function(event) {
       const minimumPrice = `${Number(forkFormAllowanceMinimumPriceInput.value) * 1_000_000_000_000_000_000}`;
       const minimumTotalSupply = forkFormAllowanceMinimumTotalSupplyInput.value;
       const maximumTotalSupply = forkFormAllowanceMaximumTotalSupplyInput.value;
-      const allowedAddresses = forkFormAllowanceAddressesInput.value.split('\n');
+      const allowedAddresses = forkFormAllowanceAddressesInput.value == "" ? [] : forkFormAllowanceAddressesInput.value.split('\n');
 
       try {
-        console.log({ minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses });
         // Try to process the transaction.
         const accepted = await tx_configure(projectId, category, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, expectedChainId);
 
