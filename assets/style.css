@@ -152,20 +152,20 @@ summary div {
 #frame-link {
   color: var(--foreground-secondary-color);
 }
-#form-state {
+#post-form-state {
   margin-top: 12px;
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 4px;
 }
-#form-state-button {
+#post-form-state-button {
   color: var(--foreground-primary-color);
 }
-.form-state-item-value {
+.post-form-state-item-value {
   margin-left: 4px;
 }
-#form-state-toggle {
+#post-form-state-toggle {
  color: var(--foreground-secondary-color);
  font-size: 12px;
  display: flex;
@@ -653,7 +653,7 @@ hr {
 #main-loading-animation {
   margin-left: 20px;
 }
-#button-loading-animation {
+.button-loading-animation {
   margin-left: 12px;
 }
 img.avatar {

@@ -506,10 +506,11 @@ const tx_collect = async (projectId, category, totalSupply, price, quantity, enc
   return true;
 }
 
-const tx_configure = async (projectId, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, chainId) => {
+const tx_configure = async (projectId, category, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, chainId) => {
   const contract = croptopPublisherContract(chainId);
   if (!contract) return false;
-  const allowedPost = {nft, category, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses};
-  await sign(contract, contractABI, "configure", [projectId, [posts, allowedPost]]);
+  const allowedPost = { nft: "0x0000000000000000000000000000000000000000", category, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses};
+  console.log({  projectId,  allowedPost });
+  await sign(contract, contractABI, "configure", [projectId, [allowedPost]]);
   return true;
 }
