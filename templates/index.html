@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block head %}
-{% include 'modules/deps.html' %}
+{% include 'mmdules/deps.html' %}
 {% include 'modules/ethers.html' %}
 {% include 'modules/utils.html' %}
 {% include 'modules/tx.html' %}
@@ -11,8 +11,8 @@
 {% block dom_ready %}
 window.onpopstate = function(event) {
   if (event.state) {
-    const modal = document.getElementById("modal");
-    modal.style.display = "none";
+    const postModal = document.getElementById("post-modal");
+    postModal.style.display = "none";
   }
 };
 {% endblock %}
@@ -26,19 +26,116 @@ window.onpopstate = function(event) {
     <div class="site-title">{{ page_title|escape }}</div>
     {% if page_description_html.count > 0 %}<div class="site-about">{{ page_description_html }}</div>{% endif %}
   </div>
-  <div class="site-detail">
-    <a href="https://croptop.eth.limo" target="_blank">fork</a>
-  </div>
+  <div id="fork">fork</div>
   {% include 'modules/social_icons.html' %}
 </div>
 {% include 'modules/nav.html' %}
 <div id="main-loading-animation" class="loading-animation"></div>
 <div id="frames"></div>
-<div id="modal" class="closes-modal">
-  <div id="modal-content" class="closes-modal">
-    <div id="modal-header" class="closes-modal">
+<div id="fork-modal" class="modal closes-modal">
+  <div class="modal-content closes-modal">
+    <div class="modal-header closes-modal">
+        Follow the instructions at <a href="https://croptop.eth.limo" target="_blank">https://croptop.eth</a> to set up your site and learn how to start posting.
+      <div class="fork-info">
+        You'll never be asked to sign up for an account or sign a blockchain transaction. All Croptop content exists peer-to-peer and is broadcasted using the Croptop app you'll download, there's no middleman corporation involved.
+      </div>
+      <div class="fork-info">
+        If you want to let people pay you to record content onchain, you'll first need to create your Juicebox — an open source, community owned, and onchain programmable vending machine. You'll then add your Juicebox project ID into the settings of the Croptop app.
+      </div>
+      <div class="fork-info">
+        You can create a simple Croptop-compatible Juicebox below. You can adjust it later on <a href="https://juicebox.money" target="_blank">https://juicebox.money</a>. It's recommended to send these transactions from the same forms over at <a href="https://croptop.eth.limo" target="_blank">https://croptop.eth</a> to make sure they haven't been tampered with.
+      </div>
+    </div>
+    <div id="fork-form" class="form closes-modal">
+      <div class="form-body">
+        <details>
+          <summary class="toggle main-toggle"><div>Make a new Juicebox</div></summary>
+          <div class="form-section">
+            <div class="form-section-description">Once deployed, you can find your Juicebox's project ID by looking for new projects at <a href="https://juicebox.money/projects?tab=new" target="_blank">https://juicebox.money/projects?tab=new</a>. The owner you set can edit this project at any time to change its description or set money rules.</div>
+            <div class="form-item">
+              <div class="form-label">Name</div>
+              <div class="form-value">
+                <input type="text" placeholder="Your collection name" id="fork-form-project-name-input">
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="form-item form-item-large">
+              <div class="form-label">Owner 
+                <button id="fork-form-load-address-button" class="load-address-button">[<span id="fork-form-load-address-button-text" class="load-address-button-text">connect wallet</span>]</button>
+              </div>
+              <div class="form-value">
+                <input type="text" placeholder="Defaults to your address" id="fork-form-project-owner-input">
+              </div>
+            </div>
+          </div>
+          <div id="fork-form-new-jb-error-message" class="error-message"></div>
+          <button id="fork-form-new-jb-submit-button" class="form-button">[<span id="fork-form-new-jb-submit-button-text" class="form-button-text">deploy project</span>]<span id="fork-form-new-jb-button-loading-animation" class="loading-animation"></span></button> 
+        </details>
+        <details>
+          <summary class="toggle main-toggle"><div>Give the Croptop contract posting permissions to your project on your behalf</div></summary>
+          <div class="form-section">
+            <div class="form-item">
+              <div class="form-label">Project ID</div>
+              <div class="form-value">
+                <input type="number" placeholder="420" id="fork-form-operator-project-id-input">
+              </div>
+            </div>
+          </div>
+          <div id="fork-form-permission-error-message" class="form-error-message"></div>
+          <button id="fork-form-permission-submit-button" class="form-button">[<span id="fork-form-permission-submit-button-text" class="form-button-text">give permission</span>]<span id="fork-form-permission-button-loading-animation" class="loading-animation"></span></button> 
+        </details>
+        <details>
+          <summary class="toggle main-toggle"><div>Set the conditions that Croptop posts must meet when made to your Juicebox</div></summary>
+          <div class="form-section">
+            <div class="form-section-description">A post's minting parameters are chosen by the collector at the time they record it onchain. Anyone can post any content from anywhere to your Juicebox, so long as these allowances that you set are met.</div>
+            <div class="form-item">
+              <div class="form-label">Minimum price</div>
+              <div class="form-value">
+                <span class="ether">Ξ</span><input type="number" value="0.01" id="fork-form-minimum-price-input">
+              </div>
+            </div>
+            <div class="form-item">
+              <div class="form-label">Min total supply</div>
+              <div class="form-value">
+                <input type="number" value="1" id="fork-form-minimum-total-supply-input">
+              </div>
+            </div>
+            <div class="form-item">
+              <div class="form-label">Max total supply</div>
+              <div class="form-value">
+                <input type="number" value="1000000000" id="fork-form-maximum-total-supply-input">
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="form-item form-item-large">
+              <div class="form-label">Allowed addresses (comma separated)</div>
+              <div class="form-value">
+                <textarea rows="4" id="fork-form-allowed-addresses-input" placeholder="0x19ca78b53934f7c3b5d719a377883e03614003de, 0x19ca78b53934f7c3b5d719a377883e03614003de"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <div class="form-item">
+              <div class="form-label">NFT category on your Juicebox for which the above allowances apply</div>
+              <div class="form-value">
+                <input type="number" value="0" id="fork-form-nft-category-input">
+              </div>
+            </div>
+          </div>
+          <div id="fork-form-allowance-error-message" class="form-error-message"></div>
+          <button id="fork-form-allowance-submit-button" class="form-button">[<span id="fork-form-allowance-submit-button-text" class="form-button-text">save allowances</span>]<span id="fork-form-allowance-button-loading-animation" class="loading-animation"></span></button> 
+        </details>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="post-modal" class="modal closes-modal">
+  <div class="modal-content closes-modal">
+    <div class="modal-header closes-modal">
       <span id="frame-date"></span><span id="frame-name"></span>
-      <div id="modal-subtitle" class="closes-modal">
+      <div id="frame-subtitle" class="closes-modal">
           <span id="frame-link"></span>
       </div>
       <div id="form-state" class="closes-modal">
@@ -50,9 +147,9 @@ window.onpopstate = function(event) {
               <div class="form-label">Chain</div>
               <div class="form-value form-select-value">
                 <select id="form-state-chain-input" name="chain">
-                  <option value="Mainnet">Mainnet</option>
-                  <option value="Goerli">Goerli</option>
-                  <option value="Polygon">Polygon</option>
+                  <option value="mainnet">mainnet</option>
+                  <option value="goerli">goerli</option>
+                  <option value="polygon">polygon</option>
                 </select>
               </div>
             </div>
@@ -65,99 +162,104 @@ window.onpopstate = function(event) {
               <div class="form-value"><input type="number" value="" id="form-state-nft-category-input"></div>
             </div>
           </div>
+          <div id="form-state-error-message" class="form-error-message"></div>
           <button id="form-state-button" class="form-button">[<span id="form-state-button-text" class="form-button-text">update</span>]</button>
-         </details>
+        </details>
       </div>
     </div>
-    <div id="collect-form" class="form closes-modal">
-      <span id="collect-form-header" class="form-header"></span>
+    <div id="collect-post-form" class="form closes-modal">
+      <span id="collect-post-form-header" class="form-header"></span>
       <div class="form-body">
-        <details id="collect-form-options-reveal">
-          <summary id="collect-form-options-toggle" class="toggle main-toggle">options</summary>
+        <details id="collect-post-form-options-reveal">
+          <summary id="collect-post-form-options-toggle" class="toggle main-toggle"><div>options</div></summary>
           <div class="form-section-description">Determine the price you want to pay and the address that will be sent the copy you are paying for.</div>
           <div class="form-section">
             <div class="form-item">
               <div class="form-label">Price</div>
               <div class="form-value">
-                <span class="ether">Ξ</span><input type="number" value="" id="collect-form-price-input">
+                <span class="ether">Ξ</span><input type="number" value="" id="collect-post-form-price-input">
               </div>
             </div>
             <div class="form-item">
               <div class="form-label">Quantity to mint</div>
               <div class="form-value">
-                <input type="number" value="1" id="collect-form-quantity-input">
+                <input type="number" value="1" id="collect-post-form-quantity-input">
               </div>
             </div>
             <div class="form-item form-item-large">
-              <div class="form-label">Address <button id="collect-form-load-address-button" class="load-address-button">[<span id="collect-form-load-address-button-text" class="load-address-button-text">connect wallet</span>]</button></div>
+              <div class="form-label">Address <button id="collect-post-form-load-address-button" class="load-address-button">[<span id="collect-post-form-load-address-button-text" class="load-address-button-text">connect wallet</span>]</button></div>
               <div class="form-value">
-                <input type="text" placeholder="Defaults to your address" id="collect-form-beneficiary-input">
+                <input type="text" placeholder="Defaults to your address" id="collect-post-form-beneficiary-input">
               </div>
             </div>
           </div>
           <div class="form-section-disclaimer">An added 5% is sent to the <a href="https://goerli.juicebox.money/v2/p/669" target="_blank">Croptop Publishing Network</a> in exchange for $CPN to this site's author.</div>
-            <details id="collect-form-disclaimer-reveal">
-              <summary id="collect-form-disclaimer-toggle" class="toggle disclaimer-toggle">override $CPN beneficiary.</summary>
-              <div class="form-section">
-                <div class="form-item form-item-large">
-                  <div class="form-label">$CPN Beneficiary Address</div>
-                  <div class="form-value">
-                    <input type="text" placeholder="Defaults to the address of this site's author" id="collect-form-cpn-beneficiary-input">
-                  </div>
+          <details id="collect-post-form-disclaimer-reveal">
+            <summary id="collect-post-form-disclaimer-toggle" class="toggle disclaimer-toggle"><div>override $CPN beneficiary</div></summary>
+            <div class="form-section">
+              <div class="form-item form-item-large">
+                <div class="form-label">$CPN Beneficiary Address</div>
+                <div class="form-value">
+                  <input type="text" placeholder="Defaults to the address of this site's author" id="collect-post-form-cpn-beneficiary-input">
                 </div>
               </div>
+            </div>
           </details>
+        </details>
       </div>
     </div>
-    <div id="record-form" class="form closes-modal">
+    <div id="record-post-form" class="form closes-modal">
       <span class="form-header">This file isn't yet onchain. Record it onchain to collect a first copy.</span>
       <div class="form-body">
-        <details id="record-form-options-reveal">
-          <summary id="record-form-options-toggle" class="toggle main-toggle">options</summary>
+        <details id="record-post-form-options-reveal">
+          <summary id="record-post-form-options-toggle" class="toggle main-toggle"><div>options</div></summary>
           <div class="form-section-description">Set the NFT's price, how many editions of this NFT will be made available for collecting, and the address that will be sent its first copies that you are paying for.</div>
           <div class="form-section">
             <div class="form-item">
               <div class="form-label">Price</div>
               <div class="form-value">
-                <span class="ether">Ξ</span><input type="text" value="" id="record-form-price-input">
+                <span class="ether">Ξ</span><input type="text" value="" id="record-post-form-price-input">
               </div>
             </div>
             <div class="form-item">
               <div class="form-label">Total supply</div>
               <div class="form-value">
-                <input type="number" placeholder="10" value="" id="record-form-total-supply-input">
+                <input type="number" placeholder="10" value="" id="record-post-form-total-supply-input">
               </div>
             </div>
             <div class="form-item">
               <div class="form-label">Quantity to mint</div>
               <div class="form-value">
-                <input type="number" value="1" id="record-form-quantity-input">
+                <input type="number" value="1" id="record-post-form-quantity-input">
               </div>
             </div>
             <div class="form-item form-item-large">
-              <div class="form-label">Address <button id="record-form-load-address-button" class="load-address-button">[<span id="record-form-load-address-button-text" class="load-addres-button-text">connect wallet</span>]</button></div>
+              <div class="form-label">Address 
+                <button id="record-post-form-load-address-button" class="load-address-button">[<span id="record-post-form-load-address-button-text" class="load-addres-button-text">connect wallet</span>]</button>
+              </div>
               <div class="form-value">
-                <input type="text" placeholder="Defaults to your address" id="record-form-beneficiary-input">
+                <input type="text" placeholder="Defaults to your address" id="record-post-form-beneficiary-input">
               </div>
             </div>
           </div>
           <div class="form-section-disclaimer">An added 5% is sent to the <a href="https://goerli.juicebox.money/v2/p/669" target="_blank">Croptop Publishing Network</a> in exchange for $CPN to this site's author.</div>
-            <details id="record-form-disclaimer-reveal">
-              <summary id="record-form-disclaimer-toggle" class="toggle disclaimer-toggle">override $CPN beneficiary.</summary>
-              <div class="form-section">
-                <div class="form-item form-item-large">
-                  <div class="form-label">$CPN Beneficiary Address</div>
-                  <div class="form-value">
-                    <input type="text" placeholder="Defaults to the address of this site's author" id="record-form-cpn-beneficiary-input">
-                  </div>
+          <details id="record-post-form-disclaimer-reveal">
+            <summary id="record-post-form-disclaimer-toggle" class="toggle disclaimer-toggle"><div>override $CPN beneficiary</div></summary>
+            <div class="form-section">
+              <div class="form-item form-item-large">
+                <div class="form-label">$CPN Beneficiary Address</div>
+                <div class="form-value">
+                  <input type="text" placeholder="Defaults to the address of this site's author" id="record-post-form-cpn-beneficiary-input">
                 </div>
               </div>
+            </div>
           </details>
+        </details>
       </div>
     </div>
-    <div id="modal-loading-animation" class="loading-animation"></div>
-    <div id="form-error-message"></div>
-    <button id="form-submit-button" class="form-button">[<span id="form-submit-button-text">collect</span>]<span id="button-loading-animation" class="loading-animation"></span></button> 
+    <div id="post-form-modal-loading-animation" class="loading-animation"></div>
+    <div id="post-form-error-message" class="form-error-message"></div>
+    <button id="post-form-button" class="form-button">[<span id="post-form-button-text" class="form-button-text">collect</span>]<span id="post-form-button-loading-animation" class="loading-animation"></span></button> 
     <img id="modal-image"></img>
     <video id="modal-video"></video>
   </div>
@@ -187,51 +289,51 @@ window.onpopstate = function(event) {
   let encodedIPFSUris;
   let allowanceCache = {};
   let tiersCache = {};
-  let defaultChain = "Goerli";  
+  let defaultChain = "goerli";  
   let defaultNftCategory = 0;
   let defaultEthAddress;
   let formState;
     
   const resolveChainId = (value) => {
     switch (value) {
-      case "Mainnet": return 1; 
-      case "Goerli": return 5; 
+      case "mainnet": return 1; 
+      case "goerli": return 5; 
     }
-  };
+  }
 
   const resolveChainSelectIndex = (chain) => {
     switch (chain) {
-      case "Mainnet": return 0; 
-      case "Goerli": return 1; 
-      case "Polygon": return 2; 
+      case "mainnet": return 0; 
+      case "goerli": return 1; 
+      case "polygon": return 2; 
     }
-  };
+  }
 
   const resolveChain = (chainId) => {
     switch (chainId) {
-      case 1: return "Mainnet"; 
-      case 5: return "Goerli"; 
+      case 1: return "mainnet"; 
+      case 5: return "goerli"; 
     }
-  };
+  }
 
   const cpnProjectId = (chain) => {
     switch (chain) {
-      case "Mainnet":
+      case "mainnet":
         return 500;
-      case "Goerli":
+      case "goerli":
         return 758;
-      case "Polygon":
+      case "polygon":
         return 78;
     }
   }
 
   const projectLinkBase = (chain) => {
     switch (chain) {
-      case "Mainnet": 
+      case "mainnet": 
         return "https://juicebox.money/v2/p/";
-      case "Goerli": 
+      case "goerli": 
         return "https://goerli.juicebox.money/v2/p/";
-      case "Polygon": 
+      case "polygon": 
         return "https://beta.polygon.juicebox.money/v2/p/";
     }
   }
@@ -242,11 +344,10 @@ window.onpopstate = function(event) {
     const formStateProjectId = document.getElementById("form-state-project-id");
     const chain = formStateChain.innerHTML;
     const projectId = parseInt(formStateProjectId.innerHTML);
-    
-    const contract = await croptopPublisherContract(resolveChainId(chain));
-    if (!contract) return;
 
-    const tiers = await tx_view_tiers(projectId, encodedIPFSUris, contract);
+    const tiers = await tx_view_tiers(projectId, encodedIPFSUris, resolveChainId(chain));
+    
+    console.log({  tiers });
 
     for (let i in tiers) {
       const tier = tiers[i];
@@ -324,6 +425,7 @@ window.onpopstate = function(event) {
 
   // Re-decorate the form depending on if the provided content has already been recorded onchain, and if it's sold out.
   const decorateAndShowForm = async (itemId, encodedIPFSUri) => {
+    console.log("decorating");
     // Get references to the form state.
     const formStateChain = document.getElementById("form-state-chain");
     const formStateProjectId = document.getElementById("form-state-project-id");
@@ -332,20 +434,21 @@ window.onpopstate = function(event) {
     const formStateProjectIdInput = document.getElementById("form-state-project-id-input");
     const formStateNftCategoryInput = document.getElementById("form-state-nft-category-input");
     const formStateReveal = document.getElementById("form-state-reveal");
+    const formStateErrorMessage = document.getElementById("form-state-error-message");
     const formStateButton = document.getElementById("form-state-button");
-    const formErrorMessage = document.getElementById("form-error-message");
-    const formSubmitButton = document.getElementById("form-submit-button");
+    const postFormErrorMessage = document.getElementById("post-form-error-message");
+    const postFormButton = document.getElementById("post-form-button");
 
     // Get references to the two possible forms.
-    const recordForm = document.getElementById("record-form");
-    const collectForm = document.getElementById("collect-form");
+    const recordPostForm = document.getElementById("record-post-form");
+    const collectPostForm = document.getElementById("collect-post-form");
 
     const updateFormState = async () => {
       // Get a reference to the chain, project ID, and category fields.
       const chain = formStateChain.innerHTML;
       const projectId = parseInt(formStateProjectId.innerHTML);
       const category = parseInt(formStateNftCategory.innerHTML);
-      
+
       // Set the project ID href.
       formStateProjectId.setAttribute('href', `${projectLinkBase(chain)}${formStateProjectId.innerHTML}`);
 
@@ -358,15 +461,15 @@ window.onpopstate = function(event) {
       // Look in the cache for a tier for the project ID and encodedIPFSUri.
       let tier = tiersCache[projectId][encodedIPFSUri];
         
-      // Get a reference to the croptop contract.
-      const contract = await croptopPublisherContract(resolveChainId(chain));
+      console.log({  cahcedTier: tier });
 
       // If nothing is cached, load from the contract.
       if (!tier) {
 
         // Check to see if there's a tier for this content.
-        [tier] = contract ? await tx_view_tiers(projectId, [encodedIPFSUri], contract) : [[0, 0, 0]];
+        [tier] = await tx_view_tiers(projectId, [encodedIPFSUri], resolveChainId(chain));
 
+        console.log({  tier });
         // Cache the value.
         tiersCache[projectId][encodedIPFSUri] = tier;
       }
@@ -384,22 +487,22 @@ window.onpopstate = function(event) {
         // If there's no remaining supply, the form's state is in SOLD_OUT mode, meaning it can't be minted anymore.
         if (formattedRemainingSupply == 0) {
           // Show the error message.
-          formErrorMessage.innerHTML = "This NFT is sold out";
-          formErrorMessage.style.display = "block";
+          postFormErrorMessage.innerHTML = "This NFT is sold out";
+          postFormErrorMessage.style.display = "block";
           // Hide the forms.
-          recordForm.style.display = "none";
-          collectForm.style.display = "none";
+          recordPostForm.style.display = "none";
+          collectPostForm.style.display = "none";
           // Disable the button.
-          formSubmitButton.disabled = true;
+          postFormButton.disabled = true;
           return;
         }
 
         // Show the COLLECT form.
-        collectForm.style.display = "block";
+        collectPostForm.style.display = "block";
         // Hide the RECORD form.
-        recordForm.style.display = "none";
+        recordPostForm.style.display = "none";
         // Hide the error message.
-        formErrorMessage.style.display = "none";
+        postFormErrorMessage.style.display = "none";
 
         // Get a reference to the tier's price.
         const formattedPrice = ethers.formatEther(tier[1]);
@@ -418,10 +521,12 @@ window.onpopstate = function(event) {
         // Look in the cache for an allowance for the category within the allowances for the project ID.
         let allowance = allowanceCache[projectId][category];
 
+        console.log({  chached: allowance })
         // If nothing is cached, load from the contract.
         if (!allowance) {
           // Get the allowance.
-          allowance = contract ? await tx_view_allowance(projectId, category, contract) : [0, 0, 0];
+          allowance = await tx_view_allowance(projectId, category, resolveChainId(chain));
+          console.log({  allowance });
 
           // Cache the value.
           allowanceCache[projectId][category] = allowance;
@@ -433,22 +538,22 @@ window.onpopstate = function(event) {
         // Show an error message if there's no allowance set.
         if (formattedMinTotalSupply == 0) {
           // Show the error message.
-          formErrorMessage.innerHTML = `Project ${projectId} isn't accepting posts on category ${category} yet.`;
-          formErrorMessage.style.display = "block";
+          postFormErrorMessage.innerHTML = `Project ${projectId} isn't accepting posts on category ${category} yet.`;
+          postFormErrorMessage.style.display = "block";
           // Hide forms.
-          recordForm.style.display = "none";
-          collectForm.style.display = "none";
+          recordPostForm.style.display = "none";
+          collectPostForm.style.display = "none";
           // Disable the button.
-          formSubmitButton.disabled = true;
+          postFormButton.disabled = true;
           return;
         }
 
         // Show the RECORD form.
-        recordForm.style.display = "block";
+        recordPostForm.style.display = "block";
         // Hide the COLLECT form.
-        collectForm.style.display = "none";
+        collectPostForm.style.display = "none";
         // Hide the error message.
-        formErrorMessage.style.display = "none";
+        postFormErrorMessage.style.display = "none";
 
         // Get a reference to the allowance min price.
         const formattedMinPrice = ethers.formatEther(allowance[0]);
@@ -478,18 +583,21 @@ window.onpopstate = function(event) {
 
     // Submit the state change form.
     formStateButton.onclick = async () => {
-      // Get the state values from the form fields.
-      const formStateChainInput = document.getElementById("form-state-chain-input");
-      const formStateProjectIdInput = document.getElementById("form-state-project-id-input");
-      const formStateNftCategoryInput = document.getElementById("form-state-nft-category-input");
-      const formStateReveal = document.getElementById("form-state-reveal");
+      // Check for empty values.
+      if (formStateProjectIdInput.value == "" || formStateNftCategoryInput.value == "") {
+        formStateErrorMessage.innerHTML = `Missing values.`;
+        formStateErrorMessage.style.display = "block";
+        return;
+      } else {
+        formStateErrorMessage.style.display = "none";
+      }
       
       // Reload the mint state if the chain changed.
       if (formStateChain.innerHTML != formStateChainInput.value) {
         // Reload the state.
         await loadFrameState();
 
-        ormStateChain.innerHTML = formStateChainInput.value; 
+        formStateChain.innerHTML = formStateChainInput.value; 
       }
 
       formStateProjectId.innerHTML = formStateProjectIdInput.value;
@@ -500,59 +608,59 @@ window.onpopstate = function(event) {
       formStateReveal.open = false;
 
       // Show the loading animation.
-      startLoadingAnimation('modal-loading-animation');
+      startLoadingAnimation('post-form-modal-loading-animation');
 
       // Update the form's state.
       await updateFormState();
 
       // Show the loading animation.
-      stopLoadingAnimation('modal-loading-animation');
-        
+      stopLoadingAnimation('post-form-modal-loading-animation');
     }
-
+    
+    console.log("updating state");
     updateFormState();
   }
 
   const decorateRecordForm = async (chain, projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice, formattedAllowedAddresses) => {
     // Get references to record form elements that need decorating.
-    const recordFormBeneficiaryInput = document.getElementById("record-form-beneficiary-input");
-    const recordFormCpnBeneficiaryInput = document.getElementById("record-form-cpn-beneficiary-input");
-    const recordFormTotalSupplyInput = document.getElementById("record-form-total-supply-input");
-    const recordFormPriceInput = document.getElementById("record-form-price-input");
-    const recordFormQuantityInput = document.getElementById("record-form-quantity-input");
-    const formErrorMessage = document.getElementById("form-error-message");
-    const formSubmitButtonText = document.getElementById("form-submit-button-text");
-    const formSubmitButton = document.getElementById("form-submit-button");
-    const recordFormOptionsReveal = document.getElementById('record-form-options-reveal');
-    const recordFormDisclaimerReveal = document.getElementById('record-form-disclaimer-reveal');
+    const recordPostFormBeneficiaryInput = document.getElementById("record-post-form-beneficiary-input");
+    const recordPostFormCpnBeneficiaryInput = document.getElementById("record-post-form-cpn-beneficiary-input");
+    const recordPostFormTotalSupplyInput = document.getElementById("record-post-form-total-supply-input");
+    const recordPostFormPriceInput = document.getElementById("record-post-form-price-input");
+    const recordPostFormQuantityInput = document.getElementById("record-post-form-quantity-input");
+    const recordPostFormErrorMessage = document.getElementById("post-form-error-message");
+    const recordPostFormButtonText = document.getElementById("post-form-button-text");
+    const recordPostFormButton = document.getElementById("post-form-button");
+    const recordPostFormOptionsReveal = document.getElementById('record-post-form-options-reveal');
+    const recordPostFormDisclaimerReveal = document.getElementById('record-post-form-disclaimer-reveal');
 
     // Toggle off the sections.
-    recordFormOptionsReveal.open = false;
-    recordFormDisclaimerReveal.open = false;
+    recordPostFormOptionsReveal.open = false;
+    recordPostFormDisclaimerReveal.open = false;
 
     // Change the button text.
-    formSubmitButtonText.innerHTML = "record & collect";
+    postFormButtonText.innerHTML = "record & collect";
 
     // Re-decorate some input fields depending on the allowances set for the project and category.
     const checkState = async () => {
       // Set error message if not allowed.
       if (signer && formattedAllowedAddresses.length && !formattedAllowedAddresses.includes(signer)) {
-        formErrorMessage.innerHTML = `Project ${projectId} has reserved posting to category ${category} for these addresses: ${formattedAllowedAddresses}.`;
-        formErrorMessage.style.display = "block";
-        formSubmitButton.disabled = true;
+        postFormErrorMessage.innerHTML = `Project ${projectId} has reserved posting to category ${category} for these addresses: ${formattedAllowedAddresses}.`;
+        postFormErrorMessage.style.display = "block";
+        postFormButton.disabled = true;
       // Set error messages if the currently inputted values are too small.
-      } else if (recordFormPriceInput.value < formattedMinPrice || recordFormTotalSupplyInput.value < formattedMinTotalSupply || recordFormTotalSupplyInput.value > formattedMaxTotalSupply) {
-        formErrorMessage.innerHTML = `Project ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedMinPrice}, a minimum total supply of ${formattedMinTotalSupply}, and a maximum total supply of ${formattedMaxTotalSupply} to record on category ${category}.`;
-        formErrorMessage.style.display = "block";
-        formSubmitButton.disabled = true;
-      } else if (recordFormQuantityInput.value > recordFormTotalSupplyInput.value) {
-        formErrorMessage.innerHTML = `The total supply is ${recordFormTotalSupplyInput.value}. Can't mint ${recordFormQuantityInput.value}.`;
-        formErrorMessage.style.display = "block";
-        formSubmitButton.disabled = true;
+      } else if (recordPostFormPriceInput.value < formattedMinPrice || recordPostFormTotalSupplyInput.value < formattedMinTotalSupply || recordPostFormTotalSupplyInput.value > formattedMaxTotalSupply) {
+        postFormErrorMessage.innerHTML = `Project ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedMinPrice}, a minimum total supply of ${formattedMinTotalSupply}, and a maximum total supply of ${formattedMaxTotalSupply} to record on category ${category}.`;
+        postFormErrorMessage.style.display = "block";
+        postFormButton.disabled = true;
+      } else if (recordPostFormQuantityInput.value > recordPostFormTotalSupplyInput.value) {
+        postFormErrorMessage.innerHTML = `The total supply is ${recordPostFormTotalSupplyInput.value}. Can't mint ${recordPostFormQuantityInput.value}.`;
+        postFormErrorMessage.style.display = "block";
+        postFormButton.disabled = true;
       } else {
         // Hide the error message.
-        formErrorMessage.style.display = "none";
-        formSubmitButton.disabled = false;
+        postFormErrorMessage.style.display = "none";
+        postFormButton.disabled = false;
       }
     }
 
@@ -564,27 +672,35 @@ window.onpopstate = function(event) {
     }
 
     // Update the form's state each time the price, total supply, or quantity changes.
-    recordFormPriceInput.addEventListener('input', queueCheckState);
-    recordFormTotalSupplyInput.addEventListener('input', queueCheckState);
-    recordFormQuantityInput.addEventListener('input', queueCheckState);
+    recordPostFormPriceInput.addEventListener("input", queueCheckState);
+    recordPostFormTotalSupplyInput.addEventListener("input", queueCheckState);
+    recordPostFormQuantityInput.addEventListener("input", queueCheckState);
 
     // Set values in the form if the fields are not yet set.
-    if (!recordFormBeneficiaryInput.value && signer) recordFormBeneficiaryInput.value = signer;
-    if (!recordFormPriceInput.value) recordFormPriceInput.value = formattedMinPrice;
-    if (!recordFormTotalSupplyInput.value) recordFormTotalSupplyInput.value = formattedMinTotalSupply;
+    if (!recordPostFormBeneficiaryInput.value && signer) recordPostFormBeneficiaryInput.value = signer;
+    if (!recordPostFormPriceInput.value) recordPostFormPriceInput.value = formattedMinPrice;
+    if (!recordPostFormTotalSupplyInput.value) recordPostFormTotalSupplyInput.value = formattedMinTotalSupply;
 
     // Allow connecting wallet to prefill beneficiary input field.
-    const loadAddressButton = document.getElementById("record-form-load-address-button");
+    const loadAddressButton = document.getElementById("record-post-form-load-address-button");
     loadAddressButton.onclick = async () => {
       signer = (await getSigner()).address;
-      recordFormBeneficiaryInput.value = signer;
+      recordPostFormBeneficiaryInput.value = signer;
       await checkState();
     };
     
     // Submit the form.
-    formSubmitButton.onclick = async () => {
+    postFormButton.onclick = async () => {
+      // Check for empty values.
+      if (recordPostFormPriceInput.value == "" || recordPostFormTotalSupplyInput.value == "" || recordPostFormQuantityInput.value == "") {
+        postFormErrorMessage.innerHTML = `Missing values.`;
+        postFormErrorMessage.style.display = "block";
+        postFormButton.disabled = true;
+        return;
+      } 
+
       // Show the loading animation.
-      startLoadingAnimation('button-loading-animation');
+      startLoadingAnimation('post-form-button-loading-animation');
         
       // Get the signer.
       signer = (await getSigner()).address;
@@ -592,9 +708,9 @@ window.onpopstate = function(event) {
       // Make sure the form contents make sense.
       await checkState();
 
-      if (formSubmitButton.disabled) {
+      if (postFormButton.disabled) {
         // Hide the loading animation.
-        stopLoadingAnimation('button-loading-animation');
+        stopLoadingAnimation('post-form-button-loading-animation');
         return;
       }
 
@@ -605,108 +721,100 @@ window.onpopstate = function(event) {
           try {
             await switchChain(expectedChainId); 
           } catch (e) {
-            formErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
-            formErrorMessage.style.display = "block";
+            postFormErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
+            postFormErrorMessage.style.display = "block";
 
             // Hide the loading animation.
-            stopLoadingAnimation('button-loading-animation');
+            stopLoadingAnimation('post-form-button-loading-animation');
 
             return;
           }
       }
-
-      // Get a reference to the croptop contract.
-      const contract = await croptopPublisherContract(resolveChainId(chain));
-      
-      // Show incompatible network if needed.
-      if (!contract) { 
-        // Show the error message.
-        formErrorMessage.innerHTML = "The connected network isn't supported.";
-        formErrorMessage.style.display = "block";
-
-        // Disable the button.
-        formSubmitButton.disabled = true;
-
-        // Hide the loading animation.
-        stopLoadingAnimation('button-loading-animation');
-
-        return;
-      }
       
       // Normalize values from the form.
-      const totalSupply = recordFormTotalSupplyInput.value;
-      const quantity = recordFormQuantityInput.value;
-      const price = `${Number(recordFormPriceInput.value) * 1_000_000_000_000_000_000}`;
-      const beneficiary = recordFormBeneficiaryInput.value;
-      const cpnBeneficiary = recordFormCpnBeneficiaryInput.value;
+      const totalSupply = recordPostFormTotalSupplyInput.value;
+      const quantity = recordPostFormQuantityInput.value;
+      const price = `${Number(recordPostFormPriceInput.value) * 1_000_000_000_000_000_000}`;
+      const beneficiary = recordPostFormBeneficiaryInput.value;
+      const cpnBeneficiary = recordPostFormCpnBeneficiaryInput.value;
       const totalPrice = BigInt(price) * BigInt(quantity);
       const value = totalPrice + ((projectId == await cpnProjectId(chain)) ? BigInt(0) : (totalPrice / BigInt(feeDivisor)));
 
       try {
-        // Add a fee if the project being paid isn't the fee project ID.
-        await tx_collect(projectId, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, contract);
+        // Try to process the transaction.
+        const accepted = await tx_collect(projectId, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, resolveChainId(chain));
+      
+          // Show incompatible network if needed.
+        if (!accepted) { 
+          // Show the error message.
+          postFormErrorMessage.innerHTML = "The connected network isn't supported.";
+          postFormErrorMessage.style.display = "block";
+
+          // Disable the button.
+          postFormButton.disabled = true;
+        }
 
         // Hide the loading animation.
-        stopLoadingAnimation('button-loading-animation');
+        stopLoadingAnimation('post-form-button-loading-animation');
       } catch (e) {
-        formErrorMessage.innerHTML = e;
-        formErrorMessage.style.display = "block";
+        postFormErrorMessage.innerHTML = e;
+        postFormErrorMessage.style.display = "block";
 
         // Hide the loading animation.
-        stopLoadingAnimation('button-loading-animation');
+        stopLoadingAnimation('post-form-button-loading-animation');
       }
     }
 
     // Check the state.
     await checkState();
-  };
+  }
 
   const decorateCollectForm = async (chain, projectId, category, encodedIPFSUri, formattedRemainingSupply, formattedPrice) => {
     // Get references to record form elements that need decorating.
-    const collectFormHeader = document.getElementById("collect-form-header");
-    const collectFormBeneficiaryInput = document.getElementById("collect-form-beneficiary-input");
-    const collectFormCpnBeneficiaryInput = document.getElementById("collect-form-cpn-beneficiary-input");
-    const collectFormQuantityInput = document.getElementById("collect-form-quantity-input");
-    const collectFormPriceInput = document.getElementById("collect-form-price-input");
-    const formErrorMessage = document.getElementById("form-error-message");
-    const formSubmitButtonText = document.getElementById("form-submit-button-text");
-    const formSubmitButton = document.getElementById("form-submit-button");
-    const collectFormOptionsReveal = document.getElementById('collect-form-options-reveal');
-    const collectFormDisclaimerReveal = document.getElementById('collect-form-disclaimer-reveal');
+    const collectPostFormHeader = document.getElementById("collect-post-form-header");
+    const collectPostFormBeneficiaryInput = document.getElementById("collect-post-form-beneficiary-input");
+    const collectPostFormCpnBeneficiaryInput = document.getElementById("collect-post-form-cpn-beneficiary-input");
+    const collectPostFormQuantityInput = document.getElementById("collect-post-form-quantity-input");
+    const collectPostFormPriceInput = document.getElementById("collect-post-form-price-input");
+    const postFormErrorMessage = document.getElementById("post-form-error-message");
+    const postFormButtonText = document.getElementById("post-form-button-text");
+    const postFormButton = document.getElementById("post-form-button");
+    const collectPostFormOptionsReveal = document.getElementById("collect-post-form-options-reveal");
+    const collectPostFormDisclaimerReveal = document.getElementById("collect-post-form-disclaimer-reveal");
 
     // Toggle off the sections.
-    collectFormOptionsReveal.open = false;
-    collectFormDisclaimerReveal.open = false;
+    collectPostFormOptionsReveal.open = false;
+    collectPostFormDisclaimerReveal.open = false;
 
     // Set the header text.
     if (formattedRemainingSupply == 1) {
-      collectFormHeader.innerHTML = `There is only 1 remaining edition of this file available to be collected for <span class="ether">Ξ</span>${formattedPrice}.`;
+      collectPostFormHeader.innerHTML = `There is only 1 remaining edition of this file available to be collected for <span class="ether">Ξ</span>${formattedPrice}.`;
     } else {
-      collectFormHeader.innerHTML = `There are still ${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } remaining editions of this file available to be collected for <span class="ether">Ξ</span>${formattedPrice} each.`;
+      collectPostFormHeader.innerHTML = `There are still ${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } remaining editions of this file available to be collected for <span class="ether">Ξ</span>${formattedPrice} each.`;
     }
 
     // Change the button text.
-    formSubmitButtonText.innerHTML = "collect";
+    postFormButtonText.innerHTML = "collect";
 
     // Re-decorate some input fields depending on the allowances set for the project and category.
     const checkState = async () => {
       // Set error messages if the currently inputted values are too small.
-      if (collectFormPriceInput.value < formattedPrice) {
-        formErrorMessage.innerHTML = `This NFT has a minimum price of <span class="ether">Ξ</span>${formattedPrice}.`;
-        formErrorMessage.style.display = "block";
-        formSubmitButton.disabled = true;
-      } else if (collectFormQuantityInput.value > formattedRemainingSupply) {
+      if (collectPostFormPriceInput.value < formattedPrice) {
+        postFormErrorMessage.innerHTML = `This NFT has a minimum price of <span class="ether">Ξ</span>${formattedPrice}.`;
+        postFormErrorMessage.style.display = "block";
+        postFormButton.disabled = true;
+      } else if (collectPostFormQuantityInput.value > formattedRemainingSupply) {
         if (formattedRemainingSupply == 1) {
-          formErrorMessage.innerHTML = `There is only 1 copy remaining. Can't mint ${collectFormQuantityInput.value}.`;
+          postFormErrorMessage.innerHTML = `There is only 1 copy remaining. Can't mint ${collectPostFormQuantityInput.value}.`;
         } else {
-          formErrorMessage.innerHTML = `There are only ${formattedRemainingSupply} copies remaining. Can't mint ${collectFormQuantityInput.value}.`;
+          postFormErrorMessage.innerHTML = `There are only ${formattedRemainingSupply} copies remaining. Can't mint ${collectPostFormQuantityInput.value}.`;
         }
-        formErrorMessage.style.display = "block";
-        formSubmitButton.disabled = true;
+        postFormErrorMessage.style.display = "block";
+        postFormButton.disabled = true;
       } else {
         // Hide the error message.
-        formErrorMessage.style.display = "none";
-        formSubmitButton.disabled = false;
+        postFormErrorMessage.style.display = "none";
+        postFormButton.disabled = false;
       }
     }
 
@@ -718,25 +826,33 @@ window.onpopstate = function(event) {
     }
 
     // Update the form's state each time the price or quantity changes.
-    collectFormPriceInput.addEventListener('input', queueCheckState);
-    collectFormQuantityInput.addEventListener('input', queueCheckState);
+    collectPostFormPriceInput.addEventListener("input", queueCheckState);
+    collectPostFormQuantityInput.addEventListener("input", queueCheckState);
 
     // Set values in the form if the fields are not yet set.
-    if (!collectFormBeneficiaryInput.value && signer) collectFormBeneficiaryInput.value = signer;
-    if (!collectFormPriceInput.value) collectFormPriceInput.value = formattedPrice;
+    if (!collectPostFormBeneficiaryInput.value && signer) collectPostFormBeneficiaryInput.value = signer;
+    if (!collectPostFormPriceInput.value) collectPostFormPriceInput.value = formattedPrice;
 
     // Allow connecting wallet to prefill beneficiary input field.
-    const loadAddressButton = document.getElementById("collect-form-load-address-button");
+    const loadAddressButton = document.getElementById("collect-post-form-load-address-button");
     loadAddressButton.onclick = async () => {
       signer = (await getSigner()).address;
-      collectFormBeneficiaryInput.value = signer;
+      collectPostFormBeneficiaryInput.value = signer;
       await checkState();
     };
 
     // Submit the form.
-    formSubmitButton.onclick = async () => {
+    postFormButton.onclick = async () => {
+      // Check for empty values.
+      if (collectPostFormPriceInput.value == "" || collectPostFormQuantityInput.value == "") {
+        postFormErrorMessage.innerHTML = `Missing values.`;
+        postFormErrorMessage.style.display = "block";
+        postFormButton.disabled = true;
+        return;
+      } 
+
       // Show the loading animation.
-      startLoadingAnimation('button-loading-animation');
+      startLoadingAnimation('post-form-button-loading-animation');
 
       // Get the signer.
       signer = (await getSigner()).address;
@@ -744,9 +860,9 @@ window.onpopstate = function(event) {
       // Make sure the form contents make sense.
       await checkState();
 
-      if (formSubmitButton.disabled) {
+      if (postFormButton.disabled) {
         // Hide the loading animation.
-        stopLoadingAnimation('button-loading-animation');
+        stopLoadingAnimation('post-form-button-loading-animation');
 
         return;
       }
@@ -758,85 +874,78 @@ window.onpopstate = function(event) {
         try {
           await switchChain(expectedChainId); 
         } catch (e) {
-          formErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
-          formErrorMessage.style.display = "block";
+          postFormErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
+          postFormErrorMessage.style.display = "block";
 
           // Hide the loading animation.
-          stopLoadingAnimation('button-loading-animation');
+          stopLoadingAnimation('post-form-button-loading-animation');
 
           return;
         }
       }
 
-      // Get a reference to the croptop contract.
-      const contract = await croptopPublisherContract(resolveChainId(chain));
-      
-      // Show incompatible network if needed.
-      if (!contract) { 
-        // Show the error message.
-        formErrorMessage.innerHTML = "The connected network isn't supported.";
-        formErrorMessage.style.display = "block";
-
-        // Disable the button.
-        formSubmitButton.disabled = true;
-
-        // Hide the loading animation.
-        stopLoadingAnimation('button-loading-animation');
-
-        return;
-      }
-
       // Normalize values from the form.
       const totalSupply = 1;
-      const price = `${Number(collectFormPriceInput.value) * 1_000_000_000_000_000_000}`;
-      const quantity = collectFormQuantityInput.value;
-      const beneficiary = collectFormBeneficiaryInput.value;
-      const cpnBeneficiary = collectFormCpnBeneficiaryInput.value;
+      const price = `${Number(collectPostFormPriceInput.value) * 1_000_000_000_000_000_000}`;
+      const quantity = collectPostFormQuantityInput.value;
+      const beneficiary = collectPostFormBeneficiaryInput.value;
+      const cpnBeneficiary = collectPostFormCpnBeneficiaryInput.value;
       // Add a fee if the project being paid isn't the fee project ID.
       const totalPrice = BigInt(price) * BigInt(quantity);
       const value = totalPrice + ((projectId == await cpnProjectId(chain)) ? BigInt(0) : (totalPrice / BigInt(feeDivisor)));
 
       try {
-        await tx_collect(projectId, category, totalSupply, BigInt(price), quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, contract);
+        // Try to process the transaction.
+        const accepted = await tx_collect(projectId, category, totalSupply, BigInt(price), quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, resolveChainId(chain));
+        // Show incompatible network if needed.
+        if (!accepted) { 
+          // Show the error message.
+          postFormErrorMessage.innerHTML = "The connected network isn't supported.";
+          postFormErrorMessage.style.display = "block";
+
+          // Disable the button.
+          postFormButton.disabled = true;
+        }
 
         // Hide the loading animation.
-        stopLoadingAnimation('button-loading-animation');
+        stopLoadingAnimation('post-form-button-loading-animation');
       } catch (e) {
-        formErrorMessage.innerHTML = e;
-        formErrorMessage.style.display = "block";
+        postFormErrorMessage.innerHTML = e;
+        postFormErrorMessage.style.display = "block";
 
         // Hide the loading animation.
-        stopLoadingAnimation('button-loading-animation');
+        stopLoadingAnimation('post-form-button-loading-animation');
       }
     }
 
     // Check the state.
     await checkState();
-  };
+  }
 
   // Get the modal set up.
-  const decorateModal = async (itemId, encodedIPFSUri, name, date, link, imageSrc, videoSrc) => {
+  const decorateAndShowPostModal = async (itemId, encodedIPFSUri, name, date, link, imageSrc, videoSrc) => {
     // Get references to modal elements that need decorating.
-    const modal = document.getElementById("modal");
-    const modalHeader = document.getElementById("modal-header");
-    const modalSubtitle = document.getElementById("modal-subtitle");
-    const modalContent = document.getElementById("modal-content");
+    const postModal = document.getElementById("post-modal");
+    const frameSubtitle = document.getElementById("frame-subtitle");
+    const frameLink = document.getElementById("frame-link");
     const formStateReveal = document.getElementById("form-state-reveal");
-    const formErrorMessage= document.getElementById("form-error-message");
-    const recordForm = document.getElementById("record-form");
-    const collectForm = document.getElementById("collect-form");
-    const modalLoadingAnimation = document.getElementById("modal-loading-animation");
+    const postFormErrorMessage= document.getElementById("post-form-error-message");
+    const recordPostForm = document.getElementById("record-post-form");
+    const collectPostForm = document.getElementById("collect-post-form");
+
+    // Show the modal.
+    postModal.style.display = "block";
 
     // Track the modal in browse history.
     history.pushState({ modalOpened: true, itemId: itemId }, "", "?id=" + itemId);
 
     // Make sure the modal is closeable when clicking on empty space.
     let activeElementOnClose;
-    modal.addEventListener("mousedown", () => {
+    postModal.addEventListener("mousedown", () => {
       activeElementOnClose = document.activeElement;
     });
 
-    modal.addEventListener("click", (e) => {
+    postModal.addEventListener("click", (e) => {
       // Ignore if the clicked view shouldn't close the modal.
       if (!e.target.classList.contains("closes-modal")) return;
 
@@ -847,16 +956,16 @@ window.onpopstate = function(event) {
       if (videoSrc) modalVideo.pause();
 
       // Hide the RECORD form.
-      recordForm.style.display = "none";
+      recordPostForm.style.display = "none";
       // Hide the COLLECT form.
-      collectForm.style.display = "none";
+      collectPostForm.style.display = "none";
       // Hide the error message.
-      formErrorMessage.style.display = "none";
+      postFormErrorMessage.style.display = "none";
       // Close the state reveal.
       formStateReveal.open = false;
 
       // Hide the modal.
-      modal.style.display = "none";
+      postModal.style.display = "none";
 
       // Reset the view stack browsing state.
       history.pushState({}, "", window.location.pathname);
@@ -870,11 +979,10 @@ window.onpopstate = function(event) {
 
     // Show and populate the frame's subtitle if there's a link.
     if (link) {
-      const frameLink = document.getElementById("frame-link");
-      modalSubtitle.style.display = "block";
+      frameSubtitle.style.display = "block";
       frameLink.innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
     } else {
-      modalSubtitle.style.display = "none";
+      frameSubtitle.style.display = "none";
     }
 
     // Decordate the image or video content.
@@ -889,23 +997,23 @@ window.onpopstate = function(event) {
       modalVideo.controls = true;
       modalImage.src = "";
       modalVideo.src = videoSrc;
-      modalVideo.addEventListener('click', (e) => e.stopPropagation());
+      modalVideo.addEventListener("click", (e) => e.stopPropagation());
     } else {
       modalImage.style.display = "block"
       modalVideo.style.display = "none"
       modalVideo.src = "";
       modalImage.src = imageSrc;
-      modalImage.addEventListener('click', (e) => e.stopPropagation());
+      modalImage.addEventListener("click", (e) => e.stopPropagation());
     }
 
     // Show the loading animation.
-    startLoadingAnimation('modal-loading-animation');
+    startLoadingAnimation('post-form-modal-loading-animation');
 
     // Show the form.
     await decorateAndShowForm(itemId, encodedIPFSUri);
 
     // Hide the loading animation.
-    stopLoadingAnimation('modal-loading-animation');
+    stopLoadingAnimation('post-form-modal-loading-animation');
   }
     
   const encodeIPFSUriFrom = async (itemId) => {
@@ -946,11 +1054,8 @@ window.onpopstate = function(event) {
     frame.addEventListener("click", async (e) => {
       e.preventDefault();
 
-      // Show the modal.
-      modal.style.display = "block";
-
       // Make the modal look right.
-      await decorateModal(itemId, encodedIPFSUri, name, date, link, imageSrc, videoSrc);
+      await decorateAndShowPostModal(itemId, encodedIPFSUri, name, date, link, imageSrc, videoSrc);
     });
   }
 
@@ -971,7 +1076,7 @@ window.onpopstate = function(event) {
 
       checkForDimensions();
     });
-  };
+  }
 
   /// Get the top.
   const getTopTarget = (frame, row) => {
@@ -1036,8 +1141,7 @@ window.onpopstate = function(event) {
     frames.appendChild(frame);
 
     return frame;
-  };
-    
+  }
 
   const positionAndShowFrame = async (imageFrame) => {
     await loadFrame(imageFrame);
@@ -1115,10 +1219,290 @@ window.onpopstate = function(event) {
     };
 
     await Promise.all([loadFrameState(), positionAndShowFrames()]);
-  };
+  }
 
+  const decorateNewJbForm = () => {
+    const forFormProjectNameInput = document.getElementById("fork-form-project-name-input");
+    const forkFormProjectOwnerInput = document.getElementById("fork-form-project-owner-input");
+    const forkFormNewJbErrorMessage = document.getElementById("fork-form-new-jb-error-message");
+    const forkFormNewJbSubmitButton = document.getElementById("fork-form-new-jb-submit-button");
+
+    // Set values in the form if the fields are not yet set.
+    if (!collectPostFormBeneficiaryInput.value && signer) collectPostFormBeneficiaryInput.value = signer;
+
+    // Allow connecting wallet to prefill beneficiary input field.
+    const loadAddressButton = document.getElementById("fork-form-load-address-button");
+    loadAddressButton.onclick = async () => {
+      signer = (await getSigner()).address;
+      forkFormBeneficiaryInput.value = signer;
+      await checkState();
+    };
+
+    // Submit the form.
+    forkFormNewJbSubmitButton.onclick = async () => {
+      // Check for empty values.
+      if (forFormProjectNameInput.value == "" || forkFormProjectOwnerInput.value == "") {
+        forkFormNewJbErrorMessage.innerHTML = `Missing values.`;
+        forkFormNewJbErrorMessage.style.display = "block";
+      } else {
+        // Hide the error message.
+        forkFormNewJbErrorMessage.style.display = "none";
+      }
+
+      // Show the loading animation.
+      startLoadingAnimation('fork-form-new-jb-button-loading-animation');
+
+      // Get the signer.
+      signer = (await getSigner()).address;
+
+      if (forkFormNewJbSubmitButton.disabled) {
+        // Hide the loading animation.
+        stopLoadingAnimation('fork-form-new-jb-button-loading-animation');
+        return;
+      }
+
+      // Make sure the client is connected to the right network.
+      const chainId = await getChainId();
+      const expectedChainId = resolveChainId(chain);
+      if (chainId != expectedChainId) {
+          try {
+            await switchChain(expectedChainId); 
+          } catch (e) {
+            forkFormNewJbErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
+            forkFormNewJbErrorMessage.style.display = "block";
+
+            // Hide the loading animation.
+            stopLoadingAnimation('fork-form-new-jb-button-loading-animation');
+
+            return;
+          }
+      }
+
+      // Normalize values from the form.
+      const name = forFormProjectNameInput.value;
+      const owner = forkFormProjectOwnerInput.value;
+
+      try {
+          // Show incompatible network if needed.
+        if (!accepted) { 
+          // Show the error message.
+          forkFormNewJbErrorMessage.innerHTML = "The connected network isn't supported.";
+          forkFormNewJbErrorMessage.style.display = "block";
+
+          // Disable the button.
+          forkFormNewJbSubmitButton.disabled = true;
+        }
+
+        // Hide the loading animation.
+        stopLoadingAnimation('fork-form-new-jb-button-loading-animation');
+      } catch (e) {
+        forkFormNewJbErrorMessage.innerHTML = e;
+        forkFormNewJbErrorMessage.style.display = "block";
+
+        // Hide the loading animation.
+        stopLoadingAnimation('fork-form-new-jb-button-loading-animation');
+      }
+    }
+  }
+
+  const decoratePermissionForm = () => {
+    const forkFormOperatorProjectIdInput = document.getElementById("fork-form-operator-project-id-input");
+    const forkFormPermissionSubmitButton = document.getElementById("fork-form-permission-submit-button");
+    const forkFormPermissionErrorMessage = document.getElementById("fork-form-permission-error-message");
+
+    // Submit the form.
+    forkFormPermissionSubmitButton.onclick = async () => {
+      // Check for empty values.
+      if (forkFormOperatorProjectIdInput.value == "") {
+        forkFormPermissionErrorMessage.innerHTML = `Missing values.`;
+        forkFormPermissionErrorMessage.style.display = "block";
+      } else {
+        // Hide the error message.
+        forkFormPermissionErrorMessage.style.display = "none";
+      }
+
+      // Show the loading animation.
+      startLoadingAnimation('fork-form-permission-button-loading-animation');
+
+      // Get the signer.
+      signer = (await getSigner()).address;
+
+      // Make sure the form contents make sense.
+
+      if (forkFormPermissionSubmitButton.disabled) {
+        // Hide the loading animation.
+        stopLoadingAnimation('fork-form-permission-button-loading-animation');
+        return;
+      }
+
+      // Make sure the client is connected to the right network.
+      const chainId = await getChainId();
+      const expectedChainId = resolveChainId(chain);
+      if (chainId != expectedChainId) {
+          try {
+            await switchChain(expectedChainId); 
+          } catch (e) {
+            forkFormPermissionErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
+            forkFormPermissionErrorMessage.style.display = "block";
+
+            // Hide the loading animation.
+            stopLoadingAnimation('fork-form-permission-button-loading-animation');
+
+            return;
+          }
+      }
+
+      // Normalize values from the form.
+      const projectId = forkFormOperatorProjectIdInput.value;
+
+      try {
+        // Show incompatible network if needed.
+        if (!accepted) { 
+          // Show the error message.
+          forkFormPermissionErrorMessage.innerHTML = "The connected network isn't supported.";
+          forkFormPermissionErrorMessage.style.display = "block";
+
+          // Disable the button.
+          forkFormPermissionSubmitButton.disabled = true;
+        }
+
+        // Hide the loading animation.
+        stopLoadingAnimation('fork-form-permission-button-loading-animation');
+      } catch (e) {
+        forkFormPermissionErrorMessage.innerHTML = e;
+        forkFormPermissionErrorMessage.style.display = "block";
+
+        // Hide the loading animation.
+        stopLoadingAnimation('fork-form-permission-button-loading-animation');
+      }
+    }
+  }
+
+  const decorateAllowanceForm = () => {
+    const forkFormAllowanceSubmitButton = document.getElementById("fork-form-permission-submit-button");
+    const forkFormMinimumPriceInput = document.getElementById("fork-form-minimum-price-input");
+    const forkFormMinimumTotalSupplyInput = document.getElementById("fork-form-minimum-total-supply-input");
+    const forkFormMaximumTotalSupplyInput = document.getElementById("fork-form-maximum-total-supply-input");
+    const forkFormAllowedAddressesInput = document.getElementById("fork-form-allowed-addresses-input");
+    const forkFormAllowanceErrorMessage = document.getElementById("fork-form-allowance-error-message");
+
+    // Submit the form.
+    forkFormAllowanceSubmitButton.onclick = async () => {
+      // Default to max
+      if (forkFormMaximumTotalSupplyInput.value == "") forkFormMaximumTotalSupplyInput.value = 1000000000;
+      // Default to 1
+      if (forkFormMinimumTotalSupplyInput.value == "") forkFormMinimumTotalSupplyInput.value = 1;
+      // Default to free
+      if (forkFormMinimumPriceInput.value == "") forkFormMinimumPriceInput.value = 0;
+
+      // Show the loading animation.
+      startLoadingAnimation('fork-form-allowance-button-loading-animation');
+
+      // Get the signer.
+      signer = (await getSigner()).address;
+
+      // Make sure the form contents make sense.
+      if (forkFormPermissionSubmitButton.disabled) {
+        // Hide the loading animation.
+        stopLoadingAnimation('fork-form-allowance-button-loading-animation');
+        return;
+      }
+
+      // Make sure the client is connected to the right network.
+      const chainId = await getChainId();
+      const expectedChainId = resolveChainId(chain);
+      if (chainId != expectedChainId) {
+          try {
+            await switchChain(expectedChainId); 
+          } catch (e) {
+            forkFormAllowanceErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
+            forkFormAllowanceErrorMessage.style.display = "block";
+
+            // Hide the loading animation.
+            stopLoadingAnimation('fork-form-allowance-button-loading-animation');
+
+            return;
+          }
+      }
+
+      // Normalize values from the form.
+      const minimumPrice = `${Number(forkFormMinimumPriceInput.value) * 1_000_000_000_000_000_000}`;
+      const minimumTotalPrice = forkFormMinimumTotalSupplyInput.value;
+      const maximumTotalPrice = forkFormMaximumTotalSupplyInput.value;
+      const allowedAddresses = forkFormAllowedAddressesInput.value.split('\n');
+
+      try {
+          // Show incompatible network if needed.
+        if (!accepted) { 
+          // Show the error message.
+          forkFormAllowanceErrorMessage.innerHTML = "The connected network isn't supported.";
+          forkFormAllowanceErrorMessage.style.display = "block";
+
+          // Disable the button.
+          postFormButton.disabled = true;
+        }
+
+        // Hide the loading animation.
+        stopLoadingAnimation('fork-form-allowance-button-loading-animation');
+      } catch (e) {
+        forkFormAllowanceErrorMessage.innerHTML = e;
+        forkFormAllowanceErrorMessage.style.display = "block";
+
+        // Hide the loading animation.
+        stopLoadingAnimation('fork-form-allowance-button-loading-animation');
+      }
+    }
+  }
+
+  // Get the fork modal set up.
+  const decorateAndShowForkModal = () => {
+    // Get references to elements that need decorating.
+    const forkModal = document.getElementById("fork-modal");
+ 
+    // Show the modal.
+    forkModal.style.display = "block";
+
+    // Make sure the modal is closeable when clicking on empty space.
+    let activeElementOnClose;
+    forkModal.addEventListener("mousedown", () => {
+      activeElementOnClose = document.activeElement;
+    });
+
+    forkModal.addEventListener("click", (e) => {
+      // Ignore if the clicked view shouldn't close the modal.
+      if (!e.target.classList.contains("closes-modal")) return;
+
+      // Ignore if the clicked view comes while an input field is selected.
+      if (activeElementOnClose.tagName === "INPUT") return;
+
+      // Hide the modal.
+      forkModal.style.display = "none";
+    });
+    
+    decorateNewJbForm();
+    decoratePermissionForm();
+    decorateAllowanceForm();
+  }
+
+  const setupForking = () => {
+    const fork = document.getElementById("fork");
+
+    fork.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      // Make the modal look right.
+      await decorateAndShowForkModal();
+    });
+  }
+    
+  console.log("umm");
   fetchSettings();
+  console.log("summ");
   loadImageFrames();
+  console.log("vumm");
   startLoadingAnimation('main-loading-animation');
+  console.log("pumm");
+  setupForking();
+  console.log("mumm");
 </script>
 {% endblock %}
