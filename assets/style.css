@@ -602,8 +602,8 @@ hr {
 
 .social-icon {
   width: 1em;
-  height: 2em;
-  vertical-align: text-top;
+  height: 0.8em;
+  vertical-align: baseline;
   filter: var(--icon-social-filter);
 }
 
