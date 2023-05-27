@@ -67,6 +67,14 @@ body {
   background-color: var(--background-color);
   font-size: 14px;
   text-align: left;
+  overflow-x: hidden;
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+body::-webkit-scrollbar {
+  display: none;
 }
 
 body, button, input, select, textarea {
@@ -839,15 +847,15 @@ footer {
 }
 
 .w1 {
-  width: 380px;
+  width: 35%;
 }
 
 .w2 {
-  width: 420px;
+  width: 45%;
 }
 
 .w3 {
-  width: 500px;
+  width: 55%;
 }
 
 .frame {
@@ -960,21 +968,51 @@ footer {
     padding: 0px 20px 0px 20px;
   }
 
+  #frames {
+    text-align: right;
+    margin-left: 0;
+  }
+
+  .frame {
+    display: block;
+    margin-right: 0;
+  }
+
+  .image-title {
+    margin-right: 8px; 
+  }
+
+  .image-cta {
+    margin-left: 8px; 
+  }
+
   .w1 {
-    width: calc(100vw);
+    width: 100%;
   }
 
   .w2 {
-    width: calc(100vw);
+    width: 100%;
   }
 
   .w3 {
-    width: calc(100vw);
+    width: 100%;
   }
 
-  .form, .modal-header, #form-post-button, .form-error-message {
+  .form, .modal-header, .form-button, .form-error-message {
     margin-inline-start: 20px;
     margin-inline-end: 20px;
+  }
+
+  #top {
+    padding: 10px 8px 10px 8px; 
+  }
+
+  #nav-container {
+    padding: 0px 8px 20px 8px; 
+  }
+
+  .frame img {
+     border: 0;
   }
 
   .form-item, .form-item-large {
@@ -991,5 +1029,9 @@ footer {
 
   .image-header {
     opacity: 1;
+  }
+
+  #fork-form {
+    width: auto; 
   }
 }
