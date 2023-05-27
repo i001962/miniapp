@@ -167,10 +167,6 @@ details[open] > summary:before {
  flex-direction: row;
  cursor: pointer;
 }
-.form {
-  display: flex;
-  flex-direction: row;
-}
 .form-header {
   color: var(--foreground-secondary-color);
   font-weight: 300;
