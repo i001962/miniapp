@@ -961,15 +961,15 @@ footer {
   }
 
   .w1 {
-    width: 100%;
+    width: calc(100vw);
   }
 
   .w2 {
-    width: 100%;
+    width: calc(100vw);
   }
 
   .w3 {
-    width: 100%;
+    width: calc(100vw);
   }
 
   .form, .modal-header, #form-post-button, .form-error-message {
