@@ -20,29 +20,33 @@ window.onpopstate = function(event) {
 {% endblock %}
 
 {% block main %}
-<div class="top">
-  {% if has_avatar == true %}
-  <img src="{{ assets_prefix }}avatar.png" width="72" height="72" class="avatar">
-  {% endif %}
-  <div class="site-info">
-    <div class="site-title">{{ page_title|escape }}</div>
-    {% if page_description_html.count > 0 %}<div class="site-about">{{ page_description_html }}</div>{% endif %}
+<div id="top-dom">
+  <div id="top">
+    {% if has_avatar == true %}
+    <img src="{{ assets_prefix }}avatar.png" width="72" height="72" class="avatar">
+    {% endif %}
+    <div class="site-info">
+      <div class="site-title">{{ page_title|escape }}</div>
+      {% if page_description_html.count > 0 %}<div class="site-about">{{ page_description_html }}</div>{% endif %}
+    </div>
+    <div id="fork">fork</div>
+    {% include 'modules/social_icons.html' %}
   </div>
-  <div id="fork">fork</div>
-  {% include 'modules/social_icons.html' %}
+  {% include 'modules/nav.html' %}
 </div>
-{% include 'modules/nav.html' %}
-<div id="main-loading-animation" class="loading-animation"></div>
-<div id="frames"></div>
+<div id="frames-dom">
+  <div id="main-loading-animation" class="loading-animation"></div>
+  <div id="frames"></div>
+</div>
 <div id="fork-modal" class="modal closes-modal">
   <div class="modal-content closes-modal">
     <div class="modal-header closes-modal">
-        Follow the instructions at <a href="https://croptop.eth.limo" target="_blank">https://croptop.eth</a> to set up your site and learn how to start posting.
+        To set up your site and learn how to start posting, follow the instructions at <a href="https://croptop.eth.limo" target="_blank">https://croptop.eth</a>.
       <div class="fork-info">
         You'll never be asked to sign up for an account or sign a blockchain transaction. All Croptop content exists peer-to-peer and is broadcasted using the Croptop app you'll download, there's no middleman corporation involved.
       </div>
       <div class="fork-info">
-        If you want to let people pay you to record content onchain, you'll first need to create a Juicebox — an open source, community owned, and onchain programmable vending machine. You'll then add your Juicebox project ID into the settings of the Croptop app.
+        If you want to let people pay you to record content onchain, you'll first need to create a Juicebox — an open source, community built & owned, and onchain programmable vending machine. You'll then add your Juicebox project ID into the settings of the Croptop app.
       </div>
       <div class="fork-info">
         You can create a simple Croptop-compatible Juicebox below. You can adjust it later on <a href="https://juicebox.money" target="_blank">https://juicebox.money</a>. It's recommended to send these transactions from the same forms over at <a href="https://croptop.eth.limo" target="_blank">https://croptop.eth</a> to make sure they haven't been tampered with.
@@ -340,6 +344,7 @@ window.onpopstate = function(event) {
   let currentRow = 1;
   let greatestRightInRow = 0;
   let rows = [];
+  let lastScrollTop = 0;
 
   // State variables.
   let signer;
@@ -974,7 +979,7 @@ window.onpopstate = function(event) {
   }
 
   // Get the modal set up.
-  const decorateAndShowPostModal = async (itemId, encodedIPFSUri, name, date, link, imageSrc, videoSrc) => {
+  const decoratePostModal = async (itemId, encodedIPFSUri, name, date, link, imageSrc, videoSrc) => {
     // Get references to modal elements that need decorating.
     const postModal = document.getElementById("post-modal");
     const frameSubtitle = document.getElementById("frame-subtitle");
@@ -983,9 +988,6 @@ window.onpopstate = function(event) {
     const postFormErrorMessage= document.getElementById("post-form-error-message");
     const recordPostForm = document.getElementById("record-post-form");
     const collectPostForm = document.getElementById("collect-post-form");
-
-    // Show the modal.
-    postModal.style.display = "block";
 
     // Track the modal in browse history.
     history.pushState({ modalOpened: true, itemId: itemId }, "", "?id=" + itemId);
@@ -1078,6 +1080,8 @@ window.onpopstate = function(event) {
     // Set a default name if needed.
     if (name === undefined || name === null || name === "") name = "✃";
 
+    const postModal = document.getElementById("post-modal");
+      
     // Get references to frame elements that need decorating.
     const ctaAnchor = frame.querySelector('a');;
     const title = frame.querySelector('div.image-title');
@@ -1103,8 +1107,13 @@ window.onpopstate = function(event) {
     frame.addEventListener("click", async (e) => {
       e.preventDefault();
 
+      // Show the modal.
+      postModal.style.display = "block";
+
+      toggleNavVisibility();
+
       // Make the modal look right.
-      await decorateAndShowPostModal(itemId, await encodeIPFSUriFrom(itemId), name, date, link, imageSrc, videoSrc);
+      await decoratePostModal(itemId, await encodeIPFSUriFrom(itemId), name, date, link, imageSrc, videoSrc);
     });
   }
 
@@ -1514,12 +1523,9 @@ window.onpopstate = function(event) {
   }
 
   // Get the fork modal set up.
-  const decorateAndShowForkModal = () => {
+  const decorateForkModal = () => {
     // Get references to elements that need decorating.
     const forkModal = document.getElementById("fork-modal");
- 
-    // Show the modal.
-    forkModal.style.display = "block";
 
     // Make sure the modal is closeable when clicking on empty space.
     let activeElementOnClose;
@@ -1544,16 +1550,74 @@ window.onpopstate = function(event) {
   }
 
   const setupForking = () => {
+    const forkModal = document.getElementById("fork-modal");
     const fork = document.getElementById("fork");
 
     fork.addEventListener("click", async (e) => {
       e.preventDefault();
+     
+      // Show the modal.
+      forkModal.style.display = "block";
+
+      toggleNavVisibility();
 
       // Make the modal look right.
-      await decorateAndShowForkModal();
+      await decorateForkModal();
     });
   }
+  
+  const toggleNavVisibility = () => {
+    const navContainer = document.getElementById('nav-container');
+    const postModal = document.getElementById('post-modal');
+    const forkModal = document.getElementById('fork-modal');
+    const top = document.getElementById('top');
+
+    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
     
+    if (currentScrollTop > lastScrollTop || postModal.style.display == "block" || forkModal.style.display == "block"){
+      navContainer.style.visibility = "hidden";
+      navContainer.style.opacity = 0;
+      delete navContainer.style.transitionDelay;
+      navContainer.style.transitionDelay = "0s";
+      top.style.borderBottom = window.getComputedStyle(navContainer).borderBottom;
+      navContainer.classList.add('hidden');
+    } else {
+      navContainer.style.visibility = "visible";
+      navContainer.style.opacity = 1;
+      top.style.borderBottom = "none";
+      navContainer.classList.remove('hidden');
+    }
+    lastScrollTop = currentScrollTop;
+  }
+  
+  const adjustTopPadding = () => {
+    const top = document.getElementById('top');
+    const topDom = document.getElementById('top-dom');
+    const framesDom = document.getElementById('frames-dom');
+    const postModal = document.getElementById('post-modal');
+    const forkModal = document.getElementById('fork-modal');
+
+    const topDomHeight = topDom.offsetHeight;
+    const topHeight = top.offsetHeight;
+
+    framesDom.style.paddingTop = topDomHeight + 'px';
+    postModal.style.top = topHeight + 'px';
+    forkModal.style.top = topHeight + 'px';
+    postModal.style.height = `calc(100% - ${topHeight}px)`;
+    forkModal.style.height = `calc(100% - ${topHeight}px)`;
+  }
+
+  window.addEventListener("load", adjustTopPadding);
+  window.addEventListener("resize", adjustTopPadding);
+
+  let isFirstScrollEvent = true;
+  window.addEventListener("scroll", () => {
+    if (isFirstScrollEvent) {
+        isFirstScrollEvent = false; 
+        return;
+    }
+    toggleNavVisibility();
+  });
   fetchSettings();
   loadImageFrames();
   startLoadingAnimation('main-loading-animation');

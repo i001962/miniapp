@@ -591,8 +591,8 @@ hr {
 
 .social-icon {
   width: 1em;
-  height: 1em;
-  vertical-align: bottom;
+  height: 2em;
+  vertical-align: text-top;
   filter: var(--icon-social-filter);
 }
 
@@ -628,7 +628,7 @@ hr {
   width: 100%;
 }
 
-.top {
+#top {
   max-width: var(--content-max-width);
   margin-left: auto;
   margin-right: auto;
@@ -636,12 +636,15 @@ hr {
   display: flex;
   gap: var(--inner-gap);
   padding: 10px 20px 10px 20px;
+  background-color: var(--background-color);
 }
 
 .loading-animation {
   color: var(--foreground-color);
 }
 #main-loading-animation {
+  position: fixed;
+  margin-top: 8px;
   margin-left: 20px;
 }
 .button-loading-animation {
@@ -671,15 +674,30 @@ img.avatar {
   font-size: 12px;
 }
 
-.nav-container {
+#top-dom {
+    position: fixed;
+    z-index: 10;
+    width: 100%;
+}
+
+#frames-dom {
+}
+#nav-container {
   text-align: left;
   max-width: var(--content-max-width);
   margin-left: auto;
   margin-right: auto;
-  padding: 0px 20px 10px 20px;
+  padding: 0px 20px 20px 20px;
+  border-bottom: 1px solid var(--foreground-tertiary-color);
+  transition: visibility 0s 0.2s, opacity 0.2s linear;
+  background-color: var(--background-color);
 }
 
-.nav {
+#nav-container.hidden {
+  transition-delay: "0s";
+}
+
+#nav {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
@@ -714,7 +732,8 @@ img.avatar {
 }
 
 #fork {
-  margin-top: 4px;
+  margin-
+  top: 4px;
   color: var(--foreground-secondary-color);
   cursor: pointer;
 }
