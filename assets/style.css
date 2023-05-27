@@ -152,6 +152,9 @@ details[open] > summary:before {
 .frame-subtitle {
   margin-top: 4px;
 }
+.frame img {
+  width: 100%;
+}
 #frame-link {
   color: var(--foreground-secondary-color);
 }
