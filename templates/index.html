@@ -335,7 +335,7 @@ window.onpopstate = function(event) {
 
   // Layout variables.
   let frames;
-  let items = Array();
+  let items = [];
   let loadingAnimationIntervals = {};
   let currentRow = 1;
   let greatestRightInRow = 0;
@@ -1074,9 +1074,7 @@ window.onpopstate = function(event) {
     return cid ? encodeIPFSUri(cid) : "";
   }
 
-  const decorateFrame = async (frame, itemId, imageSrc, date, name, link, videoSrc) => {
-    const encodedIPFSUri = await encodeIPFSUriFrom(itemId);
-
+  const decorateFrame = (frame, itemId, imageSrc, date, name, link, videoSrc) => {
     // Set a default name if needed.
     if (name === undefined || name === null || name === "") name = "✃";
 
@@ -1106,7 +1104,7 @@ window.onpopstate = function(event) {
       e.preventDefault();
 
       // Make the modal look right.
-      await decorateAndShowPostModal(itemId, encodedIPFSUri, name, date, link, imageSrc, videoSrc);
+      await decorateAndShowPostModal(itemId, await encodeIPFSUriFrom(itemId), name, date, link, imageSrc, videoSrc);
     });
   }
 
@@ -1258,7 +1256,7 @@ window.onpopstate = function(event) {
       item = items.find(item => item.id == id);
       if (item) {
         const img = document.getElementById('img-' + item.id);
-        if (img) setTimeout(() => img.click(), 200);
+          if (img) setTimeout(() => img.click(), 200);
       }
     }
 
