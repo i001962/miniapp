@@ -948,7 +948,7 @@ footer {
   100% {opacity: 1;}
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 500px) {
   :root {
     --item-gap: 15px;
     --inner-gap: 10px;
@@ -961,15 +961,15 @@ footer {
   }
 
   .w1 {
-    width: calc(94vw - 60px);
+    width: 100%;
   }
 
   .w2 {
-    width: calc(97vw - 60px);
+    width: 100%;
   }
 
   .w3 {
-    width: calc(100vw - 60px);
+    width: 100%;
   }
 
   .form, .modal-header, #form-post-button, .form-error-message {
