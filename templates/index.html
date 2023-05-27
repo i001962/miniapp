@@ -746,6 +746,11 @@ window.onpopstate = function(event) {
         
       // Get the signer.
       signer = (await getSigner()).address;
+      
+      // Default to the signer.
+      if (recordPostFormBeneficiaryInput.value == "") recordPostFormBeneficiaryInput.value = signer;
+      // Default to the eth address, or the signer;
+      if (recordPostFormCpnBeneficiaryInput.value == "") recordPostFormCpnBeneficiaryInput.value = defaultEthAddress || signer;
 
       // Make sure the form contents make sense.
       await checkState();
@@ -897,6 +902,11 @@ window.onpopstate = function(event) {
 
       // Get the signer.
       signer = (await getSigner()).address;
+
+      // Default to the signer.
+      if (collectPostFormBeneficiaryInput.value == "") collectPostFormBeneficiaryInput.value = signer;
+      // Default to the eth address, or the signer;
+      if (collectPostFormCpnBeneficiaryInput.value == "") collectPostFormCpnBeneficiaryInput.value = defaultEthAddress || signer;
 
       // Make sure the form contents make sense.
       await checkState();
@@ -1287,7 +1297,7 @@ window.onpopstate = function(event) {
     // Submit the form.
     forkFormNewJbSubmitButton.onclick = async () => {
       // Check for empty values.
-      if (forkFormNewJbCollectionNameInput.value == "" || forkFormNewJbCollectionSymbolInput.value == "" || forkFormNewJbProjectOwnerInput.value == "") {
+      if (forkFormNewJbCollectionNameInput.value == "" || forkFormNewJbCollectionSymbolInput.value == "") {
         forkFormNewJbErrorMessage.innerHTML = "Fill out the form.";
         forkFormNewJbErrorMessage.style.display = "block";
         return;
@@ -1302,6 +1312,9 @@ window.onpopstate = function(event) {
       if (forkFormNewJbMinimumTotalSupplyInput.value == "") forkFormNewJbMinimumTotalSupplyInput.value = 1;
       // Default to free
       if (forkFormNewJbMinimumPriceInput.value == "") forkFormNewJbMinimumPriceInput.value = 0;
+      // Default to the signer.
+      signer = (await getSigner()).address;
+      if (forkFormNewJbProjectOwnerInput.value == "") forkFormNewJbProjectOwnerInput.value = signer;
 
       // Show the loading animation.
       startLoadingAnimation('fork-form-new-jb-button-loading-animation');
