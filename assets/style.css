@@ -106,11 +106,6 @@ details[open] > summary:before {
   transform: rotate(90deg);
 }
 
-summary div {
-  padding-left: 16px;
-  margin-top: -20px;
-}
-
 /* The Modal (background) */
 .modal {
   display: none; /* Hidden by default */
