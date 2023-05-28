@@ -521,10 +521,21 @@ window.onpopstate = function(event) {
 
         // Check to see if there's a tier for this content.
         [tier] = await tx_view_tiers(projectId, [encodedIPFSUri], resolveChainId(chain));
+        
+        // If no tier, don't show the form. 
+        if (!tier) {
+          // Hide the forms.
+          recordPostForm.style.display = "none";
+          collectPostForm.style.display = "none";
+          // Disable the button.
+          postFormButton.disabled = true;
+          return;
+        }
 
         // Cache the value.
         tiersCache[projectId][encodedIPFSUri] = tier;
       }
+
 
       // Get a reference to the tier's ID.
       const formattedTierId = parseInt(tier[0].toString());
