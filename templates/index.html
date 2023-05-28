@@ -333,6 +333,7 @@ window.onpopstate = function(event) {
   const widthClasses = ["w1", "w2", "w3"];
   const loadingAnimationPace = 100;
   const formInputReactionTimeDelay = 600;
+  const noZcrollEffectEdgeDistance = 100;
 
   // State constants.
   const feeDivisor = 20;
@@ -1572,20 +1573,24 @@ window.onpopstate = function(event) {
     const top = document.getElementById('top');
 
     const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
-    if (currentScrollTop > lastScrollTop || postModal.style.display == "block" || forkModal.style.display == "block"){
-      navContainer.style.visibility = "hidden";
-      navContainer.style.opacity = 0;
-      delete navContainer.style.transitionDelay;
-      navContainer.style.transitionDelay = "0s";
-      top.style.borderBottom = window.getComputedStyle(navContainer).borderBottom;
-      navContainer.classList.add('hidden');
-    } else {
-      navContainer.style.visibility = "visible";
-      navContainer.style.opacity = 1;
-      top.style.borderBottom = "none";
-      navContainer.classList.remove('hidden');
+    const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        
+    if (currentScrollTop > noZcrollEffectEdgeDistance && maxScrollTop - currentScrollTop > noZcrollEffectEdgeDistance) {
+      if (currentScrollTop > lastScrollTop || postModal.style.display == "block" || forkModal.style.display == "block") {
+        navContainer.style.visibility = "hidden";
+        navContainer.style.opacity = 0;
+        delete navContainer.style.transitionDelay;
+        navContainer.style.transitionDelay = "0s";
+        top.style.borderBottom = window.getComputedStyle(navContainer).borderBottom;
+        navContainer.classList.add('hidden');
+      } else {
+        navContainer.style.visibility = "visible";
+        navContainer.style.opacity = 1;
+        top.style.borderBottom = "none";
+        navContainer.classList.remove('hidden');
+      }
     }
+
     lastScrollTop = currentScrollTop;
   }
   
@@ -1617,6 +1622,7 @@ window.onpopstate = function(event) {
     }
     toggleNavVisibility();
   });
+
   fetchSettings();
   loadImageFrames();
   startLoadingAnimation('main-loading-animation');
