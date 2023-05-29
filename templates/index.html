@@ -30,9 +30,17 @@ window.onpopstate = function(event) {
       {% if page_description_html.count > 0 %}<div class="site-about">{{ page_description_html }}</div>{% endif %}
     </div>
     <div id="fork">fork</div>
-    {% include 'modules/social_icons.html' %}
+    <a href="{{ assets_prefix }}rss.xml" target="_blank">
+      <img src="{{ assets_prefix }}assets/rss.svg" alt="RSS" class="social-icon" width="1em">
+    </a>
   </div>
-  {% include 'modules/nav.html' %}
+  <div id="nav-container">
+    <div id="nav">
+      {% for item in site_navigation %}
+      <a href="{% if item.externalLink.count > 0 %}{{ item.externalLink }}{% else %}{{ assets_prefix }}{{ item.slug }}/{% endif %}" class="{% if article.slug == item.slug %}nav-current{% else %}nav-item{% endif %}"{% if item.externalLink.count > 0 %} target="_blank"{% endif %}>{{ item.title }}</a>
+      {% endfor %}
+    </div>
+  </div>
 </div>
 <div id="frames-dom">
   <div id="main-loading-animation" class="loading-animation"></div>
@@ -40,7 +48,7 @@ window.onpopstate = function(event) {
 </div>
 <div id="fork-modal" class="modal closes-modal">
   <div class="modal-content closes-modal">
-    <div class="modal-close closes-modal">[close]</div>
+    <div class="modal-close-button closes-modal">[<span class="modal-close-button-text closes-modal">close</span>]</div>
     <div class="modal-header closes-modal">
         To set up your site and learn how to start posting, follow the instructions at <a href="https://croptop.eth.limo" target="_blank">https://croptop.eth</a>.
       <div class="fork-info">
@@ -193,7 +201,7 @@ window.onpopstate = function(event) {
 </div>
 <div id="post-modal" class="modal closes-modal">
   <div class="modal-content closes-modal">
-    <div class="modal-close closes-modal">[close]</div>
+    <div class="modal-close-button closes-modal">[<span class="modal-close-button-text closes-modal">close</span>]</div>
     <div class="modal-header closes-modal">
       <span id="frame-date"></span><span id="frame-name"></span>
       <div id="frame-subtitle" class="closes-modal">
@@ -201,7 +209,7 @@ window.onpopstate = function(event) {
       </div>
       <div id="post-form-state" class="closes-modal">
         <details id="post-form-state-reveal">
-          <summary id="post-form-state-toggle" class="toggle"><span id="post-form-state-chain" class="post-form-state-item-value"></span>, project ID: <a id="post-form-state-project-id" class="post-form-state-item-value" target="_blank"></a>, NFT category ID: <span id="post-form-state-nft-category" class="post-form-state-item-value"></span></summary>
+          <summary id="post-form-state-toggle" class="toggle"><span id="post-form-state-chain" class="post-form-state-item-value"></span>, project: <a id="post-form-state-project-id" class="post-form-state-item-value" target="_blank"></a>, category: <span id="post-form-state-nft-category" class="post-form-state-item-value"></span></summary>
           <div class="form-section-description">Specify the Juicebox project that is being funded from this NFT sale and the category under which it will appear. Changing these values will change the availability of this NFT.</div>
           <div class="form-section">
             <div class="form-item">
@@ -1115,8 +1123,8 @@ window.onpopstate = function(event) {
     // Mark videos with an icon.
     if (videoSrc) {
       const overlay = document.createElement("div");
-      overlay.classList.add("overlay-icon");
-      overlay.classList.add("video-icon");
+      overlay.innerHTML = "[▶]"
+      overlay.classList.add("overlay-play-icon");
       frame.appendChild(overlay);
     }
 
