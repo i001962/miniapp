@@ -131,7 +131,6 @@ details[open] > summary:before {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 10; /* Sit on top */
-  padding-top: 40px; /* Location of the box */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -142,6 +141,17 @@ details[open] > summary:before {
   -webkit-backdrop-filter: blur(10px);
 }
 
+#fork-modal {
+  z-index: 11; /* Sit on top */
+}
+
+.modal-close {
+  cursor: pointer; 
+  text-align: right;
+  padding: 8px 0; 
+  color: var(--foreground-secondary-color);
+}
+
 /* Modal Content (image) */
 .modal-content {
   margin: auto;
@@ -149,6 +159,7 @@ details[open] > summary:before {
   width: 88vw; /* 88% of the viewport width */
   max-width: 1000px;
   float: center;
+  padding-top: 8px;
   padding-bottom: 100px;
 }
 .modal-header {
@@ -258,13 +269,12 @@ details > summary:before {
 }
 .form-value input, .form-value select, .form-value textarea {
   width: 100%;
-  padding: 4px;
+  padding: 8px;
   border: 1px solid var(--border-color);
   color: var(--foreground-color);
   background-color: var(--background-color);
 }
 .form-select-value select {
-  width: 100%;
   padding-right: 30px;
   appearance: none;
   -webkit-appearance: none;
@@ -308,13 +318,19 @@ details > summary:before {
 .form-button:hover .form-button-text {
   text-decoration: underline;
 }
-.form-button:disabled .form-button-text {
+.form-button:disabled {
   color: var(--foreground-tertiary-color);
   cursor: crosshair;
 }
+.form-button:disabled .form-button-text {
+  color: var(--foreground-tertiary-color);
+}
+
 .ether {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  padding-right: 4px;
 }
+
 .modal img, .modal video {
   width: 100%;
   border: 1px solid var(--foreground-tertiary-color);
@@ -338,7 +354,7 @@ code {
 code {
   background-color: var(--code-background-color);
   padding: 0 2px 0 2px;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 code,
@@ -919,6 +935,7 @@ footer {
 
 .image-cta {
   text-align: left;
+  color: var(--foreground-secondary-color);
 }
 
 .sold-out {
@@ -973,7 +990,6 @@ footer {
   0% {opacity: 0;}
   100% {opacity: 1;}
 }
-
 @media screen and (max-width: 500px) {
   :root {
     --item-gap: 15px;
@@ -1008,9 +1024,9 @@ footer {
     width: 100%;
   }
 
-  .form, .modal-header, .form-button, .form-error-message {
-    margin-inline-start: 20px;
-    margin-inline-end: 20px;
+  .form, .modal-header, .main-form-button, .form-error-message {
+    margin-inline-start: 8px;
+    margin-inline-end: 8px;
   }
 
   #top {
@@ -1023,13 +1039,12 @@ footer {
   
   .frame {
     margin-top: 14px;  
-    margin-bottom: 20px;  
+    margin-bottom: 28px;  
     border-bottom: 1px solid var(--foreground-tertiary-color);
   }
 
   .frame:hover img {
-    border: none; 
-    border-bottom: 1px solid var(--foreground-tertiary-color);
+     border: none;
   }
 
   .frame img {
@@ -1060,6 +1075,11 @@ footer {
     font-size: 14px;
     justify-content: flex-start;
     gap: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .modal-close {
+    padding-right: 8px; 
   }
 
   .image-title {

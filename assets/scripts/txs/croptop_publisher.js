@@ -493,7 +493,7 @@ const tx_view_tiers = async (projectId, encodedIPFSUris, chainId) => {
   try {
     return await view(contract, croptopPublisherContractABI, "tiersFor", [projectId, "0x0000000000000000000000000000000000000000", encodedIPFSUris]);
   } catch (e) {
-    return;  
+    return [];  
   }
 }
 
