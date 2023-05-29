@@ -524,6 +524,7 @@ window.onpopstate = function(event) {
         
         // If no tier, don't show the form. 
         if (!tier) {
+          console.log("NO FORM");
           // Hide the forms.
           recordPostForm.style.display = "none";
           collectPostForm.style.display = "none";
@@ -535,6 +536,7 @@ window.onpopstate = function(event) {
         // Cache the value.
         tiersCache[projectId][encodedIPFSUri] = tier;
       }
+      console.log({  tier });
 
 
       // Get a reference to the tier's ID.
@@ -1181,6 +1183,7 @@ window.onpopstate = function(event) {
     const frames = document.getElementById("frames");
     const frame = document.createElement("div");
     const header = document.createElement("div");
+    const footer = document.createElement("div");
     const title = document.createElement("div");
     const img = document.createElement("img");
     const cta = document.createElement("div");
@@ -1191,6 +1194,7 @@ window.onpopstate = function(event) {
     frame.style.transitionDuration = `${transitionDuration / 1000}s, ${transitionDuration / 1000}s`;
     frame.style.transitionTimingFunction = "ease, ease";
     header.classList.add("image-header");
+    footer.classList.add("image-footer");
     cta.classList.add("image-cta");
     title.classList.add("image-title");
     img.loading = "lazy";
@@ -1229,7 +1233,7 @@ window.onpopstate = function(event) {
     else rows[rows.length - 1].frames.push(newFrame);
 
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const marginTop = heightDiff + scrollTop - verticalMargin;
+    const marginTop = window.getComputedStyle(imageFrame).display == "block" ? 0 : heightDiff + scrollTop - verticalMargin;
     imageFrame.classList.add("frame-fade-in");
 
     return new Promise((resolve) => {

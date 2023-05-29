@@ -490,8 +490,11 @@ const tx_view_allowance = async (projectId, category, chainId) => {
 const tx_view_tiers = async (projectId, encodedIPFSUris, chainId) => {
   const contract = croptopPublisherContract(chainId);
   if (!contract) return [[0, 0, 0]];
-  console.log({  contract, projectId, encodedIPFSUris });
-  return await view(contract, croptopPublisherContractABI, "tiersFor", [projectId, "0x0000000000000000000000000000000000000000", encodedIPFSUris]);
+  try {
+    return await view(contract, croptopPublisherContractABI, "tiersFor", [projectId, "0x0000000000000000000000000000000000000000", encodedIPFSUris]);
+  } catch (e) {
+    return;  
+  }
 }
 
 const tx_collect = async (projectId, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, chainId) => {

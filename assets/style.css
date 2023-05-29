@@ -308,7 +308,7 @@ details > summary:before {
 .form-button:hover .form-button-text {
   text-decoration: underline;
 }
-.form-button:disabled {
+.form-button:disabled .form-button-text {
   color: var(--foreground-tertiary-color);
   cursor: crosshair;
 }
@@ -901,6 +901,9 @@ footer {
   justify-content: space-between;
   padding-bottom: 3px;
 }
+.image-footer {
+  display: none;
+}
 
 .image-title {
   text-align: right;
@@ -993,14 +996,6 @@ footer {
     margin-right: 0;
   }
 
-  .image-title {
-    margin-right: 8px;
-  }
-
-  .image-cta {
-    margin-left: 8px;
-  }
-
   .w1 {
     width: 100%;
   }
@@ -1025,6 +1020,15 @@ footer {
   #nav-container {
     padding: 0px 8px 20px 8px;
   }
+  
+  .frame {
+    margin-top: 14px;  
+    margin-bottom: 20px;  
+    border-bottom: 1px solid var(--foreground-tertiary-color);
+  }
+  .frame:hover img {
+    border: inherit; 
+  }
 
   .frame img {
      border: 0;
@@ -1048,5 +1052,20 @@ footer {
 
   #fork-form {
     width: auto;
+  }
+
+  .image-header {
+    font-size: 14px;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .image-title {
+    text-align: left;
+    max-width: inherit;
+  }
+
+  .image-footer {
+    display: block;
   }
 }
