@@ -545,8 +545,6 @@ window.onpopstate = function(event) {
         // Cache the value.
         tiersCache[projectId][encodedIPFSUri] = tier;
       }
-      console.log({  tier });
-
 
       // Get a reference to the tier's ID.
       const formattedTierId = parseInt(tier[0].toString());
@@ -1005,12 +1003,20 @@ window.onpopstate = function(event) {
   const decoratePostModal = async (itemId, encodedIPFSUri, name, date, link, imageSrc, videoSrc) => {
     // Get references to modal elements that need decorating.
     const postModal = document.getElementById("post-modal");
+    const top = document.getElementById('top');
     const frameSubtitle = document.getElementById("frame-subtitle");
     const frameLink = document.getElementById("frame-link");
     const postFormStateReveal = document.getElementById("post-form-state-reveal");
     const postFormErrorMessage= document.getElementById("post-form-error-message");
     const recordPostForm = document.getElementById("record-post-form");
     const collectPostForm = document.getElementById("collect-post-form");
+    
+    // Adjust the size.
+    requestAnimationFrame(() => {
+      const topHeight = top.offsetHeight;
+      postModal.style.top = topHeight + 'px';
+      postModal.style.height = `calc(100% - ${topHeight}px)`;
+    });
 
     // Track the modal in browse history.
     history.pushState({ modalOpened: true, itemId: itemId }, "", "?id=" + itemId);
@@ -1550,6 +1556,14 @@ window.onpopstate = function(event) {
   const decorateForkModal = () => {
     // Get references to elements that need decorating.
     const forkModal = document.getElementById("fork-modal");
+    const top = document.getElementById('top');
+
+    // Adjust the size.
+    requestAnimationFrame(() => {
+      const topHeight = top.offsetHeight;
+      forkModal.style.top = topHeight + 'px';
+      forkModal.style.height = `calc(100% - ${topHeight}px)`;
+    });
 
     // Make sure the modal is closeable when clicking on empty space.
     let activeElementOnClose;
@@ -1579,6 +1593,7 @@ window.onpopstate = function(event) {
     const forkModal = document.getElementById("fork-modal");
     const fork = document.getElementById("fork");
 
+    // Summon a modal when the fork button is clicked.
     fork.addEventListener("click", async (e) => {
       e.preventDefault();
      
@@ -1586,7 +1601,7 @@ window.onpopstate = function(event) {
       forkModal.style.display = "block";
 
       toggleNavVisibility(true);
-
+      
       // Make the modal look right.
       await decorateForkModal();
     });
@@ -1621,35 +1636,28 @@ window.onpopstate = function(event) {
     lastScrollTop = currentScrollTop;
   }
   
-  const adjustTopPadding = () => {
+  const adjustModalTopPadding = (modal) => {
     const top = document.getElementById('top');
-    const topDom = document.getElementById('top-dom');
-    const framesDom = document.getElementById('frames-dom');
     const postModal = document.getElementById('post-modal');
     const forkModal = document.getElementById('fork-modal');
 
-    const topDomHeight = topDom.offsetHeight;
     const topHeight = top.offsetHeight;
 
-    framesDom.style.paddingTop = topDomHeight + 'px';
     postModal.style.top = topHeight + 'px';
     forkModal.style.top = topHeight + 'px';
     postModal.style.height = `calc(100% - ${topHeight}px)`;
     forkModal.style.height = `calc(100% - ${topHeight}px)`;
   }
 
-  window.addEventListener("load", adjustTopPadding);
-  window.addEventListener("resize", adjustTopPadding);
+  const adjustFramesTopPadding = () => {
+    const topDom = document.getElementById('top-dom');
+    const framesDom = document.getElementById('frames-dom');
+    framesDom.style.paddingTop = topDom.offsetHeight + 'px';
+  }
 
-  let isFirstScrollEvent = true;
-  window.addEventListener("scroll", () => {
-    if (isFirstScrollEvent) {
-        isFirstScrollEvent = false; 
-        return;
-    }
-
-    toggleNavVisibility(false);
-  });
+  window.addEventListener("load", adjustFramesTopPadding);
+  window.addEventListener("resize", adjustFramesTopPadding);
+  window.addEventListener("scroll", () => toggleNavVisibility(false));
 
   fetchSettings();
   loadImageFrames();
