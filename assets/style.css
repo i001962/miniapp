@@ -380,7 +380,7 @@ details > summary:before {
 .social-icon {
   width: 1em;
   height: 0.8em;
-  vertical-align: baseline;
+  vertical-align: middle;
   filter: var(--icon-social-filter);
 }
 
