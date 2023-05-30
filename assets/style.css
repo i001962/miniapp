@@ -1,11 +1,11 @@
 :root {
   --background-color: #fff;
+  --background-color-opacity: rgba(255, 255, 255, 0.8);
   --foreground-color: #000;
   --foreground-secondary-color: #888;
   --foreground-tertiary-color: #e2e2e2;
   --link-color: #f056c1;
   --alert-color: #efab1d;
-  --modal-background-color: rgba(255, 255, 255, 0.9);
   --icon-social-filter: invert(100%) sepia(0%) saturate(7460%) hue-rotate(186deg) brightness(107%) contrast(77%);
   --font-size-1: 14px;
   --font-size-2: 28px;
@@ -35,11 +35,11 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background-color: #111;
+    --background-color-opacity: rgba(17, 17, 17, 0.8);
     --foreground-color: #fff;
     --foreground-secondary-color: #adadaf;
     --foreground-tertiary-color: #2a2a2a;
     --icon-social-filter: invert(24%) sepia(11%) saturate(0%) hue-rotate(188deg) brightness(95%) contrast(95%);
-    --modal-background-color: rgba(16, 16, 16, 0.85);
   }
 }
 
@@ -124,7 +124,6 @@ details[open] > summary:before {
   padding: 0 var(--spacing-4) var(--spacing-3) var(--spacing-4);
   border-bottom: 1px solid var(--foreground-tertiary-color);
   transition: visibility 0s 0.2s, opacity 0.2s linear;
-  background-color: var(--background-color);
 }
 
 #nav-container.hidden {
@@ -152,7 +151,7 @@ details[open] > summary:before {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: var(--modal-background-color);
+  background-color: var(--background-color-opacity);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -162,18 +161,22 @@ details[open] > summary:before {
   z-index: 11;
 }
 
-.modal-close-button {
+#title-button {
+  cursor: pointer; 
+}
+
+.modal-close-button, .body-reset-button {
   cursor: pointer; 
   text-align: right;
   padding: var(--spacing-2) 0; 
   color: var(--foreground-secondary-color);
 }
 
-.modal-close-button:hover .modal-close-button-text {
+.modal-close-button:hover .modal-close-button-text, .body-reset-button:hover .body-reset-button-text {
   text-decoration: underline;
 }
 
-.modal-content {
+.content {
   margin: auto;
   width: 88vw;
   max-width: 1000px;
@@ -182,33 +185,32 @@ details[open] > summary:before {
   padding-bottom: 100px;
 }
 
-.modal-header {
+.post-header {
   padding-bottom: var(--spacing-3);
 }
-#frame-name {
+#post-name {
   color: var(--foreground-color);
   font-weight: 500;
 }
-#frame-date {
+#post-date {
   color: var(--foreground-secondary-color);
 }
-#frame-subtitle {
+#post-subtitle {
   margin-top: var(--spacing-1);
+}
+#post-link {
+  color: var(--foreground-secondary-color);
 }
 .frame img {
   width: 100%;
 }
-#frame-link {
-  color: var(--foreground-secondary-color);
-}
-
-.overlay-icon {
+.overlay-play-icon {
   font-size: var(--font-size-2); 
   z-index: 2;
   display: block;
   position: absolute;
-  top: var(--spacing-2);
-  left: var(--spacing-2);
+  bottom: var(--spacing-5);
+  right: var(--spacing-5);
   opacity: 0.6;
 }
 
@@ -357,7 +359,7 @@ details > summary:before {
   padding-right: var(--spacing-1);
 }
 
-.modal img, .modal video {
+.content img, .content video {
   width: 100%;
   border: 1px solid var(--foreground-tertiary-color);
 }
@@ -368,24 +370,28 @@ details > summary:before {
   animation-name: fadein;
 }
 
+.page-content {
+  padding-top: var(--spacing-5); 
+}
+
 .date {
   color: var(--foreground-secondary-color);
 }
 
-.site-info {
+#site-info {
   flex: 1;
   display: flex;
   flex-direction: column;
   color: var(--foreground-color);
 }
 
-.site-title {
+#site-title {
   font-size: var(--font-size-2); 
   font-weight: 600;
   color: var(--foreground-color);
 }
 
-.site-about {
+#site-about {
   font-size: var(--font-size-1);
   color: var(--foreground-color);
 }
@@ -416,13 +422,12 @@ details > summary:before {
   z-index: 1;
 }
 
-#top {
+#header-container {
   margin-left: auto;
   margin-right: auto;
   align-items: center;
   display: flex;
   gap: var(--spacing-3);
-  background-color: var(--background-color);
   padding: var(--spacing-3) var(--spacing-4) var(--spacing-3) var(--spacing-4);
 }
 
@@ -449,6 +454,9 @@ img.avatar {
   position: fixed;
   z-index: 10;
   width: 100%;
+  background-color: var(--background-color-opacity);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 #fork {
@@ -608,12 +616,6 @@ h2 {
   margin-bottom: 20px;
 }
 
-.content img {
-  display: block;
-  margin: 40px auto 40px auto;
-  max-width: 100%;
-}
-
 hr {
   border: none;
   height: 2px;
@@ -622,19 +624,20 @@ hr {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
+
 .breadcrumb {
   display: flex;
   align-items: center;
   width: 100%;
   padding: 20px 0;
-  position: sticky;
+  position: fixed;
   top: 0;
-  background-color: var(--breadcrumb-background-color);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--breadcrumb-border-color);
+  background: var(--background-color-opacity);
+  border-bottom: 1px solid var(--foreground-tertiary-color);
   box-sizing: border-box;
   z-index: 99;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .breadcrumb-inner {
@@ -649,7 +652,7 @@ hr {
 .breadcrumb-inner>.chevron {
   display: inline-block;
   margin: 0 8px;
-  color: var(--chevron-color);
+  color: var(--foreground-secondary-color);
   font-weight: 500;
 }
 
@@ -670,13 +673,6 @@ hr {
 
 .main>.date {
   padding: 0px 20px;
-}
-
-.content {
-  margin: 40px 0;
-  line-height: 1.75rem;
-  font-size: 1em;
-  color: var(--foreground-color);
 }
 
 .content>p {
@@ -743,11 +739,11 @@ hr {
 .content table tr td :last-child {
   margin-bottom: 0;
 }
-.site-about p:first-child {
+#site-about p:first-child {
   margin-top: 0px;
 }
 
-.site-about p:last-child {
+#site-about p:last-child {
   margin-bottom: 0px;
 }
 
@@ -851,7 +847,7 @@ ol {
   padding-inline-start: 1em;
 }
 
-.site-about p {
+#site-about p {
   max-width: 100%;
   margin-left: 0px;
   margin-right: 0px;
@@ -906,9 +902,6 @@ footer {
 }
 /**************/
 
-
-
-
 @media screen and (max-width: 500px) {
   #frames {
     text-align: right;
@@ -932,21 +925,17 @@ footer {
     width: 100%;
   }
 
-  .form, .modal-header, .main-form-button, .form-error-message, .modal-close-button, .image-header {
+  .form, .modal-header, .main-form-button, .form-error-message, .modal-close-button, .body-reset-button, .image-header {
     margin-inline-start: var(--spacing-2);
     margin-inline-end: var(--spacing-2);
   }
 
-  #top {
+  #header-container {
     padding: var(--spacing-2);
   }
 
   #nav-container {
     padding: var(--spacing-1) var(--spacing-2) var(--spacing-2) var(--spacing-2);
-  }
-  
-  .modal-content {
-    width: 100%;
   }
 
   .frame {

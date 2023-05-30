@@ -8,18 +8,89 @@ const encodeIPFSUri = (cid) => {
   return hex;
 }
 
+const encodeIPFSUriFrom = async (prefix, itemId) => {
+  // Create the content's encoded IPFS URL.
+  const cidUrl = `${prefix}${itemId}/nft.json.cid.txt`;
+  const cid = await (await fetch(cidUrl)).text();
+  return cid ? encodeIPFSUri(cid) : "";
+}
+
+const formatDate = (date) => {
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const year = date.getFullYear();
+
+  return `${month}.${day}.${year.toString().slice(-2)}`;
+}
+
 const formatTimestamp = (timestamp) => {
   const months = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
   ];
 
-  const dateObj = new Date((timestamp + 978307200) * 1000);
-  const month = dateObj.getMonth() + 1;
-  const day = dateObj.getDate();
-  const year = dateObj.getFullYear();
-
-  return `${month}.${day}.${year.toString().slice(-2)}`;
+  const date = new Date((timestamp + 978307200) * 1000);
+  return formatDate(date);
 }
 
-const {CID} = Multiformats;
+const resolveChainId = (value) => {
+  switch (value) {
+    case "mainnet": return 1; 
+    case "goerli": return 5; 
+  }
+}
+
+const resolveChainSelectIndex = (chain) => {
+  switch (chain) {
+    case "goerli": return 0; 
+  }
+}
+
+const resolveChain = (chainId) => {
+  switch (chainId) {
+    case 1: return "mainnet"; 
+    case 5: return "goerli"; 
+  }
+}
+
+const cpnProjectId = (chain) => {
+  switch (chain) {
+    case "goerli":
+      return 758;
+  }
+}
+
+const projectLinkBase = (chain) => {
+  switch (chain) {
+    case "goerli": 
+      return "https://goerli.juicebox.money/v2/p/";
+  }
+}
+
+const loadingAnimationPace = 100;
+let loadingAnimationIntervals = {};
+
+/// Animate the loading ticker.
+const startLoadingAnimation = (loadingAnimationId) => {
+  const loadingAnimation = document.getElementById(loadingAnimationId);
+  loadingAnimation.style.display = "inherit";
+  const loadingAnimationFrames = ['-', '\\', '|', '/'];
+  let currentFrame = 0;
+
+  const animate = () => {
+    loadingAnimation.textContent = loadingAnimationFrames[currentFrame];
+    currentFrame = (currentFrame + 1) % loadingAnimationFrames.length;
+    loadingAnimationIntervals[loadingAnimationId] = setTimeout(animate, loadingAnimationPace);
+  }
+
+  animate();
+}
+
+/// Stop animating the loading ticker.
+const stopLoadingAnimation = (loadingAnimationId) => {
+  const loadingAnimation = document.getElementById(loadingAnimationId);
+  loadingAnimationIntervals[loadingAnimationId] = clearTimeout(loadingAnimationIntervals[loadingAnimationId]);
+  loadingAnimation.style.display = "none";
+}
+
+// const {CID} = Multiformats;
 

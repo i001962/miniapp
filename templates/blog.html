@@ -32,31 +32,132 @@
       if(document.getElementById('footer')){
         document.querySelector('#footer').style.display = 'block';
       }
-      breadcrumb([
-        { text: "{{ planet.name|escapejs }}", url: '../' },
-      ]);
+    } else {
+      const topDom = document.getElementById('top-dom');
+      topDom.style.display = "none"
     }
   });
 </script>
+{% include 'modules/deps.html' %}
+{% include 'modules/ethers.html' %}
+{% include 'modules/utils.html' %}
+{% include 'modules/tx.html' %}
+{% include 'modules/croptop_publisher.html' %}
 {% endblock %}
 {% block main %}
-<h1>{{ article.title|escape }}</h1>
-<div class="date">{{ article.created|formatDate }}</div>
-<div class="content">
-  {% if article.hasVideo %}
-  <div class="video-container">
-    <video class="video" controls playsinline>
-      <source src="{{ article.videoFilename }}">
-    </video>
-  </div>
-  {% endif %}
-  {% if article.hasAudio %}
-  <div class="audio-container" id="audio-container" style="display: none;">
-    <audio class="audio" controls>
-      <source src="{{ article.audioFilename }}">
-    </audio>
-  </div>
-  {% endif %}
-  {{ content_html }}
+<div id="top-dom">
+  {% include 'modules/header.html' %}
 </div>
+<div id="body-dom">
+  <div class="page-content content">
+    <div class="body-reset-button">[<span class="modal-reset-button-text">See all posts</span>]</div>
+    {% include 'modules/post.html' %}
+  </div>
+</div>
+<div id="fork-modal" class="modal negative-space">
+  <div class="modal-content content negative-space">
+    <div class="modal-close-button negative-space">[<span class="modal-close-button-text negative-space">close</span>]</div>
+    {% include 'modules/fork.html' %}
+  </div>
+</div>
+<script>
+  // Get the fork modal set up.
+  const decorateForkModal = () => {
+    // Get references to elements that need decorating.
+    const forkModal = document.getElementById("fork-modal");
+    const headerContainer = document.getElementById('header-container');
+
+    // Make sure the modal is closeable when clicking on empty space.
+    let activeElementOnClose;
+    forkModal.addEventListener("mousedown", () => {
+      activeElementOnClose = document.activeElement;
+    });
+
+    forkModal.addEventListener("click", (e) => {
+      // Ignore if the clicked view shouldn't close the modal.
+      if (!e.target.classList.contains("negative-space")) return;
+        
+      // Ignore if the clicked view comes while an input, select, or textarea field is selected.
+      if (activeElementOnClose.tagName === "INPUT" || activeElementOnClose.tagName === "SELECT" || activeElementOnClose.tagName === "TEXTAREA") return;
+
+      // Hide the modal.
+      forkModal.style.display = "none";
+    });
+        
+    decorateNewJbForm();
+    decoratePermissionForm();
+    decorateAllowanceForm();
+  }
+
+  const setupForking = () => {
+    const forkModal = document.getElementById("fork-modal");
+    const fork = document.getElementById("fork");
+
+    // Summon a modal when the fork button is clicked.
+    fork.addEventListener("click", async (e) => {
+      e.preventDefault();
+     
+      // Show the modal.
+      forkModal.style.display = "block";
+      
+      // Make the modal look right.
+      await decorateForkModal();
+    });
+  }
+
+  const load = async () => {
+    startLoadingAnimation('post-form-loading-animation');
+
+    await loadSettings();
+    
+    const imageName = {{ article.hasVideo }} ? '_videoThumbnail.png' : {{ article.attachments }}.at(0);
+    const videoSrc = {{ article.hasVideo }} ? './' + '{{ article.videoFilename }}' : null;
+    const imageSrc = './' + imageName;
+    const name = "{{ article.title }}";
+    const itemId = "{{ article.id }}";
+    const created = "{{ article.created }}";
+    const link = "{{ article.externalLink }}";
+
+    await decoratePostPage(itemId, name, formatDate(new Date(created)), link, imageSrc, videoSrc, await encodeIPFSUriFrom('{{ assets_prefix }}', itemId));
+
+    stopLoadingAnimation('post-form-loading-animation');
+  }
+
+  const adjustBodyTopPadding = () => {
+    const topDom = document.getElementById('top-dom');
+    const bodyDom = document.getElementById('body-dom');
+    const forkModal = document.getElementById('fork-modal');
+    bodyDom.style.paddingTop = topDom.offsetHeight + 'px';
+    forkModal.style.marginTop = topDom.offsetHeight + 'px';
+  }
+
+  const setupResetButton = () => {
+    const resetButton = document.getElementById('body-reset-button');
+
+    resetButton.addEventListener('click', () => {
+      window.location.href = '/'; 
+    });
+  }
+
+  window.addEventListener("load", adjustBodyTopPadding);
+  window.addEventListener("resize", adjustBodyTopPadding);
+  load();
+  setupForking();
+  setupResetButton();
+</script>
 {% endblock %}
+{# {% if article.hasVideo %} #}
+{# <div class="video-container"> #}
+{#   <video class="video" controls playsinline> #}
+{#     <source src="{{ article.videoFilename }}"> #}
+{#   </video> #}
+{# </div> #}
+{# {% endif %} #}
+{# {% if article.hasAudio %} #}
+{# <div class="audio-container" id="audio-container" style="display: none;"> #}
+{#   <audio class="audio" controls> #}
+{#     <source src="{{ article.audioFilename }}"> #}
+{#   </audio> #}
+{# </div> #}
+{# {% endif %} #}
+{# {{ content_html }} #}
