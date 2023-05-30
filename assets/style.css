@@ -46,13 +46,13 @@
 @font-face {
   font-family: "Capsules";
   src: url(./CapsulesVF.woff2) format("woff2");
-  font-weight: 100 700;
+  font-weight: 200 300 500 600 700;
 }
 
 @font-face{
   font-family: "Capsules";
   src: url(./CapsulesVF.woff2) format("woff2") tech("variations");
-  font-weight: 100 700;
+  font-weight: 200 300 500 600 700;
 }
 
 html {
@@ -138,7 +138,7 @@ details[open] > summary:before {
   box-sizing: border-box;
   margin: 0px auto 0px auto;
   align-items: center;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 /* The Modal (background) */
@@ -279,7 +279,7 @@ details > summary:before {
   color: var(--foreground-secondary-color);
 }
 .form-section-disclaimer a:hover {
-  font-weight: 400;
+  font-weight: 500;
   text-decoration: underline;
 }
 .form-item {
@@ -987,12 +987,9 @@ footer {
   }
 
   .image-header {
-    opacity: 1;
-  }
-
-  .image-header {
     justify-content: flex-start;
     gap: var(--spacing-2);
+    opacity: 1;
   }
 
   .image-title {
