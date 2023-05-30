@@ -50,7 +50,7 @@
 </div>
 <div id="body-dom">
   <div class="page-content content">
-    <div class="body-reset-button">[<span class="modal-reset-button-text">See all posts</span>]</div>
+    <div id="body-reset-button">[<span id="body-reset-button-text">See all</span>]</div>
     {% include 'modules/post.html' %}
   </div>
 </div>
@@ -133,7 +133,8 @@
 
   const setupResetButton = () => {
     const resetButton = document.getElementById('body-reset-button');
-
+    
+    console.log("hey");
     resetButton.addEventListener('click', () => {
       window.location.href = '/'; 
     });

@@ -165,14 +165,16 @@ details[open] > summary:before {
   cursor: pointer; 
 }
 
-.modal-close-button, .body-reset-button {
+.modal-close-button, #body-reset-button {
+  display: inline;
+  float: right;
   cursor: pointer; 
   text-align: right;
-  padding: var(--spacing-2) 0; 
+  padding: var(--spacing-3) 0 var(--spacing-3) var(--spacing-3); 
   color: var(--foreground-secondary-color);
 }
 
-.modal-close-button:hover .modal-close-button-text, .body-reset-button:hover .body-reset-button-text {
+.modal-close-button:hover .modal-close-button-text, #body-reset-button:hover #body-reset-button-text {
   text-decoration: underline;
 }
 
@@ -185,9 +187,10 @@ details[open] > summary:before {
   padding-bottom: 100px;
 }
 
-.post-header {
-  padding-bottom: var(--spacing-3);
+.body-header {
+  padding: var(--spacing-3) 0;
 }
+
 #post-name {
   color: var(--foreground-color);
   font-weight: 500;
@@ -925,9 +928,32 @@ footer {
     width: 100%;
   }
 
-  .form, .modal-header, .main-form-button, .form-error-message, .modal-close-button, .body-reset-button, .image-header {
-    margin-inline-start: var(--spacing-2);
-    margin-inline-end: var(--spacing-2);
+  .form, .body-header, .main-form-button, .form-error-message, .modal-close-button, #body-reset-button, .image-header {
+    margin-inline-start: var(--spacing-3);
+    margin-inline-end: var(--spacing-3);
+  }
+
+  .content {
+    width: 100%; 
+  }
+
+  .content img, .content video {
+    width: 100%;
+    border-left: none; 
+    border-right: none; 
+  }
+
+  .page-content {
+    padding-top: var(--spacing-3); 
+  }
+
+  .modal-close-button, #body-reset-button {
+    padding-top: 0;
+    padding-bottom: var(--spacing-1);
+  }
+
+  .body-header {
+    padding-top: var(--spacing-5);
   }
 
   #header-container {
