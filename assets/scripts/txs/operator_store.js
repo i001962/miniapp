@@ -212,6 +212,6 @@ const tx_set_operator = async (projectId, chainId) => {
   if (!contract) return false;
   const operator = croptopPublisherContract(chainId);
   const operatorData = { operator, domain: projectId, permissionIndexes: [21] };
-  await sign(contract, operatorStoreContractABI, "setOperator", [operatorData]);
+  await sign(chainId, contract, operatorStoreContractABI, "setOperator", [operatorData]);
   return true;
 }

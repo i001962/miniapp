@@ -227,6 +227,6 @@ const tx_deploy_project = async (name, symbol, owner, minimumPrice, minimumTotal
   const projectMetadata = {  domain: 0, content: "" };
   const contractUri = "QmaJzQjaFKxU2LLyqPTpZoGU47owQcmmvVCP1p4YqeuMUy";
   const allowedPost = { nft: "0x0000000000000000000000000000000000000000", category: 0, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses};
-  await sign(contract, croptopDeployerContractABI, "deployProjectFor", [owner, terminal, projectMetadata, [allowedPost], contractUri, name, symbol]);
+  await sign(chainId, contract, croptopDeployerContractABI, "deployProjectFor", [owner, terminal, projectMetadata, [allowedPost], contractUri, name, symbol]);
   return true;
 }

@@ -484,15 +484,16 @@ const croptopPublisherContractABI = [{
 const tx_view_allowance = async (projectId, category, chainId) => {
   const contract = croptopPublisherContract(chainId);
   if (!contract) return [0, 0, 0];
-  return await view(contract, croptopPublisherContractABI, "allowanceFor", [projectId, "0x0000000000000000000000000000000000000000", category]);
+  return await view(chainId, contract, croptopPublisherContractABI, "allowanceFor", [projectId, "0x0000000000000000000000000000000000000000", category]);
 }
 
 const tx_view_tiers = async (projectId, encodedIPFSUris, chainId) => {
   const contract = croptopPublisherContract(chainId);
   if (!contract) return [[0, 0, 0]];
   try {
-    return await view(contract, croptopPublisherContractABI, "tiersFor", [projectId, "0x0000000000000000000000000000000000000000", encodedIPFSUris]);
+    return await view(chainId, contract, croptopPublisherContractABI, "tiersFor", [projectId, "0x0000000000000000000000000000000000000000", encodedIPFSUris]);
   } catch (e) {
+    console.log({  chainId, e });
     return [];  
   }
 }
@@ -502,9 +503,7 @@ const tx_collect = async (projectId, category, totalSupply, price, quantity, enc
   if (!contract) return false;
   const post = {totalSupply, price, quantity, category, encodedIPFSUri};
   const posts = Array.from({length: quantity}, () => post);
-  if (!beneficiary) beneficiary = (await getSigner()).address;
-  if (!cpnBeneficiary) cpnBeneficiary = beneficiary; 
-  await sign(contract, croptopPublisherContractABI, "collectFrom", [projectId, posts, beneficiary, cpnBeneficiary, {
+  await sign(chainId, contract, croptopPublisherContractABI, "collectFrom", [projectId, posts, beneficiary, cpnBeneficiary, {
       value 
   }]);
   return true;
@@ -514,6 +513,6 @@ const tx_configure = async (projectId, category, minimumPrice, minimumTotalSuppl
   const contract = croptopPublisherContract(chainId);
   if (!contract) return false;
   const allowedPost = { nft: "0x0000000000000000000000000000000000000000", category, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses};
-  await sign(contract, croptopPublisherContractABI, "configureFor", [projectId, [allowedPost]]);
+  await sign(chainId, contract, croptopPublisherContractABI, "configureFor", [projectId, [allowedPost]]);
   return true;
 }
