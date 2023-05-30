@@ -307,6 +307,8 @@ window.onpopstate = function(event) {
 
       toggleNavVisibility(true);
 
+      requestAnimationFrame(adjustBodyTopPadding);     
+
       // Reset the view stack browsing state.
       history.pushState({}, "", window.location.pathname);
     });
@@ -351,6 +353,8 @@ window.onpopstate = function(event) {
       forkModal.style.display = "none";
 
       toggleNavVisibility(true);
+
+      requestAnimationFrame(adjustBodyTopPadding);     
     });
         
     decorateNewJbForm();
@@ -452,19 +456,6 @@ window.onpopstate = function(event) {
     }
 
     lastScrollTop = currentScrollTop;
-  }
-  
-  const adjustModalTopPadding = (modal) => {
-    const header = document.getElementById('header-container');
-    const postModal = document.getElementById('post-modal');
-    const forkModal = document.getElementById('fork-modal');
-
-    const headerHeight = top.offsetHeight;
-
-    postModal.style.top = headerHeight + 'px';
-    forkModal.style.top = headerHeight + 'px';
-    postModal.style.height = `calc(100% - ${headerHeight}px)`;
-    forkModal.style.height = `calc(100% - ${headerHeight}px)`;
   }
 
   const adjustBodyTopPadding = () => {

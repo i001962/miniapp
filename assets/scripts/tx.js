@@ -30,7 +30,7 @@ const view = async (chainId, contractAddress, contractAbi, fn, params) => {
     return await contract[fn](...params);
 }
 
-const sign = async (chainId, contractAddress, contractAbi, fn, params) => {
-    const contract = new ethers.Contract(contractAddress, contractAbi, await getSigner(chainId));
+const sign = async (contractAddress, contractAbi, fn, params) => {
+    const contract = new ethers.Contract(contractAddress, contractAbi, await getSigner());
     return await contract[fn](...params);
 }
