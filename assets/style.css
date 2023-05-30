@@ -165,7 +165,7 @@ details[open] > summary:before {
   cursor: pointer; 
 }
 
-.modal-close-button, #body-reset-button {
+.exit-button {
   display: inline;
   float: right;
   cursor: pointer; 
@@ -174,7 +174,7 @@ details[open] > summary:before {
   color: var(--foreground-secondary-color);
 }
 
-.modal-close-button:hover .modal-close-button-text, #body-reset-button:hover #body-reset-button-text {
+.exit-button:hover .exit-button-text {
   text-decoration: underline;
 }
 
@@ -928,7 +928,7 @@ footer {
     width: 100%;
   }
 
-  .form, .body-header, .main-form-button, .form-error-message, .modal-close-button, #body-reset-button, .image-header {
+  .form, .body-header, .main-form-button, .form-error-message, .exit-button, .image-header {
     margin-inline-start: var(--spacing-3);
     margin-inline-end: var(--spacing-3);
   }
@@ -947,7 +947,7 @@ footer {
     padding-top: var(--spacing-3); 
   }
 
-  .modal-close-button, #body-reset-button {
+  .exit-button {
     padding-top: 0;
     padding-bottom: var(--spacing-1);
   }
