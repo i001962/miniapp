@@ -206,9 +206,6 @@ details[open] > summary:before {
 #post-form-state-button {
   color: var(--foreground-primary-color);
 }
-.post-form-state-item-value {
-  margin-left: var(--spacing-1);
-}
 #post-form-state-toggle {
  color: var(--foreground-secondary-color);
  display: flex;

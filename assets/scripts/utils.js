@@ -14,7 +14,7 @@ const formatTimestamp = (timestamp) => {
   ];
 
   const dateObj = new Date((timestamp + 978307200) * 1000);
-  const month = dateObj.getMonth();
+  const month = dateObj.getMonth() + 1;
   const day = dateObj.getDate();
   const year = dateObj.getFullYear();
 
