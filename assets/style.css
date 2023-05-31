@@ -46,13 +46,13 @@
 @font-face {
   font-family: "Capsules";
   src: url(./CapsulesVF.woff2) format("woff2");
-  font-weight: 200 300 500 600 700;
+  font-weight: 200 700;
 }
 
 @font-face{
   font-family: "Capsules";
   src: url(./CapsulesVF.woff2) format("woff2") tech("variations");
-  font-weight: 200 300 500 600 700;
+  font-weight: 200 700;
 }
 
 html {
