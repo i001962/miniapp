@@ -114,11 +114,11 @@
     const videoSrc = {{ article.hasVideo }} ? './' + '{{ article.videoFilename }}' : null;
     const imageSrc = './' + imageName;
     const name = "{{ article.title }}";
-    const itemId = "{{ article.id }}";
+    const postId = "{{ article.id }}";
     const created = "{{ article.created }}";
     const link = "{{ article.externalLink }}";
 
-    await decoratePostPage(itemId, name, formatDate(new Date(created)), link, imageSrc, videoSrc, await encodeIPFSUriFrom('{{ assets_prefix }}', itemId));
+    await decoratePostPage(name, formatDate(new Date(created)), link, imageSrc, videoSrc, await encodeIPFSUriFrom('{{ assets_prefix }}', postId));
 
     stopLoadingAnimation('post-form-loading-animation');
   }

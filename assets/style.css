@@ -480,7 +480,7 @@ img.avatar {
   margin-top: var(--spacing-3);
 }
 
-#frames {
+#frames-container {
   text-align: right;
   margin-left: var(--spacing-5);
 }
@@ -907,7 +907,7 @@ footer {
 /**************/
 
 @media screen and (max-width: 500px) {
-  #frames {
+  #frames-container {
     text-align: right;
     margin-left: 0;
   }

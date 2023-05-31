@@ -471,7 +471,7 @@
   }
 
   // Re-decorate the form depending on if the provided content has already been recorded onchain, and if it's sold out.
-  const decoratePostPage = async (itemId, name, date, link, imageSrc, videoSrc, encodedIPFSUri) => {
+  const decoratePostPage = async (name, date, link, imageSrc, videoSrc, encodedIPFSUri) => {
     // Show the loading animation.
     startLoadingAnimation('post-form-loading-animation');
     // Get references to the form state.

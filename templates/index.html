@@ -25,7 +25,7 @@ window.onpopstate = function(event) {
 </div>
 <div id="body-dom">
   <div id="main-loading-animation" class="loading-animation"></div>
-  <div id="frames"></div>
+  <div id="frames-container"></div>
 </div>
 <div id="fork-modal" class="modal negative-space">
   <div class="modal-content content negative-space">
@@ -52,17 +52,14 @@ window.onpopstate = function(event) {
   const feeDivisor = 20;
 
   // Layout variables.
-  let frames;
-  let items = [];
+  let postFrames;
+  let posts = [];
   let currentRow = 1;
   let greatestRightInRow = 0;
   let rows = [];
   let lastScrollTop = 0;
 
-  // State variables.
-  let encodedIPFSUris;
-    
-  const loadFrameState = async () => { 
+  const loadPostsState = async (encodedIPFSUris) => { 
     // Load tiers.
     const postFormStateChain = document.getElementById("post-form-state-chain");
     const postFormStateProjectId = document.getElementById("post-form-state-project-id");
@@ -73,42 +70,48 @@ window.onpopstate = function(event) {
 
     for (let i in tiers) {
       const tier = tiers[i];
-      if (tier.id != 0) {
+      if (tier.id == 0) continue;
 
-        // Cache the value.
-        if (!tiersCache[projectId]) tiersCache[projectId] = {};
-        tiersCache[projectId][encodedIPFSUris[i]] = tier;
+      // Cache the value.
+      if (!tiersCache[projectId]) tiersCache[projectId] = {};
+      tiersCache[projectId][encodedIPFSUris[i]] = tier;
+    }
+  }
 
-        // Get a reference to the tier's remaining supply.
-        const formattedRemainingSupply = parseInt(tier[2].toString());
-        const frame = frames[i]; 
-        const cta = frame.querySelector('.image-cta');
+  const decoratePostFrameState = (postFrame,  projectId, encodedIPFSUri) => {
+    const tier = tiersCache[projectId][encodedIPFSUri];
+    if (!tier) return;
 
-        // Set the content.
-        if (formattedRemainingSupply == 0) {
-          cta.textContent = '[sold out]';
-          cta.classList.add("sold-out");
-        } else {
-          cta.textContent = `[${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } left]`;
-        }
-      } 
+    // Get a reference to the tier's remaining supply.
+    const formattedRemainingSupply = parseInt(tier[2].toString());
+    const cta = postFrame.querySelector('.image-cta');
+
+    // Set the content.
+    if (formattedRemainingSupply == 0) {
+      cta.textContent = '[sold out]';
+      cta.classList.add("sold-out");
+    } else {
+      cta.textContent = `[${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } left]`;
     }
   }
  
-  const decorateFrame = (frame, itemId, date, name, link, imageSrc, videoSrc) => {
+  const decoratePostFrame = async (postFrame, postId, date, name, link, imageSrc, videoSrc) => {
+    const postFormStateProjectId = document.getElementById("post-form-state-project-id");
+    const projectId = parseInt(postFormStateProjectId.innerHTML);
+
     // Set a default name if needed.
     if (name === undefined || name === null || name === "") name = "✃";
 
     const postModal = document.getElementById("post-modal");
       
     // Get references to frame elements that need decorating.
-    const cta = frame.querySelector('.image-cta');;
-    const title = frame.querySelector('div.image-title');
-    const img = frame.querySelector('img');
+    const cta = postFrame.querySelector('.image-cta');;
+    const title = postFrame.querySelector('div.image-title');
+    const img = postFrame.querySelector('img');
 
     // Set the frame and img's ID.
-    frame.id = 'frame-' + itemId;
-    img.id = 'img-' + itemId;
+    postFrame.id = 'frame-' + postId;
+    img.id = 'img-' + postId;
 
     // Set the content.
     cta.textContent = '[rec]';
@@ -119,11 +122,13 @@ window.onpopstate = function(event) {
       const overlay = document.createElement("div");
       overlay.innerHTML = "[▶]"
       overlay.classList.add("overlay-play-icon");
-      frame.appendChild(overlay);
+      postFrame.appendChild(overlay);
     }
 
+    const encodedIPFSUri = await encodeIPFSUriFrom("{{ assets_prefix }}", postId);
+
     // Summon a modal when the frame is clicked.
-    frame.addEventListener("click", async (e) => {
+    postFrame.addEventListener("click", async (e) => {
       e.preventDefault();
 
       // Show the modal.
@@ -132,12 +137,14 @@ window.onpopstate = function(event) {
       toggleNavVisibility(true);
 
       // Make the modal look right.
-      await decoratePostModal(itemId, await encodeIPFSUriFrom("{{ assets_prefix }}", itemId), name, date, link, imageSrc, videoSrc);
+      await decoratePostModal(postId, encodedIPFSUri, name, date, link, imageSrc, videoSrc);
     });
+    
+    decoratePostFrameState(postFrame, projectId, encodedIPFSUri);
   }
 
   /// Load the frame contents.
-  const loadFrame = async (frame) => {
+  const loadPostFrame = async (frame) => {
     const img = frame.querySelector('img:first-of-type');
     return new Promise((resolve) => {
       // Resolve if the image if done.
@@ -156,36 +163,36 @@ window.onpopstate = function(event) {
   }
 
   /// Get the top.
-  const getTopTarget = (frame, row) => {
+  const getTopTarget = (postFrame, row) => {
     if (row == 1) {
-      const frames = document.getElementById("frames");
-      return frames.offsetTop;
+      const framesContainer = document.getElementById("frames-container");
+      return framesContainer.offsetTop;
     } 
 
     let previousRow = rows[row - 2];
-    let candidateFrame;
+    let candidatePostFrame;
 
-    for (let j = 0; j < previousRow.frames.length; j++) {
-      let frameToCheck = previousRow.frames[j];
+    for (let j = 0; j < previousRow.postFrameReferences.length; j++) {
+      let postFrameToCheck = previousRow.postFrameReferences[j];
 
       if (
-        frame.left < frameToCheck.right + horizontalMargin &&
-        frame.right + horizontalMargin > frameToCheck.left &&
-        (candidateFrame == null || frameToCheck.bottom > candidateFrame.bottom)
-      ) candidateFrame = frameToCheck;
-      else if (frame.right <= frameToCheck.left) {
-        return candidateFrame ? candidateFrame.bottom : getTopTarget(frame, row - 1);
+        postFrame.left < postFrameToCheck.right + horizontalMargin &&
+        postFrame.right + horizontalMargin > postFrameToCheck.left &&
+        (candidatePostFrame == null || postFrameToCheck.bottom > candidatePostFrame.bottom)
+      ) candidatePostFrame = postFrameToCheck;
+      else if (postFrame.right <= postFrameToCheck.left) {
+        return candidatePostFrame ? candidatePostFrame.bottom : getTopTarget(postFrame, row - 1);
       }
     }
     
-    if (!candidateFrame) {
-      console.log({ frame, row, previousRow });
+    if (!candidatePostFrame) {
+      console.log({ postFrame, row, previousRow });
     }
-    return candidateFrame.bottom;
+    return candidatePostFrame.bottom;
   }
 
-  const frameImage = (src) => {
-    const frames = document.getElementById("frames");
+  const framePost = (src) => {
+    const framesContainer = document.getElementById("frames-container");
     const frame = document.createElement("div");
     const header = document.createElement("div");
     const footer = document.createElement("div");
@@ -214,17 +221,17 @@ window.onpopstate = function(event) {
     header.appendChild(title);
     frame.appendChild(header);
     frame.appendChild(img);
-    frames.appendChild(frame);
+    framesContainer.appendChild(frame);
 
     return frame;
   }
 
-  const positionAndShowFrame = async (imageFrame) => {
-    await loadFrame(imageFrame);
+  const positionAndShowPostFrame = async (postFrame) => {
+    await loadPostFrame(postFrame);
 
     if (loadingAnimationIntervals['main-loading-animation']) stopLoadingAnimation('main-loading-animation');
 
-    const rect = imageFrame.getBoundingClientRect();
+    const rect = postFrame.getBoundingClientRect();
     if (rect.left < greatestRightInRow) currentRow++;
     
     greatestRightInRow = rect.right;
@@ -232,28 +239,28 @@ window.onpopstate = function(event) {
     const heightDiff = rect.top - getTopTarget(rect, currentRow);
       let newFrame = { left: rect.left, right: rect.right, bottom: rect.bottom - heightDiff + verticalMargin };
 
-    if (currentRow > rows.length) rows.push({ frames: [newFrame] });
-    else rows[rows.length - 1].frames.push(newFrame);
+    if (currentRow > rows.length) rows.push({ postFrameReferences: [newFrame] });
+    else rows[rows.length - 1].postFrameReferences.push(newFrame);
 
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const marginTop = window.getComputedStyle(imageFrame).display == "block" ? 0 : heightDiff + scrollTop - verticalMargin;
-    imageFrame.classList.add("frame-fade-in");
+    const marginTop = window.getComputedStyle(postFrame).display == "block" ? 0 : heightDiff + scrollTop - verticalMargin;
+    postFrame.classList.add("frame-fade-in");
 
     return new Promise((resolve) => {
       if (marginTop) {
         const handleEvent = (event) => {
           if (event.propertyName === "margin-top") {
-            imageFrame.removeEventListener("transitionend", handleEvent);
+            postFrame.removeEventListener("transitionend", handleEvent);
             resolve();
           }
         };
-        imageFrame.addEventListener("transitionend", handleEvent);
-        imageFrame.style.marginTop = -marginTop + "px";
+        postFrame.addEventListener("transitionend", handleEvent);
+        postFrame.style.marginTop = -marginTop + "px";
       } else setTimeout(resolve, transitionDuration);
     });
   }
 
-  const decoratePostModal = async (itemId, encodedIPFSUri, name, date, link, imageSrc, videoSrc) => {
+  const decoratePostModal = async (postId, encodedIPFSUri, name, date, link, imageSrc, videoSrc) => {
     // Get references to modal elements that need decorating.
     const postModal = document.getElementById("post-modal");
     const headerContainer = document.getElementById('header-container');
@@ -272,7 +279,7 @@ window.onpopstate = function(event) {
     });
 
     // Track the modal in browse history.
-    history.pushState({ modalOpened: true, itemId: itemId }, "", "?id=" + itemId);
+    history.pushState({ modalOpened: true, postId }, "", "?id=" + postId);
 
     // Make sure the modal is closeable when clicking on empty space.
     let activeElementOnClose;
@@ -314,7 +321,7 @@ window.onpopstate = function(event) {
     });
     
     // Show the post page.
-    await decoratePostPage(itemId, name, date, link, imageSrc, videoSrc, encodedIPFSUri);
+    await decoratePostPage(name, date, link, imageSrc, videoSrc, encodedIPFSUri);
   }
 
   // Get the fork modal set up.
@@ -374,50 +381,49 @@ window.onpopstate = function(event) {
     });
   }
 
-  const loadImageFrames = async () => {
+  const showPostFrames = async () => {
+    postFrames = posts.map((post) => {
+      // if post.hasVideo, use _videoThumbnail.png
+      // else use a random attachment
+      const imageName = post.hasVideo ? '_videoThumbnail.png' : post.attachments[Math.floor(Math.random() * post.attachments.length)];
+      const videoSrc = post.hasVideo ? './' + post.id + '/' + post.videoFilename : null;
+      const coverImageSrc = './' + post.id + '/' + imageName;
+      const frame = framePost(coverImageSrc);
+      decoratePostFrame(frame, post.id, formatTimestamp(post.created), post.title, post.externalLink, coverImageSrc, videoSrc);
+      return frame;
+    });
+
+    for (const postFrame of postFrames)
+      await positionAndShowPostFrame(postFrame);
+  }
+  
+  const loadPosts = async () => {
     const response = await fetch(
       `{{ assets_prefix }}planet.json`
     );
     const data = await response.json();
-    const itemIds = [];
-    frames = data['articles']
+    posts = data['articles']
       // Only if attachments have file extensions like ".jpg" ".jpeg" ".png" ".gif" ".webp" ".svg" ".avif"
-      .filter(item => item.hasVideo === true || item.attachments.some(attachment => attachment.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)$/i)))
-      .map((item) => {
-        items.push(item);
-        // if item.hasVideo, use _videoThumbnail.png
-        // else use a random attachment
-        const imageName = item.hasVideo ? '_videoThumbnail.png' : item.attachments[Math.floor(Math.random() * item.attachments.length)];
-        const videoSrc = item.hasVideo ? './' + item.id + '/' + item.videoFilename : null;
-        const imageSrc = './' + item.id + '/' + imageName;
-        const frame = frameImage(imageSrc);
-        itemIds.push(item.id);
-        decorateFrame(frame, item.id, formatTimestamp(item.created), item.title, item.externalLink, imageSrc, videoSrc);
-        return frame;
-      }
-    );
+      .filter(post => post.hasVideo === true || post.attachments.some(attachment => attachment.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)$/i)));
 
     // if there is ?id= in the url, open the modal
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     if (id) {
-      item = items.find(item => item.id == id);
-      if (item) {
-        const img = document.getElementById('img-' + item.id);
-          if (img) setTimeout(() => img.click(), 200);
+      const post = posts.find(post => post.id == id);
+      if (post) {
+        const img = document.getElementById('img-' + post.id);
+         if (img) setTimeout(() => img.click(), 200);
       }
     }
     
-    encodedIPFSUris = await Promise.all(itemIds.map(async (itemId) => await encodeIPFSUriFrom("{{ assets_prefix }}", itemId)));
+    const encodedIPFSUris = await Promise.all(posts.map(async (post) => await encodeIPFSUriFrom("{{ assets_prefix }}", post.id)));
 
-    const positionAndShowFrames = async () => {
-      for (const frame of frames)
-        await positionAndShowFrame(frame);
-    };
+    await loadPostsState(encodedIPFSUris);
 
-    await Promise.all([loadFrameState(), positionAndShowFrames()]);
+    showPostFrames();
   }
-  
+
   const toggleNavVisibility = (force) => {
     const topDom = document.getElementById('top-dom');
     const navContainer = document.getElementById('nav-container');
@@ -464,7 +470,7 @@ window.onpopstate = function(event) {
 
   startLoadingAnimation('main-loading-animation');
   loadSettings();
-  loadImageFrames();
   setupForking();
+  loadPosts();
 </script>
 {% endblock %}
