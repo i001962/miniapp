@@ -522,6 +522,7 @@ img.avatar {
   display: flex;
   justify-content: space-between;
   padding-bottom: var(--spacing-1);
+  font-weight: 500;
 }
 
 .image-title {
