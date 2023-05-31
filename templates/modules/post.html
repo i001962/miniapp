@@ -472,6 +472,8 @@
 
   // Re-decorate the form depending on if the provided content has already been recorded onchain, and if it's sold out.
   const decoratePostPage = async (itemId, name, date, link, imageSrc, videoSrc, encodedIPFSUri) => {
+    // Show the loading animation.
+    startLoadingAnimation('post-form-loading-animation');
     // Get references to the form state.
     const postName = document.getElementById("post-name");
     const postDate = document.getElementById("post-date");
@@ -560,6 +562,10 @@
           collectPostForm.style.display = "none";
           // Disable the button.
           postFormButton.disabled = true;
+
+          // Hide the loading animation.
+          stopLoadingAnimation('post-form-loading-animation');
+
           return;
         }
 
@@ -587,6 +593,10 @@
           collectPostForm.style.display = "none";
           // Disable the button.
           postFormButton.disabled = true;
+
+          // Hide the loading animation.
+          stopLoadingAnimation('post-form-loading-animation');
+
           return;
         }
 
@@ -636,6 +646,10 @@
           collectPostForm.style.display = "none";
           // Disable the button.
           postFormButton.disabled = true;
+
+          // Hide the loading animation.
+          stopLoadingAnimation('post-form-loading-animation');
+
           return;
         }
 
@@ -656,6 +670,9 @@
         const formattedAllowedAddresses = allowance[3];
 
         await decorateRecordForm(chain, projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice, formattedAllowedAddresses);
+
+        // Hide the loading animation.
+        stopLoadingAnimation('post-form-loading-animation');
       }
     }
     

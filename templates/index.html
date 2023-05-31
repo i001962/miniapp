@@ -312,15 +312,9 @@ window.onpopstate = function(event) {
       // Reset the view stack browsing state.
       history.pushState({}, "", window.location.pathname);
     });
-
-    // Show the loading animation.
-    startLoadingAnimation('post-form-loading-animation');
     
     // Show the post page.
     await decoratePostPage(itemId, name, date, link, imageSrc, videoSrc, encodedIPFSUri);
-
-    // Hide the loading animation.
-    stopLoadingAnimation('post-form-loading-animation');
   }
 
   // Get the fork modal set up.
