@@ -95,7 +95,7 @@ a:hover {
 
 /* todo remove*/
 p {
-  margin: 0; 
+  margin: 0;
 }
 
 details > summary {
@@ -122,12 +122,12 @@ details[open] > summary:before {
   text-align: left;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 var(--spacing-4) var(--spacing-3) var(--spacing-4);
+  padding: 0 var(--spacing-3) var(--spacing-3) var(--spacing-3);
   transition: visibility 0s 0.1s, opacity 0.05s linear;
 }
 
 #nav-container.hidden {
-  transition: visibility 0s 0.1s, opacity 0.1s linear 0.1s; 
+  transition: visibility 0s 0.1s, opacity 0.1s linear 0.1s;
 }
 
 #nav {
@@ -160,15 +160,15 @@ details[open] > summary:before {
 }
 
 #title-button {
-  cursor: pointer; 
+  cursor: pointer;
 }
 
 .exit-button {
   display: inline;
   float: right;
-  cursor: pointer; 
+  cursor: pointer;
   text-align: right;
-  padding: var(--spacing-3) 0 var(--spacing-3) var(--spacing-3); 
+  padding: var(--spacing-3) 0 var(--spacing-3) var(--spacing-3);
   color: var(--foreground-secondary-color);
 }
 
@@ -206,7 +206,7 @@ details[open] > summary:before {
   width: 100%;
 }
 .overlay-play-icon {
-  font-size: var(--font-size-2); 
+  font-size: var(--font-size-2);
   z-index: 2;
   display: block;
   position: absolute;
@@ -372,7 +372,7 @@ details > summary:before {
 }
 
 .page-content {
-  padding-top: var(--spacing-5); 
+  padding-top: var(--spacing-5);
 }
 
 .date {
@@ -387,7 +387,7 @@ details > summary:before {
 }
 
 #site-title {
-  font-size: var(--font-size-2); 
+  font-size: var(--font-size-2);
   font-weight: 600;
   color: var(--foreground-color);
 }
@@ -458,8 +458,8 @@ img.avatar {
   width: 100%;
   background-color: var(--background-color-opacity);
   transition: height 0.1s linear;
-  border-bottom-width: 0px; 
-  border-bottom-style: solid; 
+  border-bottom-width: 0px;
+  border-bottom-style: solid;
   border-bottom-color: var(--foreground-tertiary-color);
 }
 
@@ -933,17 +933,17 @@ footer {
   }
 
   .content {
-    width: 100%; 
+    width: 100%;
   }
 
   .content img, .content video {
     width: 100%;
-    border-left: none; 
-    border-right: none; 
+    border-left: none;
+    border-right: none;
   }
 
   .page-content {
-    padding-top: var(--spacing-3); 
+    padding-top: var(--spacing-3);
   }
 
   .exit-button {
@@ -964,8 +964,8 @@ footer {
   }
 
   .frame {
-    margin-top: var(--spacing-3);  
-    margin-bottom: var(--spacing-5);  
+    margin-top: var(--spacing-3);
+    margin-bottom: var(--spacing-5);
     border-bottom: 1px solid var(--foreground-tertiary-color);
   }
 
