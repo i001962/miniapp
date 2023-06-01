@@ -423,17 +423,6 @@ window.onpopstate = function(event) {
     if (!newPosts.length) return;
 
     currentPage++;
-
-    // if there is ?id= in the url, open the modal
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
-    if (id) {
-      const post = posts.find(post => post.id == id);
-      if (post) {
-        const img = document.getElementById('img-' + post.id);
-         if (img) setTimeout(() => img.click(), 200);
-      }
-    }
     
     const encodedIPFSUris = await Promise.all(posts.map(async (post) => await encodeIPFSUriFrom("{{ assets_prefix }}", post.id)));
 
@@ -500,20 +489,28 @@ window.onpopstate = function(event) {
     pageMorePostsIfNeeded();
   }
 
-  const adjustBodyTopPadding = () => {
+  const setTopDomHeight = () => {
     const topDom = document.getElementById('top-dom');
     const headerContainer = document.getElementById('header-container');
     const navContainer = document.getElementById('nav-container');
-    topDom.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + "px";
+    const navHeight = navContainer ? navContainer.offsetHeight : 0;
+    topDom.style.height = headerContainer.offsetHeight + navHeight + "px";
   }
 
-  window.addEventListener("load", adjustBodyTopPadding);
-  window.addEventListener("resize", adjustBodyTopPadding);
+  window.addEventListener("load", setTopDomHeight);
+  window.addEventListener("resize", setTopDomHeight);
   window.addEventListener("scroll", didScroll);
 
-  startLoadingAnimation('main-loading-animation');
-  loadSettings();
-  setupForking();
-  loadPosts(defaultPageSize);
+  // if there is ?id= in the url, open the object page.
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get('id');
+  if (id) {
+    window.location.href = '/' + id; 
+  } else {
+    startLoadingAnimation('main-loading-animation');
+    loadSettings();
+    setupForking();
+    loadPosts(defaultPageSize);
+  }
 </script>
 {% endblock %}

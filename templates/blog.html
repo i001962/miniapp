@@ -50,7 +50,7 @@
 </div>
 <div id="body-dom">
   <div class="page-content content">
-    <div id="body-reset-button" class="exit-button">[<span class="exit-button-text">See all</span>]</div>
+    <div id="body-reset-button" class="exit-button">[<span class="exit-button-text">All posts</span>]</div>
     {% include 'modules/post.html' %}
   </div>
 </div>
@@ -123,12 +123,12 @@
     stopLoadingAnimation('post-form-loading-animation');
   }
 
-  const adjustBodyTopPadding = () => {
+  const setTopDomHeight = () => {
     const topDom = document.getElementById('top-dom');
-    const bodyDom = document.getElementById('body-dom');
-    const forkModal = document.getElementById('fork-modal');
-    bodyDom.style.paddingTop = topDom.offsetHeight + 'px';
-    forkModal.style.marginTop = topDom.offsetHeight + 'px';
+    const headerContainer = document.getElementById('header-container');
+    const navContainer = document.getElementById('nav-container');
+    const navHeight = navContainer ? navContainer.offsetHeight : 0;
+    topDom.style.height = headerContainer.offsetHeight + navHeight + "px";
   }
 
   const setupResetButton = () => {
@@ -140,8 +140,8 @@
     });
   }
 
-  window.addEventListener("load", adjustBodyTopPadding);
-  window.addEventListener("resize", adjustBodyTopPadding);
+  window.addEventListener("load", setTopDomHeight);
+  window.addEventListener("resize", setTopDomHeight);
   load();
   setupForking();
   setupResetButton();
