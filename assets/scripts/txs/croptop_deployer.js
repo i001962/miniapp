@@ -224,8 +224,8 @@ const tx_deploy_project = async (name, symbol, owner, minimumPrice, minimumTotal
   const contract = croptopDeployerContract(chainId);
   if (!contract) return false;
   const terminal = ethPaymentTerminalContract(chainId);
-  const projectMetadata = {  domain: 0, content: "" };
-  const contractUri = "QmaJzQjaFKxU2LLyqPTpZoGU47owQcmmvVCP1p4YqeuMUy";
+  const projectMetadata = {  domain: 0, content: "QmaJzQjaFKxU2LLyqPTpZoGU47owQcmmvVCP1p4YqeuMUy" };
+  const contractUri = "";
   const allowedPost = { nft: "0x0000000000000000000000000000000000000000", category: 0, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses};
   await sign(contract, croptopDeployerContractABI, "deployProjectFor", [owner, terminal, projectMetadata, [allowedPost], contractUri, name, symbol]);
   return true;
