@@ -907,7 +907,7 @@ footer {
 
 @media screen and (max-width: 500px) {
   #frames-container {
-    margin-left: 0;
+    margin-right: 0;
   }
 
   .frame {
@@ -964,8 +964,9 @@ footer {
   }
 
   .frame {
-    margin-top: var(--spacing-3);
-    margin-bottom: var(--spacing-5);
+    margin-left: 0;
+    margin-top: var(--spacing-3);  
+    margin-bottom: var(--spacing-5);  
     border-bottom: 1px solid var(--foreground-tertiary-color);
   }
 
