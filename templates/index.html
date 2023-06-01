@@ -450,11 +450,13 @@ window.onpopstate = function(event) {
       navContainer.style.visibility = "visible";
       navContainer.style.opacity = 1;
       topDom.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + "px";
+      navContainer.classList.remove("hidden");
     }
     const hide = () => {
       navContainer.style.visibility = "hidden";
       navContainer.style.opacity = 0;
       topDom.style.height = headerContainer.offsetHeight + "px";
+      navContainer.classList.add("hidden");
     }
 
     if (postModal.style.display == "block" || forkModal.style.display == "block") {
