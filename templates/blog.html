@@ -76,14 +76,14 @@
     forkModal.addEventListener("click", (e) => {
       // Ignore if the clicked view shouldn't close the modal.
       if (!e.target.classList.contains("negative-space")) return;
-        
+
       // Ignore if the clicked view comes while an input, select, or textarea field is selected.
       if (activeElementOnClose.tagName === "INPUT" || activeElementOnClose.tagName === "SELECT" || activeElementOnClose.tagName === "TEXTAREA") return;
 
       // Hide the modal.
       forkModal.style.display = "none";
     });
-        
+
     decorateNewJbForm();
     decoratePermissionForm();
     decorateAllowanceForm();
@@ -96,10 +96,10 @@
     // Summon a modal when the fork button is clicked.
     fork.addEventListener("click", async (e) => {
       e.preventDefault();
-     
+
       // Show the modal.
       forkModal.style.display = "block";
-      
+
       // Make the modal look right.
       await decorateForkModal();
     });
@@ -109,7 +109,7 @@
     startLoadingAnimation('post-form-loading-animation');
 
     await loadSettings();
-    
+
     const imageName = {{ article.hasVideo }} ? '_videoThumbnail.png' : {{ article.attachments }}.at(0);
     const videoSrc = {{ article.hasVideo }} ? './' + '{{ article.videoFilename }}' : null;
     const imageSrc = './' + imageName;
@@ -133,10 +133,10 @@
 
   const setupResetButton = () => {
     const resetButton = document.getElementById('body-reset-button');
-    
+
     console.log("hey");
     resetButton.addEventListener('click', () => {
-      window.location.href = '/'; 
+      window.location.href = '../';
     });
   }
 

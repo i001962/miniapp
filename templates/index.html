@@ -60,13 +60,13 @@ window.onpopstate = function(event) {
   let greatestRightInRow = 0;
   let rows = [];
   let lastScrollTop = 0;
-  
+
   // State variables.
   let defaultPageSize = 20;
   let currentPage = 0;
   let canLoadNewPosts = true;
 
-  const loadPostsState = async (encodedIPFSUris) => { 
+  const loadPostsState = async (encodedIPFSUris) => {
     // Load tiers.
     const postFormStateChain = document.getElementById("post-form-state-chain");
     const postFormStateProjectId = document.getElementById("post-form-state-project-id");
@@ -101,7 +101,7 @@ window.onpopstate = function(event) {
       cta.textContent = `[${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } left]`;
     }
   }
- 
+
   const decoratePostFrame = async (postFrame, postId, date, name, link, imageSrc, videoSrc) => {
     const postFormStateProjectId = document.getElementById("post-form-state-project-id");
     const projectId = parseInt(postFormStateProjectId.innerHTML);
@@ -110,7 +110,7 @@ window.onpopstate = function(event) {
     if (name === undefined || name === null || name === "") name = "✃";
 
     const postModal = document.getElementById("post-modal");
-      
+
     // Get references to frame elements that need decorating.
     const cta = postFrame.querySelector('.image-cta');;
     const title = postFrame.querySelector('div.image-title');
@@ -146,7 +146,7 @@ window.onpopstate = function(event) {
       // Make the modal look right.
       await decoratePostModal(postId, encodedIPFSUri, name, date, link, imageSrc, videoSrc);
     });
-    
+
     decoratePostFrameState(postFrame, projectId, encodedIPFSUri);
   }
 
@@ -174,14 +174,14 @@ window.onpopstate = function(event) {
     if (row == 1) {
       const framesContainer = document.getElementById("frames-container");
       return framesContainer.offsetTop;
-    } 
+    }
 
     let previousRow = rows[row - 2];
     let candidatePostFrame;
 
     for (let j = 0; j < previousRow.postFrameReferences.length; j++) {
       let postFrameToCheck = previousRow.postFrameReferences[j];
-      
+
       if (
         postFrame.left < postFrameToCheck.right + horizontalMargin &&
         postFrame.right + horizontalMargin > postFrameToCheck.left &&
@@ -191,7 +191,7 @@ window.onpopstate = function(event) {
         return candidatePostFrame ? candidatePostFrame.bottom : getTopTarget(postFrame, row - 1);
       }
     }
-    
+
     if (!candidatePostFrame) {
       console.log({ postFrame, row, previousRow });
     }
@@ -241,7 +241,7 @@ window.onpopstate = function(event) {
 
     const rect = postFrame.getBoundingClientRect();
     if (rect.left < greatestRightInRow) currentRow++;
-    
+
     greatestRightInRow = rect.right;
 
     const heightDiff = rect.top - getTopTarget(rect, currentRow);
@@ -327,7 +327,7 @@ window.onpopstate = function(event) {
       // Reset the view stack browsing state.
       history.pushState({}, "", window.location.pathname);
     });
-    
+
     // Show the post page.
     await decoratePostPage(name, date, link, imageSrc, videoSrc, encodedIPFSUri);
   }
@@ -356,7 +356,7 @@ window.onpopstate = function(event) {
     forkModal.addEventListener("click", (e) => {
       // Ignore if the clicked view shouldn't close the modal.
       if (!e.target.classList.contains("negative-space")) return;
-        
+
       // Ignore if the clicked view comes while an input, select, or textarea field is selected.
       if (activeElementOnClose.tagName === "INPUT" || activeElementOnClose.tagName === "SELECT" || activeElementOnClose.tagName === "TEXTAREA") return;
 
@@ -365,7 +365,7 @@ window.onpopstate = function(event) {
 
       toggleNavVisibility();
     });
-        
+
     decorateNewJbForm();
     decoratePermissionForm();
     decorateAllowanceForm();
@@ -378,12 +378,12 @@ window.onpopstate = function(event) {
     // Summon a modal when the fork button is clicked.
     fork.addEventListener("click", async (e) => {
       e.preventDefault();
-     
+
       // Show the modal.
       forkModal.style.display = "block";
 
       toggleNavVisibility();
-      
+
       // Make the modal look right.
       await decorateForkModal();
     });
@@ -405,7 +405,7 @@ window.onpopstate = function(event) {
     for (const postFrame of newPostFrames)
       await positionAndShowPostFrame(postFrame);
   }
-  
+
   const loadPosts = async (pageSize) => {
     canLoadNewPosts = false;
     const response = await fetch(
@@ -423,7 +423,7 @@ window.onpopstate = function(event) {
     if (!newPosts.length) return;
 
     currentPage++;
-    
+
     const encodedIPFSUris = await Promise.all(posts.map(async (post) => await encodeIPFSUriFrom("{{ assets_prefix }}", post.id)));
 
     await loadPostsState(encodedIPFSUris);
@@ -445,7 +445,7 @@ window.onpopstate = function(event) {
     const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
 
     if (!navContainer) return;
-    
+
     const show = () => {
       navContainer.style.visibility = "visible";
       navContainer.style.opacity = 1;
@@ -461,13 +461,13 @@ window.onpopstate = function(event) {
 
     if (postModal.style.display == "block" || forkModal.style.display == "block") {
       hide();
-      topDom.style.borderBottomWidth = "1px"; 
+      topDom.style.borderBottomWidth = "1px";
     } else {
       if (currentScrollTop <= 0) {
         show();
-        topDom.style.borderBottomWidth = "0px"; 
+        topDom.style.borderBottomWidth = "0px";
       } else {
-        topDom.style.borderBottomWidth = "1px"; 
+        topDom.style.borderBottomWidth = "1px";
         if (Math.abs(currentScrollTop - lastScrollTop) < toggleNavVisibilityScrollThreshold) return;
         if (lastScrollTop > noScrollEffectEdgeDistance && maxScrollTop - lastScrollTop > noScrollEffectEdgeDistance) {
           if (currentScrollTop > lastScrollTop) hide();
@@ -475,13 +475,13 @@ window.onpopstate = function(event) {
         }
       }
       lastScrollTop = currentScrollTop;
-    } 
+    }
   }
 
   const pageMorePostsIfNeeded = () => {
     const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    
+
     if (canLoadNewPosts && maxScrollTop - currentScrollTop < pagingEdgeDistance)
       loadPosts(defaultPageSize);
   }
@@ -507,7 +507,7 @@ window.onpopstate = function(event) {
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get('id');
   if (id) {
-    window.location.href = '/' + id; 
+    window.location.href = './' + id + '/';
   } else {
     startLoadingAnimation('main-loading-animation');
     loadSettings();
