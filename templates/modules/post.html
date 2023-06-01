@@ -562,10 +562,6 @@
           collectPostForm.style.display = "none";
           // Disable the button.
           postFormButton.disabled = true;
-
-          // Hide the loading animation.
-          stopLoadingAnimation('post-form-loading-animation');
-
           return;
         }
 
@@ -593,10 +589,6 @@
           collectPostForm.style.display = "none";
           // Disable the button.
           postFormButton.disabled = true;
-
-          // Hide the loading animation.
-          stopLoadingAnimation('post-form-loading-animation');
-
           return;
         }
 
@@ -646,10 +638,6 @@
           collectPostForm.style.display = "none";
           // Disable the button.
           postFormButton.disabled = true;
-
-          // Hide the loading animation.
-          stopLoadingAnimation('post-form-loading-animation');
-
           return;
         }
 
@@ -670,9 +658,6 @@
         const formattedAllowedAddresses = allowance[3];
 
         await decorateRecordForm(chain, projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice, formattedAllowedAddresses);
-
-        // Hide the loading animation.
-        stopLoadingAnimation('post-form-loading-animation');
       }
     }
     
@@ -725,6 +710,9 @@
       stopLoadingAnimation('post-form-loading-animation');
     }
     
-    updateFormState();
+    await updateFormState();
+
+    // Hide the loading animation.
+    stopLoadingAnimation('post-form-loading-animation');
   }
 </script>
