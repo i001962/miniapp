@@ -41,23 +41,29 @@ window.onpopstate = function(event) {
 </div>
 <script>
   // Layout constants.
-  const horizontalMargin = 24;
-  const verticalMargin = 12;
+  const horizontalMargin = 12;
   const transitionDuration = 300;
   const widthClasses = ["w1", "w2", "w3"];
   const formInputReactionTimeDelay = 600;
   const noScrollEffectEdgeDistance = 80;
+  const pagingEdgeDistance = 1000;
+  const toggleNavVisibilityScrollThreshold = 50;
 
   // State constants.
   const feeDivisor = 20;
 
   // Layout variables.
-  let postFrames;
+  let postFrames = [];
   let posts = [];
   let currentRow = 1;
   let greatestRightInRow = 0;
   let rows = [];
   let lastScrollTop = 0;
+  
+  // State variables.
+  let defaultPageSize = 20;
+  let currentPage = 0;
+  let canLoadNewPosts = true;
 
   const loadPostsState = async (encodedIPFSUris) => { 
     // Load tiers.
@@ -134,7 +140,7 @@ window.onpopstate = function(event) {
       // Show the modal.
       postModal.style.display = "block";
 
-      toggleNavVisibility(true);
+      toggleNavVisibility();
 
       // Make the modal look right.
       await decoratePostModal(postId, encodedIPFSUri, name, date, link, imageSrc, videoSrc);
@@ -174,13 +180,13 @@ window.onpopstate = function(event) {
 
     for (let j = 0; j < previousRow.postFrameReferences.length; j++) {
       let postFrameToCheck = previousRow.postFrameReferences[j];
-
+      
       if (
         postFrame.left < postFrameToCheck.right + horizontalMargin &&
         postFrame.right + horizontalMargin > postFrameToCheck.left &&
         (candidatePostFrame == null || postFrameToCheck.bottom > candidatePostFrame.bottom)
       ) candidatePostFrame = postFrameToCheck;
-      else if (postFrame.right <= postFrameToCheck.left) {
+      else if (j == previousRow.postFrameReferences.length - 1 && postFrame.left >= postFrameToCheck.right + horizontalMargin) {
         return candidatePostFrame ? candidatePostFrame.bottom : getTopTarget(postFrame, row - 1);
       }
     }
@@ -188,6 +194,7 @@ window.onpopstate = function(event) {
     if (!candidatePostFrame) {
       console.log({ postFrame, row, previousRow });
     }
+
     return candidatePostFrame.bottom;
   }
 
@@ -237,13 +244,13 @@ window.onpopstate = function(event) {
     greatestRightInRow = rect.right;
 
     const heightDiff = rect.top - getTopTarget(rect, currentRow);
-      let newFrame = { left: rect.left, right: rect.right, bottom: rect.bottom - heightDiff + verticalMargin };
+    const newFrame = { left: rect.left, right: rect.right, bottom: rect.bottom - heightDiff };
 
     if (currentRow > rows.length) rows.push({ postFrameReferences: [newFrame] });
     else rows[rows.length - 1].postFrameReferences.push(newFrame);
 
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const marginTop = window.getComputedStyle(postFrame).display == "block" ? 0 : heightDiff + scrollTop - verticalMargin;
+    const marginTop = window.getComputedStyle(postFrame).display == "block" ? 0 : heightDiff + scrollTop;
     postFrame.classList.add("frame-fade-in");
 
     return new Promise((resolve) => {
@@ -263,7 +270,8 @@ window.onpopstate = function(event) {
   const decoratePostModal = async (postId, encodedIPFSUri, name, date, link, imageSrc, videoSrc) => {
     // Get references to modal elements that need decorating.
     const postModal = document.getElementById("post-modal");
-    const headerContainer = document.getElementById('header-container');
+    const topDom = document.getElementById("top-dom");
+    const headerContainer = document.getElementById("header-container");
     const postFormStateReveal = document.getElementById("post-form-state-reveal");
     const postFormErrorMessage= document.getElementById("post-form-error-message");
     const recordPostForm = document.getElementById("record-post-form");
@@ -274,8 +282,9 @@ window.onpopstate = function(event) {
     // Adjust the size.
     requestAnimationFrame(() => {
       const headerContainerHeight = headerContainer.offsetHeight;
-      postModal.style.top = headerContainerHeight + 'px';
-      postModal.style.height = `calc(100% - ${headerContainerHeight}px)`;
+      const borderHeight = parseInt(topDom.style.borderBottomWidth, 10);
+      postModal.style.top = headerContainerHeight + borderHeight + 'px';
+      postModal.style.height = `calc(100% - ${headerContainerHeight + borderHeight}px)`;
     });
 
     // Track the modal in browse history.
@@ -312,9 +321,7 @@ window.onpopstate = function(event) {
       // Hide the modal.
       postModal.style.display = "none";
 
-      toggleNavVisibility(true);
-
-      requestAnimationFrame(adjustBodyTopPadding);     
+      toggleNavVisibility();
 
       // Reset the view stack browsing state.
       history.pushState({}, "", window.location.pathname);
@@ -328,13 +335,15 @@ window.onpopstate = function(event) {
   const decorateForkModal = () => {
     // Get references to elements that need decorating.
     const forkModal = document.getElementById("fork-modal");
-    const headerContainer = document.getElementById('header-container');
+    const topDom = document.getElementById("top-dom");
+    const headerContainer = document.getElementById("header-container");
 
     // Adjust the size.
     requestAnimationFrame(() => {
-      const headerContiainerHeight = headerContainer.offsetHeight;
-      forkModal.style.top = headerContiainerHeight + 'px';
-      forkModal.style.height = `calc(100% - ${headerContiainerHeight}px)`;
+      const headerContainerHeight = headerContainer.offsetHeight;
+      const borderHeight = parseInt(topDom.style.borderBottomWidth, 10);
+      forkModal.style.top = headerContainerHeight + borderHeight + 'px';
+      forkModal.style.height = `calc(100% - ${headerContainerHeight + borderHeight}px)`;
     });
 
     // Make sure the modal is closeable when clicking on empty space.
@@ -353,9 +362,7 @@ window.onpopstate = function(event) {
       // Hide the modal.
       forkModal.style.display = "none";
 
-      toggleNavVisibility(true);
-
-      requestAnimationFrame(adjustBodyTopPadding);     
+      toggleNavVisibility();
     });
         
     decorateNewJbForm();
@@ -374,15 +381,15 @@ window.onpopstate = function(event) {
       // Show the modal.
       forkModal.style.display = "block";
 
-      toggleNavVisibility(true);
+      toggleNavVisibility();
       
       // Make the modal look right.
       await decorateForkModal();
     });
   }
 
-  const showPostFrames = async () => {
-    postFrames = posts.map((post) => {
+  const showPostFrames = async (newPosts) => {
+    const newPostFrames = newPosts.map((post) => {
       // if post.hasVideo, use _videoThumbnail.png
       // else use a random attachment
       const imageName = post.hasVideo ? '_videoThumbnail.png' : post.attachments[Math.floor(Math.random() * post.attachments.length)];
@@ -392,19 +399,29 @@ window.onpopstate = function(event) {
       decoratePostFrame(frame, post.id, formatTimestamp(post.created), post.title, post.externalLink, coverImageSrc, videoSrc);
       return frame;
     });
+    postFrames = postFrames.concat(newPostFrames);
 
-    for (const postFrame of postFrames)
+    for (const postFrame of newPostFrames)
       await positionAndShowPostFrame(postFrame);
   }
   
-  const loadPosts = async () => {
+  const loadPosts = async (pageSize) => {
+    canLoadNewPosts = false;
     const response = await fetch(
       `{{ assets_prefix }}planet.json`
     );
     const data = await response.json();
-    posts = data['articles']
+    const startingIndex = currentPage*pageSize;
+    const newPosts = data['articles']
+      .slice(startingIndex, startingIndex + pageSize)
       // Only if attachments have file extensions like ".jpg" ".jpeg" ".png" ".gif" ".webp" ".svg" ".avif"
       .filter(post => post.hasVideo === true || post.attachments.some(attachment => attachment.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)$/i)));
+
+    posts = posts.concat(newPosts);
+
+    if (!newPosts.length) return;
+
+    currentPage++;
 
     // if there is ?id= in the url, open the modal
     const urlParams = new URLSearchParams(window.location.search);
@@ -421,56 +438,81 @@ window.onpopstate = function(event) {
 
     await loadPostsState(encodedIPFSUris);
 
-    showPostFrames();
+    await showPostFrames(newPosts);
+
+    canLoadNewPosts = true;
   }
 
-  const toggleNavVisibility = (force) => {
-    const topDom = document.getElementById('top-dom');
+  const toggleNavVisibility = () => {
     const navContainer = document.getElementById('nav-container');
+
+    const topDom = document.getElementById('top-dom');
     const postModal = document.getElementById('post-modal');
     const forkModal = document.getElementById('fork-modal');
     const headerContainer = document.getElementById('header-container');
 
-    if (!navContainer) return;
-
     const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
     const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+    if (!navContainer) return;
     
-    if (force || lastScrollTop > noScrollEffectEdgeDistance && maxScrollTop - lastScrollTop > noScrollEffectEdgeDistance) {
-      if (currentScrollTop > lastScrollTop || postModal.style.display == "block" || forkModal.style.display == "block") {
-        navContainer.style.visibility = "hidden";
-        navContainer.style.opacity = 0;
-        delete navContainer.style.transitionDelay;
-        navContainer.style.transitionDelay = "0s";
-        headerContainer.style.borderBottom = window.getComputedStyle(navContainer).borderBottom;
-        navContainer.classList.add('hidden');
-        topDom.style.height = headerContainer.offsetHeight + "px";
-      } else {
-        navContainer.style.visibility = "visible";
-        navContainer.style.opacity = 1;
-        headerContainer.style.borderBottom = "none";
-        navContainer.classList.remove('hidden');
-        topDom.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + "px";
-      }
+    const show = () => {
+      navContainer.style.visibility = "visible";
+      navContainer.style.opacity = 1;
+      topDom.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + "px";
+    }
+    const hide = () => {
+      navContainer.style.visibility = "hidden";
+      navContainer.style.opacity = 0;
+      topDom.style.height = headerContainer.offsetHeight + "px";
     }
 
-    lastScrollTop = currentScrollTop;
+    if (postModal.style.display == "block" || forkModal.style.display == "block") {
+      hide();
+      topDom.style.borderBottomWidth = "1px"; 
+    } else {
+      if (currentScrollTop <= 0) {
+        show();
+        topDom.style.borderBottomWidth = "0px"; 
+      } else {
+        topDom.style.borderBottomWidth = "1px"; 
+        if (Math.abs(currentScrollTop - lastScrollTop) < toggleNavVisibilityScrollThreshold) return;
+        if (lastScrollTop > noScrollEffectEdgeDistance && maxScrollTop - lastScrollTop > noScrollEffectEdgeDistance) {
+          if (currentScrollTop > lastScrollTop) hide();
+          else show();
+        }
+      }
+      lastScrollTop = currentScrollTop;
+    } 
+  }
+
+  const pageMorePostsIfNeeded = () => {
+    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    
+    if (canLoadNewPosts && maxScrollTop - currentScrollTop < pagingEdgeDistance)
+      loadPosts(defaultPageSize);
+  }
+
+  const didScroll = () => {
+    toggleNavVisibility();
+    pageMorePostsIfNeeded();
   }
 
   const adjustBodyTopPadding = () => {
     const topDom = document.getElementById('top-dom');
-    const bodyDom = document.getElementById('body-dom');
-    bodyDom.style.paddingTop = topDom.offsetHeight + 'px';
+    const headerContainer = document.getElementById('header-container');
+    const navContainer = document.getElementById('nav-container');
+    topDom.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + "px";
   }
 
   window.addEventListener("load", adjustBodyTopPadding);
   window.addEventListener("resize", adjustBodyTopPadding);
-  window.addEventListener("scroll", () => toggleNavVisibility(false));
+  window.addEventListener("scroll", didScroll);
 
   startLoadingAnimation('main-loading-animation');
   loadSettings();
   setupForking();
-  loadPosts();
+  loadPosts(defaultPageSize);
 </script>
 {% endblock %}

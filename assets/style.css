@@ -1,6 +1,6 @@
 :root {
   --background-color: #fff;
-  --background-color-opacity: rgba(255, 255, 255, 0.8);
+  --background-color-opacity: rgba(255, 255, 255, 0.98);
   --foreground-color: #000;
   --foreground-secondary-color: #888;
   --foreground-tertiary-color: #e2e2e2;
@@ -14,6 +14,7 @@
   --spacing-3: 12px;
   --spacing-4: 20px;
   --spacing-5: 24px;
+  --spacing-scroll-padding: 100px;
   /* ADDED BACK FOR IN APP TEMPLATE */
   --nav-current-background-color: #000;
   --nav-current-foreground-color: #fff;
@@ -122,12 +123,11 @@ details[open] > summary:before {
   margin-left: auto;
   margin-right: auto;
   padding: 0 var(--spacing-4) var(--spacing-3) var(--spacing-4);
-  border-bottom: 1px solid var(--foreground-tertiary-color);
-  transition: visibility 0s 0.2s, opacity 0.2s linear;
+  transition: visibility 0s 0.1s, opacity 0.05s linear;
 }
 
 #nav-container.hidden {
-  transition-delay: "0s";
+  transition: visibility 0s 0.1s, opacity 0.1s linear 0.1s; 
 }
 
 #nav {
@@ -152,8 +152,6 @@ details[open] > summary:before {
   height: 100%;
   overflow: auto;
   background-color: var(--background-color-opacity);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 /* fork modal sits above post modal */
@@ -184,7 +182,7 @@ details[open] > summary:before {
   max-width: 1000px;
   float: center;
   padding-top: var(--spacing-2);
-  padding-bottom: 100px;
+  padding-bottom: var(--spacing-scroll-padding);
 }
 
 .body-header {
@@ -431,7 +429,7 @@ details > summary:before {
   align-items: center;
   display: flex;
   gap: var(--spacing-3);
-  padding: var(--spacing-3) var(--spacing-4) var(--spacing-3) var(--spacing-4);
+  padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) var(--spacing-3);
 }
 
 .loading-animation {
@@ -454,12 +452,15 @@ img.avatar {
 }
 
 #top-dom {
-  position: fixed;
+  position: sticky;
+  top: 0;
   z-index: 10;
   width: 100%;
   background-color: var(--background-color-opacity);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  transition: height 0.1s linear;
+  border-bottom-width: 0px; 
+  border-bottom-style: solid; 
+  border-bottom-color: var(--foreground-tertiary-color);
 }
 
 #fork {
@@ -481,8 +482,9 @@ img.avatar {
 }
 
 #frames-container {
-  text-align: right;
-  margin-left: var(--spacing-5);
+  text-align: left;
+  margin-right: var(--spacing-3);
+  padding-bottom: var(--spacing-scroll-padding);
 }
 
 .w1 {
@@ -499,8 +501,7 @@ img.avatar {
 
 .frame {
   display: inline-block;
-  margin-right: var(--spacing-5);
-  margin-bottom: var(--spacing-3);
+  margin-left: var(--spacing-3);
   vertical-align: top;
   opacity: 0;
   position: relative;
@@ -640,8 +641,6 @@ hr {
   border-bottom: 1px solid var(--foreground-tertiary-color);
   box-sizing: border-box;
   z-index: 99;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 .breadcrumb-inner {
@@ -908,7 +907,6 @@ footer {
 
 @media screen and (max-width: 500px) {
   #frames-container {
-    text-align: right;
     margin-left: 0;
   }
 
