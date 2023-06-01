@@ -168,7 +168,7 @@ details[open] > summary:before {
   float: right;
   cursor: pointer;
   text-align: right;
-  padding: var(--spacing-3) 0 var(--spacing-3) var(--spacing-3);
+  padding: var(--spacing-3) 0 var(--spacing-3) var(--spacing-5);
   color: var(--foreground-secondary-color);
 }
 
