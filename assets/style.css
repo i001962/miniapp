@@ -36,7 +36,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background-color: #111;
-    --background-color-opacity: rgba(17, 17, 17, 0.8);
+    --background-color-opacity: rgba(17, 17, 17, 0.98);
     --foreground-color: #fff;
     --foreground-secondary-color: #adadaf;
     --foreground-tertiary-color: #2a2a2a;
