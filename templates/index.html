@@ -42,6 +42,7 @@ window.onpopstate = function(event) {
 <script>
   // Layout constants.
   const horizontalMargin = 12;
+  const verticalMargin = 4;
   const transitionDuration = 300;
   const widthClasses = ["w1", "w2", "w3"];
   const formInputReactionTimeDelay = 600;
@@ -244,13 +245,13 @@ window.onpopstate = function(event) {
     greatestRightInRow = rect.right;
 
     const heightDiff = rect.top - getTopTarget(rect, currentRow);
-    const newFrame = { left: rect.left, right: rect.right, bottom: rect.bottom - heightDiff };
+    const newFrame = { left: rect.left, right: rect.right, bottom: rect.bottom - heightDiff + verticalMargin };
 
     if (currentRow > rows.length) rows.push({ postFrameReferences: [newFrame] });
     else rows[rows.length - 1].postFrameReferences.push(newFrame);
 
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const marginTop = window.getComputedStyle(postFrame).display == "block" ? 0 : heightDiff + scrollTop;
+    const marginTop = window.getComputedStyle(postFrame).display == "block" ? 0 : heightDiff + scrollTop - verticalMargin;
     postFrame.classList.add("frame-fade-in");
 
     return new Promise((resolve) => {
