@@ -86,6 +86,7 @@ window.onpopstate = function(event) {
   }
 
   const decoratePostFrameState = (postFrame,  projectId, encodedIPFSUri) => {
+    if (!tiersCache[projectId]) tiersCache[projectId] = {};
     const tier = tiersCache[projectId][encodedIPFSUri];
     if (!tier) return;
 
