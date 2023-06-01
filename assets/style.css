@@ -927,8 +927,8 @@ footer {
   }
 
   .form, .body-header, .main-form-button, .form-error-message, .exit-button, .image-header, #main-loading-animation, #post-form-loading-animation {
-    margin-inline-start: var(--spacing-3);
-    margin-inline-end: var(--spacing-3);
+    margin-inline-start: var(--spacing-2);
+    margin-inline-end: var(--spacing-2);
   }
 
   .content {
