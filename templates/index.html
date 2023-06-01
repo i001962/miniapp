@@ -445,19 +445,23 @@ window.onpopstate = function(event) {
     const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
 
-    if (!navContainer) return;
-
     const show = () => {
-      navContainer.style.visibility = "visible";
-      navContainer.style.opacity = 1;
-      topDom.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + "px";
-      navContainer.classList.remove("hidden");
+      let navContainerHeight = 0;
+      if (navContainer) {
+        navContainer.style.visibility = "visible";
+        navContainer.style.opacity = 1;
+        navContainer.classList.remove("hidden");
+        navContainerHeight = navContainer.offsetHeight;
+      }
+      topDom.style.height = headerContainer.offsetHeight + navContainerHeight + "px";
     }
     const hide = () => {
-      navContainer.style.visibility = "hidden";
-      navContainer.style.opacity = 0;
+      if (navContainer) {
+        navContainer.style.visibility = "hidden";
+        navContainer.style.opacity = 0;
+        navContainer.classList.add("hidden");
+      }
       topDom.style.height = headerContainer.offsetHeight + "px";
-      navContainer.classList.add("hidden");
     }
 
     if (postModal.style.display == "block" || forkModal.style.display == "block") {
