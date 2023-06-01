@@ -5,7 +5,7 @@
   "authorWebsite": "https://jango.eth.limo",
   "version": "1.0.5",
   "idealItemsPerPage": 10,
-  "buildNumber": 258,
+  "buildNumber": 259,
   "generateNFTMetadata": true,
   "settings": {
     "juiceboxProjectID": {

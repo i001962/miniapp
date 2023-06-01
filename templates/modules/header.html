@@ -23,6 +23,10 @@
 <script>
   const titleButton = document.getElementById('title-button');
   titleButton.addEventListener('click', () => {
-    window.location.href = '/'; 
+    {% if current_item_type == "blog" %}
+    window.location.href = '../';
+    {% else %}
+    window.location.href = './';
+    {% endif %}
   });
 </script>
