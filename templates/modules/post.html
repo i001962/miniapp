@@ -338,7 +338,7 @@
     if (formattedRemainingSupply == 1) {
       collectPostFormHeader.innerHTML = `There is only 1 remaining edition of this file available to be collected for <span class="ether">Ξ</span>${formattedPrice}.`;
     } else {
-      collectPostFormHeader.innerHTML = `There are still ${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } remaining editions of this file available to be collected for <span class="ether">Ξ</span>${formattedPrice} each.`;
+      collectPostFormHeader.innerHTML = `${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } remaining editions of this file collectible for <span class="ether">Ξ</span>${formattedPrice} each.`;
     }
 
     // Change the button text.
