@@ -93,11 +93,6 @@ a:hover {
   text-decoration: underline;
 }
 
-/* todo remove*/
-p {
-  margin: 0;
-}
-
 details > summary {
   list-style: none;
 }
@@ -964,8 +959,8 @@ footer {
 
   .frame {
     margin-left: 0;
-    margin-top: var(--spacing-3);  
-    margin-bottom: var(--spacing-5);  
+    margin-top: var(--spacing-3);
+    margin-bottom: var(--spacing-5);
     border-bottom: 1px solid var(--foreground-tertiary-color);
   }
 
