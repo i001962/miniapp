@@ -3,7 +3,7 @@
   "description": "For pictures and screenshots",
   "author": "Jango",
   "authorWebsite": "https://jango.eth.limo",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "idealItemsPerPage": 10,
   "buildNumber": 264,
   "generateNFTMetadata": true,
@@ -31,6 +31,18 @@
       "type": "int",
       "defaultValue": "0",
       "description": "Default category of the NFTs"
+    },
+    "ethereumRPC": {
+      "name": "Ethereum RPC",
+      "type": "string",
+      "defaultValue": "",
+      "description": "Ethereum RPC endpoint to use"
+    },
+    "highlightColor": {
+      "name": "Highlight Color",
+      "type": "string",
+      "defaultValue": "#f056c1",
+      "description": "Color for links and buttons"
     }
   }
 }

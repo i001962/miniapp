@@ -98,7 +98,7 @@
           </div>
         </div>
         <div class="form-item form-item-large">
-          <div class="form-label">Address 
+          <div class="form-label">Address
             <button id="record-post-form-load-address-button" class="load-address-button">[<span class="load-addres-button-text">connect wallet</span>]</button>
           </div>
           <div class="form-value">
@@ -123,15 +123,16 @@
 </div>
 <div id="post-form-loading-animation" class="loading-animation"></div>
 <div id="post-form-error-message" class="form-error-message"></div>
-<button id="post-form-button" class="form-button main-form-button">[<span id="post-form-button-text" class="form-button-text">collect</span>]<span id="post-form-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
+<button id="post-form-button" class="form-button main-form-button">[<span id="post-form-button-text" class="form-button-text">collect</span>]<span id="post-form-button-loading-animation" class="loading-animation button-loading-animation"></span></button>
 <img id="post-image"></img>
 <video id="post-video"></video>
 <script>
   let tiersCache = {};
   let allowanceCache = {};
-  let defaultChain = "goerli";  
+  let defaultChain = "goerli";
   let defaultNftCategory = 0;
   let defaultEthAddress;
+  let highlightColor = "#f056c1";
   let signer;
 
   /// Get admin settings.
@@ -158,6 +159,9 @@
         // data.juiceboxProjectIDGoerli is also available if you need it
         if (data.nftCategory != null) postFormStateNftCategory.innerHTML = Number(data.nftCategory);
         if (data.ethAddress) defaultEthAddress = data.ethAddress;
+        if (data.highlightColor) highlightColor = data.highlightColor;
+        const r = document.querySelector(':root');
+        r.style.setProperty('--link-color', highlightColor);
       });
   }
 
@@ -205,9 +209,9 @@
     }
 
     // Prevent excessive calls.
-    let checkStateTimer; 
-      const queueCheckState = async () => { 
-        clearTimeout(checkStateTimer); 
+    let checkStateTimer;
+      const queueCheckState = async () => {
+        clearTimeout(checkStateTimer);
         checkStateTimer = setTimeout(checkState, formInputReactionTimeDelay);
     }
 
@@ -228,7 +232,7 @@
       recordPostFormBeneficiaryInput.value = signer;
       await checkState();
     };
-    
+
     // Submit the form.
     postFormButton.onclick = async () => {
       // Check for empty values.
@@ -236,14 +240,14 @@
         postFormErrorMessage.innerHTML = "Fill out the form.";
         postFormErrorMessage.style.display = "block";
         return;
-      } 
+      }
 
       // Show the loading animation.
       startLoadingAnimation('post-form-button-loading-animation');
-        
+
       // Get the signer.
       signer = (await getSigner()).address;
-      
+
       // Default to the signer.
       if (recordPostFormBeneficiaryInput.value == "") recordPostFormBeneficiaryInput.value = signer;
       // Default to the eth address, or the signer;
@@ -263,7 +267,7 @@
       const expectedChainId = resolveChainId(chain);
       if (chainId != expectedChainId) {
           try {
-            await switchChain(expectedChainId); 
+            await switchChain(expectedChainId);
           } catch (e) {
             postFormErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
             postFormErrorMessage.style.display = "block";
@@ -274,7 +278,7 @@
             return;
           }
       }
-      
+
       // Normalize values from the form.
       const totalSupply = recordPostFormTotalSupplyInput.value;
       const quantity = recordPostFormQuantityInput.value;
@@ -287,9 +291,9 @@
       try {
         // Try to process the transaction.
         const accepted = await tx_collect(projectId, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, resolveChainId(chain));
-      
+
           // Show incompatible network if needed.
-        if (!accepted) { 
+        if (!accepted) {
           // Show the error message.
           postFormErrorMessage.innerHTML = "The connected network isn't supported.";
           postFormErrorMessage.style.display = "block";
@@ -392,7 +396,7 @@
         postFormErrorMessage.innerHTML = "Fill out the form.";
         postFormErrorMessage.style.display = "block";
         return;
-      } 
+      }
 
       // Show the loading animation.
       startLoadingAnimation('post-form-button-loading-animation');
@@ -420,7 +424,7 @@
       const expectedChainId = resolveChainId(chain);
       if (chainId != expectedChainId) {
         try {
-          await switchChain(expectedChainId); 
+          await switchChain(expectedChainId);
         } catch (e) {
           postFormErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
           postFormErrorMessage.style.display = "block";
@@ -446,7 +450,7 @@
         // Try to process the transaction.
         const accepted = await tx_collect(projectId, category, totalSupply, BigInt(price), quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, resolveChainId(chain));
         // Show incompatible network if needed.
-        if (!accepted) { 
+        if (!accepted) {
           // Show the error message.
           postFormErrorMessage.innerHTML = "The connected network isn't supported.";
           postFormErrorMessage.style.display = "block";
@@ -545,14 +549,14 @@
 
       // Look in the cache for a tier for the project ID and encodedIPFSUri.
       let tier = tiersCache[projectId][encodedIPFSUri];
-        
+
       // If nothing is cached, load from the contract.
       if (!tier) {
 
         // Check to see if there's a tier for this content.
         [tier] = await tx_view_tiers(projectId, [encodedIPFSUri], resolveChainId(chain));
-        
-        // If no tier, don't show the form. 
+
+        // If no tier, don't show the form.
         if (!tier) {
           // Show the error message.
           postFormErrorMessage.innerHTML = "Browser not connected to the right blockchain.";
@@ -660,7 +664,7 @@
         await decorateRecordForm(chain, projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice, formattedAllowedAddresses);
       }
     }
-    
+
     // Populate the state input values when opened.
     postFormStateReveal.addEventListener("toggle", () => {
       if (!this.open) return;
@@ -684,18 +688,18 @@
       } else {
         postFormStateErrorMessage.style.display = "none";
       }
-      
+
       // Reload the mint state if the chain changed.
       if (postFormStateChain.innerHTML != postFormStateChainInput.value) {
         // Reload the state.
         await loadFrameState();
 
-        postFormStateChain.innerHTML = postFormStateChainInput.value; 
+        postFormStateChain.innerHTML = postFormStateChainInput.value;
       }
 
       postFormStateProjectId.innerHTML = postFormStateProjectIdInput.value;
       postFormStateProjectId.setAttribute('href', `${projectLinkBase(postFormStateChain.innerHTML)}${postFormStateProjectId.innerHTML}`);
-      postFormStateNftCategory.innerHTML = postFormStateNftCategoryInput.value; 
+      postFormStateNftCategory.innerHTML = postFormStateNftCategoryInput.value;
 
       // Close the state change form.
       postFormStateReveal.open = false;
@@ -709,7 +713,7 @@
       // Show the loading animation.
       stopLoadingAnimation('post-form-loading-animation');
     }
-    
+
     await updateFormState();
 
     // Hide the loading animation.
