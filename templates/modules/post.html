@@ -75,8 +75,8 @@
     </details>
   </div>
 </div>
-<div id="record-post-form" class="form negative-space">
-  <span class="form-header">This file isn't yet onchain. Record it onchain to collect a first copy.</span>
+<div id="record-post-form" class="form mobile-padding negative-space">
+  <span class="form-header">Record this file onchain to collect a first copy.</span>
   <div class="form-body">
     <details id="record-post-form-options-reveal">
       <summary id="record-post-form-options-toggle" class="form-toggle form-main-toggle">options</summary>
@@ -128,8 +128,11 @@
 <div id="post-form-loading-animation" class="loading-animation mobile-padding"></div>
 <div id="post-form-error-message" class="form-error-message mobile-padding"></div>
 <button id="post-form-button" class="form-button form-main-button mobile-padding">[<span id="post-form-button-text" class="form-button-text">collect</span>]<span id="post-form-button-loading-animation" class="loading-animation button-loading-animation"></span></button>
-<img id="post-image"></img>
-<video id="post-video"></video>
+<img id="post-cover-image"></img>
+<video id="post-cover-video"></video>
+{% if article_summary.count > 0 %}
+  <div id="post-body">{{ content_html }}</div>
+{% endif %}
 <script>
   let tiersCache = {};
   let allowanceCache = {};
@@ -478,6 +481,16 @@
     await checkState();
   }
 
+  const decoratePostBody = () => {
+      const postBody = document.getElementById('post-body');
+      if (!postBody) return;
+      const firstChild = postBody.firstChild;
+      // Remove the first child if it's a img tag.
+      if (firstChild.tagName === 'IMG') {
+        postBody.removeChild(firstChild);
+      }
+  }
+
   // Re-decorate the form depending on if the provided content has already been recorded onchain, and if it's sold out.
   const decoratePostPage = async (name, date, link, imageSrc, videoSrc, encodedIPFSUri) => {
     // Show the loading animation.
@@ -498,8 +511,8 @@
     const postFormStateButton = document.getElementById("post-form-state-button");
     const postFormErrorMessage = document.getElementById("post-form-error-message");
     const postFormButton = document.getElementById("post-form-button");
-    const postImage = document.getElementById("post-image");
-    const postVideo = document.getElementById("post-video");
+    const postCoverImage = document.getElementById("post-cover-image");
+    const postCoverVideo = document.getElementById("post-cover-video");
 
     // Decorate the frame's title.
     postName.innerHTML = name;
@@ -515,21 +528,21 @@
 
     // Decordate the image or video content.
     if (videoSrc) {
-      postImage.style.display = "none"
-      postVideo.style.display = "block"
-      postVideo.autoplay = true;
-      postVideo.loop = true;
-      postVideo.muted = true;
-      postVideo.controls = true;
-      postImage.src = "";
-      postVideo.src = videoSrc;
-      postVideo.addEventListener("click", (e) => e.stopPropagation());
+      postCoverImage.style.display = "none"
+      postCoverVideo.style.display = "block"
+      postCoverVideo.autoplay = true;
+      postCoverVideo.loop = true;
+      postCoverVideo.muted = true;
+      postCoverVideo.controls = true;
+      postCoverImage.src = "";
+      postCoverVideo.src = videoSrc;
+      postCoverVideo.addEventListener("click", (e) => e.stopPropagation());
     } else {
-      postImage.style.display = "block"
-      postVideo.style.display = "none"
-      postVideo.src = "";
-      postImage.src = imageSrc;
-      postImage.addEventListener("click", (e) => e.stopPropagation());
+      postCoverImage.style.display = "block"
+      postCoverVideo.style.display = "none"
+      postCoverVideo.src = "";
+      postCoverImage.src = imageSrc;
+      postCoverImage.addEventListener("click", (e) => e.stopPropagation());
     }
 
     // Get references to the two possible forms.
@@ -719,6 +732,8 @@
     }
 
     await updateFormState();
+
+    decoratePostBody();
 
     // Hide the loading animation.
     stopLoadingAnimation('post-form-loading-animation');

@@ -52,26 +52,6 @@
   <div class="body-content content">
     <div id="body-reset-button" class="exit-button">[<span class="exit-button-text">all posts &gt;</span>]</div>
     {% include 'modules/post.html' %}
-    {% if article_summary.count > 0 %}
-    <div id="post-markdown-content" style="background-color: rgba(0, 0, 0, 0.05); padding: 12px 20px 12px 20px; border-left: 4px solid var(--border-color); line-height: 150%; margin-top: 20px;">{{ content_html }}</div>
-    <script>
-    const pmc = document.getElementById('post-markdown-content');
-    const firstChild = pmc.firstChild;
-    // Remove the first child if it's a img tag.
-    if (firstChild.tagName === 'IMG') {
-      pmc.removeChild(firstChild);
-    }
-    </script>
-    <style>
-    #post-markdown-content>*:first-child {
-      margin-top: 0px;
-    }
-
-    #post-markdown-content>*:last-child {
-      margin-bottom: 0px;
-    }
-    </style>
-    {% endif %}
   </div>
 </div>
 <div id="fork-modal" class="modal negative-space">
