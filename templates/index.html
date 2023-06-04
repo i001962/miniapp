@@ -42,7 +42,7 @@ window.onpopstate = function(event) {
 <script>
   // Layout constants.
   const horizontalMargin = 20;
-  const verticalMargin = 8;
+  const verticalMargin = 20;
   const transitionDuration = 300;
   const widthClasses = ["frame-w1", "frame-w2", "frame-w3"];
   const formInputReactionTimeDelay = 600;
@@ -96,10 +96,10 @@ window.onpopstate = function(event) {
 
     // Set the content.
     if (formattedRemainingSupply == 0) {
-      state.textContent = '[sold out]';
+      state.innerHTML = 'sold out';
       state.classList.add("alert");
     } else {
-      state.textContent = `[${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } left]`;
+      state.textContent = `${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } left`;
     }
   }
 
@@ -113,7 +113,7 @@ window.onpopstate = function(event) {
     const postModal = document.getElementById("post-modal");
 
     // Get references to frame elements that need decorating.
-    const state = postFrame.querySelector(".frame-image-state");
+    const subtitle = postFrame.querySelector(".frame-image-subtitle");
     const title = postFrame.querySelector("div.frame-image-title");
     const img = postFrame.querySelector("img");
 
@@ -122,8 +122,8 @@ window.onpopstate = function(event) {
     img.id = 'img-' + postId;
 
     // Set the content.
-    state.textContent = '[record]';
-    title.innerHTML = `<span><span class="frame-image-date">${date} | </span>${ name }<span>`;
+    title.innerHTML = name;
+    subtitle.innerHTML = `<span class="frame-image-date">${date} | </span><span class="frame-image-state">recordable</span>`;
 
     // Mark videos with an icon.
     if (videoSrc) {
@@ -206,7 +206,7 @@ window.onpopstate = function(event) {
     const header = document.createElement("div");
     const title = document.createElement("div");
     const img = document.createElement("img");
-    const state = document.createElement("div");
+    const subtitle = document.createElement("div");
 
     frame.classList.add("frame");
     frame.style.transitionProperty = "opacity, margin-top";
@@ -214,7 +214,7 @@ window.onpopstate = function(event) {
     frame.style.transitionTimingFunction = "ease, ease";
     header.classList.add("frame-image-header");
     header.classList.add("mobile-padding");
-    state.classList.add("frame-image-state");
+    subtitle.classList.add("frame-image-subtitle");
     title.classList.add("frame-image-title");
     img.loading = "lazy";
     img.style.cursor = "pointer";
@@ -226,7 +226,7 @@ window.onpopstate = function(event) {
     img.src = src;
 
     header.appendChild(title);
-    header.appendChild(state);
+    header.appendChild(subtitle);
     frame.appendChild(header);
     frame.appendChild(img);
     framesContainer.appendChild(frame);
