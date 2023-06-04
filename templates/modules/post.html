@@ -1,5 +1,7 @@
 <div class="post-header body-header negative-space">
-  <span id="post-date"></span><span id="post-name"></span>
+  <div id="post-title">
+    <span id="post-date"></span><span id="post-name"></span>
+  </div>
   <div id="post-subtitle" class="negative-space">
       <span id="post-link"></span>
   </div>
@@ -338,7 +340,7 @@
     if (formattedRemainingSupply == 1) {
       collectPostFormHeader.innerHTML = `There is only 1 remaining edition of this file available to be collected for <span class="ether">Ξ</span>${formattedPrice}.`;
     } else {
-      collectPostFormHeader.innerHTML = `${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } remaining editions of this file collectible for <span class="ether">Ξ</span>${formattedPrice} each.`;
+      collectPostFormHeader.innerHTML = `${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } editions left collectible for <span class="ether">Ξ</span>${formattedPrice} each.`;
     }
 
     // Change the button text.
@@ -710,7 +712,7 @@
       // Update the form's state.
       await updateFormState();
 
-      // Show the loading animation.
+      // Stop the loading animation.
       stopLoadingAnimation('post-form-loading-animation');
     }
 
