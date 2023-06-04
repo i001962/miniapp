@@ -49,7 +49,7 @@
   {% include 'modules/header.html' %}
 </div>
 <div id="body-dom">
-  <div class="page-content content">
+  <div class="body-content content">
     <div id="body-reset-button" class="exit-button">[<span class="exit-button-text">all posts &gt;</span>]</div>
     {% include 'modules/post.html' %}
     {% if article_summary.count > 0 %}
@@ -107,22 +107,6 @@
     decorateNewJbForm();
     decoratePermissionForm();
     decorateAllowanceForm();
-  }
-
-  const setupForking = () => {
-    const forkModal = document.getElementById("fork-modal");
-    const fork = document.getElementById("fork");
-
-    // Summon a modal when the fork button is clicked.
-    fork.addEventListener("click", async (e) => {
-      e.preventDefault();
-
-      // Show the modal.
-      forkModal.style.display = "block";
-
-      // Make the modal look right.
-      await decorateForkModal();
-    });
   }
 
   const load = async () => {

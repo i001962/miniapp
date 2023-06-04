@@ -1,14 +1,14 @@
 <div id="header-container">
   {% if has_avatar == true %}
-  <img src="{{ assets_prefix }}avatar.png" width="72" height="72" class="avatar">
+  <img src="{{ assets_prefix }}avatar.png" width="72" height="72" class="header-avatar">
   {% endif %}
-  <div id="site-info">
-    <div id="site-title"><span id="title-button">{{ planet.name }}</span></div>
-    {% if page_description_html.count > 0 %}<div id="site-about">{{ page_description_html }}</div>{% endif %}
+  <div id="header-info">
+    <div id="header-title"><span id="header-title-button">{{ planet.name }}</span></div>
+    {% if page_description_html.count > 0 %}<div id="header-about">{{ page_description_html }}</div>{% endif %}
   </div>
-  <div id="fork">fork</div>
+  <div id="fork-button">fork</div>
   <a href="{{ assets_prefix }}rss.xml" target="_blank">
-    <img src="{{ assets_prefix }}assets/rss.svg" alt="RSS" class="social-icon" width="1em">
+    <img src="{{ assets_prefix }}assets/rss.svg" alt="RSS" class="header-social-icon" width="1em">
   </a>
 </div>
 {% if site_navigation.count > 0 %}
@@ -21,7 +21,25 @@
 </div>
 {% endif %}
 <script>
-  const titleButton = document.getElementById('title-button');
+  const setupForking = () => {
+    const forkModal = document.getElementById("fork-modal");
+    const forkButton = document.getElementById("fork-button");
+
+    // Summon a modal when the fork button is clicked.
+    forkButton.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      // Show the modal.
+      forkModal.style.display = "block";
+
+      toggleNavVisibility();
+
+      // Make the modal look right.
+      await decorateForkModal();
+    });
+  }
+
+  const titleButton = document.getElementById('header-title-button');
   titleButton.addEventListener('click', () => {
     {% if current_item_type == "blog" %}
     window.location.href = '../';

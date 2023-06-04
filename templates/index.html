@@ -24,18 +24,18 @@ window.onpopstate = function(event) {
   {% include 'modules/header.html' %}
 </div>
 <div id="body-dom">
-  <div id="main-loading-animation" class="loading-animation"></div>
+  <div id="frames-loading-animation" class="body-loading-animation loading-animation mobile-padding"></div>
   <div id="frames-container"></div>
 </div>
 <div id="fork-modal" class="modal negative-space">
   <div class="modal-content content negative-space">
-    <div class="exit-button negative-space">[<span class="exit-button-text negative-space">close</span>]</div>
+    <div class="exit-button mobile-padding negative-space">[<span class="exit-button-text negative-space">close</span>]</div>
     {% include 'modules/fork.html' %}
   </div>
 </div>
 <div id="post-modal" class="modal negative-space">
   <div class="modal-content content negative-space">
-    <div class="exit-button negative-space">[<span class="exit-button-text negative-space">close</span>]</div>
+    <div class="exit-button mobile-padding negative-space">[<span class="exit-button-text negative-space">close</span>]</div>
     {% include 'modules/post.html' %}
   </div>
 </div>
@@ -44,7 +44,7 @@ window.onpopstate = function(event) {
   const horizontalMargin = 20;
   const verticalMargin = 8;
   const transitionDuration = 300;
-  const widthClasses = ["w1", "w2", "w3"];
+  const widthClasses = ["frame-w1", "frame-w2", "frame-w3"];
   const formInputReactionTimeDelay = 600;
   const noScrollEffectEdgeDistance = 80;
   const pagingEdgeDistance = 1000;
@@ -92,14 +92,14 @@ window.onpopstate = function(event) {
 
     // Get a reference to the tier's remaining supply.
     const formattedRemainingSupply = parseInt(tier[2].toString());
-    const cta = postFrame.querySelector('.image-cta');
+    const state = postFrame.querySelector(".frame-image-state");
 
     // Set the content.
     if (formattedRemainingSupply == 0) {
-      cta.textContent = '[sold out]';
-      cta.classList.add("sold-out");
+      state.textContent = '[sold out]';
+      state.classList.add("alert");
     } else {
-      cta.textContent = `[${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } left]`;
+      state.textContent = `[${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } left]`;
     }
   }
 
@@ -113,17 +113,17 @@ window.onpopstate = function(event) {
     const postModal = document.getElementById("post-modal");
 
     // Get references to frame elements that need decorating.
-    const cta = postFrame.querySelector('.image-cta');;
-    const title = postFrame.querySelector('div.image-title');
-    const img = postFrame.querySelector('img');
+    const state = postFrame.querySelector(".frame-image-state");
+    const title = postFrame.querySelector("div.frame-image-title");
+    const img = postFrame.querySelector("img");
 
     // Set the frame and img's ID.
     postFrame.id = 'frame-' + postId;
     img.id = 'img-' + postId;
 
     // Set the content.
-    cta.textContent = '[rec]';
-    title.innerHTML = `<span><span class="image-date">${date} | </span>${ name }<span>`;
+    state.textContent = '[record]';
+    title.innerHTML = `<span><span class="frame-image-date">${date} | </span>${ name }<span>`;
 
     // Mark videos with an icon.
     if (videoSrc) {
@@ -204,19 +204,18 @@ window.onpopstate = function(event) {
     const framesContainer = document.getElementById("frames-container");
     const frame = document.createElement("div");
     const header = document.createElement("div");
-    const footer = document.createElement("div");
     const title = document.createElement("div");
     const img = document.createElement("img");
-    const cta = document.createElement("div");
+    const state = document.createElement("div");
 
     frame.classList.add("frame");
     frame.style.transitionProperty = "opacity, margin-top";
     frame.style.transitionDuration = `${transitionDuration / 1000}s, ${transitionDuration / 1000}s`;
     frame.style.transitionTimingFunction = "ease, ease";
-    header.classList.add("image-header");
-    footer.classList.add("image-footer");
-    cta.classList.add("image-cta");
-    title.classList.add("image-title");
+    header.classList.add("frame-image-header");
+    header.classList.add("mobile-padding");
+    state.classList.add("frame-image-state");
+    title.classList.add("frame-image-title");
     img.loading = "lazy";
     img.style.cursor = "pointer";
 
@@ -226,8 +225,8 @@ window.onpopstate = function(event) {
 
     img.src = src;
 
-    header.appendChild(cta);
     header.appendChild(title);
+    header.appendChild(state);
     frame.appendChild(header);
     frame.appendChild(img);
     framesContainer.appendChild(frame);
@@ -238,7 +237,7 @@ window.onpopstate = function(event) {
   const positionAndShowPostFrame = async (postFrame) => {
     await loadPostFrame(postFrame);
 
-    if (loadingAnimationIntervals['main-loading-animation']) stopLoadingAnimation('main-loading-animation');
+    if (loadingAnimationIntervals['frames-loading-animation']) stopLoadingAnimation('frames-loading-animation');
 
     const rect = postFrame.getBoundingClientRect();
     if (rect.left < greatestRightInRow) currentRow++;
@@ -372,24 +371,6 @@ window.onpopstate = function(event) {
     decorateAllowanceForm();
   }
 
-  const setupForking = () => {
-    const forkModal = document.getElementById("fork-modal");
-    const fork = document.getElementById("fork");
-
-    // Summon a modal when the fork button is clicked.
-    fork.addEventListener("click", async (e) => {
-      e.preventDefault();
-
-      // Show the modal.
-      forkModal.style.display = "block";
-
-      toggleNavVisibility();
-
-      // Make the modal look right.
-      await decorateForkModal();
-    });
-  }
-
   const showPostFrames = async (newPosts) => {
     const newPostFrames = newPosts.map((post) => {
       // if post.hasVideo, use _videoThumbnail.png
@@ -514,7 +495,7 @@ window.onpopstate = function(event) {
   if (id) {
     window.location.href = './' + id + '/';
   } else {
-    startLoadingAnimation('main-loading-animation');
+    startLoadingAnimation('frames-loading-animation');
     loadSettings();
     setupForking();
     loadPosts(defaultPageSize);
