@@ -185,6 +185,9 @@
     const postFormButtonText = document.getElementById("post-form-button-text");
     const postFormButton = document.getElementById("post-form-button");
 
+    // Disable the button.
+    postFormButton.disabled = true;
+
     // Change the button text.
     postFormButtonText.innerHTML = "record & collect";
 
@@ -351,6 +354,9 @@
     // Change the button text.
     postFormButtonText.innerHTML = "collect";
 
+    // Disable the button.
+    postFormButton.disabled = true;
+
     // Re-decorate some input fields depending on the allowances set for the project and category.
     const checkState = async () => {
       // Set error messages if the currently inputted values are too small.
@@ -513,6 +519,12 @@
     const postFormButton = document.getElementById("post-form-button");
     const postCoverImage = document.getElementById("post-cover-image");
     const postCoverVideo = document.getElementById("post-cover-video");
+    const recordPostForm = document.getElementById("record-post-form");
+    const collectPostForm = document.getElementById("collect-post-form");
+
+    // Hide the form.
+    collectPostForm.style.display = "none";
+    recordPostForm.style.display = "none";
 
     // Decorate the frame's title.
     postName.innerHTML = name;
@@ -527,6 +539,7 @@
     }
 
     // Decordate the image or video content.
+
     if (videoSrc) {
       postCoverImage.style.display = "none"
       postCoverVideo.style.display = "block"
@@ -544,10 +557,6 @@
       postCoverImage.src = imageSrc;
       postCoverImage.addEventListener("click", (e) => e.stopPropagation());
     }
-
-    // Get references to the two possible forms.
-    const recordPostForm = document.getElementById("record-post-form");
-    const collectPostForm = document.getElementById("collect-post-form");
 
     const updateFormState = async () => {
       // Get a reference to the chain, project ID, and category fields.
