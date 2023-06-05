@@ -11,16 +11,32 @@
     <img src="{{ assets_prefix }}assets/rss.svg" alt="RSS" class="header-social-icon" width="1em">
   </a>
 </div>
-{% if site_navigation.count > 0 %}
 <div id="nav-container">
   <div id="nav">
     {% for item in site_navigation %}
     <a href="{% if item.externalLink.count > 0 %}{{ item.externalLink }}{% else %}{{ assets_prefix }}{{ item.slug }}/{% endif %}" class="{% if article.slug == item.slug %}nav-current{% else %}nav-item{% endif %}"{% if item.externalLink.count > 0 %} target="_blank"{% endif %}>{{ item.title }}</a>
     {% endfor %}
+    <div id="post-mode-button" class="post-mode-button"><span id="grid-post-mode-button" class="post-mode-button-active"> </span> | <span id="list-post-mode-button">☰</span></div>
   </div>
 </div>
-{% endif %}
 <script>
+  let postMode = "frames";
+  
+  const togglePostMode = () => {
+    const gridPostModeButton = document.getElementById("grid-post-mode-button");
+    const listPostModeButton = document.getElementById("list-post-mode-button");
+
+    if (postMode == "frames") {
+      postMode = "list"; 
+      listPostModeButton.classList.add("post-mode-button-active");
+      gridPostModeButton.classList.remove("post-mode-button-active");
+    } else {
+      postMode = "frames"; 
+      gridPostModeButton.classList.add("post-mode-button-active");
+      listPostModeButton.classList.remove("post-mode-button-active");
+    }
+  }
+
   const setupForking = () => {
     const forkModal = document.getElementById("fork-modal");
     const forkButton = document.getElementById("fork-button");
@@ -47,4 +63,7 @@
     window.location.href = './';
     {% endif %}
   });
+
+  const postModeButton = document.getElementById("post-mode-button");
+  postModeButton.addEventListener('click', togglePostMode);
 </script>

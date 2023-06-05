@@ -24,8 +24,9 @@ window.onpopstate = function(event) {
   {% include 'modules/header.html' %}
 </div>
 <div id="body-dom">
-  <div id="frames-loading-animation" class="body-loading-animation loading-animation"></div>
-  <div id="frames-container"></div>
+  <div id="posts-loading-animation" class="body-loading-animation loading-animation"></div>
+  <div id="post-frames-container" style="display: none"></div>
+  <div id="post-list-container"></div>
 </div>
 <div id="fork-modal" class="modal negative-space">
   <div class="modal-content content negative-space">
@@ -43,8 +44,7 @@ window.onpopstate = function(event) {
   // Layout constants.
   const horizontalMargin = 20;
   const verticalMargin = 20;
-  const transitionDuration = 300;
-  const widthClasses = ["frame-w1", "frame-w2", "frame-w3"];
+  const postFrameWidthClasses = ["post-frame-w1", "post-frame-w2", "post-frame-w3"];
   const formInputReactionTimeDelay = 600;
   const noScrollEffectEdgeDistance = 80;
   const pagingEdgeDistance = 1000;
@@ -55,6 +55,7 @@ window.onpopstate = function(event) {
 
   // Layout variables.
   let postFrames = [];
+  let postRows = [];
   let posts = [];
   let currentRow = 1;
   let greatestRightInRow = 0;
@@ -92,7 +93,25 @@ window.onpopstate = function(event) {
 
     // Get a reference to the tier's remaining supply.
     const formattedRemainingSupply = parseInt(tier[2].toString());
-    const state = postFrame.querySelector(".frame-image-state");
+    const state = postFrame.querySelector(".post-frame-state");
+
+    // Set the content.
+    if (formattedRemainingSupply == 0) {
+      state.innerHTML = 'sold out';
+      state.classList.add("alert");
+    } else {
+      state.textContent = `${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } left`;
+    }
+  }
+
+  const decoratePostRowState = (postRow,  projectId, encodedIPFSUri) => {
+    if (!tiersCache[projectId]) tiersCache[projectId] = {};
+    const tier = tiersCache[projectId][encodedIPFSUri];
+    if (!tier) return;
+
+    // Get a reference to the tier's remaining supply.
+    const formattedRemainingSupply = parseInt(tier[2].toString());
+    const state = postRow.querySelector(".post-row-state");
 
     // Set the content.
     if (formattedRemainingSupply == 0) {
@@ -113,8 +132,8 @@ window.onpopstate = function(event) {
     const postModal = document.getElementById("post-modal");
 
     // Get references to frame elements that need decorating.
-    const subtitle = postFrame.querySelector(".frame-image-subtitle");
-    const title = postFrame.querySelector("div.frame-image-title");
+    const subtitle = postFrame.querySelector(".post-frame-subtitle");
+    const title = postFrame.querySelector("div.post-frame-title");
     const img = postFrame.querySelector("img");
 
     // Set the frame and img's ID.
@@ -123,7 +142,9 @@ window.onpopstate = function(event) {
 
     // Set the content.
     title.innerHTML = name;
-    subtitle.innerHTML = `<span class="frame-image-date">${date} | </span><span class="frame-image-state">recordable</span>`;
+    subtitle.innerHTML = `${date} | <span class="post-frame-state">recordable</span>`;
+
+    if (name == "✃") title.classList.add("bigger-font"); 
 
     // Mark videos with an icon.
     if (videoSrc) {
@@ -151,9 +172,59 @@ window.onpopstate = function(event) {
     decoratePostFrameState(postFrame, projectId, encodedIPFSUri);
   }
 
+  const decoratePostRow = async (postRow, postId, date, name, link, imageSrc, videoSrc) => {
+    const postFormStateProjectId = document.getElementById("post-form-state-project-id");
+    const projectId = parseInt(postFormStateProjectId.innerHTML);
+
+    // Set a default name if needed.
+    if (name === undefined || name === null || name === "") name = "✃";
+
+    const postModal = document.getElementById("post-modal");
+
+    // Get references to frame elements that need decorating.
+    const subtitle = postRow.querySelector(".post-row-subtitle");
+    const title = postRow.querySelector("div.post-row-title");
+    const img = postRow.querySelector("img");
+
+    // Set the frame and img's ID.
+    postRow.id = 'row-' + postId;
+    img.id = 'img-' + postId;
+
+    // Set the content.
+    title.innerHTML = name;
+    subtitle.innerHTML = `${date} | <span class="post-row-state">recordable</span>`;
+
+    if (name == "✃") title.classList.add("bigger-font"); 
+
+    // Mark videos with an icon.
+    if (videoSrc) {
+      const overlay = document.createElement("div");
+      overlay.innerHTML = "[▶]"
+      overlay.classList.add("overlay-play-icon");
+      img.appendChild(overlay);
+    }
+
+    const encodedIPFSUri = await encodeIPFSUriFrom("{{ assets_prefix }}", postId);
+
+    // Summon a modal when the frame is clicked.
+    postRow.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      // Show the modal.
+      postModal.style.display = "block";
+
+      toggleNavVisibility();
+
+      // Make the modal look right.
+      await decoratePostModal(postId, encodedIPFSUri, name, date, link, imageSrc, videoSrc);
+    });
+
+    decoratePostRowState(postRow, projectId, encodedIPFSUri);
+  }
+
   /// Load the frame contents.
-  const loadPostFrame = async (frame) => {
-    const img = frame.querySelector('img:first-of-type');
+  const loadPostImage = async (container) => {
+    const img = container.querySelector('img:first-of-type');
     return new Promise((resolve) => {
       // Resolve if the image if done.
       if (img.complete) return resolve();
@@ -173,7 +244,7 @@ window.onpopstate = function(event) {
   /// Get the top.
   const getTopTarget = (postFrame, row) => {
     if (row == 1) {
-      const framesContainer = document.getElementById("frames-container");
+      const framesContainer = document.getElementById("post-frames-container");
       return framesContainer.offsetTop;
     }
 
@@ -201,46 +272,68 @@ window.onpopstate = function(event) {
   }
 
   const framePost = (src) => {
-    const framesContainer = document.getElementById("frames-container");
+    const framesContainer = document.getElementById("post-frames-container");
     const frame = document.createElement("div");
-    const headerContainer = document.createElement("div");
-    const header = document.createElement("div");
+    const infoContainer = document.createElement("div");
+    const info = document.createElement("div");
     const title = document.createElement("div");
-    const img = document.createElement("img");
     const subtitle = document.createElement("div");
+    const img = document.createElement("img");
 
-    frame.classList.add("frame");
-    frame.style.transitionProperty = "opacity, margin-top";
-    frame.style.transitionDuration = `${transitionDuration / 1000}s, ${transitionDuration / 1000}s`;
-    frame.style.transitionTimingFunction = "ease, ease";
-    headerContainer.classList.add("frame-image-header-container");
-    header.classList.add("frame-image-header");
-    header.classList.add("mobile-padding");
-    subtitle.classList.add("frame-image-subtitle");
-    title.classList.add("frame-image-title");
+    frame.classList.add("post-frame");
+    infoContainer.classList.add("post-frame-info-container");
+    info.classList.add("post-frame-info");
+    subtitle.classList.add("post-frame-subtitle");
+    title.classList.add("post-frame-title");
     img.loading = "lazy";
-    img.style.cursor = "pointer";
 
     // Get random width.
-    const widthClass = widthClasses[Math.floor(Math.random() * widthClasses.length)];
+    const widthClass = postFrameWidthClasses[Math.floor(Math.random() * postFrameWidthClasses.length)];
     frame.classList.add(widthClass);
 
     img.src = src;
 
-    header.appendChild(title);
-    header.appendChild(subtitle);
-    headerContainer.appendChild(header);
-    frame.appendChild(headerContainer);
+    info.appendChild(title);
+    info.appendChild(subtitle);
+    infoContainer.appendChild(info);
+    frame.appendChild(infoContainer);
     frame.appendChild(img);
     framesContainer.appendChild(frame);
 
     return frame;
   }
 
-  const positionAndShowPostFrame = async (postFrame) => {
-    await loadPostFrame(postFrame);
+  const listPost = (src) => {
+    const listContainer = document.getElementById("post-list-container");
+    const row = document.createElement("div");
+    const info = document.createElement("div");
+    const title = document.createElement("div");
+    const subtitle = document.createElement("div");
+    const imgContainer = document.createElement("div");
+    const img = document.createElement("img");
 
-    if (loadingAnimationIntervals['frames-loading-animation']) stopLoadingAnimation('frames-loading-animation');
+    row.classList.add("post-row");
+    info.classList.add("post-row-info");
+    title.classList.add("post-row-title");
+    subtitle.classList.add("post-row-subtitle");
+    imgContainer.classList.add("post-row-image-container");
+    img.loading = "lazy";
+    img.src = src;
+
+    info.appendChild(title);
+    info.appendChild(subtitle);
+    imgContainer.appendChild(img);
+    row.appendChild(imgContainer);
+    row.appendChild(info);
+    listContainer.appendChild(row);
+
+    return row;
+  }
+
+  const positionAndShowPostFrame = async (postFrame) => {
+    await loadPostImage(postFrame);
+
+    if (loadingAnimationIntervals['posts-loading-animation']) stopLoadingAnimation('posts-loading-animation');
 
     const rect = postFrame.getBoundingClientRect();
     if (rect.left < greatestRightInRow) currentRow++;
@@ -255,7 +348,7 @@ window.onpopstate = function(event) {
 
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const marginTop = window.getComputedStyle(postFrame).display == "block" ? 0 : heightDiff + scrollTop - verticalMargin;
-    postFrame.classList.add("frame-fade-in");
+    postFrame.classList.add("post-frame-fade-in");
 
     return new Promise((resolve) => {
       if (marginTop) {
@@ -267,8 +360,16 @@ window.onpopstate = function(event) {
         };
         postFrame.addEventListener("transitionend", handleEvent);
         postFrame.style.marginTop = -marginTop + "px";
-      } else setTimeout(resolve, transitionDuration);
+      } else resolve();
     });
+  }
+
+  const positionAndShowPostRow = async (postRow) => {
+    await loadPostImage(postRow);
+
+    if (loadingAnimationIntervals['posts-loading-animation']) stopLoadingAnimation('posts-loading-animation');
+
+    postRow.classList.add("post-row-fade-in");
   }
 
   const decoratePostModal = async (postId, encodedIPFSUri, name, date, link, imageSrc, videoSrc) => {
@@ -388,6 +489,38 @@ window.onpopstate = function(event) {
       await positionAndShowPostFrame(postFrame);
   }
 
+  const showPostList = async (newPosts) => {
+    const newPostRows = newPosts.map((post) => {
+      // if post.hasVideo, use _videoThumbnail.png
+      // else use a random attachment
+      const imageName = post.hasVideo ? '_videoThumbnail.png' : post.attachments[Math.floor(Math.random() * post.attachments.length)];
+      const videoSrc = post.hasVideo ? './' + post.id + '/' + post.videoFilename : null;
+      const coverImageSrc = './' + post.id + '/' + imageName;
+      const row = listPost(coverImageSrc);
+      decoratePostRow(row, post.id, formatTimestamp(post.created), post.title, post.externalLink, coverImageSrc, videoSrc);
+      return row;
+    });
+    postRows = postRows.concat(newPostRows);
+
+    for (const postRow of newPostRows)
+      await positionAndShowPostRow(postRow);
+  }
+
+  const showPosts = async (posts) => {
+    const framesContainer = document.getElementById("post-frames-container");
+    const listContainer = document.getElementById("post-list-container");
+
+    if (postMode == "frames") {
+      framesContainer.style.display = "block";
+      listContainer.style.display = "none";
+      await showPostFrames(posts);
+    } else {
+      framesContainer.style.display = "none";
+      listContainer.style.display = "block";
+      await showPostList(posts);
+    }
+  }
+
   const loadPosts = async (pageSize) => {
     canLoadNewPosts = false;
     const response = await fetch(
@@ -410,7 +543,7 @@ window.onpopstate = function(event) {
 
     await loadPostsState(encodedIPFSUris);
 
-    await showPostFrames(newPosts);
+    await showPosts(newPosts);
 
     canLoadNewPosts = true;
   }
@@ -485,9 +618,10 @@ window.onpopstate = function(event) {
     topDom.style.height = headerContainer.offsetHeight + navHeight + "px";
   }
 
-  window.addEventListener("load",  setTopDomHeight);
-  window.addEventListener("resize", setTopDomHeight);
-  window.addEventListener("scroll", didScroll);
+  const setupPostMode = () => {
+    const postModeButton = document.getElementById("post-mode-button");
+    postModeButton.addEventListener('click', () => showPosts(posts));
+  }
 
   // if there is ?id= in the url, open the object page.
   const urlParams = new URLSearchParams(window.location.search);
@@ -495,10 +629,15 @@ window.onpopstate = function(event) {
   if (id) {
     window.location.href = './' + id + '/';
   } else {
-    startLoadingAnimation('frames-loading-animation');
+    window.addEventListener("load",  setTopDomHeight);
+    window.addEventListener("resize", setTopDomHeight);
+    window.addEventListener("scroll", didScroll);
+
+    startLoadingAnimation('posts-loading-animation');
     loadSettings();
     setupForking();
     loadPosts(defaultPageSize);
+    setupPostMode();
   }
 </script>
 {% endblock %}
