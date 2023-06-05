@@ -539,7 +539,7 @@ details > summary:before {
 /* BODY STYLES */
 
 .body-header {
-  padding: var(--spacing-3) 0;
+  padding: var(--spacing-6) 0 var(--spacing-3) 0;
 }
 
 .body-loading-animation {
@@ -906,10 +906,6 @@ details > summary:before {
   }
 
   /* BODY STYLES */
-
-  .body-header {
-    padding-top: var(--spacing-6);
-  }
 
   .body-content {
     padding-top: var(--spacing-3);
