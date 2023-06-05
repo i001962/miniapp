@@ -520,11 +520,14 @@ details > summary:before {
 #fork-form .main-toggle {
   margin-top: var(--spacing-4);
 }
+#fork-button {
+  cursor: pointer;
+}
 #fork-button:hover {
   color: var(--link-color);
 }
 #fork-form {
-  width: 45%;
+  width: 55%;
 }
 #fork-form details .form-item {
   margin-top: var(--spacing-3);
