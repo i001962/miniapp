@@ -280,12 +280,10 @@ window.onpopstate = function(event) {
     const postImage = document.getElementById("post-cover-image");
     const postVideo = document.getElementById("post-cover-video");
 
-    // Adjust the size.
     requestAnimationFrame(() => {
       const headerContainerHeight = headerContainer.offsetHeight;
       const borderHeight = parseInt(topDom.style.borderBottomWidth, 10);
-      postModal.style.top = headerContainerHeight + borderHeight + 'px';
-      postModal.style.height = `calc(100% - ${headerContainerHeight + borderHeight}px)`;
+      postModal.style.paddingTop = headerContainerHeight + borderHeight + 'px';
     });
 
     // Track the modal in browse history.
@@ -343,8 +341,7 @@ window.onpopstate = function(event) {
     requestAnimationFrame(() => {
       const headerContainerHeight = headerContainer.offsetHeight;
       const borderHeight = parseInt(topDom.style.borderBottomWidth, 10);
-      forkModal.style.top = headerContainerHeight + borderHeight + 'px';
-      forkModal.style.height = `calc(100% - ${headerContainerHeight + borderHeight}px)`;
+      forkModal.style.paddingTop = headerContainerHeight + borderHeight + 'px';
     });
 
     // Make sure the modal is closeable when clicking on empty space.
