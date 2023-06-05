@@ -19,11 +19,13 @@
   --spacing-3: 12px;
   --spacing-4: 20px;
   --spacing-5: 24px;
+  --spacing-6: 32px;
   --spacing-scroll-padding: 100px;
   --base-z-index: 1;
   --modal-z-index: 10;
   --top-dom-z-index: 100;
-  --content-max-width: 100%;
+  --max-content-width: 1000px;
+  --max-width: 100%;
   --transition-duration: 0.1s;
 }
 
@@ -145,12 +147,10 @@ h6,
 ul,
 ol,
 pre,
-hr {
-  max-width: var(--content-max-width);
+hr { 
   margin-left: auto;
   margin-right: auto;
-  margin-inline-start: var(--spacing-2);
-  margin-inline-end: var(--spacing-2);
+  max-width: var(--max-width);
 }
 
 ul:has(input[type="checkbox"]) {
@@ -261,20 +261,6 @@ details > summary:before {
   color: var(--foreground-secondary-color);
 }
 
-p {
-  margin-inline-start: var(--spacing-2);
-  margin-inline-end: var(--spacing-2);
-}
-
-p:has(img) {
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
-}
-
-p:has(img) {
-  margin-inline-start: 0px;
-}
-
 @-webkit-keyframes fadein {
   0% {opacity: 0;}
   100% {opacity: 1;}
@@ -288,7 +274,7 @@ p:has(img) {
 /* BASE STYLES */
 
 .main {
-  max-width: min(1800px, calc(var(--content-max-width) - env(safe-area-inset-left) - env(safe-area-inset-left)));
+  max-width: min(1800px, calc(var(--max-width) - env(safe-area-inset-left) - env(safe-area-inset-left)));
   margin: 0 auto;
   color: var(--foreground-color);
   padding: 0px;
@@ -300,7 +286,7 @@ p:has(img) {
   position: sticky;
   top: 0;
   z-index: var(--top-dom-z-index);
-  width: var(--content-max-width);
+  width: var(--max-width);
   background-color: var(--background-color-opacity);
   transition: height calc(2*var(--transition-duration)) linear;
   border-bottom-width: 0px;
@@ -313,14 +299,14 @@ p:has(img) {
 .content {
   margin: auto;
   width: 88vw;
-  max-width: 1000px;
+  max-width: var(--max-content-width);
   float: center;
   padding-top: var(--spacing-2);
   padding-bottom: var(--spacing-scroll-padding);
 }
 
 .content img, .content video {
-  width: var(--content-max-width);
+  width: var(--max-width);
   border: var(--border-width) solid var(--foreground-tertiary-color);
 }
 
@@ -344,11 +330,11 @@ p:has(img) {
   margin-bottom: 20px;
   margin-left: auto;
   margin-right: auto;
-  max-width: var(--content-max-width);
+  max-width: var(--max-width);
 }
 
 .audio {
-  width: var(--content-max-width);
+  width: var(--max-width);
 }
 
 .overlay-play-icon {
@@ -362,7 +348,7 @@ p:has(img) {
 }
 
 .video-container {
-  width: var(--content-max-width);
+  width: var(--max-width);
   padding-top: 56.25%;
   height: 0px;
   position: relative;
@@ -372,7 +358,7 @@ p:has(img) {
 }
 
 .video {
-  width: var(--content-max-width);
+  width: var(--max-width);
   height: 100%;
   position: absolute;
   top: 0;
@@ -388,7 +374,7 @@ p:has(img) {
   z-index: var(--modal-z-index);
   left: 0;
   top: 0;
-  width: var(--content-max-width);
+  width: var(--max-width);
   height: 100%;
   overflow: auto;
   background-color: var(--background-color-opacity);
@@ -453,7 +439,7 @@ p:has(img) {
 }
 
 #header-about p {
-  max-width: var(--content-max-width);
+  max-width: var(--max-width);
   margin-left: 0px;
   margin-right: 0px;
 }
@@ -533,9 +519,9 @@ p:has(img) {
 }
 
 .body-loading-animation {
-  position: fixed;
-  margin-top: var(--spacing-2);
-  margin-left: var(--spacing-4);
+  position: relative;
+  top: var(--spacing-2);
+  left: var(--spacing-3);
 }
 
 /* POST BODY STYLES */
@@ -565,8 +551,6 @@ p:has(img) {
 }
 #post-form-state-toggle {
  color: var(--foreground-secondary-color);
- display: flex;
- flex-direction: row;
  cursor: pointer;
 }
 .post-form-state-item-value {
@@ -644,7 +628,7 @@ p:has(img) {
   align-items: center;
 }
 .form-value input, .form-value select, .form-value textarea {
-  width: var(--content-max-width);
+  width: var(--max-width);
   padding: var(--spacing-2);
   border: var(--border-width) solid var(--foreground-tertiary-color);
   color: var(--foreground-color);
@@ -722,6 +706,7 @@ p:has(img) {
   position: relative;
   cursor: pointer;
   border: var(--border-width) solid var(--foreground-tertiary-color);
+  transition: border var(--transition-duration) ease;
 }
 
 .frame:hover {
@@ -729,16 +714,15 @@ p:has(img) {
 }
 
 .frame img {
-  width: var(--content-max-width);
+  width: var(--max-width);
   display: block;
-  transition: border var(--transition-duration) ease;
 }
 
 .frame-image-header-container {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: var(--content-max-width);
+  width: var(--max-width);
 }
 
 .frame-image-header {
@@ -788,7 +772,7 @@ p:has(img) {
 
 /**************/
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
 
   /* COMMON STYLES */
 
@@ -798,11 +782,11 @@ p:has(img) {
   }
 
   .content {
-    width: var(--content-max-width);
+    width: var(--max-width);
   }
 
   .content img, .content video {
-    width: var(--content-max-width);
+    width: var(--max-width);
     border-left: none;
     border-right: none;
   }
@@ -811,7 +795,7 @@ p:has(img) {
 
   .exit-button {
     padding-top: 0;
-    padding-bottom: var(--spacing-1);
+    padding-bottom: var(--spacing-2);
   }
 
   /* HEADER STYLES */
@@ -841,11 +825,15 @@ p:has(img) {
   /* BODY STYLES */
 
   .body-header {
-    padding-top: var(--spacing-5);
+    padding-top: var(--spacing-6);
   }
 
   .body-content {
     padding-top: var(--spacing-3);
+  }
+
+  .body-loading-animation {
+    left: var(--spacing-2);
   }
 
   /* FORM STYLES */
@@ -860,33 +848,32 @@ p:has(img) {
     margin-right: 0;
   }
 
-  .frame { display: block;
-    margin-right: 0;
-  }
-
   .frame-w1, .frame-w2, .frame-w3 {
-    width: var(--content-max-width);
+    width: var(--max-width);
   }
 
   .frame {
+    display: block;
     margin-left: 0;
     margin-top: var(--spacing-3);
     margin-bottom: var(--spacing-5);
+    border: none;
     border-bottom: var(--border-width) solid var(--foreground-tertiary-color);
   }
 
-  .frame:hover img {
-     border: none;
+  .frame:hover {
+    border-left: none; 
+    border-right: none; 
+    border-top: none; 
   }
 
-  .frame img {
-     border: 0;
+  .frame-image-header-container {
+    position: relative;
   }
 
   .frame-image-header {
     gap: var(--spacing-2);
     opacity: 1;
-    position: relative;
     padding: 0 0 var(--spacing-1) 0;
     border: none;
   }

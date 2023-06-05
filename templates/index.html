@@ -24,7 +24,7 @@ window.onpopstate = function(event) {
   {% include 'modules/header.html' %}
 </div>
 <div id="body-dom">
-  <div id="frames-loading-animation" class="body-loading-animation loading-animation mobile-padding"></div>
+  <div id="frames-loading-animation" class="body-loading-animation loading-animation"></div>
   <div id="frames-container"></div>
 </div>
 <div id="fork-modal" class="modal negative-space">
@@ -485,7 +485,7 @@ window.onpopstate = function(event) {
     topDom.style.height = headerContainer.offsetHeight + navHeight + "px";
   }
 
-  window.addEventListener("load", setTopDomHeight);
+  window.addEventListener("load",  setTopDomHeight);
   window.addEventListener("resize", setTopDomHeight);
   window.addEventListener("scroll", didScroll);
 
