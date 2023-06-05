@@ -798,13 +798,16 @@ details > summary:before {
   width: var(--max-width); 
 }
 
+.post-row-container {
+  width: var(--max-width); 
+}
+
 .post-row {
   cursor: pointer;
   display: flex; 
   opacity: 0;
   align-items: center;
   gap: var(--spacing-5);
-  width: var(--max-width); 
   padding: var(--spacing-4);
   border-bottom: var(--border-width) solid var(--foreground-tertiary-color);
 }

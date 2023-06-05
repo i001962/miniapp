@@ -305,6 +305,7 @@ window.onpopstate = function(event) {
 
   const listPost = (src) => {
     const listContainer = document.getElementById("post-list-container");
+    const rowContainer = document.createElement("div");
     const row = document.createElement("div");
     const info = document.createElement("div");
     const title = document.createElement("div");
@@ -312,6 +313,7 @@ window.onpopstate = function(event) {
     const imgContainer = document.createElement("div");
     const img = document.createElement("img");
 
+    rowContainer.classList.add("post-row-container");
     row.classList.add("post-row");
     info.classList.add("post-row-info");
     title.classList.add("post-row-title");
@@ -325,7 +327,8 @@ window.onpopstate = function(event) {
     imgContainer.appendChild(img);
     row.appendChild(imgContainer);
     row.appendChild(info);
-    listContainer.appendChild(row);
+    rowContainer.appendChild(row);
+    listContainer.appendChild(rowContainer);
 
     return row;
   }
