@@ -691,34 +691,34 @@ p:has(img) {
   opacity: 0;
   position: relative;
   cursor: pointer;
+  border: var(--border-width) solid var(--foreground-tertiary-color);
+}
+
+.frame:hover {
+   border: var(--border-width) solid var(--link-color);
 }
 
 .frame img {
   width: var(--content-max-width);
   display: block;
-  border: var(--border-width) solid var(--background-color);
   transition: border var(--transition-duration) ease;
 }
 
-.frame:hover img {
-   border-left: var(--border-width) solid var(--link-color);
-   border-right: var(--border-width) solid var(--link-color);
-   border-top: var(--border-width) solid var(--link-color);
+.frame-image-header-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: var(--content-max-width);
 }
 
 .frame-image-header {
-  position: absolute;
-  bottom: var(--border-width);
-  left: var(--border-width);
   padding: var(--spacing-2);
-  width: calc(var(--content-max-width) - 2*var(--spacing-2) - var(--border-width));
   color: var(--foreground-color);
   background-color: var(--background-color-opacity);
   opacity: 0;
   transition: opacity var(--transition-duration) ease;
   gap: var(--spacing-2);
   justify-content: space-between;
-  border-bottom: var(--border-width) solid var(--link-color);
   border-top: var(--border-width) solid var(--link-color);
 }
 

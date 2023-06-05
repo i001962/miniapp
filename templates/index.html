@@ -203,6 +203,7 @@ window.onpopstate = function(event) {
   const framePost = (src) => {
     const framesContainer = document.getElementById("frames-container");
     const frame = document.createElement("div");
+    const headerContainer = document.createElement("div");
     const header = document.createElement("div");
     const title = document.createElement("div");
     const img = document.createElement("img");
@@ -212,6 +213,7 @@ window.onpopstate = function(event) {
     frame.style.transitionProperty = "opacity, margin-top";
     frame.style.transitionDuration = `${transitionDuration / 1000}s, ${transitionDuration / 1000}s`;
     frame.style.transitionTimingFunction = "ease, ease";
+    headerContainer.classList.add("frame-image-header-container");
     header.classList.add("frame-image-header");
     header.classList.add("mobile-padding");
     subtitle.classList.add("frame-image-subtitle");
@@ -227,7 +229,8 @@ window.onpopstate = function(event) {
 
     header.appendChild(title);
     header.appendChild(subtitle);
-    frame.appendChild(header);
+    headerContainer.appendChild(header);
+    frame.appendChild(headerContainer);
     frame.appendChild(img);
     framesContainer.appendChild(frame);
 
