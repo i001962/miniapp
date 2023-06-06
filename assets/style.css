@@ -26,7 +26,8 @@
   --top-dom-z-index: 100;
   --max-content-width: 1000px;
   --max-width: 100%;
-  --transition-duration: 0.2s;
+  --transition-duration-1: 0.1s;
+  --transition-duration-2: 0.2s;
   --transition-timing-function: ease;
 }
 
@@ -97,10 +98,7 @@ details > summary:before {
   content: '▶';
   display: inline-block;
   margin-right: var(--spacing-1);
-  -webkit-transition : transform var(--transition-duration) linear;
-  -moz-transition : transform var(--transition-duration) linear;
-  -o-transition : transform var(--transition-duration) linear;
-  transition: transform var(--transition-duration) linear;
+  transition: transform var(--transition-duration-2) linear;
   font-style: normal;
 }
 details[open] > summary:before {
@@ -292,10 +290,7 @@ details > summary:before {
   z-index: var(--top-dom-z-index);
   width: var(--max-width);
   background-color: var(--background-color-opacity);
-  -webkit-transition : height calc(2*var(--transition-duration)) linear;
-  -moz-transition : height calc(2*var(--transition-duration)) linear;
-  -o-transition : height calc(2*var(--transition-duration)) linear;
-  transition: height calc(2*var(--transition-duration)) linear;
+  transition: height calc(2*var(--transition-duration-1)) linear;
   border-bottom-width: 0px;
   border-bottom-style: solid;
   border-bottom-color: var(--foreground-tertiary-color);
@@ -486,17 +481,11 @@ details > summary:before {
   margin-left: auto;
   margin-right: auto;
   padding: 0 var(--spacing-3) var(--spacing-3) var(--spacing-4);
-  -webkit-transition : visibility 0s var(--transition-duration), opacity var(--transition-duration) linear;
-  -moz-transition : visibility 0s var(--transition-duration), opacity var(--transition-duration) linear;
-  -o-transition : visibility 0s var(--transition-duration), opacity var(--transition-duration) linear;
-  transition: visibility 0s var(--transition-duration), opacity var(--transition-duration) linear;
+  transition: visibility 0s var(--transition-duration-1), opacity var(--transition-duration-1) var(--transition-timing-function);
 }
 
 #nav-container.hidden {
-  -webkit-transition: visibility 0s var(--transition-duration), opacity var(--transition-duration) linear var(--transition-duration);;
-  -moz-transition: visibility 0s var(--transition-duration), opacity var(--transition-duration) linear var(--transition-duration);
-  -o-transition: visibility 0s var(--transition-duration), opacity var(--transition-duration) linear var(--transition-duration);
-  transition: visibility 0s var(--transition-duration), opacity var(--transition-duration) linear var(--transition-duration);
+  transition: visibility 0s var(--transition-duration-1), opacity var(--transition-duration-1) var(--transition-timing-function) var(--transition-duration-1);
 }
 
 #nav {
@@ -730,7 +719,7 @@ details > summary:before {
   position: relative;
   cursor: pointer;
   border: var(--border-width) solid var(--foreground-tertiary-color);
-  transition: border-color var(--transition-duration) var(--transition-timing-function), opacity var(--transition-duration) var(--transition-timing-function), margin-top var(--transition-duration) var(--transition-timing-function);
+  transition: border-color var(--transition-duration-2) var(--transition-timing-function), opacity var(--transition-duration-2) var(--transition-timing-function), margin-top var(--transition-duration-2) var(--transition-timing-function);
 }
 
 .post-frame:hover {
@@ -754,7 +743,7 @@ details > summary:before {
   color: var(--foreground-color);
   background-color: var(--background-color-opacity);
   opacity: 0;
-  transition: opacity var(--transition-duration) var(--transition-timing-function);
+  transition: opacity var(--transition-duration-2) var(--transition-timing-function);
   gap: var(--spacing-2);
   justify-content: space-between;
   border-top: var(--border-width) solid var(--link-color);
