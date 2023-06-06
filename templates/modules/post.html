@@ -1,4 +1,4 @@
-<div class="post-header body-header mobile-padding negative-space">
+<div id="post-header" class="post-header body-header mobile-padding negative-space">
   <div id="post-title">
     <span id="post-date"></span><span id="post-name"></span>
   </div>
@@ -522,6 +522,10 @@
     const recordPostForm = document.getElementById("record-post-form");
     const collectPostForm = document.getElementById("collect-post-form");
 
+    {% if article.attachments.count == 0 %}
+    return;
+    {% endif %}
+
     // Hide the form.
     collectPostForm.style.display = "none";
     recordPostForm.style.display = "none";
@@ -748,3 +752,14 @@
     stopLoadingAnimation('post-form-loading-animation');
   }
 </script>
+{% if article.attachments.count == 0 %}
+<script>
+  document.getElementById("post-header").style.display = "none";
+  document.getElementById("collect-post-form").style.display = "none";
+  document.getElementById("collect-post-form").style.display = "none";
+  document.getElementById("record-post-form").style.display = "none";
+  document.getElementById("post-cover-image").style.display = "none";
+  document.getElementById("post-cover-video").style.display = "none";
+  document.getElementById("post-form-button").style.display = "none";
+</script>
+{% endif %}
