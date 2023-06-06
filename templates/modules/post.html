@@ -523,6 +523,7 @@
     const collectPostForm = document.getElementById("collect-post-form");
 
     {% if article.attachments.count == 0 %}
+    // Many decorations are only working if there's an attachment.
     return;
     {% endif %}
 
@@ -752,7 +753,7 @@
     stopLoadingAnimation('post-form-loading-animation');
   }
 </script>
-{% if article.attachments.count == 0 %}
+{% if article_type == 1 %}
 <script>
   document.getElementById("post-header").style.display = "none";
   document.getElementById("collect-post-form").style.display = "none";
