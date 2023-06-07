@@ -355,6 +355,7 @@ details > summary:before {
   bottom: var(--spacing-3);
   right: var(--spacing-3);
   color: var(--foreground-secondary-color);
+  transition: opacity var(--transition-duration-2) var(--transition-timing-function);
 }
 
 .video-container {
@@ -728,6 +729,10 @@ details > summary:before {
 
 .post-frame:hover {
   border-color: var(--link-color);
+}
+
+.post-frame:hover .overlay-play-icon {
+  opacity: 0; 
 }
 
 .post-frame img, .post-frame video {

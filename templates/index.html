@@ -160,6 +160,10 @@ window.onpopstate = function(event) {
       frameImage.src = "";
       frameVideo.src = videoSrc;
       frameImage.loading = "lazy";
+      const overlay = document.createElement("div");
+      overlay.innerHTML = "[▶]";
+      overlay.classList.add("overlay-play-icon");
+      postFrame.appendChild(overlay);
       frameVideo.addEventListener("mouseover", frameVideo.play);
       frameVideo.addEventListener("mouseout", frameVideo.pause);
     } else {
@@ -233,7 +237,6 @@ window.onpopstate = function(event) {
       rowImage.loading = "lazy";
       rowVideo.addEventListener("mouseover", rowVideo.play);
       rowVideo.addEventListener("mouseout", rowVideo.pause);
-      subtitle.innerHTML = `${subtitle.innerHTML} | [▶]`
     } else {
       rowImage.style.display = "block"
       rowVideo.style.display = "none"
