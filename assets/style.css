@@ -808,7 +808,6 @@ details > summary:before {
   flex-shrink: 0;
   width: 200px;   
   height: 100px;   
-  border: var(--border-width) solid var(--foreground-tertiary-color);
   overflow: hidden;
 }
 
@@ -816,6 +815,7 @@ details > summary:before {
   width: var(--max-width);
   height: var(--max-width);
   object-fit: contain; 
+  /* background: var(--foreground-tertiary-color); */
 }
 
 .post-row-info {
