@@ -151,6 +151,7 @@ window.onpopstate = function(event) {
       const overlay = document.createElement("div");
       overlay.innerHTML = "[▶]"
       overlay.classList.add("overlay-play-icon");
+      overlay.style.zIndex = window.getComputedStyle(postFrame).zIndex + 1;
       postFrame.appendChild(overlay);
     }
 
@@ -201,6 +202,7 @@ window.onpopstate = function(event) {
       const overlay = document.createElement("div");
       overlay.innerHTML = "[▶]"
       overlay.classList.add("overlay-play-icon");
+      overlay.style.zIndex = window.getComputedStyle(postRow).zIndex + 1;
       img.appendChild(overlay);
     }
 

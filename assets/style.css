@@ -308,8 +308,11 @@ details > summary:before {
 }
 
 .content img, .content video {
-  width: var(--max-width);
   border: var(--border-width) solid var(--foreground-tertiary-color);
+  min-width: 600px;
+  max-height: 700px;
+  object-position: left;
+  object-fit: cover;
 }
 
 .loading-animation {
@@ -345,7 +348,6 @@ details > summary:before {
 
 .overlay-play-icon {
   font-size: var(--font-size-1);
-  z-index: calc(var(--base-z-index) + 1);
   display: block;
   position: absolute;
   bottom: var(--spacing-3);
@@ -797,7 +799,6 @@ details > summary:before {
   align-items: center;
   gap: var(--spacing-5);
   padding: var(--spacing-4);
-  border-bottom: var(--border-width) solid var(--foreground-tertiary-color);
 }
 
 .post-row-fade-in {
@@ -812,10 +813,10 @@ details > summary:before {
 }
 
 .post-row-image-container img {
-  width: var(--max-width);
+  max-width: var(--max-width);
   height: var(--max-width);
-  object-fit: contain; 
-  /* background: var(--foreground-tertiary-color); */
+  object-fit: cover; 
+  border: 1px solid var(--foreground-tertiary-color);
 }
 
 .post-row-info {
@@ -943,6 +944,7 @@ details > summary:before {
     opacity: 1;
     padding: 0 var(--spacing-2) var(--spacing-1) var(--spacing-2);
     border: none;
+    background-color: inherit;
   }
   
   /* LIST STYLES */
