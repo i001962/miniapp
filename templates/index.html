@@ -164,7 +164,7 @@ window.onpopstate = function(event) {
       overlay.classList.add("overlay-play-icon");
       postFrame.appendChild(overlay);
 
-      frameVideo.addEventListener("mouseover", () => frameVideo.play());
+      frameVideo.addEventListener("mouseover", () => frameVideo.paused && frameVideo.play());
       frameVideo.addEventListener("mouseout", () => frameVideo.pause());
     } else {
       const frameImage = document.createElement("img");
@@ -229,7 +229,7 @@ window.onpopstate = function(event) {
       rowVideo.src = videoSrc;
       rowVideo.loading = "lazy";
       imageContainer.appendChild(rowVideo);
-      postRow.addEventListener("mouseover", () => rowVideo.play());
+      postRow.addEventListener("mouseover", () => rowVideo.paused && rowVideo.play());
       postRow.addEventListener("mouseout", () => rowVideo.pause());
     } else {
       const rowImage = document.createElement("img");
