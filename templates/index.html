@@ -133,12 +133,14 @@ window.onpopstate = function(event) {
 
     // Get references to frame elements that need decorating.
     const subtitle = postFrame.querySelector(".post-frame-subtitle");
-    const title = postFrame.querySelector("div.post-frame-title");
-    const img = postFrame.querySelector("img");
+    const title = postFrame.querySelector(".post-frame-title");
+    const frameImage = postFrame.querySelector("img");
+    const frameVideo = postFrame.querySelector("video");
 
     // Set the frame and img's ID.
     postFrame.id = 'frame-' + postId;
-    img.id = 'img-' + postId;
+    frameImage.id = 'img-' + postId;
+    frameVideo.id = 'img-' + postId;
 
     // Set the content.
     title.innerHTML = name;
@@ -146,13 +148,26 @@ window.onpopstate = function(event) {
 
     if (name == "✃") title.classList.add("bigger-font"); 
 
-    // Mark videos with an icon.
     if (videoSrc) {
-      const overlay = document.createElement("div");
-      overlay.innerHTML = "[▶]"
-      overlay.classList.add("overlay-play-icon");
-      overlay.style.zIndex = window.getComputedStyle(postFrame).zIndex + 1;
-      postFrame.appendChild(overlay);
+      frameImage.style.display = "none"
+      frameVideo.style.display = "block"
+      frameVideo.autoplay = false;
+      frameVideo.loop = true;
+      frameVideo.muted = true;
+      frameVideo.controls = false;
+      // Mark videos with an icon.
+      subtitle.innerHTML = `${subtitle.innerHTML} | [▶]`
+      frameImage.src = "";
+      frameVideo.src = videoSrc;
+      frameImage.loading = "lazy";
+      frameVideo.addEventListener("mouseover", frameVideo.play);
+      frameVideo.addEventListener("mouseout", frameVideo.pause);
+    } else {
+      frameImage.style.display = "block"
+      frameVideo.style.display = "none"
+      frameVideo.src = "";
+      frameImage.src = imageSrc;
+      frameImage.loading = "lazy";
     }
 
     const encodedIPFSUri = await encodeIPFSUriFrom("{{ assets_prefix }}", postId);
@@ -160,6 +175,10 @@ window.onpopstate = function(event) {
     // Summon a modal when the frame is clicked.
     postFrame.addEventListener("click", async (e) => {
       e.preventDefault();
+      
+      // Pause the video.
+      // If there's a video, pause it.
+      if (videoSrc) frameVideo.pause();
 
       // Show the modal.
       postModal.style.display = "block";
@@ -184,12 +203,15 @@ window.onpopstate = function(event) {
 
     // Get references to frame elements that need decorating.
     const subtitle = postRow.querySelector(".post-row-subtitle");
-    const title = postRow.querySelector("div.post-row-title");
-    const img = postRow.querySelector("img");
+    const title = postRow.querySelector(".post-row-title");
+    const imageContainer = postRow.querySelector(".post-row-image-container");
+    const rowImage = postRow.querySelector("img");
+    const rowVideo = postRow.querySelector("video");
 
     // Set the frame and img's ID.
     postRow.id = 'row-' + postId;
-    img.id = 'img-' + postId;
+    rowImage.id = 'img-' + postId;
+    rowVideo.id = 'img-' + postId;
 
     // Set the content.
     title.innerHTML = name;
@@ -197,13 +219,27 @@ window.onpopstate = function(event) {
 
     if (name == "✃") title.classList.add("bigger-font"); 
 
-    // Mark videos with an icon.
     if (videoSrc) {
-      const overlay = document.createElement("div");
-      overlay.innerHTML = "[▶]"
-      overlay.classList.add("overlay-play-icon");
-      overlay.style.zIndex = window.getComputedStyle(postRow).zIndex + 1;
-      img.appendChild(overlay);
+      rowImage.style.display = "none"
+      rowVideo.style.display = "block"
+      rowVideo.autoplay = false;
+      rowVideo.loop = true;
+      rowVideo.muted = true;
+      rowVideo.controls = false;
+      // Mark videos with an icon.
+      subtitle.innerHTML = `${subtitle.innerHTML} | [▶]`
+      rowImage.src = "";
+      rowVideo.src = videoSrc;
+      rowImage.loading = "lazy";
+      rowVideo.addEventListener("mouseover", rowVideo.play);
+      rowVideo.addEventListener("mouseout", rowVideo.pause);
+      subtitle.innerHTML = `${subtitle.innerHTML} | [▶]`
+    } else {
+      rowImage.style.display = "block"
+      rowVideo.style.display = "none"
+      rowVideo.src = "";
+      rowImage.src = imageSrc;
+      rowImage.loading = "lazy";
     }
 
     const encodedIPFSUri = await encodeIPFSUriFrom("{{ assets_prefix }}", postId);
@@ -273,39 +309,38 @@ window.onpopstate = function(event) {
     return candidatePostFrame.bottom;
   }
 
-  const framePost = (src) => {
+  const framePost = () => {
     const framesContainer = document.getElementById("post-frames-container");
     const frame = document.createElement("div");
     const infoContainer = document.createElement("div");
     const info = document.createElement("div");
     const title = document.createElement("div");
     const subtitle = document.createElement("div");
-    const img = document.createElement("img");
+    const image = document.createElement("img");
+    const video = document.createElement("video");
 
     frame.classList.add("post-frame");
     infoContainer.classList.add("post-frame-info-container");
     info.classList.add("post-frame-info");
     subtitle.classList.add("post-frame-subtitle");
     title.classList.add("post-frame-title");
-    img.loading = "lazy";
 
     // Get random width.
     const widthClass = postFrameWidthClasses[Math.floor(Math.random() * postFrameWidthClasses.length)];
     frame.classList.add(widthClass);
 
-    img.src = src;
-
     info.appendChild(title);
     info.appendChild(subtitle);
     infoContainer.appendChild(info);
     frame.appendChild(infoContainer);
-    frame.appendChild(img);
+    frame.appendChild(image);
+    frame.appendChild(video);
     framesContainer.appendChild(frame);
 
     return frame;
   }
 
-  const listPost = (src) => {
+  const listPost = () => {
     const listContainer = document.getElementById("post-list-container");
     const rowContainer = document.createElement("div");
     const row = document.createElement("div");
@@ -313,7 +348,8 @@ window.onpopstate = function(event) {
     const title = document.createElement("div");
     const subtitle = document.createElement("div");
     const imgContainer = document.createElement("div");
-    const img = document.createElement("img");
+    const image = document.createElement("img");
+    const video = document.createElement("video");
 
     rowContainer.classList.add("post-row-container");
     row.classList.add("post-row");
@@ -321,12 +357,11 @@ window.onpopstate = function(event) {
     title.classList.add("post-row-title");
     subtitle.classList.add("post-row-subtitle");
     imgContainer.classList.add("post-row-image-container");
-    img.loading = "lazy";
-    img.src = src;
 
     info.appendChild(title);
     info.appendChild(subtitle);
-    imgContainer.appendChild(img);
+    imgContainer.appendChild(image);
+    imgContainer.appendChild(video);
     row.appendChild(imgContainer);
     row.appendChild(info);
     rowContainer.appendChild(row);
@@ -482,10 +517,10 @@ window.onpopstate = function(event) {
       // if post.hasVideo, use _videoThumbnail.png
       // else use a random attachment
       const imageName = post.hasVideo ? '_videoThumbnail.png' : post.attachments[Math.floor(Math.random() * post.attachments.length)];
+      const imageSrc = './' + post.id + '/' + imageName;
       const videoSrc = post.hasVideo ? './' + post.id + '/' + post.videoFilename : null;
-      const coverImageSrc = './' + post.id + '/' + imageName;
-      const frame = framePost(coverImageSrc);
-      decoratePostFrame(frame, post.id, formatTimestamp(post.created), post.title, post.externalLink, coverImageSrc, videoSrc);
+      const frame = framePost();
+      decoratePostFrame(frame, post.id, formatTimestamp(post.created), post.title, post.externalLink, imageSrc, videoSrc);
       return frame;
     });
     postFrames = postFrames.concat(newPostFrames);
@@ -500,9 +535,9 @@ window.onpopstate = function(event) {
       // else use a random attachment
       const imageName = post.hasVideo ? '_videoThumbnail.png' : post.attachments[Math.floor(Math.random() * post.attachments.length)];
       const videoSrc = post.hasVideo ? './' + post.id + '/' + post.videoFilename : null;
-      const coverImageSrc = './' + post.id + '/' + imageName;
-      const row = listPost(coverImageSrc);
-      decoratePostRow(row, post.id, formatTimestamp(post.created), post.title, post.externalLink, coverImageSrc, videoSrc);
+      const imageSrc = './' + post.id + '/' + imageName;
+      const row = listPost();
+      decoratePostRow(row, post.id, formatTimestamp(post.created), post.title, post.externalLink, imageSrc, videoSrc);
       return row;
     });
     postRows = postRows.concat(newPostRows);

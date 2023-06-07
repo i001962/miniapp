@@ -25,6 +25,7 @@
   --modal-z-index: 10;
   --top-dom-z-index: 100;
   --max-content-width: 1000px;
+  --reduced-width: 65%;
   --max-width: 100%;
   --transition-duration-1: 0.12s;
   --transition-duration-2: 0.2s;
@@ -309,7 +310,8 @@ details > summary:before {
 
 .content img, .content video {
   border: var(--border-width) solid var(--foreground-tertiary-color);
-  min-width: 600px;
+  width: var(--reduced-width);
+  max-width: var(--max-width);
   max-height: 700px;
   object-position: left;
   object-fit: cover;
@@ -518,7 +520,7 @@ details > summary:before {
   color: var(--link-color);
 }
 #fork-form {
-  width: 55%;
+  width: var(--reduced-width);
 }
 #fork-form details .form-item {
   margin-top: var(--spacing-3);
@@ -728,9 +730,10 @@ details > summary:before {
   border-color: var(--link-color);
 }
 
-.post-frame img {
+.post-frame img, .post-frame video {
   width: var(--max-width);
   display: block;
+  object-fit: cover;
 }
 
 .post-frame-info-container {
