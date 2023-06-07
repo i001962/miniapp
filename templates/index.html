@@ -135,12 +135,9 @@ window.onpopstate = function(event) {
     const subtitle = postFrame.querySelector(".post-frame-subtitle");
     const title = postFrame.querySelector(".post-frame-title");
     const frameImage = postFrame.querySelector("img");
-    const frameVideo = postFrame.querySelector("video");
 
     // Set the frame and img's ID.
     postFrame.id = 'frame-' + postId;
-    frameImage.id = 'img-' + postId;
-    frameVideo.id = 'img-' + postId;
 
     // Set the content.
     title.innerHTML = name;
@@ -149,7 +146,8 @@ window.onpopstate = function(event) {
     if (name == "✃") title.classList.add("bigger-font"); 
 
     if (videoSrc) {
-      frameImage.style.display = "none"
+      const frameVideo = document.createElement("video");
+      frameVideo.id = 'img-' + postId;
       frameVideo.style.display = "block"
       frameVideo.autoplay = false;
       frameVideo.loop = true;
@@ -157,21 +155,24 @@ window.onpopstate = function(event) {
       frameVideo.controls = false;
       // Mark videos with an icon.
       subtitle.innerHTML = `${subtitle.innerHTML} | [▶]`
-      frameImage.src = "";
       frameVideo.src = videoSrc;
-      frameImage.loading = "lazy";
+      frameVideo.loading = "lazy";
+      postFrame.appendChild(frameVideo);
+
       const overlay = document.createElement("div");
       overlay.innerHTML = "[▶]";
       overlay.classList.add("overlay-play-icon");
       postFrame.appendChild(overlay);
+
       frameVideo.addEventListener("mouseover", frameVideo.play);
       frameVideo.addEventListener("mouseout", frameVideo.pause);
     } else {
+      const frameImage = document.createElement("img");
+      frameImage.id = 'img-' + postId;
       frameImage.style.display = "block"
-      frameVideo.style.display = "none"
-      frameVideo.src = "";
       frameImage.src = imageSrc;
       frameImage.loading = "lazy";
+      postFrame.appendChild(frameImage);
     }
 
     const encodedIPFSUri = await encodeIPFSUriFrom("{{ assets_prefix }}", postId);
@@ -179,10 +180,6 @@ window.onpopstate = function(event) {
     // Summon a modal when the frame is clicked.
     postFrame.addEventListener("click", async (e) => {
       e.preventDefault();
-      
-      // Pause the video.
-      // If there's a video, pause it.
-      if (videoSrc) frameVideo.pause();
 
       // Show the modal.
       postModal.style.display = "block";
@@ -209,13 +206,9 @@ window.onpopstate = function(event) {
     const subtitle = postRow.querySelector(".post-row-subtitle");
     const title = postRow.querySelector(".post-row-title");
     const imageContainer = postRow.querySelector(".post-row-image-container");
-    const rowImage = postRow.querySelector("img");
-    const rowVideo = postRow.querySelector("video");
 
     // Set the frame and img's ID.
     postRow.id = 'row-' + postId;
-    rowImage.id = 'img-' + postId;
-    rowVideo.id = 'img-' + postId;
 
     // Set the content.
     title.innerHTML = name;
@@ -224,7 +217,8 @@ window.onpopstate = function(event) {
     if (name == "✃") title.classList.add("bigger-font"); 
 
     if (videoSrc) {
-      rowImage.style.display = "none"
+      const rowVideo = document.createElement("video");
+      rowVideo.id = 'img-' + postId;
       rowVideo.style.display = "block"
       rowVideo.autoplay = false;
       rowVideo.loop = true;
@@ -232,17 +226,18 @@ window.onpopstate = function(event) {
       rowVideo.controls = false;
       // Mark videos with an icon.
       subtitle.innerHTML = `${subtitle.innerHTML} | [▶]`
-      rowImage.src = "";
       rowVideo.src = videoSrc;
-      rowImage.loading = "lazy";
-      rowVideo.addEventListener("mouseover", rowVideo.play);
-      rowVideo.addEventListener("mouseout", rowVideo.pause);
+      rowVideo.loading = "lazy";
+      imageContainer.appendChild(rowVideo);
+      postRow.addEventListener("mouseover", rowVideo.play);
+      postRow.addEventListener("mouseout", rowVideo.pause);
     } else {
+      const rowImage = document.createElement("img");
+      rowImage.id = 'img-' + postId;
       rowImage.style.display = "block"
-      rowVideo.style.display = "none"
-      rowVideo.src = "";
       rowImage.src = imageSrc;
       rowImage.loading = "lazy";
+      imageContainer.appendChild(rowImage);
     }
 
     const encodedIPFSUri = await encodeIPFSUriFrom("{{ assets_prefix }}", postId);
@@ -264,15 +259,15 @@ window.onpopstate = function(event) {
   }
 
   /// Load the frame contents.
-  const loadPostImage = async (container) => {
-    const img = container.querySelector('img:first-of-type');
+  const loadMedia = async (container) => {
+    const media = container.querySelector('img:first-of-type') || container.querySelector('video:first-of-type');
     return new Promise((resolve) => {
       // Resolve if the image if done.
-      if (img.complete) return resolve();
+      if (media.complete) return resolve();
 
       const checkForDimensions = () => {
         // Resolve if the img has dimensions. Small delay to let more of the img load for a smoother slide in.
-        if (img.width > 0 && img.height > 0) return setTimeout(resolve, 1000);
+        if (media.width || media.videoWidth > 0 && media.height || media.videoHeight > 0) return setTimeout(resolve, 1000);
         // Otherwise wait until the image has dimensions.
         else
           return requestAnimationFrame(checkForDimensions);
@@ -319,8 +314,6 @@ window.onpopstate = function(event) {
     const info = document.createElement("div");
     const title = document.createElement("div");
     const subtitle = document.createElement("div");
-    const image = document.createElement("img");
-    const video = document.createElement("video");
 
     frame.classList.add("post-frame");
     infoContainer.classList.add("post-frame-info-container");
@@ -336,8 +329,6 @@ window.onpopstate = function(event) {
     info.appendChild(subtitle);
     infoContainer.appendChild(info);
     frame.appendChild(infoContainer);
-    frame.appendChild(image);
-    frame.appendChild(video);
     framesContainer.appendChild(frame);
 
     return frame;
@@ -351,8 +342,6 @@ window.onpopstate = function(event) {
     const title = document.createElement("div");
     const subtitle = document.createElement("div");
     const imgContainer = document.createElement("div");
-    const image = document.createElement("img");
-    const video = document.createElement("video");
 
     rowContainer.classList.add("post-row-container");
     row.classList.add("post-row");
@@ -363,8 +352,6 @@ window.onpopstate = function(event) {
 
     info.appendChild(title);
     info.appendChild(subtitle);
-    imgContainer.appendChild(image);
-    imgContainer.appendChild(video);
     row.appendChild(imgContainer);
     row.appendChild(info);
     rowContainer.appendChild(row);
@@ -374,7 +361,7 @@ window.onpopstate = function(event) {
   }
 
   const positionAndShowPostFrame = async (postFrame) => {
-    await loadPostImage(postFrame);
+    await loadMedia(postFrame);
 
     if (loadingAnimationIntervals['posts-loading-animation']) stopLoadingAnimation('posts-loading-animation');
 
@@ -408,7 +395,7 @@ window.onpopstate = function(event) {
   }
 
   const positionAndShowPostRow = async (postRow) => {
-    await loadPostImage(postRow);
+    await loadMedia(postRow);
 
     if (loadingAnimationIntervals['posts-loading-animation']) stopLoadingAnimation('posts-loading-animation');
 

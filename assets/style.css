@@ -27,7 +27,7 @@
   --max-content-width: 1000px;
   --reduced-width: 65%;
   --max-width: 100%;
-  --transition-duration-1: 0.12s;
+  --transition-duration-1: 0.1s;
   --transition-duration-2: 0.2s;
   --transition-timing-function: ease;
 }
@@ -291,7 +291,7 @@ details > summary:before {
   z-index: var(--top-dom-z-index);
   width: var(--max-width);
   background-color: var(--background-color-opacity);
-  transition: height calc(2*var(--transition-duration-1)) linear;
+  /* transition: height var(--transition-duration-1) linear; */
   border-bottom-width: 0px;
   border-bottom-style: solid;
   border-bottom-color: var(--foreground-tertiary-color);
@@ -486,11 +486,11 @@ details > summary:before {
   margin-left: auto;
   margin-right: auto;
   padding: 0 var(--spacing-3) var(--spacing-3) var(--spacing-4);
-  transition: visibility 0s var(--transition-duration-1), opacity var(--transition-duration-1) var(--transition-timing-function);
+  /* transition: visibility 0s var(--transition-duration-1), opacity var(--transition-duration-1) var(--transition-timing-function); */
 }
 
 #nav-container.hidden {
-  transition: visibility 0s var(--transition-duration-1), opacity var(--transition-duration-1) var(--transition-timing-function) var(--transition-duration-1);
+  /* transition: visibility 0s var(--transition-duration-1), opacity var(--transition-duration-1) var(--transition-timing-function) var(--transition-duration-1); */
 }
 
 #nav {
