@@ -344,13 +344,13 @@ details > summary:before {
 }
 
 .overlay-play-icon {
-  font-size: var(--font-size-2);
+  font-size: var(--font-size-1);
   z-index: calc(var(--base-z-index) + 1);
   display: block;
   position: absolute;
-  bottom: var(--spacing-5);
-  right: var(--spacing-5);
-  opacity: 0.6;
+  bottom: var(--spacing-3);
+  right: var(--spacing-3);
+  color: var(--foreground-secondary-color);
 }
 
 .video-container {
