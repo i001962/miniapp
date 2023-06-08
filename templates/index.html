@@ -188,6 +188,9 @@ window.onpopstate = function(event) {
 
       // Make the modal look right.
       await decoratePostModal(postId, encodedIPFSUri, name, date, link, imageSrc, videoSrc);
+      
+      // Make the body not scrollable.
+      document.body.style.overflow = "hidden";
     });
 
     decoratePostFrameState(postFrame, projectId, encodedIPFSUri);
@@ -253,6 +256,9 @@ window.onpopstate = function(event) {
 
       // Make the modal look right.
       await decoratePostModal(postId, encodedIPFSUri, name, date, link, imageSrc, videoSrc);
+
+      // Make the body not scrollable.
+      document.body.style.overflow = "hidden";
     });
 
     decoratePostRowState(postRow, projectId, encodedIPFSUri);
@@ -428,13 +434,17 @@ window.onpopstate = function(event) {
     postModal.addEventListener("mousedown", () => {
       activeElementOnClose = document.activeElement;
     });
-
+    
+    // Close the modal.
     postModal.addEventListener("click", (e) => {
       // Ignore if the clicked view shouldn't close the modal.
       if (!e.target.classList.contains("negative-space")) return;
 
       // Ignore if the clicked view comes while an input field is selected.
       if (activeElementOnClose.tagName === "INPUT" || activeElementOnClose.tagName === "SELECT") return;
+
+      // Make the body scrollable.
+      document.body.style.overflow = "auto";
 
       // If there's a video, pause it.
       if (videoSrc) postVideo.pause();
@@ -490,6 +500,9 @@ window.onpopstate = function(event) {
 
       // Ignore if the clicked view comes while an input, select, or textarea field is selected.
       if (activeElementOnClose.tagName === "INPUT" || activeElementOnClose.tagName === "SELECT" || activeElementOnClose.tagName === "TEXTAREA") return;
+
+      // Make the body scrollable.
+      document.body.style.overflow = "auto";
 
       // Hide the modal.
       forkModal.style.display = "none";
