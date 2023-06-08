@@ -130,9 +130,7 @@
 <button id="post-form-button" class="form-button form-main-button mobile-padding">[<span id="post-form-button-text" class="form-button-text">collect</span>]<span id="post-form-button-loading-animation" class="loading-animation button-loading-animation"></span></button>
 <img id="post-cover-image"></img>
 <video id="post-cover-video"></video>
-{% if article_summary.count > 0 %}
-  <div id="post-body" class="mobile-padding">{{ content_html }}</div>
-{% endif %}
+<div id="post-content" class="mobile-padding"></div>
 <script>
   let tiersCache = {};
   let allowanceCache = {};
@@ -488,17 +486,12 @@
   }
 
   const decoratePostBody = () => {
-      const postBody = document.getElementById('post-body');
-      if (!postBody) return;
-      const firstChild = postBody.firstChild;
-      // Remove the first child if it's a img tag.
-      if (firstChild.tagName === 'IMG') {
-        postBody.removeChild(firstChild);
-      }
+      const postContent = document.getElementById('post-content');
+      const firstChild = postContent.firstChild;
   }
 
   // Re-decorate the form depending on if the provided content has already been recorded onchain, and if it's sold out.
-  const decoratePostPage = async (name, date, link, imageSrc, videoSrc, encodedIPFSUri) => {
+  const decoratePostPage = async (name, date, link, content, imageSrc, videoSrc, encodedIPFSUri) => {
     // Show the loading animation.
     startLoadingAnimation('post-form-loading-animation');
     // Get references to the form state.
@@ -519,13 +512,16 @@
     const postFormButton = document.getElementById("post-form-button");
     const postCoverImage = document.getElementById("post-cover-image");
     const postCoverVideo = document.getElementById("post-cover-video");
+    const postContent = document.getElementById("post-content");
     const recordPostForm = document.getElementById("record-post-form");
     const collectPostForm = document.getElementById("collect-post-form");
-
-    {% if article.attachments.count == 0 %}
-    // Many decorations are only working if there's an attachment.
-    return;
-    {% endif %}
+    
+    if (content) {
+      postContent.style.display = "block"; 
+      postContent.innerHTML = content;
+    } else {
+      postContent.style.display = "none"; 
+    }
 
     // Hide the form.
     collectPostForm.style.display = "none";

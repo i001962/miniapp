@@ -1,10 +1,9 @@
 :root {
   --background-color: #fff;
-  --background-secondary-color: #eee;
+  --background-secondary-color: #e2e2e2;
   --background-color-opacity: rgba(255, 255, 255, 0.95);
   --foreground-color: #000;
   --foreground-secondary-color: #555;
-  --foreground-tertiary-color: #e2e2e2;
   --link-color: #f056c1;
   --alert-color: #efab1d;
   --icon-social-filter: invert(100%) sepia(0%) saturate(7460%) hue-rotate(186deg) brightness(107%) contrast(77%);
@@ -27,6 +26,7 @@
   --max-content-width: 1000px;
   --reduced-width: 65%;
   --max-width: 100%;
+  --max-height: 100%;
   --transition-duration-1: 0.1s;
   --transition-duration-2: 0.2s;
   --transition-timing-function: ease;
@@ -35,11 +35,10 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background-color: #111;
-    --background-secondary-color: #222;
+    --background-secondary-color: #2a2a2a;
     --background-color-opacity: rgba(17, 17, 17, 0.95);
     --foreground-color: #fff;
     --foreground-secondary-color: #adadaf;
-    --foreground-tertiary-color: #2a2a2a;
     --icon-social-filter: invert(24%) sepia(11%) saturate(0%) hue-rotate(188deg) brightness(95%) contrast(95%);
   }
 }
@@ -121,7 +120,7 @@ samp,
 tt {}
 
 pre {
-  border: var(--border-width) solid var(--foreground-tertiary-color);
+  border: var(--border-width) solid var(--background-secondary-color);
   background-color: var(--background-secondary-color);
   padding: var(--spacing-3);
 }
@@ -135,8 +134,8 @@ pre {
 hr {
   border: none;
   height: var(--spacing-1);
-  color: var(--foreground-tertiary-color);
-  background-color: var(--foreground-tertiary-color);
+  color: var(--background-secondary-color);
+  background-color: var(--background-secondary-color);
   margin-top: var(--spacing-5) 0;
 }
 
@@ -211,7 +210,7 @@ blockquote {
   border-left: 5px solid;
   margin-left: var(--spacing-3);
   padding-left: var(--spacing-2);
-  border-color: var(--foreground-tertiary-color);
+  border-color: var(--background-secondary-color);
   color: var(--foreground-secondary-color);
 }
 
@@ -226,7 +225,7 @@ table {
 }
 
 table tr {
-  border-top: var(--border-width) solid var(--foreground-tertiary-color);
+  border-top: var(--border-width) solid var(--background-secondary-color);
   background-color: var(--background-color);
   margin: 0;
   padding: 0;
@@ -238,14 +237,14 @@ table tr:nth-child(2n) {
 
 table tr th {
   font-weight: var(--font-weight-2);
-  border: var(--border-width) solid var(--foreground-tertiary-color);
+  border: var(--border-width) solid var(--background-secondary-color);
   margin: 0;
   padding: var(--spacing-2) var(--spacing-3);
   background-color: var(--background-secondary-color);
 }
 
 table tr td {
-  border: var(--border-width) solid var(--foreground-tertiary-color);
+  border: var(--border-width) solid var(--background-secondary-color);
   margin: 0;
   padding: var(--spacing-2) var(--spacing-3);
 }
@@ -294,7 +293,7 @@ details > summary:before {
   /* transition: height var(--transition-duration-1) linear; */
   border-bottom-width: 0px;
   border-bottom-style: solid;
-  border-bottom-color: var(--foreground-tertiary-color);
+  border-bottom-color: var(--background-secondary-color);
 }
 
 /* COMMON STYLES */
@@ -309,7 +308,7 @@ details > summary:before {
 }
 
 .content img, .content video {
-  border: var(--border-width) solid var(--foreground-tertiary-color);
+  border: var(--border-width) solid var(--background-secondary-color);
   width: var(--reduced-width);
   max-width: var(--max-width);
   max-height: 700px;
@@ -431,7 +430,7 @@ details > summary:before {
 #header-avatar {
   width: 60px;
   height: 60px;
-  border: var(--border-width) solid var(--foreground-tertiary-color);
+  border: var(--border-width) solid var(--background-secondary-color);
 }
 
 #header-title {
@@ -565,7 +564,7 @@ details > summary:before {
   gap: var(--spacing-1);
 }
 #post-form-state-button {
-  color: var(--foreground-primary-color);
+  color: var(--foreground-color);
 }
 #post-form-state-toggle {
  color: var(--foreground-secondary-color);
@@ -586,7 +585,7 @@ details > summary:before {
 /* FORM STYLES */
 
 .form-header {
-  color: var(--foreground-primary-color);
+  color: var(--foreground-color);
   font-weight: var(--font-weight-1);
 }
 .form-body {
@@ -605,7 +604,7 @@ details > summary:before {
 }
 .form-section-description {
   margin-top: var(--spacing-3);
-  color: var(--foreground-primary-color);
+  color: var(--foreground-color);
   line-height: var(--line-height-1);
 }
 .form-section {
@@ -648,7 +647,7 @@ details > summary:before {
 .form-value input, .form-value select, .form-value textarea {
   width: var(--max-width);
   padding: var(--spacing-2);
-  border: var(--border-width) solid var(--foreground-tertiary-color);
+  border: var(--border-width) solid var(--background-secondary-color);
   color: var(--foreground-color);
   background-color: var(--background-color);
 }
@@ -661,7 +660,7 @@ details > summary:before {
 
 .form-select-value::after {
   content: '▼';
-  color: var(--foreground-primary-color);
+  color: var(--foreground-color);
   position: relative;
   right: var(--spacing-4);
   width: 0;
@@ -696,11 +695,11 @@ details > summary:before {
   text-decoration: underline;
 }
 .form-button:disabled {
-  color: var(--foreground-tertiary-color);
+  color: var(--background-secondary-color);
   cursor: crosshair;
 }
 .form-button:disabled .form-button-text {
-  color: var(--foreground-tertiary-color);
+  color: var(--background-secondary-color);
 }
 
 .form-input-preface {
@@ -723,7 +722,8 @@ details > summary:before {
   opacity: 0;
   position: relative;
   cursor: pointer;
-  border: var(--border-width) solid var(--foreground-tertiary-color);
+  overflow: hidden;
+  border: var(--border-width) solid var(--background-secondary-color);
   transition: border-color var(--transition-duration-2) var(--transition-timing-function), opacity var(--transition-duration-2) var(--transition-timing-function), margin-top var(--transition-duration-2) var(--transition-timing-function);
 }
 
@@ -741,6 +741,17 @@ details > summary:before {
   object-fit: cover;
 }
 
+.post-frame-text {
+  width: var(--max-width);
+  min-height: 300px;
+  max-height: 500px;
+  background: var(--background-color);
+  padding: var(--spacing-1);
+  color: var(--foreground-color);
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-2);
+}
+
 .post-frame-info-container {
   position: absolute;
   bottom: 0;
@@ -755,7 +766,7 @@ details > summary:before {
   transition: opacity var(--transition-duration-2) var(--transition-timing-function);
   gap: var(--spacing-2);
   justify-content: space-between;
-  background-color: var(--foreground-tertiary-color);
+  background-color: var(--background-secondary-color);
 }
 
 .post-frame:hover .post-frame-info {
@@ -813,18 +824,36 @@ details > summary:before {
   opacity: 1;
 }
 
-.post-row-image-container {
+.post-row-thumbnail {
   flex-shrink: 0;
   width: 200px;   
   height: 100px;   
   overflow: hidden;
 }
 
-.post-row-image-container img {
+.post-row-thumbnail img, .post-row-thumbnail video {
   max-width: var(--max-width);
   height: var(--max-width);
   object-fit: cover; 
-  border: 1px solid var(--foreground-tertiary-color);
+  border: var(--border-width) solid var(--background-secondary-color);
+}
+
+.post-row-thumbnail-text-container {
+  width: calc(var(--max-width) - 2*var(--spacing-1) - var(--border-width));
+  height: calc(var(--max-height) - 2*var(--spacing-1) - var(--border-width));
+  padding: var(--spacing-1);
+  border: var(--border-width) solid var(--background-secondary-color);
+}
+
+.post-row-thumbnail-text {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: var(--max-width);
+  height: var(--max-height);
+  background: var(--background-color);
+  color: var(--foreground-color);
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-2);
 }
 
 .post-row-info {
@@ -883,7 +912,7 @@ details > summary:before {
   #header-avatar {
     width: 48px;
     height: 48px;
-    border: var(--border-width) solid var(--foreground-tertiary-color);
+    border: var(--border-width) solid var(--background-secondary-color);
   }
 
   #header-container {
@@ -934,7 +963,7 @@ details > summary:before {
     margin-top: var(--spacing-3);
     margin-bottom: var(--spacing-5);
     border: none;
-    border-bottom: var(--border-width) solid var(--foreground-tertiary-color);
+    border-bottom: var(--border-width) solid var(--background-secondary-color);
   }
 
   .post-frame:hover {
@@ -957,7 +986,7 @@ details > summary:before {
   
   /* LIST STYLES */
 
-  .post-row-image-container {
+  .post-row-thumbnail {
     width: 100px;   
     height: 100px;   
   }

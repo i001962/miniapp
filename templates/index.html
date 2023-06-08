@@ -122,7 +122,7 @@ window.onpopstate = function(event) {
     }
   }
 
-  const decoratePostFrame = async (postFrame, postId, date, name, link, imageSrc, videoSrc) => {
+  const decoratePostFrame = async (postFrame, postId, date, name, link, content, coverImageSrc, coverVideoSrc) => {
     const postFormStateProjectId = document.getElementById("post-form-state-project-id");
     const projectId = parseInt(postFormStateProjectId.innerHTML);
 
@@ -145,7 +145,7 @@ window.onpopstate = function(event) {
 
     if (name == "✃") title.classList.add("bigger-font"); 
 
-    if (videoSrc) {
+    if (coverVideoSrc) {
       const frameVideo = document.createElement("video");
       frameVideo.id = 'img-' + postId;
       frameVideo.style.display = "block"
@@ -155,7 +155,7 @@ window.onpopstate = function(event) {
       frameVideo.controls = false;
       // Mark videos with an icon.
       subtitle.innerHTML = `${subtitle.innerHTML} | [▶]`
-      frameVideo.src = videoSrc;
+      frameVideo.src = coverVideoSrc;
       frameVideo.loading = "lazy";
       postFrame.appendChild(frameVideo);
 
@@ -166,13 +166,18 @@ window.onpopstate = function(event) {
 
       frameVideo.addEventListener("mouseover", () => frameVideo.paused && frameVideo.play());
       frameVideo.addEventListener("mouseout", () => frameVideo.pause());
-    } else {
+    } else if (coverImageSrc) {
       const frameImage = document.createElement("img");
       frameImage.id = 'img-' + postId;
       frameImage.style.display = "block"
-      frameImage.src = imageSrc;
+      frameImage.src = coverImageSrc;
       frameImage.loading = "lazy";
       postFrame.appendChild(frameImage);
+    } else {
+      const frameText = document.createElement("div");
+      frameText.classList.add("post-frame-text");
+      frameText.innerHTML = content.slice(0, 300).replace(/\n/g, "<br />");  
+      postFrame.appendChild(frameText);
     }
 
     const encodedIPFSUri = await encodeIPFSUriFrom("{{ assets_prefix }}", postId);
@@ -187,7 +192,7 @@ window.onpopstate = function(event) {
       toggleNavVisibility();
 
       // Make the modal look right.
-      await decoratePostModal(postId, encodedIPFSUri, name, date, link, imageSrc, videoSrc);
+      await decoratePostModal(postId, encodedIPFSUri, name, date, link, content, coverImageSrc, coverVideoSrc);
       
       // Make the body not scrollable.
       document.body.style.overflow = "hidden";
@@ -196,7 +201,7 @@ window.onpopstate = function(event) {
     decoratePostFrameState(postFrame, projectId, encodedIPFSUri);
   }
 
-  const decoratePostRow = async (postRow, postId, date, name, link, imageSrc, videoSrc) => {
+  const decoratePostRow = async (postRow, postId, date, name, link, content, thumbnailImageSrc, thumbnailVideoSrc) => {
     const postFormStateProjectId = document.getElementById("post-form-state-project-id");
     const projectId = parseInt(postFormStateProjectId.innerHTML);
 
@@ -208,7 +213,7 @@ window.onpopstate = function(event) {
     // Get references to frame elements that need decorating.
     const subtitle = postRow.querySelector(".post-row-subtitle");
     const title = postRow.querySelector(".post-row-title");
-    const imageContainer = postRow.querySelector(".post-row-image-container");
+    const thumbnail = postRow.querySelector(".post-row-thumbnail");
 
     // Set the frame and img's ID.
     postRow.id = 'row-' + postId;
@@ -218,29 +223,37 @@ window.onpopstate = function(event) {
     subtitle.innerHTML = `${date} | <span class="post-row-state">recordable</span>`;
 
     if (name == "✃") title.classList.add("bigger-font"); 
-
-    if (videoSrc) {
-      const rowVideo = document.createElement("video");
-      rowVideo.id = 'img-' + postId;
-      rowVideo.style.display = "block"
-      rowVideo.autoplay = false;
-      rowVideo.loop = true;
-      rowVideo.muted = true;
-      rowVideo.controls = false;
+    
+    if (thumbnailVideoSrc) {
+      const thumbnailVideo = document.createElement("video");
+      thumbnailVideo.id = 'img-' + postId;
+      thumbnailVideo.style.display = "block"
+      thumbnailVideo.autoplay = false;
+      thumbnailVideo.loop = true;
+      thumbnailVideo.muted = true;
+      thumbnailVideo.controls = false;
       // Mark videos with an icon.
       subtitle.innerHTML = `${subtitle.innerHTML} | [▶]`
-      rowVideo.src = videoSrc;
-      rowVideo.loading = "lazy";
-      imageContainer.appendChild(rowVideo);
-      postRow.addEventListener("mouseover", () => rowVideo.paused && rowVideo.play());
-      postRow.addEventListener("mouseout", () => rowVideo.pause());
+      thumbnailVideo.src = thumbnailVideoSrc;
+      thumbnailVideo.loading = "lazy";
+      thumbnail.appendChild(thumbnailVideo);
+      postRow.addEventListener("mouseover", () => thumbnailVideo.paused && thumbnailVideo.play());
+      postRow.addEventListener("mouseout", () => thumbnailVideo.pause());
+    } else if (thumbnailImageSrc) {
+      const thumbnailImage = document.createElement("img");
+      thumbnailImage.id = 'img-' + postId;
+      thumbnailImage.style.display = "block"
+      thumbnailImage.src = thumbnailImageSrc;
+      thumbnailImage.loading = "lazy";
+      thumbnail.appendChild(thumbnailImage);
     } else {
-      const rowImage = document.createElement("img");
-      rowImage.id = 'img-' + postId;
-      rowImage.style.display = "block"
-      rowImage.src = imageSrc;
-      rowImage.loading = "lazy";
-      imageContainer.appendChild(rowImage);
+      const thumbnailTextContainer = document.createElement("div");
+      const thumbnailText = document.createElement("div");
+      thumbnailTextContainer.classList.add("post-row-thumbnail-text-container");
+      thumbnailText.classList.add("post-row-thumbnail-text");
+      thumbnailText.innerHTML = content.slice(0, 300).replace(/\n/g, "<br />");  
+      thumbnailTextContainer.appendChild(thumbnailText)
+      thumbnail.appendChild(thumbnailTextContainer);
     }
 
     const encodedIPFSUri = await encodeIPFSUriFrom("{{ assets_prefix }}", postId);
@@ -255,7 +268,7 @@ window.onpopstate = function(event) {
       toggleNavVisibility();
 
       // Make the modal look right.
-      await decoratePostModal(postId, encodedIPFSUri, name, date, link, imageSrc, videoSrc);
+      await decoratePostModal(postId, encodedIPFSUri, name, date, link, content, coverImageSrc, coverVideoSrc);
 
       // Make the body not scrollable.
       document.body.style.overflow = "hidden";
@@ -267,6 +280,7 @@ window.onpopstate = function(event) {
   /// Load the frame contents.
   const loadMedia = async (container) => {
     const media = container.querySelector('img:first-of-type') || container.querySelector('video:first-of-type');
+    if (!media) return;
     return new Promise((resolve) => {
       // Resolve if the image if done.
       if (media.complete) return resolve();
@@ -347,18 +361,18 @@ window.onpopstate = function(event) {
     const info = document.createElement("div");
     const title = document.createElement("div");
     const subtitle = document.createElement("div");
-    const imgContainer = document.createElement("div");
+    const thumbnail = document.createElement("div");
 
     rowContainer.classList.add("post-row-container");
     row.classList.add("post-row");
     info.classList.add("post-row-info");
     title.classList.add("post-row-title");
     subtitle.classList.add("post-row-subtitle");
-    imgContainer.classList.add("post-row-image-container");
+    thumbnail.classList.add("post-row-thumbnail");
 
     info.appendChild(title);
     info.appendChild(subtitle);
-    row.appendChild(imgContainer);
+    row.appendChild(thumbnail);
     row.appendChild(info);
     rowContainer.appendChild(row);
     listContainer.appendChild(rowContainer);
@@ -408,7 +422,7 @@ window.onpopstate = function(event) {
     postRow.classList.add("post-row-fade-in");
   }
 
-  const decoratePostModal = async (postId, encodedIPFSUri, name, date, link, imageSrc, videoSrc) => {
+  const decoratePostModal = async (postId, encodedIPFSUri, name, date, link, content, imageSrc, videoSrc) => {
     // Get references to modal elements that need decorating.
     const postModal = document.getElementById("post-modal");
     const topDom = document.getElementById("top-dom");
@@ -419,6 +433,7 @@ window.onpopstate = function(event) {
     const collectPostForm = document.getElementById("collect-post-form");
     const postImage = document.getElementById("post-cover-image");
     const postVideo = document.getElementById("post-cover-video");
+    const postContent = document.getElementById("post-content");
 
     requestAnimationFrame(() => {
       const headerContainerHeight = headerContainer.offsetHeight;
@@ -460,6 +475,7 @@ window.onpopstate = function(event) {
       // Hide the content
       postImage.style.display = "none"
       postVideo.style.display = "none"
+      postContent.style.display = "none"
 
       // Hide the modal.
       postModal.style.display = "none";
@@ -471,7 +487,7 @@ window.onpopstate = function(event) {
     });
 
     // Show the post page.
-    await decoratePostPage(name, date, link, imageSrc, videoSrc, encodedIPFSUri);
+    await decoratePostPage(name, date, link, content, imageSrc, videoSrc, encodedIPFSUri);
   }
 
   // Get the fork modal set up.
@@ -519,11 +535,12 @@ window.onpopstate = function(event) {
     const newPostFrames = newPosts.map((post) => {
       // if post.hasVideo, use _videoThumbnail.png
       // else use a random attachment
-      const imageName = post.hasVideo ? '_videoThumbnail.png' : post.attachments[Math.floor(Math.random() * post.attachments.length)];
-      const imageSrc = './' + post.id + '/' + imageName;
-      const videoSrc = post.hasVideo ? './' + post.id + '/' + post.videoFilename : null;
+      const coverImageName = post.hasVideo ? '_videoThumbnail.png' : post.attachments.length && post.attachments[Math.floor(Math.random() * post.attachments.length)];
+      const coverImageSrc = coverImageName && './' + post.id + '/' + coverImageName;
+      const coverVideoSrc = post.hasVideo ? './' + post.id + '/' + post.videoFilename : null;
       const frame = framePost();
-      decoratePostFrame(frame, post.id, formatTimestamp(post.created), post.title, post.externalLink, imageSrc, videoSrc);
+      console.log({ post });
+      decoratePostFrame(frame, post.id, formatTimestamp(post.created), post.title, post.externalLink, post.content, coverImageSrc, coverVideoSrc);
       return frame;
     });
     postFrames = postFrames.concat(newPostFrames);
@@ -536,11 +553,11 @@ window.onpopstate = function(event) {
     const newPostRows = newPosts.map((post) => {
       // if post.hasVideo, use _videoThumbnail.png
       // else use a random attachment
-      const imageName = post.hasVideo ? '_videoThumbnail.png' : post.attachments[Math.floor(Math.random() * post.attachments.length)];
-      const videoSrc = post.hasVideo ? './' + post.id + '/' + post.videoFilename : null;
-      const imageSrc = './' + post.id + '/' + imageName;
+      const thumbnailImageName = post.hasVideo ? '_videoThumbnail.png' : post.attachments.length && post.attachments[Math.floor(Math.random() * post.attachments.length)];
+      const thumbnailImageSrc = thumbnailImageName && './' + post.id + '/' + thumbnailImageName;
+      const thumbnailVideoSrc = post.hasVideo ? './' + post.id + '/' + post.videoFilename : null;
       const row = listPost();
-      decoratePostRow(row, post.id, formatTimestamp(post.created), post.title, post.externalLink, imageSrc, videoSrc);
+      decoratePostRow(row, post.id, formatTimestamp(post.created), post.title, post.externalLink, post.content, thumbnailImageSrc, thumbnailVideoSrc);
       return row;
     });
     postRows = postRows.concat(newPostRows);
@@ -572,9 +589,9 @@ window.onpopstate = function(event) {
     const data = await response.json();
     const startingIndex = currentPage*pageSize;
     const newPosts = data['articles']
-      .slice(startingIndex, startingIndex + pageSize)
-      // Only if attachments have file extensions like ".jpg" ".jpeg" ".png" ".gif" ".webp" ".svg" ".avif"
-      .filter(post => post.hasVideo === true || post.attachments.some(attachment => attachment.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)$/i)));
+      .slice(startingIndex, startingIndex + pageSize);
+      {# // Only if attachments have file extensions like ".jpg" ".jpeg" ".png" ".gif" ".webp" ".svg" ".avif" #}
+      {# .filter(post => post.hasVideo === true || post.attachments.some(attachment => attachment.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)$/i))); #}
 
     posts = posts.concat(newPosts);
 
