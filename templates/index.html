@@ -531,13 +531,14 @@ window.onpopstate = function(event) {
     decorateAllowanceForm();
   }
 
-  const parseAndRender = function(md) {
-    const commonmark = window.commonmark;
-    const writer = new commonmark.HtmlRenderer({ sourcepos: false });
-    const reader = new commonmark.Parser();
-
-    var parsed = reader.parse(md);
-    const result = writer.render(parsed);
+  const renderMarkdown = function(text) {
+    const md = window.markdownit({
+      html: true,
+      xhtmlOut: false,
+      linkify: true
+    });
+    md.use(window.markdownitTaskLists);
+    const result = md.render(text);
     return result;
   }
 
@@ -548,7 +549,7 @@ window.onpopstate = function(event) {
       const coverImageName = post.hasVideo ? '_videoThumbnail.png' : post.attachments.length && post.attachments[Math.floor(Math.random() * post.attachments.length)];
       const coverImageSrc = coverImageName && './' + post.id + '/' + coverImageName;
       const coverVideoSrc = post.hasVideo ? './' + post.id + '/' + post.videoFilename : null;
-      const contentHTML = parseAndRender(post.content);
+      const contentHTML = renderMarkdown(post.content);
       console.log(contentHTML);
       const frame = framePost();
       console.log({ post });
