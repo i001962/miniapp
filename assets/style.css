@@ -30,6 +30,7 @@
   --transition-duration-1: 0.1s;
   --transition-duration-2: 0.2s;
   --transition-timing-function: ease;
+  --blur-intensity: blur(3px);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -294,6 +295,7 @@ details > summary:before {
   border-bottom-width: 0px;
   border-bottom-style: solid;
   border-bottom-color: var(--background-secondary-color);
+  backdrop-filter: var(--blur-intensity);
 }
 
 #body-dom {
@@ -373,6 +375,7 @@ details > summary:before {
   overflow: auto;
   background-color: var(--background-color-opacity);
   padding-bottom: var(--spacing-6);
+  backdrop-filter: var(--blur-intensity);
 }
 
 .modal-content {

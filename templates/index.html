@@ -690,7 +690,7 @@ window.onpopstate = function(event) {
 
     nextPageOffset += newPosts.length;
 
-    const encodedIPFSUris = await Promise.all(posts.map(async (post) => await encodeIPFSUriFrom("{{ assets_prefix }}", post.id)));
+    const encodedIPFSUris = await Promise.all(newPosts.map(async (post) => await encodeIPFSUriFrom("{{ assets_prefix }}", post.id)));
 
     await loadPostsState(encodedIPFSUris);
 
@@ -732,7 +732,6 @@ window.onpopstate = function(event) {
     const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
     
-    console.log({ currentScrollTop, maxScrollTop, diff: maxScrollTop - currentScrollTop });
     if (maxScrollTop - currentScrollTop < pagingMargingBottom) loadPosts(defaultPageSize);
   }
 
@@ -758,6 +757,7 @@ window.onpopstate = function(event) {
 
     postModeButton.addEventListener('click', async () => {
       toggleView();
+      // Load any necessary frames.
       postMode == "frames" ? postFrames.length < postRows.length && await showPostFrames(posts.slice(postFrames.length)) : postRows.length < postFrames.length && showPostList(posts.slice(postRows.length));
     });
 
