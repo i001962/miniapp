@@ -130,6 +130,9 @@
 <button id="post-form-button" class="form-button form-main-button mobile-padding">[<span id="post-form-button-text" class="form-button-text">collect</span>]<span id="post-form-button-loading-animation" class="loading-animation button-loading-animation"></span></button>
 <img id="post-cover-image"></img>
 <video id="post-cover-video"></video>
+<div id="post-cover-audio-container">
+  <audio id="post-cover-audio"></audio>
+</div>
 <div id="post-content" class="mobile-padding"></div>
 <script>
   let tiersCache = {};
@@ -491,7 +494,8 @@
   }
 
   // Re-decorate the form depending on if the provided content has already been recorded onchain, and if it's sold out.
-  const decoratePostPage = async (name, date, link, content, imageSrc, videoSrc, encodedIPFSUri) => {
+  const decoratePostPage = async (name, date, link, content, imageSrc, videoSrc, audioSrc, encodedIPFSUri) => {
+    console.log({  imageSrc, videoSrc, audioSrc });
     // Show the loading animation.
     startLoadingAnimation('post-form-loading-animation');
     // Get references to the form state.
@@ -512,6 +516,8 @@
     const postFormButton = document.getElementById("post-form-button");
     const postCoverImage = document.getElementById("post-cover-image");
     const postCoverVideo = document.getElementById("post-cover-video");
+    const postCoverAudioContainer = document.getElementById("post-cover-audio-container");
+    const postCoverAudio = document.getElementById("post-cover-audio");
     const postContent = document.getElementById("post-content");
     const recordPostForm = document.getElementById("record-post-form");
     const collectPostForm = document.getElementById("collect-post-form");
@@ -542,8 +548,9 @@
     // Decorate the image or video content.
 
     if (videoSrc) {
-      postCoverImage.style.display = "none"
-      postCoverVideo.style.display = "block"
+      postCoverImage.style.display = "none";
+      postCoverAudioContainer.style.display = "none";
+      postCoverVideo.style.display = "block";
       postCoverVideo.autoplay = true;
       postCoverVideo.loop = true;
       postCoverVideo.muted = true;
@@ -551,15 +558,30 @@
       postCoverImage.src = "";
       postCoverVideo.src = videoSrc;
       postCoverVideo.addEventListener("click", (e) => e.stopPropagation());
+    } else if (audioSrc) {
+      const postCoverAudioSource = document.createElement("source");
+      postCoverImage.style.display = "none"
+      postCoverVideo.style.display = "none"
+      postCoverAudioContainer.style.display = "block";
+      postCoverAudio.autoplay = false;
+      postCoverAudio.loop = false;
+      postCoverAudio.muted = false;
+      postCoverAudio.controls = true;
+      postCoverAudioSource.src = audioSrc;
+      postCoverVideo.src = "";
+      postCoverImage.src = "";
+      postCoverAudio.appendChild(postCoverAudioSource);
     } else if (imageSrc) {
       postCoverImage.style.display = "block"
       postCoverVideo.style.display = "none"
+      postCoverAudioContainer.style.display = "none";
       postCoverVideo.src = "";
       postCoverImage.src = imageSrc;
       postCoverImage.addEventListener("click", (e) => e.stopPropagation());
     } else {
       postCoverImage.style.display = "none"
       postCoverVideo.style.display = "none"
+      postCoverAudioContainer.style.display = "none";
       postCoverVideo.src = "";
       postCoverImage.src = "";
     }

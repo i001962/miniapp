@@ -103,16 +103,17 @@
     const topDom = document.getElementById('top-dom');
     topDom.style.borderBottomWidth = "1px";
 
-    const imageName = {{ article.hasVideo }} ? '_videoThumbnail.png' : {{ article.attachments }}.at(0);
+    const imageName = {{ article.hasVideo }} ? '_videoThumbnail.png' : {{ article.hasAudio }} ? '_audioThumbnail.png' : {{ article.attachments.count }} && {{ article.attachments }}.at(0);
+    const imageSrc = imageName && './' + imageName;
     const videoSrc = {{ article.hasVideo }} ? './' + '{{ article.videoFilename }}' : null;
-    const imageSrc = './' + imageName;
+    const audioSrc = {{ article.hasAudio }} ? './' + '{{ article.audioFilename }}' : null;
     const name = `{{ article.title }}`;
     const postId = `{{ article.id }}`;
     const created = Math.floor({{ article.created.timeIntervalSince1970 }} * 1000);
     const link = `{{ article.externalLink }}`;
     const content = `{{ content_html }}`;
 
-    await decoratePostPage(name, formatDate(new Date(created)), link, content, imageSrc, videoSrc, await encodeIPFSUriFrom('{{ assets_prefix }}', postId));
+    await decoratePostPage(name, formatDate(new Date(created)), link, content, imageSrc, videoSrc, audioSrc, await encodeIPFSUriFrom('{{ assets_prefix }}'));
 
     stopLoadingAnimation('post-form-loading-animation');
   }

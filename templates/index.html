@@ -64,7 +64,7 @@ window.onpopstate = function(event) {
 
   // State variables.
   let defaultPageSize = 20;
-  let currentPage = 0;
+  let nextPageOffset = 0;
   let canLoadNewPosts = true;
 
   const loadPostsState = async (encodedIPFSUris) => {
@@ -177,8 +177,7 @@ window.onpopstate = function(event) {
       frameAudioCurrentTime.classList.add("post-frame-audio-play-clock");
       frameAudioDuration.classList.add("post-frame-audio-play-clock");
       frameAudio.id = 'img-' + postId;
-      frameAudioAnimation.id = 'audio-' + postId;
-      frameAudio.style.display = "block"
+      frameAudioAnimation.id = 'frame-audio-' + postId;
       frameAudio.autoplay = false;
       frameAudio.loop = true;
       frameAudio.muted = false;
@@ -186,11 +185,11 @@ window.onpopstate = function(event) {
       subtitle.innerHTML = `${subtitle.innerHTML} | [▶]`
       frameAudioSource.src = coverAudioSrc;
       frameAudioSource.loading = "lazy";
-      frameAudio.addEventListener('loadedmetadata', function() {
+      frameAudio.addEventListener('loadedmetadata', () => {
         frameAudioDuration.textContent = formatPlayclock(frameAudio.duration);
         frameAudioCurrentTime.textContent = ` | ${formatPlayclock(frameAudio.currentTime)} | `;
       });
-      frameAudio.addEventListener('timeupdate', function() {
+      frameAudio.addEventListener('timeupdate', () => {
           frameAudioCurrentTime.textContent = ` | ${formatPlayclock(frameAudio.currentTime)} | `;
       });
       frameAudio.appendChild(frameAudioSource);
@@ -209,6 +208,12 @@ window.onpopstate = function(event) {
         frameAudio.pause();
         stopAudioAnimation(frameAudioAnimation.id);
       });
+
+      const overlay = document.createElement("div");
+      overlay.innerHTML = "[▶]";
+      overlay.classList.add("overlay-play-icon");
+      postFrame.appendChild(overlay);
+
     } else if (coverImageSrc) {
       const frameImage = document.createElement("img");
       frameImage.id = 'img-' + postId;
@@ -219,7 +224,7 @@ window.onpopstate = function(event) {
     } else {
       const frameText = document.createElement("div");
       frameText.classList.add("post-frame-text");
-      frameText.innerHTML = content.slice(0, 300);
+      frameText.innerHTML = content.slice(0, 200).replace(/\n/g, "<br>");
       postFrame.appendChild(frameText);
     }
 
@@ -235,7 +240,7 @@ window.onpopstate = function(event) {
       toggleNavVisibility();
 
       // Make the modal look right.
-      await decoratePostModal(postId, encodedIPFSUri, name, date, link, content, coverImageSrc, coverVideoSrc);
+      await decoratePostModal(postId, encodedIPFSUri, name, date, link, renderMarkdown(content), coverImageSrc, coverVideoSrc, coverAudioSrc);
 
       // Make the body not scrollable.
       document.body.style.overflow = "hidden";
@@ -244,7 +249,7 @@ window.onpopstate = function(event) {
     decoratePostFrameState(postFrame, projectId, encodedIPFSUri);
   }
 
-  const decoratePostRow = async (postRow, postId, date, name, link, content, thumbnailImageSrc, thumbnailVideoSrc) => {
+  const decoratePostRow = async (postRow, postId, date, name, link, content, thumbnailImageSrc, thumbnailVideoSrc, thumbnailAudioSrc) => {
     const postFormStateProjectId = document.getElementById("post-form-state-project-id");
     const projectId = parseInt(postFormStateProjectId.innerHTML);
 
@@ -282,6 +287,48 @@ window.onpopstate = function(event) {
       thumbnail.appendChild(thumbnailVideo);
       postRow.addEventListener("mouseover", () => thumbnailVideo.paused && thumbnailVideo.play());
       postRow.addEventListener("mouseout", () => thumbnailVideo.pause());
+    } else if (thumbnailAudioSrc) {
+      const rowAudioContainer = document.createElement("div");
+      const rowAudio = document.createElement("audio");
+      const rowAudioSource = document.createElement("source");
+      const rowAudioCurrentTime = document.createElement("span");
+      const rowAudioDuration = document.createElement("span");
+      const rowAudioAnimation = document.createElement("span");
+      rowAudioContainer.classList.add("post-row-audio-container");
+      rowAudioCurrentTime.classList.add("post-row-audio-play-clock");
+      rowAudioDuration.classList.add("post-row-audio-play-clock");
+      rowAudio.id = 'img-' + postId;
+      rowAudioAnimation.id = 'row-audio-' + postId;
+      rowAudio.autoplay = false;
+      rowAudio.loop = true;
+      rowAudio.muted = false;
+      rowAudio.controls = false;
+      subtitle.innerHTML = `${subtitle.innerHTML} | [▶]`
+      rowAudioSource.src = thumbnailAudioSrc;
+      rowAudioSource.loading = "lazy";
+      rowAudio.addEventListener('loadedmetadata', () => {
+        rowAudioDuration.textContent = formatPlayclock(rowAudio.duration);
+        rowAudioCurrentTime.textContent = ` | ${formatPlayclock(rowAudio.currentTime)} | `;
+      });
+      rowAudio.addEventListener('timeupdate', () => {
+          rowAudioCurrentTime.textContent = ` | ${formatPlayclock(rowAudio.currentTime)} | `;
+      });
+      rowAudio.appendChild(rowAudioSource);
+      rowAudioContainer.appendChild(rowAudio);
+      rowAudioContainer.appendChild(rowAudioAnimation);
+      rowAudioContainer.appendChild(rowAudioCurrentTime);
+      rowAudioContainer.appendChild(rowAudioDuration);
+      thumbnail.appendChild(rowAudioContainer);
+      prepareAudioAnimation(rowAudioAnimation.id);
+      rowAudioContainer.addEventListener("mouseover", () => {
+        if (!rowAudio.paused) return;
+        rowAudio.play();
+        startAudioAnimation(rowAudioAnimation.id);
+      });
+      rowAudioContainer.addEventListener("mouseout", () => {
+        rowAudio.pause();
+        stopAudioAnimation(rowAudioAnimation.id);
+      });
     } else if (thumbnailImageSrc) {
       const thumbnailImage = document.createElement("img");
       thumbnailImage.id = 'img-' + postId;
@@ -294,7 +341,7 @@ window.onpopstate = function(event) {
       const thumbnailText = document.createElement("div");
       thumbnailTextContainer.classList.add("post-row-thumbnail-text-container");
       thumbnailText.classList.add("post-row-thumbnail-text");
-      thumbnailText.innerHTML = content.slice(0, 300);
+      thumbnailText.innerHTML = content.slice(0, 100).replace(/\n/g, "<br>");
       thumbnailTextContainer.appendChild(thumbnailText)
       thumbnail.appendChild(thumbnailTextContainer);
     }
@@ -311,7 +358,7 @@ window.onpopstate = function(event) {
       toggleNavVisibility();
 
       // Make the modal look right.
-      await decoratePostModal(postId, encodedIPFSUri, name, date, link, content, coverImageSrc, coverVideoSrc);
+      await decoratePostModal(postId, encodedIPFSUri, name, date, link, renderMarkdown(content), thumbnailImageSrc, thumbnailVideoSrc, thumbnailAudioSrc);
 
       // Make the body not scrollable.
       document.body.style.overflow = "hidden";
@@ -465,7 +512,7 @@ window.onpopstate = function(event) {
     postRow.classList.add("post-row-fade-in");
   }
 
-  const decoratePostModal = async (postId, encodedIPFSUri, name, date, link, content, imageSrc, videoSrc) => {
+  const decoratePostModal = async (postId, encodedIPFSUri, name, date, link, content, imageSrc, videoSrc, audioSrc) => {
     // Get references to modal elements that need decorating.
     const postModal = document.getElementById("post-modal");
     const topDom = document.getElementById("top-dom");
@@ -476,6 +523,7 @@ window.onpopstate = function(event) {
     const collectPostForm = document.getElementById("collect-post-form");
     const postImage = document.getElementById("post-cover-image");
     const postVideo = document.getElementById("post-cover-video");
+    const postAudio = document.getElementById("post-cover-audio");
     const postContent = document.getElementById("post-content");
 
     requestAnimationFrame(() => {
@@ -506,6 +554,8 @@ window.onpopstate = function(event) {
 
       // If there's a video, pause it.
       if (videoSrc) postVideo.pause();
+      // If there's audio, pause it.
+      if (audioSrc) postAudio.pause();
 
       // Hide the RECORD form.
       recordPostForm.style.display = "none";
@@ -530,7 +580,7 @@ window.onpopstate = function(event) {
     });
 
     // Show the post page.
-    await decoratePostPage(name, date, link, content, imageSrc, videoSrc, encodedIPFSUri);
+    await decoratePostPage(name, date, link, content, imageSrc, videoSrc, audioSrc, encodedIPFSUri);
   }
 
   // Get the fork modal set up.
@@ -574,16 +624,6 @@ window.onpopstate = function(event) {
     decorateAllowanceForm();
   }
 
-  const renderMarkdown = function(text) {
-    const md = window.markdownit({
-      html: true,
-      xhtmlOut: false,
-      linkify: true
-    });
-    md.use(window.markdownitTaskLists);
-    return md.render(text);
-  }
-
   const showPostFrames = async (newPosts) => {
     const newPostFrames = newPosts.map((post) => {
       // if post.hasVideo, use _videoThumbnail.png
@@ -593,7 +633,7 @@ window.onpopstate = function(event) {
       const coverVideoSrc = post.hasVideo ? './' + post.id + '/' + post.videoFilename : null;
       const coverAudioSrc = post.hasAudio ? './' + post.id + '/' + post.audioFilename : null;
       const frame = framePost();
-      decoratePostFrame(frame, post.id, formatTimestamp(post.created), post.title, post.externalLink, renderMarkdown(post.content), coverImageSrc, coverVideoSrc, coverAudioSrc);
+      decoratePostFrame(frame, post.id, formatTimestamp(post.created), post.title, post.externalLink, post.content, coverImageSrc, coverVideoSrc, coverAudioSrc);
       return frame;
     });
     postFrames = postFrames.concat(newPostFrames);
@@ -611,7 +651,7 @@ window.onpopstate = function(event) {
       const thumbnailVideoSrc = post.hasVideo ? './' + post.id + '/' + post.videoFilename : null;
       const thumbnailAudioSrc = post.hasAudio ? './' + post.id + '/' + post.audioFilename : null;
       const row = listPost();
-      decoratePostRow(row, post.id, formatTimestamp(post.created), post.title, post.externalLink, parseAndRender(post.content), thumbnailImageSrc, thumbnailVideoSrc, thumbnailAudioSrc);
+      decoratePostRow(row, post.id, formatTimestamp(post.created), post.title, post.externalLink, post.content, thumbnailImageSrc, thumbnailVideoSrc, thumbnailAudioSrc);
       return row;
     });
     postRows = postRows.concat(newPostRows);
@@ -627,11 +667,11 @@ window.onpopstate = function(event) {
     if (postMode == "frames") {
       framesContainer.style.display = "block";
       listContainer.style.display = "none";
-      await showPostFrames(posts);
+      !postFrames.length && await showPostFrames(posts);
     } else {
       framesContainer.style.display = "none";
       listContainer.style.display = "block";
-      await showPostList(posts);
+      !postRows.length && await showPostList(posts);
     }
   }
 
@@ -641,17 +681,16 @@ window.onpopstate = function(event) {
       `{{ assets_prefix }}planet.json`
     );
     const data = await response.json();
-    const startingIndex = currentPage*pageSize;
     const newPosts = data['articles']
-      .slice(startingIndex, startingIndex + pageSize);
+      .slice(nextPageOffset, nextPageOffset + pageSize);
       {# // Only if attachments have file extensions like ".jpg" ".jpeg" ".png" ".gif" ".webp" ".svg" ".avif" #}
       {# .filter(post => post.hasVideo === true || post.attachments.some(attachment => attachment.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)$/i))); #}
 
     posts = posts.concat(newPosts);
-
+    
     if (!newPosts.length) return;
-
-    currentPage++;
+    
+    nextPageOffset += newPosts.length;
 
     const encodedIPFSUris = await Promise.all(posts.map(async (post) => await encodeIPFSUriFrom("{{ assets_prefix }}", post.id)));
 

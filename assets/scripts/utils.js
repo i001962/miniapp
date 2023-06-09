@@ -8,7 +8,7 @@ const encodeIPFSUri = () => {
       hex += uint8Array[i].toString(16).padStart(2, '0');
     return hex;
   } catch (e) {
-    return ""; 
+    return "0x0000000000000000000000000000000000000000000000000000000000000000"; 
   }
 }
 
@@ -16,7 +16,7 @@ const encodeIPFSUriFrom = async (prefix, itemId) => {
   // Create the content's encoded IPFS URL.
   const cidUrl = `${prefix}${itemId}/nft.json.cid.txt`;
   const cid = await (await fetch(cidUrl)).text();
-  return cid ? encodeIPFSUri(cid) : "";
+  return cid ? encodeIPFSUri(cid) : "0x0000000000000000000000000000000000000000000000000000000000000000";
 }
 
 const formatDate = (date) => {
@@ -76,6 +76,16 @@ const projectLinkBase = (chain) => {
   }
 }
 
+const renderMarkdown = function(text) {
+  const md = window.markdownit({
+    html: true,
+    xhtmlOut: false,
+    linkify: true
+  });
+  md.use(window.markdownitTaskLists);
+  return md.render(text);
+}
+
 const loadingAnimationPace = 100;
 let animationIntervals = {};
 
@@ -128,7 +138,4 @@ const stopAudioAnimation = (audioAnimationId) => {
   const audioAnimation = document.getElementById(audioAnimationId);
   animationIntervals[audioAnimationId] = clearTimeout(animationIntervals[audioAnimationId]);
 }
-
-
-// const {CID} = Multiformats;
 
