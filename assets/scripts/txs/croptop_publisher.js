@@ -489,7 +489,6 @@ const tx_view_allowance = async (projectId, category, chainId) => {
 
 const tx_view_tiers = async (projectId, encodedIPFSUris, chainId) => {
   const contract = croptopPublisherContract(chainId);
-  console.log({  projectId, encodedIPFSUris, chainId });
   if (!contract) return [[0, 0, 0]];
   try {
     return await view(chainId, contract, croptopPublisherContractABI, "tiersFor", [projectId, "0x0000000000000000000000000000000000000000", encodedIPFSUris]);

@@ -296,6 +296,10 @@ details > summary:before {
   border-bottom-color: var(--background-secondary-color);
 }
 
+#body-dom {
+  padding-bottom: var(--spacing-scroll-padding);
+}
+
 /* COMMON STYLES */
 
 .content {
@@ -529,6 +533,7 @@ details > summary:before {
   position: relative;
   top: var(--spacing-2);
   left: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
 }
 
 /* POST BODY STYLES */
@@ -701,7 +706,6 @@ details > summary:before {
 #post-frames-container {
   text-align: left;
   margin-right: var(--spacing-4);
-  padding-bottom: var(--spacing-scroll-padding);
 }
 
 .post-frame {

@@ -24,9 +24,9 @@ window.onpopstate = function(event) {
   {% include 'modules/header.html' %}
 </div>
 <div id="body-dom">
-  <div id="posts-loading-animation" class="body-loading-animation loading-animation"></div>
   <div id="post-frames-container" style="display: none"></div>
-  <div id="post-list-container"></div>
+   <div id="post-list-container" style="display: none"></div>
+  <div id="posts-loading-animation" class="body-loading-animation loading-animation"></div>
 </div>
 <div id="fork-modal" class="modal negative-space">
   <div class="modal-content content negative-space">
@@ -47,8 +47,8 @@ window.onpopstate = function(event) {
   const postFrameWidthClasses = ["post-frame-w1", "post-frame-w2", "post-frame-w3"];
   const formInputReactionTimeDelay = 600;
   const noScrollEffectEdgeDistance = 80;
-  const pagingEdgeDistance = 1000;
   const toggleNavVisibilityScrollThreshold = 50;
+  const pagingMargingBottom = 100;
 
   // State constants.
   const feeDivisor = 20;
@@ -376,8 +376,8 @@ window.onpopstate = function(event) {
       if (media.complete) return resolve();
 
       const checkForDimensions = () => {
-        // Resolve if the img has dimensions. Small delay to let more of the img load for a smoother slide in.
-        if (media.width || media.videoWidth > 0 && media.height || media.videoHeight > 0) return setTimeout(resolve, 1000);
+        // Resolve if the img has dimensions. 
+        if ((media.width || media.videoWidth) && (media.height || media.videoHeight)) return resolve(); // setTimeout(resolve, 1000);
         // Otherwise wait until the image has dimensions.
         else
           return requestAnimationFrame(checkForDimensions);
@@ -473,8 +473,6 @@ window.onpopstate = function(event) {
   const positionAndShowPostFrame = async (postFrame) => {
     await loadMedia(postFrame);
 
-    if (animationIntervals['posts-loading-animation']) stopLoadingAnimation('posts-loading-animation');
-
     const rect = postFrame.getBoundingClientRect();
     if (rect.left < greatestRightInRow) currentRow++;
 
@@ -506,8 +504,6 @@ window.onpopstate = function(event) {
 
   const positionAndShowPostRow = async (postRow) => {
     await loadMedia(postRow);
-
-    if (animationIntervals['posts-loading-animation']) stopLoadingAnimation('posts-loading-animation');
 
     postRow.classList.add("post-row-fade-in");
   }
@@ -661,22 +657,17 @@ window.onpopstate = function(event) {
   }
 
   const showPosts = async (posts) => {
-    const framesContainer = document.getElementById("post-frames-container");
-    const listContainer = document.getElementById("post-list-container");
-
-    if (postMode == "frames") {
-      framesContainer.style.display = "block";
-      listContainer.style.display = "none";
-      !postFrames.length && await showPostFrames(posts);
-    } else {
-      framesContainer.style.display = "none";
-      listContainer.style.display = "block";
-      !postRows.length && await showPostList(posts);
-    }
+    postMode == "frames" ? await showPostFrames(posts) : await showPostList(posts);
   }
 
   const loadPosts = async (pageSize) => {
+    console.log("loading: ", canLoadNewPosts);
+    if (!canLoadNewPosts) return;
+
     canLoadNewPosts = false;
+
+    startLoadingAnimation('posts-loading-animation');
+
     const response = await fetch(
       `{{ assets_prefix }}planet.json`
     );
@@ -687,14 +678,19 @@ window.onpopstate = function(event) {
       {# .filter(post => post.hasVideo === true || post.attachments.some(attachment => attachment.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)$/i))); #}
 
     posts = posts.concat(newPosts);
-    
-    if (!newPosts.length) return;
-    
+
+    if (!newPosts.length) {
+      stopLoadingAnimation('posts-loading-animation');
+      return;
+    }
+
     nextPageOffset += newPosts.length;
 
     const encodedIPFSUris = await Promise.all(posts.map(async (post) => await encodeIPFSUriFrom("{{ assets_prefix }}", post.id)));
 
     await loadPostsState(encodedIPFSUris);
+
+    stopLoadingAnimation('posts-loading-animation');
 
     await showPosts(newPosts);
 
@@ -731,9 +727,9 @@ window.onpopstate = function(event) {
   const pageMorePostsIfNeeded = () => {
     const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-
-    if (canLoadNewPosts && maxScrollTop - currentScrollTop < pagingEdgeDistance)
-      loadPosts(defaultPageSize);
+    
+    console.log({ currentScrollTop, maxScrollTop, diff: maxScrollTop - currentScrollTop });
+    if (maxScrollTop - currentScrollTop < pagingMargingBottom) loadPosts(defaultPageSize);
   }
 
   const didScroll = () => {
@@ -742,10 +738,28 @@ window.onpopstate = function(event) {
   }
 
   const setupPostMode = () => {
+    const framesContainer = document.getElementById("post-frames-container");
+    const listContainer = document.getElementById("post-list-container");
     const postModeButton = document.getElementById("post-mode-button");
-    postModeButton.addEventListener('click', () => showPosts(posts));
-  }
 
+    const toggleView = () => {
+      if (postMode == "frames") {
+        framesContainer.style.display = "block";
+        listContainer.style.display = "none";
+      } else {
+        framesContainer.style.display = "none";
+        listContainer.style.display = "block";
+      }
+    }
+
+    postModeButton.addEventListener('click', async () => {
+      toggleView();
+      postMode == "frames" ? postFrames.length < postRows.length && await showPostFrames(posts.slice(postFrames.length)) : postRows.length < postFrames.length && showPostList(posts.slice(postRows.length));
+    });
+
+    toggleView();
+  }
+  
   // if there is ?id= in the url, open the object page.
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get('id');
@@ -753,7 +767,6 @@ window.onpopstate = function(event) {
     window.location.href = './' + id + '/';
   } else {
     window.addEventListener("scroll", didScroll);
-    startLoadingAnimation('posts-loading-animation');
     loadSettings();
     setupForking();
     loadPosts(defaultPageSize);
