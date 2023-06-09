@@ -381,7 +381,7 @@ window.onpopstate = function(event) {
 
       const checkForDimensions = () => {
         // Resolve if the img has dimensions. 
-        if ((media.width || media.videoWidth) && (media.height || media.videoHeight)) return resolve(); // setTimeout(resolve, 1000);
+        if ((media.width || media.videoWidth) && (media.height || media.videoHeight)) return setTimeout(resolve, 300);
         // Otherwise wait until the image has dimensions.
         else
           return requestAnimationFrame(checkForDimensions);

@@ -25,7 +25,8 @@
   --modal-z-index: 10;
   --top-dom-z-index: 100;
   --max-content-width: 1000px;
-  --reduced-width: 65%;
+  --reduced-width1: 65%;
+  --reduced-width2: 80%;
   --max-width: 100%;
   --max-height: 100%;
   --transition-duration-1: 0.1s;
@@ -510,13 +511,13 @@ details > summary:before {
   color: var(--link-color);
 }
 #fork-form {
-  width: var(--reduced-width);
+  width: var(--reduced-width1);
 }
 #fork-form details .form-item {
   margin-top: var(--spacing-3);
 }
 #fork-form-chain  {
-  width: calc(var(--reduced-width) / 2);
+  width: calc(var(--reduced-width1) / 2);
 }
 
 .fork-info {
@@ -579,7 +580,7 @@ details > summary:before {
 
 #post-cover-image, #post-cover-video {
   border: var(--border-width) solid var(--background-secondary-color);
-  width: var(--reduced-width);
+  width: var(--reduced-width2);
   max-width: var(--max-width);
   max-height: 700px;
   object-position: left;
@@ -588,11 +589,6 @@ details > summary:before {
 
 #post-content {
   width: var(--max-width); 
-}
-
-#post-content img, #post-content video {
-  width: var(--reduced-width);
-  border: var(--border-width) solid var(--background-secondary-color);
 }
 
 /* FORM STYLES */
