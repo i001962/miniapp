@@ -22,6 +22,26 @@
 <script>
   let postMode = "frames";
   
+  const showNav = () => {
+    const topDom = document.getElementById('top-dom');
+    const navContainer = document.getElementById('nav-container');
+    const headerContainer = document.getElementById('header-container');
+    navContainer.style.visibility = "visible";
+    navContainer.style.opacity = 1;
+    navContainer.classList.remove("hidden");
+    topDom.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + "px";
+  }
+
+  const hideNav = () => {
+    const topDom = document.getElementById('top-dom');
+    const navContainer = document.getElementById('nav-container');
+    const headerContainer = document.getElementById('header-container');
+    navContainer.style.visibility = "hidden";
+    navContainer.style.opacity = 0;
+    navContainer.classList.add("hidden");
+    topDom.style.height = headerContainer.offsetHeight + "px";
+  }
+
   const togglePostMode = () => {
     const gridPostModeButton = document.getElementById("grid-post-mode-button");
     const listPostModeButton = document.getElementById("list-post-mode-button");

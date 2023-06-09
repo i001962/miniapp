@@ -24,6 +24,10 @@
   {% endif %}
 <!-- End Open Graph Tags -->
 <script>
+  const noScrollEffectEdgeDistance = 80;
+  const toggleNavVisibilityScrollThreshold = 50;
+  let lastScrollTop = 0;
+
   document.addEventListener('DOMContentLoaded', () => {
     if (!window.PLANET.visitedFromPlanetClient) {
       if(document.getElementById('audio-container')){
@@ -96,6 +100,9 @@
 
     await loadSettings();
 
+    const topDom = document.getElementById('top-dom');
+    topDom.style.borderBottomWidth = "1px";
+
     const imageName = {{ article.hasVideo }} ? '_videoThumbnail.png' : {{ article.attachments }}.at(0);
     const videoSrc = {{ article.hasVideo }} ? './' + '{{ article.videoFilename }}' : null;
     const imageSrc = './' + imageName;
@@ -110,28 +117,44 @@
     stopLoadingAnimation('post-form-loading-animation');
   }
 
-  const setTopDomHeight = () => {
+  const toggleNavVisibility = () => {
     const topDom = document.getElementById('top-dom');
-    const headerContainer = document.getElementById('header-container');
-    const navContainer = document.getElementById('nav-container');
-    const navHeight = navContainer ? navContainer.offsetHeight : 0;
-    topDom.style.height = headerContainer.offsetHeight + navHeight + "px";
+    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    
+    if (currentScrollTop <= 0) showNav();
+    else {
+      if (Math.abs(currentScrollTop - lastScrollTop) < toggleNavVisibilityScrollThreshold) return;
+      if (lastScrollTop > noScrollEffectEdgeDistance && maxScrollTop - lastScrollTop > noScrollEffectEdgeDistance) {
+        if (currentScrollTop > lastScrollTop) hideNav();
+        else showNav();
+      }
+    }
+    lastScrollTop = currentScrollTop;
   }
 
   const setupResetButton = () => {
     const resetButton = document.getElementById('body-reset-button');
-
-    console.log("hey");
     resetButton.addEventListener('click', () => {
       window.location.href = '../';
     });
   }
-
-  window.addEventListener("load", setTopDomHeight);
-  window.addEventListener("resize", setTopDomHeight);
+  
   load();
   setupForking();
   setupResetButton();
+
+  let isUserScroll = false;
+  window.addEventListener('load', function() {
+    window.requestAnimationFrame(() => {
+      window.addEventListener('scroll', function() {
+        if (isUserScroll) toggleNavVisibility();
+      });
+      window.requestAnimationFrame(() => {
+        isUserScroll = true;
+      });
+    });
+  });
 </script>
 {% endblock %}
 {# {% if article.hasVideo %} #}

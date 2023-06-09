@@ -336,17 +336,6 @@ details > summary:before {
   font-size: var(--font-size-2);
 }
 
-.audio-container {
-  margin-bottom: 20px;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: var(--max-width);
-}
-
-.audio {
-  width: var(--max-width);
-}
-
 .overlay-play-icon {
   font-size: var(--font-size-1);
   display: block;
@@ -385,9 +374,10 @@ details > summary:before {
   left: 0;
   top: 0;
   width: var(--max-width);
-  height: 100%;
+  height: calc(var(--max-height) - var(--spacing-6));
   overflow: auto;
   background-color: var(--background-color-opacity);
+  padding-bottom: var(--spacing-6);
 }
 
 .modal-content {
@@ -735,10 +725,19 @@ details > summary:before {
   opacity: 0; 
 }
 
-.post-frame img, .post-frame video {
+.post-frame img, .post-frame video, .post-frame audio {
   width: var(--max-width);
   display: block;
   object-fit: cover;
+}
+
+.post-frame-audio-container {
+  min-height: 200px;
+  padding: var(--spacing-3);
+}
+
+.post-frame-audio-play-clock {
+  font-size: var(--font-size-2);   
 }
 
 .post-frame-text {
@@ -746,7 +745,7 @@ details > summary:before {
   min-height: 300px;
   max-height: 500px;
   background: var(--background-color);
-  padding: var(--spacing-1);
+  padding: var(--spacing-3);
   color: var(--foreground-color);
   font-size: var(--font-size-2);
   font-weight: var(--font-weight-2);
@@ -831,7 +830,7 @@ details > summary:before {
   overflow: hidden;
 }
 
-.post-row-thumbnail img, .post-row-thumbnail video {
+.post-row-thumbnail img, .post-row-thumbnail video, .post-row-thumbnail audio {
   max-width: var(--max-width);
   height: var(--max-width);
   object-fit: cover; 
@@ -894,7 +893,7 @@ details > summary:before {
     width: var(--max-width);
   }
 
-  .content img, .content video {
+  .content img, .content video, .content audio {
     width: var(--max-width);
     border-left: none;
     border-right: none;

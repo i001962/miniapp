@@ -36,6 +36,12 @@ const formatTimestamp = (timestamp) => {
   return formatDate(date);
 }
 
+const formatPlayclock = (seconds) => {
+  const minutes = Math.floor(seconds / 60);
+  seconds = Math.floor(seconds % 60);
+  return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+} 
+
 const resolveChainId = (value) => {
   switch (value) {
     case "mainnet": return 1; 
@@ -71,7 +77,7 @@ const projectLinkBase = (chain) => {
 }
 
 const loadingAnimationPace = 100;
-let loadingAnimationIntervals = {};
+let animationIntervals = {};
 
 /// Animate the loading ticker.
 const startLoadingAnimation = (loadingAnimationId) => {
@@ -83,7 +89,7 @@ const startLoadingAnimation = (loadingAnimationId) => {
   const animate = () => {
     loadingAnimation.textContent = loadingAnimationFrames[currentFrame];
     currentFrame = (currentFrame + 1) % loadingAnimationFrames.length;
-    loadingAnimationIntervals[loadingAnimationId] = setTimeout(animate, loadingAnimationPace);
+    animationIntervals[loadingAnimationId] = setTimeout(animate, loadingAnimationPace);
   }
 
   animate();
@@ -92,9 +98,37 @@ const startLoadingAnimation = (loadingAnimationId) => {
 /// Stop animating the loading ticker.
 const stopLoadingAnimation = (loadingAnimationId) => {
   const loadingAnimation = document.getElementById(loadingAnimationId);
-  loadingAnimationIntervals[loadingAnimationId] = clearTimeout(loadingAnimationIntervals[loadingAnimationId]);
+  animationIntervals[loadingAnimationId] = clearTimeout(animationIntervals[loadingAnimationId]);
   loadingAnimation.style.display = "none";
 }
+
+let audioAnimationInterval;
+const audioAnimationFrames = ['▄', '▅', '█'];
+
+const prepareAudioAnimation = (audioAnimationId) => {
+  const audioAnimation = document.getElementById(audioAnimationId);
+  audioAnimation.innerHTML = audioAnimationFrames[1] + audioAnimationFrames[2] + audioAnimationFrames[0];
+}
+const startAudioAnimation = (audioAnimationId) => {
+  const audioAnimation = document.getElementById(audioAnimationId);
+  const audioAnimationPace = 100;
+
+  const animate = () => {
+    const oneOrTwo = Math.floor(Math.random() * 2) + 1;
+    const char0 = audioAnimationFrames[(audioAnimationFrames.indexOf(audioAnimation.innerHTML.charAt(0)) + oneOrTwo) % 3]; 
+    const char1 = audioAnimationFrames[(audioAnimationFrames.indexOf(audioAnimation.innerHTML.charAt(1)) + oneOrTwo) % 3]; 
+    const char2 = audioAnimationFrames[(audioAnimationFrames.indexOf(audioAnimation.innerHTML.charAt(2)) + oneOrTwo) % 3]; 
+    audioAnimation.innerHTML = char0 + char1 + char2;
+    animationIntervals[audioAnimationId] = setTimeout(animate, audioAnimationPace);
+  }
+  animate();
+}
+
+const stopAudioAnimation = (audioAnimationId) => {
+  const audioAnimation = document.getElementById(audioAnimationId);
+  animationIntervals[audioAnimationId] = clearTimeout(animationIntervals[audioAnimationId]);
+}
+
 
 // const {CID} = Multiformats;
 
