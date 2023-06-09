@@ -2,7 +2,7 @@
   --background-color: #fff;
   --background-secondary-color: #e2e2e2;
   --background-color-opacity: rgba(255, 255, 255, 0.95);
-  --background-secondary-color-opacity: rgba(226, 226, 226, 0.8);
+  --background-secondary-color-opacity: rgba(226, 226, 226, 0.7);
   --foreground-color: #000;
   --foreground-secondary-color: #555;
   --link-color: #f056c1;
@@ -39,7 +39,7 @@
     --background-color: #111;
     --background-secondary-color: #2a2a2a;
     --background-color-opacity: rgba(17, 17, 17, 0.95);
-  --background-secondary-color-opacity: rgba(42, 42, 42, 0.8);
+  --background-secondary-color-opacity: rgba(42, 42, 42, 0.7);
     --foreground-color: #fff;
     --foreground-secondary-color: #adadaf;
     --icon-social-filter: invert(24%) sepia(11%) saturate(0%) hue-rotate(188deg) brightness(95%) contrast(95%);
