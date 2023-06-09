@@ -302,24 +302,6 @@ details > summary:before {
 
 /* COMMON STYLES */
 
-.content {
-  margin: auto;
-  width: 88vw;
-  max-width: var(--max-content-width);
-  float: center;
-  padding-top: var(--spacing-2);
-  padding-bottom: var(--spacing-scroll-padding);
-}
-
-.content img, .content video {
-  border: var(--border-width) solid var(--background-secondary-color);
-  width: var(--reduced-width);
-  max-width: var(--max-width);
-  max-height: 700px;
-  object-position: left;
-  object-fit: cover;
-}
-
 .loading-animation {
   color: var(--foreground-color);
 }
@@ -388,6 +370,21 @@ details > summary:before {
   -webkit-animation-name: fadein;
   -webkit-animation-duration: 0.3s;
   animation-name: fadein;
+  margin: auto;
+  width: 88vw;
+  max-width: var(--max-content-width);
+  float: center;
+  padding-top: var(--spacing-2);
+  padding-bottom: var(--spacing-scroll-padding);
+}
+
+.modal-content #post-cover-image, .content #post-cover-video {
+  border: var(--border-width) solid var(--background-secondary-color);
+  width: var(--reduced-width);
+  max-width: var(--max-width);
+  max-height: 700px;
+  object-position: left;
+  object-fit: cover;
 }
 
 .exit-button {
@@ -573,7 +570,7 @@ details > summary:before {
   margin-top: var(--spacing-5);
 }
 
-#post-body img {
+#post-body .body-image {
   margin: var(--spacing-3) 0; 
 }
 
@@ -729,7 +726,7 @@ details > summary:before {
   opacity: 0; 
 }
 
-.post-frame img, .post-frame video {
+.post-frame .frame-image, .post-frame .frame-video {
   width: var(--max-width);
   display: block;
   object-fit: cover;
@@ -834,7 +831,7 @@ details > summary:before {
   overflow: hidden;
 }
 
-.post-row-thumbnail img, .post-row-thumbnail video {
+.post-row-thumbnail .row-thumbnail-image, .post-row-thumbnail .row-thumbnail-video {
   max-width: var(--max-width);
   height: var(--max-width);
   object-fit: cover; 
@@ -897,17 +894,17 @@ details > summary:before {
     margin-inline-end: var(--spacing-2);
   }
 
-  .content {
+  /* COMMON MODAL STYLES */
+
+  .modal-content {
     width: var(--max-width);
   }
 
-  .content img, .content video, .content audio {
+  .modal-content #post-cover-image, .modal-content #post-cover-video, .modal-content #post-cover-audio {
     width: var(--max-width);
     border-left: none;
     border-right: none;
   }
-
-  /* COMMON MODAL STYLES */
 
   .exit-button {
     padding-top: 0;

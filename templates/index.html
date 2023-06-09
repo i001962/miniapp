@@ -29,7 +29,7 @@ window.onpopstate = function(event) {
   <div id="posts-loading-animation" class="body-loading-animation loading-animation"></div>
 </div>
 <div id="fork-modal" class="modal negative-space">
-  <div class="modal-content content negative-space">
+  <div class="modal-content negative-space">
     <div class="exit-button mobile-padding negative-space">[<span class="exit-button-text negative-space">close</span>]</div>
     {% include 'modules/fork.html' %}
   </div>
@@ -147,6 +147,7 @@ window.onpopstate = function(event) {
     
     if (coverVideoSrc) {
       const frameVideo = document.createElement("video");
+      frameVideo.classList.add("frame-video");
       frameVideo.id = 'img-' + postId;
       frameVideo.style.display = "block"
       frameVideo.autoplay = false;
@@ -216,6 +217,7 @@ window.onpopstate = function(event) {
 
     } else if (coverImageSrc) {
       const frameImage = document.createElement("img");
+      frameImage.classList.add("frame-image");
       frameImage.id = 'img-' + postId;
       frameImage.style.display = "block"
       frameImage.src = coverImageSrc;
@@ -274,6 +276,7 @@ window.onpopstate = function(event) {
 
     if (thumbnailVideoSrc) {
       const thumbnailVideo = document.createElement("video");
+      thumbnailVideo.classList.add("row-thumbnail-video");
       thumbnailVideo.id = 'img-' + postId;
       thumbnailVideo.style.display = "block"
       thumbnailVideo.autoplay = false;
@@ -331,6 +334,7 @@ window.onpopstate = function(event) {
       });
     } else if (thumbnailImageSrc) {
       const thumbnailImage = document.createElement("img");
+      thumbnailImage.classList.add("row-thumbnail-image");
       thumbnailImage.id = 'img-' + postId;
       thumbnailImage.style.display = "block"
       thumbnailImage.src = thumbnailImageSrc;
@@ -345,7 +349,7 @@ window.onpopstate = function(event) {
       thumbnailTextContainer.appendChild(thumbnailText)
       thumbnail.appendChild(thumbnailTextContainer);
     }
-
+    
     const encodedIPFSUri = await encodeIPFSUriFrom("{{ assets_prefix }}", postId);
 
     // Summon a modal when the frame is clicked.
