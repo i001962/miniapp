@@ -140,10 +140,17 @@
       window.location.href = '../';
     });
   }
+
+  const setupPostMode = () => {
+    postModeButton.addEventListener('click', async () => {
+      window.location.href = '../';
+    });
+  }
   
   load();
   setupForking();
   setupResetButton();
+  setupPostMode();
 
   let isUserScroll = false;
   window.addEventListener('load', function() {
