@@ -302,6 +302,15 @@ details > summary:before {
 
 /* COMMON STYLES */
 
+.content {
+  margin: auto;
+  width: 60vw;
+  max-width: var(--max-content-width);
+  float: center;
+  padding-top: var(--spacing-2);
+  padding-bottom: var(--spacing-scroll-padding);
+}
+
 .loading-animation {
   color: var(--foreground-color);
 }
@@ -370,21 +379,6 @@ details > summary:before {
   -webkit-animation-name: fadein;
   -webkit-animation-duration: 0.3s;
   animation-name: fadein;
-  margin: auto;
-  width: 88vw;
-  max-width: var(--max-content-width);
-  float: center;
-  padding-top: var(--spacing-2);
-  padding-bottom: var(--spacing-scroll-padding);
-}
-
-.modal-content #post-cover-image, .content #post-cover-video {
-  border: var(--border-width) solid var(--background-secondary-color);
-  width: var(--reduced-width);
-  max-width: var(--max-width);
-  max-height: 700px;
-  object-position: left;
-  object-fit: cover;
 }
 
 .exit-button {
@@ -516,6 +510,10 @@ details > summary:before {
 #fork-form details .form-item {
   margin-top: var(--spacing-3);
 }
+#fork-form-chain  {
+  width: calc(var(--reduced-width) / 2);
+}
+
 .fork-info {
   margin-top: var(--spacing-4);
 }
@@ -572,6 +570,24 @@ details > summary:before {
 
 #post-body .body-image {
   margin: var(--spacing-3) 0; 
+}
+
+#post-cover-image, #post-cover-video {
+  border: var(--border-width) solid var(--background-secondary-color);
+  width: var(--reduced-width);
+  max-width: var(--max-width);
+  max-height: 700px;
+  object-position: left;
+  object-fit: cover;
+}
+
+#post-content {
+  width: var(--max-width); 
+}
+
+#post-content img, #post-content video {
+  width: var(--reduced-width);
+  border: var(--border-width) solid var(--background-secondary-color);
 }
 
 /* FORM STYLES */
@@ -900,12 +916,6 @@ details > summary:before {
     width: var(--max-width);
   }
 
-  .modal-content #post-cover-image, .modal-content #post-cover-video, .modal-content #post-cover-audio {
-    width: var(--max-width);
-    border-left: none;
-    border-right: none;
-  }
-
   .exit-button {
     padding-top: 0;
     padding-bottom: var(--spacing-2);
@@ -943,6 +953,14 @@ details > summary:before {
 
   .body-loading-animation {
     left: var(--spacing-2);
+  }
+
+  /* POST BODY STYLES */
+
+  #post-cover-image, #post-cover-video {
+    width: var(--max-width);
+    border-left: none;
+    border-right: none;
   }
 
   /* FORM STYLES */
