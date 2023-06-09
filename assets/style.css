@@ -308,7 +308,7 @@ details > summary:before {
 
 .content {
   margin: auto;
-  width: 60vw;
+  width: 68vw;
   max-width: var(--max-content-width);
   float: center;
   padding-top: var(--spacing-2);
