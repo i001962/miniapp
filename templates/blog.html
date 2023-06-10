@@ -71,7 +71,14 @@
   const decorateForkModal = () => {
     // Get references to elements that need decorating.
     const forkModal = document.getElementById("fork-modal");
-    const headerContainer = document.getElementById('header-container');
+    const topDom = document.getElementById('top-dom');
+
+    // Adjust the size.
+    requestAnimationFrame(() => {
+      const topDomHeight = topDom.offsetHeight;
+      const borderHeight = parseInt(topDom.style.borderBottomWidth, 10);
+      forkModal.style.paddingTop = topDomHeight + borderHeight + 'px';
+    });
 
     // Make sure the modal is closeable when clicking on empty space.
     let activeElementOnClose;
