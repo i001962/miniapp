@@ -521,12 +521,19 @@
     const postContent = document.getElementById("post-content");
     const recordPostForm = document.getElementById("record-post-form");
     const collectPostForm = document.getElementById("collect-post-form");
-    
+
     if (content) {
-      postContent.style.display = "block"; 
+      postContent.style.display = "block";
       postContent.innerHTML = content;
+      let imgs = postContent.getElementsByTagName("img");
+      for (let i = 0; i < imgs.length; i++) {
+        let src = imgs[i].getAttribute("src");
+        if (!src.startsWith("https://") && !src.startsWith("http://") && !src.startsWith("/")) {
+          postContent.removeChild(imgs[i]);
+        }
+      }
     } else {
-      postContent.style.display = "none"; 
+      postContent.style.display = "none";
     }
 
     // Hide the form.

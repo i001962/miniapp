@@ -144,7 +144,7 @@ window.onpopstate = function(event) {
     subtitle.innerHTML = `${date} | <span class="post-frame-state">recordable</span>`;
 
     if (name == "✃") title.classList.add("bigger-font");
-    
+
     if (coverVideoSrc) {
       const frameVideo = document.createElement("video");
       frameVideo.classList.add("frame-video");
@@ -349,7 +349,7 @@ window.onpopstate = function(event) {
       thumbnailTextContainer.appendChild(thumbnailText)
       thumbnail.appendChild(thumbnailTextContainer);
     }
-    
+
     const encodedIPFSUri = await encodeIPFSUriFrom("{{ assets_prefix }}", postId);
 
     // Summon a modal when the frame is clicked.
@@ -380,7 +380,7 @@ window.onpopstate = function(event) {
       if (media.complete) return resolve();
 
       const checkForDimensions = () => {
-        // Resolve if the img has dimensions. 
+        // Resolve if the img has dimensions.
         if ((media.width || media.videoWidth) && (media.height || media.videoHeight)) return setTimeout(resolve, 500);
         // Otherwise wait until the image has dimensions.
         else
@@ -731,7 +731,7 @@ window.onpopstate = function(event) {
   const pageMorePostsIfNeeded = () => {
     const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    
+
     if (maxScrollTop - currentScrollTop < pagingMargingBottom) loadPosts(defaultPageSize);
   }
 
@@ -763,7 +763,7 @@ window.onpopstate = function(event) {
 
     toggleView();
   }
-  
+
   // if there is ?id= in the url, open the object page.
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get('id');
