@@ -887,8 +887,7 @@ details > summary:before {
 }
 
 .post-row-thumbnail-text-container, .post-row-audio-container {
-  width: calc(var(--max-width) - 2*var(--spacing-1) - var(--border-width));
-  height: calc(var(--max-height) - 2*var(--spacing-1) - var(--border-width));
+  height: calc(var(--max-height) - 2*var(--spacing-1) - 2*var(--border-width));
   padding: var(--spacing-1);
   border: var(--border-width) solid var(--background-secondary-color);
 }

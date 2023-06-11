@@ -49,6 +49,7 @@ window.onpopstate = function(event) {
   const noScrollEffectEdgeDistance = 80;
   const toggleNavVisibilityScrollThreshold = 50;
   const pagingMargingBottom = 100;
+  const timeTillIdle = 2000;
 
   // State constants.
   const feeDivisor = 20;
@@ -195,7 +196,7 @@ window.onpopstate = function(event) {
         clearTimeout(hideInfoAnimation);
         hideInfoAnimation = setTimeout(() => {
           postFrame.classList.add("idle");
-        }, 2000);
+        }, timeTillIdle);
       });
       frameVideo.addEventListener("mouseout", () => {
         clearTimeout(hideInfoAnimation);
@@ -311,20 +312,42 @@ window.onpopstate = function(event) {
 
     if (thumbnailVideoSrc) {
       const thumbnailVideo = document.createElement("video");
+      const thumbnailVideoCurrentTime = document.createElement("span");
+      const thumbnailVideoDuration = document.createElement("span");
+      const thumbnailVideoAnimation = document.createElement("span");
       thumbnailVideo.classList.add("row-thumbnail-video");
       thumbnailVideo.id = 'img-' + postId;
+      thumbnailVideoAnimation.id = 'thumbnail-video-' + postId;
       thumbnailVideo.style.display = "block"
       thumbnailVideo.autoplay = false;
       thumbnailVideo.loop = true;
       thumbnailVideo.muted = false;
       thumbnailVideo.controls = false;
-      // Mark videos with an icon.
-      subtitle.innerHTML = `${subtitle.innerHTML} | [▶]`
+      // Mark videos with playback info.
+      subtitle.appendChild(document.createTextNode(" | "));
+      subtitle.appendChild(thumbnailVideoAnimation);
+      subtitle.appendChild(thumbnailVideoCurrentTime);
+      subtitle.appendChild(thumbnailVideoDuration);
+      prepareAudioAnimation(thumbnailVideoAnimation.id);
       thumbnailVideo.src = thumbnailVideoSrc;
       thumbnailVideo.loading = "lazy";
       thumbnail.appendChild(thumbnailVideo);
-      postRow.addEventListener("mouseover", () => thumbnailVideo.paused && thumbnailVideo.play());
-      postRow.addEventListener("mouseout", () => thumbnailVideo.pause());
+      thumbnailVideo.addEventListener('loadedmetadata', () => {
+        thumbnailVideoDuration.textContent = formatPlayclock(thumbnailVideo.duration);
+        thumbnailVideoCurrentTime.textContent = ` ${formatPlayclock(thumbnailVideo.currentTime)} / `;
+      });
+      thumbnailVideo.addEventListener('timeupdate', () => {
+          thumbnailVideoCurrentTime.textContent = ` ${formatPlayclock(thumbnailVideo.currentTime)} / `;
+      });
+      postRow.addEventListener("mouseover", () => {
+        if (!thumbnailVideo.paused) return;
+        thumbnailVideo.play();
+        startAudioAnimation(thumbnailVideoAnimation.id);
+      });
+      postRow.addEventListener("mouseout", () => {
+        thumbnailVideo.pause();
+        stopAudioAnimation(thumbnailVideoAnimation.id);
+      });
     } else if (thumbnailAudioSrc) {
       const rowAudioContainer = document.createElement("div");
       const rowAudio = document.createElement("audio");
@@ -358,12 +381,12 @@ window.onpopstate = function(event) {
       rowAudioContainer.appendChild(rowAudioDuration);
       thumbnail.appendChild(rowAudioContainer);
       prepareAudioAnimation(rowAudioAnimation.id);
-      rowAudioContainer.addEventListener("mouseover", () => {
+      postRow.addEventListener("mouseover", () => {
         if (!rowAudio.paused) return;
         rowAudio.play();
         startAudioAnimation(rowAudioAnimation.id);
       });
-      rowAudioContainer.addEventListener("mouseout", () => {
+      postRow.addEventListener("mouseout", () => {
         rowAudio.pause();
         stopAudioAnimation(rowAudioAnimation.id);
       });
