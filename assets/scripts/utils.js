@@ -96,13 +96,13 @@ const startLoadingAnimation = (loadingAnimationId) => {
   const loadingAnimationFrames = ['-', '\\', '|', '/'];
   let currentFrame = 0;
 
-  const animate = () => {
+  const animate = (firstTime) => {
     loadingAnimation.textContent = loadingAnimationFrames[currentFrame];
     currentFrame = (currentFrame + 1) % loadingAnimationFrames.length;
-    animationIntervals[loadingAnimationId] = setTimeout(animate, loadingAnimationPace);
+    if (firstTime || animationIntervals[loadingAnimationId]) animationIntervals[loadingAnimationId] = setTimeout(() => animate(false), loadingAnimationPace);
   }
 
-  animate();
+  animate(true);
 }
 
 /// Stop animating the loading ticker.
