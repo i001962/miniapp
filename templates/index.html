@@ -89,10 +89,7 @@ window.onpopstate = function(event) {
   const decoratePostFrameState = (postFrame,  projectId, encodedIPFSUri) => {
     if (!tiersCache[projectId]) tiersCache[projectId] = {};
     const tier = tiersCache[projectId][encodedIPFSUri];
-    if (!tier) {
-      state.innerHTML = '';
-      return;
-    }
+    if (!tier) return;
 
     const state = postFrame.querySelector(".post-frame-state");
 
@@ -112,10 +109,7 @@ window.onpopstate = function(event) {
   const decoratePostRowState = (postRow,  projectId, encodedIPFSUri) => {
     if (!tiersCache[projectId]) tiersCache[projectId] = {};
     const tier = tiersCache[projectId][encodedIPFSUri];
-    if (!tier) {
-      state.innerHTML = '';
-      return;
-    };
+    if (!tier) return;
 
     const state = postRow.querySelector(".post-row-state");
 
