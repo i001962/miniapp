@@ -73,12 +73,15 @@ window.onpopstate = function(event) {
     const postFormStateProjectId = document.getElementById("post-form-state-project-id");
     const chain = postFormStateChain.innerHTML;
     const projectId = parseInt(postFormStateProjectId.innerHTML);
-
+    
     const tiers = await tx_view_tiers(projectId, encodedIPFSUris, resolveChainId(chain));
+    console.log({  encodedIPFSUris, tiers });
 
     for (let i in tiers) {
       const tier = tiers[i];
-      if (tier.id == 0) continue;
+      console.log({  tier });
+      if (tier[0] == 0) continue;
+      console.log({  i });
 
       // Cache the value.
       if (!tiersCache[projectId]) tiersCache[projectId] = {};
@@ -89,14 +92,20 @@ window.onpopstate = function(event) {
   const decoratePostFrameState = (postFrame,  projectId, encodedIPFSUri) => {
     if (!tiersCache[projectId]) tiersCache[projectId] = {};
     const tier = tiersCache[projectId][encodedIPFSUri];
-    if (!tier) return;
+    console.log({ tier, projectId, encodedIPFSUri });
+    if (!tier) {
+      state.innerHTML = '';
+      return;
+    }
+
+    const state = postFrame.querySelector(".post-frame-state");
 
     // Get a reference to the tier's remaining supply.
     const formattedRemainingSupply = parseInt(tier[2].toString());
-    const state = postFrame.querySelector(".post-frame-state");
+    const formattedTotalSupply = parseInt(tier[3].toString());
 
     // Set the content.
-    if (formattedRemainingSupply == 0) {
+    if (formattedTotalSupply > 0 && formattedRemainingSupply == 0) {
       state.innerHTML = 'sold out';
       state.classList.add("alert");
     } else {
@@ -107,14 +116,20 @@ window.onpopstate = function(event) {
   const decoratePostRowState = (postRow,  projectId, encodedIPFSUri) => {
     if (!tiersCache[projectId]) tiersCache[projectId] = {};
     const tier = tiersCache[projectId][encodedIPFSUri];
-    if (!tier) return;
+    console.log({ tier, projectId, encodedIPFSUri });
+    if (!tier) {
+      state.innerHTML = '';
+      return;
+    };
+
+    const state = postRow.querySelector(".post-row-state");
 
     // Get a reference to the tier's remaining supply.
     const formattedRemainingSupply = parseInt(tier[2].toString());
-    const state = postRow.querySelector(".post-row-state");
+    const formattedTotalSupply = parseInt(tier[3].toString());
 
     // Set the content.
-    if (formattedRemainingSupply == 0) {
+    if (formattedTotalSupply > 0 && formattedRemainingSupply == 0) {
       state.innerHTML = 'sold out';
       state.classList.add("alert");
     } else {
