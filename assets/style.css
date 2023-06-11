@@ -579,7 +579,7 @@ details > summary:before {
   margin: var(--spacing-3) 0;
 }
 
-#post-cover-image, #post-cover-video {
+#post-cover-image, #post-cover-video, #post-cover-audio {
   border: var(--border-width) solid var(--background-secondary-color);
   width: var(--reduced-width2);
   max-width: var(--max-width);
@@ -966,7 +966,7 @@ details > summary:before {
 
   /* POST BODY STYLES */
 
-  #post-cover-image, #post-cover-video {
+  #post-cover-image, #post-cover-video, #post-cover-audio {
     width: var(--max-width);
     border-left: none;
     border-right: none;
