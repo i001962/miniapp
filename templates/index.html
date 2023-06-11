@@ -515,7 +515,7 @@ window.onpopstate = function(event) {
   const decoratePostModal = async (postId, encodedIPFSUri, name, date, link, content, imageSrc, videoSrc, audioSrc) => {
     // Get references to modal elements that need decorating.
     const postModal = document.getElementById("post-modal");
-    const topDom = document.getElementById("top-dom");
+    const topDomShrinkWrapper = document.getElementById("top-dom-shrink-wrapper");
     const headerContainer = document.getElementById("header-container");
     const postFormStateReveal = document.getElementById("post-form-state-reveal");
     const postFormErrorMessage= document.getElementById("post-form-error-message");
@@ -528,7 +528,7 @@ window.onpopstate = function(event) {
 
     requestAnimationFrame(() => {
       const headerContainerHeight = headerContainer.offsetHeight;
-      const borderHeight = parseInt(topDom.style.borderBottomWidth, 10);
+      const borderHeight = parseInt(topDomShrinkWrapper.style.borderBottomWidth, 10);
       postModal.style.paddingTop = headerContainerHeight + borderHeight + 'px';
     });
 
@@ -587,13 +587,13 @@ window.onpopstate = function(event) {
   const decorateForkModal = () => {
     // Get references to elements that need decorating.
     const forkModal = document.getElementById("fork-modal");
-    const topDom = document.getElementById("top-dom");
+    const topDomShrinkWrapper = document.getElementById("top-dom-shrink-wrapper");
     const headerContainer = document.getElementById("header-container");
 
     // Adjust the size.
     requestAnimationFrame(() => {
       const headerContainerHeight = headerContainer.offsetHeight;
-      const borderHeight = parseInt(topDom.style.borderBottomWidth, 10);
+      const borderHeight = parseInt(topDomShrinkWrapper.style.borderBottomWidth, 10);
       forkModal.style.paddingTop = headerContainerHeight + borderHeight + 'px';
     });
 
@@ -702,22 +702,22 @@ window.onpopstate = function(event) {
   }
 
   const toggleNavVisibility = () => {
-    const topDom = document.getElementById('top-dom');
+    const topDomShrinkWrapper = document.getElementById('top-dom-shrink-wrapper');
     const postModal = document.getElementById('post-modal');
     const forkModal = document.getElementById('fork-modal');
 
     const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-
+    
     if (postModal.style.display == "block" || forkModal.style.display == "block") {
       hideNav();
-      topDom.style.borderBottomWidth = "1px";
+      topDomShrinkWrapper.style.borderBottomWidth = "1px";
     } else {
       if (currentScrollTop <= 0) {
         showNav();
-        topDom.style.borderBottomWidth = "0px";
+        topDomShrinkWrapper.style.borderBottomWidth = "0px";
       } else {
-        topDom.style.borderBottomWidth = "1px";
+        topDomShrinkWrapper.style.borderBottomWidth = "1px";
         if (Math.abs(currentScrollTop - lastScrollTop) < toggleNavVisibilityScrollThreshold) return;
         if (lastScrollTop > noScrollEffectEdgeDistance && maxScrollTop - lastScrollTop > noScrollEffectEdgeDistance) {
           if (currentScrollTop > lastScrollTop) hideNav();

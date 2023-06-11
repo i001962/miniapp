@@ -1,45 +1,50 @@
-<div id="header-container">
-  {% if has_avatar == true %}
-  <img src="{{ assets_prefix }}avatar.png" width="72" height="72" id="header-avatar">
-  {% endif %}
-  <div id="header-info">
-    <div id="header-title"><span id="header-title-button">{{ planet.name }}</span></div>
-    {% if page_description_html.count > 0 %}<div id="header-about">{{ page_description_html }}</div>{% endif %}
+<div id="top-dom-shrink-wrapper">
+  <div id="header-container">
+    {% if has_avatar == true %}
+    <img src="{{ assets_prefix }}avatar.png" width="72" height="72" id="header-avatar">
+    {% endif %}
+    <div id="header-info">
+      <div id="header-title"><span id="header-title-button">{{ planet.name }}</span></div>
+      {% if page_description_html.count > 0 %}<div id="header-about">{{ page_description_html }}</div>{% endif %}
+    </div>
+    <div id="fork-button">fork</div>
+    <a href="{{ assets_prefix }}rss.xml" target="_blank">
+      <img src="{{ assets_prefix }}assets/rss.svg" alt="RSS" class="header-social-icon" width="1em">
+    </a>
   </div>
-  <div id="fork-button">fork</div>
-  <a href="{{ assets_prefix }}rss.xml" target="_blank">
-    <img src="{{ assets_prefix }}assets/rss.svg" alt="RSS" class="header-social-icon" width="1em">
-  </a>
-</div>
-<div id="nav-container">
-  <div id="nav">
-    {% for item in site_navigation %}
-    <a href="{% if item.externalLink.count > 0 %}{{ item.externalLink }}{% else %}{{ assets_prefix }}{{ item.slug }}/{% endif %}" class="{% if article.slug == item.slug %}nav-current{% else %}nav-item{% endif %}"{% if item.externalLink.count > 0 %} target="_blank"{% endif %}>{{ item.title }}</a>
-    {% endfor %}
-    <div id="post-mode-button" class="post-mode-button"><span id="grid-post-mode-button" class="post-mode-button-active"> </span> | <span id="list-post-mode-button">☰</span></div>
+  <div id="nav-container">
+    <div id="nav">
+      {% for item in site_navigation %}
+      <a href="{% if item.externalLink.count > 0 %}{{ item.externalLink }}{% else %}{{ assets_prefix }}{{ item.slug }}/{% endif %}" class="{% if article.slug == item.slug %}nav-current{% else %}nav-item{% endif %}"{% if item.externalLink.count > 0 %} target="_blank"{% endif %}>{{ item.title }}</a>
+      {% endfor %}
+      <div id="post-mode-button" class="post-mode-button"><span id="grid-post-mode-button" class="post-mode-button-active"> </span> | <span id="list-post-mode-button">☰</span></div>
+    </div>
   </div>
 </div>
+
 <script>
   let postMode = "frames";
   
   const showNav = () => {
-    const topDom = document.getElementById('top-dom');
+    const topDomShrinkWrapper = document.getElementById('top-dom-shrink-wrapper');
     const navContainer = document.getElementById('nav-container');
     const headerContainer = document.getElementById('header-container');
     navContainer.style.visibility = "visible";
     navContainer.style.opacity = 1;
     navContainer.classList.remove("hidden");
-    topDom.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + "px";
+    topDomShrinkWrapper.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + "px";
   }
 
   const hideNav = () => {
     const topDom = document.getElementById('top-dom');
+    const topDomShrinkWrapper = document.getElementById('top-dom-shrink-wrapper');
     const navContainer = document.getElementById('nav-container');
     const headerContainer = document.getElementById('header-container');
     navContainer.style.visibility = "hidden";
     navContainer.style.opacity = 0;
     navContainer.classList.add("hidden");
-    topDom.style.height = headerContainer.offsetHeight + "px";
+    topDom.style.height = topDom.offsetHeight + "px";
+    topDomShrinkWrapper.style.height = headerContainer.offsetHeight + "px";
   }
 
   const togglePostMode = () => {
