@@ -31,7 +31,6 @@
     const headerContainer = document.getElementById('header-container');
     navContainer.style.visibility = "visible";
     navContainer.style.opacity = 1;
-    navContainer.classList.remove("hidden");
     topDomShrinkWrapper.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + "px";
   }
 
@@ -42,7 +41,6 @@
     const headerContainer = document.getElementById('header-container');
     navContainer.style.visibility = "hidden";
     navContainer.style.opacity = 0;
-    navContainer.classList.add("hidden");
     topDom.style.height = topDom.offsetHeight + "px";
     topDomShrinkWrapper.style.height = headerContainer.offsetHeight + "px";
   }
