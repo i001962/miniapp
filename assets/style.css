@@ -39,7 +39,7 @@
     --background-color: #111;
     --background-secondary-color: #2a2a2a;
     --background-color-opacity: rgba(17, 17, 17, 0.9);
-  --background-secondary-color-opacity: rgba(42, 42, 42, 0.7);
+    --background-secondary-color-opacity: rgba(42, 42, 42, 0.7);
     --foreground-color: #fff;
     --foreground-secondary-color: #adadaf;
     --icon-social-filter: invert(24%) sepia(11%) saturate(0%) hue-rotate(188deg) brightness(95%) contrast(95%);
@@ -49,13 +49,13 @@
 @font-face{
   font-family: "Capsules";
   src: url(./CapsulesVF.woff2) format("woff2");
-  font-weight: 300 700;
+  font-weight: 300 600;
 }
 
 @font-face{
   font-family: "Capsules";
   src: url(./CapsulesVF.woff2) format("woff2") tech("variations");
-  font-weight: 300 700;
+  font-weight: 300 600;
 }
 
 /* GLOBAL STYLES */
@@ -553,8 +553,15 @@ details > summary:before {
 #post-link {
   color: var(--foreground-secondary-color);
 }
+
+#post-onchain {
+  border-left: var(--spacing-1) solid var(--background-secondary-color);   
+  padding: var(--spacing-3);
+  display: inline-block;
+  margin-bottom: var(--spacing-3);
+}
+
 #post-form-state {
-  margin-top: var(--spacing-3);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -699,7 +706,7 @@ details > summary:before {
 }
 .form-button {
   background: none;
-  margin: var(--spacing-3) 0;
+  margin-top: var(--spacing-3);
   color: var(--link-color);
   font-weight: var(--font-weight-2);
   border: none;
@@ -710,11 +717,11 @@ details > summary:before {
   text-decoration: underline;
 }
 .form-button:disabled {
-  color: var(--background-secondary-color);
+  color: var(--foreground-secondary-color);
   cursor: crosshair;
 }
 .form-button:disabled .form-button-text {
-  color: var(--background-secondary-color);
+  color: var(--foreground-secondary-color);
 }
 
 .form-input-preface {
