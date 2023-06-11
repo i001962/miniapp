@@ -370,6 +370,10 @@ details > summary:before {
   z-index: var(--base-z-index);
 }
 
+.hidden-cursor {
+  cursor: none;
+}
+
 /* COMMON MODAL STYLES */
 
 .modal {
@@ -807,6 +811,14 @@ details > summary:before {
 
 .post-frame:hover .post-frame-info {
   opacity: 1;
+}
+
+.post-frame.idle:hover .post-frame-info {
+  opacity: 0;
+}
+
+.post-frame.idle:hover {
+  cursor: none;
 }
 
 .post-frame-title {
