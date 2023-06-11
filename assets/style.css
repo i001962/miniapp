@@ -558,7 +558,7 @@ details > summary:before {
   border-left: var(--spacing-1) solid var(--background-secondary-color);   
   padding: var(--spacing-3);
   display: inline-block;
-  margin-bottom: var(--spacing-3);
+  margin-bottom: var(--spacing-5);
 }
 
 #post-form-state {
