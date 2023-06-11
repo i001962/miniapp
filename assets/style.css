@@ -307,6 +307,7 @@ details > summary:before {
 
 #body-dom {
   padding-bottom: var(--spacing-scroll-padding);
+  padding-top: var(--spacing-4);
 }
 
 /* COMMON STYLES */
