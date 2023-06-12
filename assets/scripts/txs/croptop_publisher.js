@@ -1,7 +1,7 @@
 const croptopPublisherContract = (chainId) => {
   switch (chainId) {
     case 5:
-      return "0x90f196c7f0553655025982fc1871a1e5a9463a6b";
+      return "0xfA694CBd732b836aBB727Effb4f55B9cA2Da58df";
   }
 }
 
@@ -525,6 +525,7 @@ const tx_collect = async (projectId, category, totalSupply, price, quantity, enc
   const post = {totalSupply, price, quantity, category, encodedIPFSUri};
   const posts = Array.from({length: quantity}, () => post);
   const emptyBytes = "0x";
+  console.log({  value });
   await sign(contract, croptopPublisherContractABI, "collectFrom", [projectId, posts, beneficiary, cpnBeneficiary, emptyBytes, emptyBytes, {
       value 
   }]);

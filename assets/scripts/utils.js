@@ -92,7 +92,7 @@ let animationIntervals = {};
 /// Animate the loading ticker.
 const startLoadingAnimation = (loadingAnimationId) => {
   const loadingAnimation = document.getElementById(loadingAnimationId);
-  loadingAnimation.style.display = "inherit";
+  loadingAnimation.style.display = "initial";
   const loadingAnimationFrames = ['-', '\\', '|', '/'];
   let currentFrame = 0;
 

@@ -318,6 +318,7 @@ details > summary:before {
 
 .button-loading-animation {
   margin-left: var(--spacing-3);
+  display: inline-block;
 }
 
 .ether {
@@ -705,7 +706,7 @@ details > summary:before {
 }
 .form-error-message {
   margin-top: var(--spacing-3);
-  line-break: "anywhere";
+  line-break: anywhere;
 }
 .form-error-message.info {
   color: var(--foreground-secondary-color);
