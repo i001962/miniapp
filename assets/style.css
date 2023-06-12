@@ -610,6 +610,10 @@ details > summary:before {
 
 /* FORM STYLES */
 
+.form {
+  margin-top: var(--spacing-3); 
+}
+
 .form-header {
   color: var(--foreground-color);
   font-weight: var(--font-weight-1);

@@ -1,7 +1,7 @@
 const croptopPublisherContract = (chainId) => {
   switch (chainId) {
     case 5:
-      return "0x18966c43b031e0c8220a7e286ac4eefb295373f9";
+      return "0x90f196c7f0553655025982fc1871a1e5a9463a6b";
   }
 }
 
@@ -282,9 +282,9 @@ const croptopPublisherContractABI = [{
       "type": "address"
     },
     {
-      "internalType": "bytes32",
-      "name": "_nftMetadataChunk",
-      "type": "bytes32"
+      "internalType": "bytes",
+      "name": "_nftMetadata",
+      "type": "bytes"
     },
     {
       "internalType": "bytes",
@@ -524,9 +524,8 @@ const tx_collect = async (projectId, category, totalSupply, price, quantity, enc
   if (!contract) return false;
   const post = {totalSupply, price, quantity, category, encodedIPFSUri};
   const posts = Array.from({length: quantity}, () => post);
-  const emptyBytes32 = "0x0000000000000000000000000000000000000000000000000000000000000000";
   const emptyBytes = "0x";
-  await sign(contract, croptopPublisherContractABI, "collectFrom", [projectId, posts, beneficiary, cpnBeneficiary, emptyBytes32, emptyBytes, {
+  await sign(contract, croptopPublisherContractABI, "collectFrom", [projectId, posts, beneficiary, cpnBeneficiary, emptyBytes, emptyBytes, {
       value 
   }]);
   return true;
