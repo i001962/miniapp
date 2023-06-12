@@ -39,14 +39,8 @@
     <div class="form-body">
       <details id="collect-post-form-options-reveal">
         <summary id="collect-post-form-options-toggle" class="form-toggle form-main-toggle">options</summary>
-        <div class="form-section-description">Set the price and the address that will get the copies you are paying for.</div>
+        <div class="form-section-description">Set the address that will get the copies you are paying for.</div>
         <div class="form-section">
-          <div class="form-item">
-            <div class="form-label">Price</div>
-            <div class="form-value">
-              <span class="ether form-input-preface">Ξ</span><input type="number" value="" id="collect-post-form-price-input">
-            </div>
-          </div>
           <div class="form-item">
             <div class="form-label">Quantity to mint</div>
             <div class="form-value">
@@ -211,13 +205,13 @@
         postFormButton.disabled = true;
         postFormButton.style.display = "block";
       // Set error messages if the currently inputted values are too small.
-      } else if (recordPostFormPriceInput.value < formattedMinPrice || recordPostFormTotalSupplyInput.value < formattedMinTotalSupply || recordPostFormTotalSupplyInput.value > formattedMaxTotalSupply) {
+      } else if (Number(recordPostFormPriceInput.value) < formattedMinPrice || Number(recordPostFormTotalSupplyInput.value) < formattedMinTotalSupply || Number(recordPostFormTotalSupplyInput.value) > formattedMaxTotalSupply) {
         postFormErrorMessage.innerHTML = `Project ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedMinPrice}, a minimum total supply of ${formattedMinTotalSupply}, and a maximum total supply of ${formattedMaxTotalSupply} to record on category ${category}.`;
         postFormErrorMessage.classList.add("warn");
         postFormErrorMessage.style.display = "block";
         postFormButton.disabled = true;
         postFormButton.style.display = "block";
-      } else if (recordPostFormQuantityInput.value > recordPostFormTotalSupplyInput.value) {
+      } else if (Number(recordPostFormQuantityInput.value) > Number(recordPostFormTotalSupplyInput.value)) {
         postFormErrorMessage.innerHTML = `The total supply is ${recordPostFormTotalSupplyInput.value}. Can't mint ${recordPostFormQuantityInput.value}.`;
         postFormErrorMessage.classList.add("warn");
         postFormErrorMessage.style.display = "block";
@@ -259,7 +253,7 @@
     // Submit the form.
     postFormButton.onclick = async () => {
       // Check for empty values.
-      if (recordPostFormPriceInput.value == "" || recordPostFormTotalSupplyInput.value == "" || recordPostFormQuantityInput.value == "") {
+      if (!recordPostFormPriceInput.value || !recordPostFormTotalSupplyInput.value || !recordPostFormQuantityInput.value) {
         postFormErrorMessage.innerHTML = "Fill out the form.";
         postFormErrorMessage.classList.add("warn");
         postFormErrorMessage.style.display = "block";
@@ -273,9 +267,9 @@
       signer = (await getSigner()).address;
 
       // Default to the signer.
-      if (recordPostFormBeneficiaryInput.value == "") recordPostFormBeneficiaryInput.value = signer;
+      if (!recordPostFormBeneficiaryInput.value) recordPostFormBeneficiaryInput.value = signer;
       // Default to the eth address, or the signer;
-      if (recordPostFormCpnBeneficiaryInput.value == "") recordPostFormCpnBeneficiaryInput.value = defaultEthAddress || signer;
+      if (!recordPostFormCpnBeneficiaryInput.value) recordPostFormCpnBeneficiaryInput.value = defaultEthAddress || signer;
 
       // Make sure the form contents make sense.
       await checkState();
@@ -351,7 +345,6 @@
     const collectPostFormBeneficiaryInput = document.getElementById("collect-post-form-beneficiary-input");
     const collectPostFormCpnBeneficiaryInput = document.getElementById("collect-post-form-cpn-beneficiary-input");
     const collectPostFormQuantityInput = document.getElementById("collect-post-form-quantity-input");
-    const collectPostFormPriceInput = document.getElementById("collect-post-form-price-input");
     const collectPostFormOptionsReveal = document.getElementById("collect-post-form-options-reveal");
     const collectPostFormDisclaimerReveal = document.getElementById("collect-post-form-disclaimer-reveal");
     const postFormErrorMessage = document.getElementById("post-form-error-message");
@@ -379,13 +372,7 @@
     // Re-decorate some input fields depending on the allowances set for the project and category.
     const checkState = async () => {
       // Set error messages if the currently inputted values are too small.
-      if (collectPostFormPriceInput.value < formattedPrice) {
-        postFormErrorMessage.innerHTML = `This NFT has a minimum price of <span class="ether">Ξ</span> ${formattedPrice}.`;
-        postFormErrorMessage.classList.add("warn");
-        postFormErrorMessage.style.display = "block";
-        postFormButton.disabled = true;
-        postFormButton.style.display = "block";
-      } else if (collectPostFormQuantityInput.value > formattedRemainingSupply) {
+      if (Number(collectPostFormQuantityInput.value) > formattedRemainingSupply) {
         if (formattedRemainingSupply == 1) {
           postFormErrorMessage.innerHTML = `There is only 1 copy remaining. Can't mint ${collectPostFormQuantityInput.value}.`;
         } else {
@@ -411,12 +398,10 @@
     }
 
     // Update the form's state each time the price or quantity changes.
-    collectPostFormPriceInput.addEventListener("input", queueCheckState);
     collectPostFormQuantityInput.addEventListener("input", queueCheckState);
 
     // Set values in the form if the fields are not yet set.
     if (!collectPostFormBeneficiaryInput.value && signer) collectPostFormBeneficiaryInput.value = signer;
-    if (!collectPostFormPriceInput.value) collectPostFormPriceInput.value = formattedPrice;
 
     // Allow connecting wallet to prefill beneficiary input field.
     const loadAddressButton = document.getElementById("collect-post-form-load-address-button");
@@ -429,7 +414,7 @@
     // Submit the form.
     postFormButton.onclick = async () => {
       // Check for empty values.
-      if (collectPostFormPriceInput.value == "" || collectPostFormQuantityInput.value == "") {
+      if (!collectPostFormQuantityInput.value) {
         postFormErrorMessage.innerHTML = "Fill out the form.";
         postFormErrorMessage.classList.add("warn");
         postFormErrorMessage.style.display = "block";
@@ -443,9 +428,9 @@
       signer = (await getSigner()).address;
 
       // Default to the signer.
-      if (collectPostFormBeneficiaryInput.value == "") collectPostFormBeneficiaryInput.value = signer;
+      if (!collectPostFormBeneficiaryInput.value) collectPostFormBeneficiaryInput.value = signer;
       // Default to the eth address, or the signer;
-      if (collectPostFormCpnBeneficiaryInput.value == "") collectPostFormCpnBeneficiaryInput.value = defaultEthAddress || signer;
+      if (!collectPostFormCpnBeneficiaryInput.value) collectPostFormCpnBeneficiaryInput.value = defaultEthAddress || signer;
 
       // Make sure the form contents make sense.
       await checkState();
@@ -477,7 +462,7 @@
 
       // Normalize values from the form.
       const totalSupply = 1;
-      const price = `${Number(collectPostFormPriceInput.value) * 1_000_000_000_000_000_000}`;
+      const price = `${Number(formattedPrice) * 1_000_000_000_000_000_000}`;
       const quantity = collectPostFormQuantityInput.value;
       const beneficiary = collectPostFormBeneficiaryInput.value;
       const cpnBeneficiary = collectPostFormCpnBeneficiaryInput.value;
@@ -776,7 +761,7 @@
     // Submit the state change form.
     postFormStateButton.onclick = async () => {
       // Check for empty values.
-      if (postFormStateProjectIdInput.value == "" || postFormStateNftCategoryInput.value == "") {
+      if (!postFormStateProjectIdInput.value || !postFormStateNftCategoryInput.value) {
         postFormStateErrorMessage.innerHTML = "Fill out the form.";
         postFormStateErrorMessage.style.display = "block";
         return;
