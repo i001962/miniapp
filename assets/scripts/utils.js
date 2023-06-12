@@ -1,4 +1,4 @@
-const encodeIPFSUri = () => { 
+const encodeIPFSUri = (cid) => { 
   try {
     const decodedCID = bs58.decode(cid);
     const slicedCID = decodedCID.slice(2);
