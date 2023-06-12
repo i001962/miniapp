@@ -301,11 +301,6 @@ details > summary:before {
   pointer-events: auto;
 }
 
-#body-dom {
-  padding-bottom: var(--spacing-scroll-padding);
-  padding-top: var(--spacing-4);
-}
-
 /* COMMON STYLES */
 
 .content {
@@ -746,6 +741,12 @@ details > summary:before {
 #post-frames-container {
   text-align: left;
   margin-right: var(--spacing-4);
+  padding-top: var(--spacing-4);
+  padding-bottom: var(--spacing-6);
+}
+
+#body-dom {
+  padding-bottom: var(--spacing-scroll-padding);
 }
 
 .post-frame {
@@ -858,6 +859,8 @@ details > summary:before {
 
 #post-list-container {
   width: var(--max-width);
+  padding-top: var(--spacing-4);
+  padding-bottom: var(--spacing-6);
 }
 
 .post-row-container {

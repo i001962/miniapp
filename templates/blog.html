@@ -77,7 +77,9 @@
     requestAnimationFrame(() => {
       const topDomHeight = topDom.offsetHeight;
       const borderHeight = parseInt(topDom.style.borderBottomWidth, 10);
-      forkModal.style.paddingTop = topDomHeight + borderHeight + 'px';
+      const paddingTop = topDomHeight + borderHeight;
+      forkModal.style.paddingTop = paddingTop + 'px';
+      forkModal.style.height = `calc(100vh - (${paddingTop + 'px'}))`;
     });
 
     // Make sure the modal is closeable when clicking on empty space.

@@ -587,7 +587,9 @@ window.onpopstate = function(event) {
     requestAnimationFrame(() => {
       const headerContainerHeight = headerContainer.offsetHeight;
       const borderHeight = parseInt(topDomShrinkWrapper.style.borderBottomWidth, 10);
-      postModal.style.paddingTop = headerContainerHeight + borderHeight + 'px';
+      const paddingTop = headerContainerHeight + borderHeight;
+      postModal.style.paddingTop = paddingTop + 'px';
+      postModal.style.height = `calc(100vh - (${paddingTop + 'px'}))`;
     });
 
     // Track the modal in browse history.
@@ -652,7 +654,9 @@ window.onpopstate = function(event) {
     requestAnimationFrame(() => {
       const headerContainerHeight = headerContainer.offsetHeight;
       const borderHeight = parseInt(topDomShrinkWrapper.style.borderBottomWidth, 10);
-      forkModal.style.paddingTop = headerContainerHeight + borderHeight + 'px';
+      const paddingTop = headerContainerHeight + borderHeight;
+      forkModal.style.paddingTop = paddingTop + 'px';
+      forkModal.style.height = `calc(100vh - (${paddingTop + 'px'}))`;
     });
 
     // Make sure the modal is closeable when clicking on empty space.
