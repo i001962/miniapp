@@ -108,7 +108,6 @@ details[open] > summary:before {
   transform: rotate(90deg);
 }
 code {
-  white-space: pre;
   white-space: pre-wrap;
   word-break: break-all;
   word-wrap: break-word;
@@ -123,13 +122,10 @@ samp,
 tt {}
 
 pre {
+  display: inline-block;
   border: var(--border-width) solid var(--background-secondary-color);
   background-color: var(--background-secondary-color);
-  padding: var(--spacing-3);
-}
-
-pre {
-  display: block;
+  padding: var(--spacing-3) var(--spacing-6) var(--spacing-3) var(--spacing-3);
   break-inside: avoid;
   text-align: left;
 }
@@ -710,6 +706,11 @@ details > summary:before {
 }
 .form-error-message {
   margin-top: var(--spacing-3);
+}
+.form-error-message.info {
+  color: var(--foreground-secondary-color);
+}
+.form-error-message.warn {
   color: var(--alert-color);
 }
 .form-button {
