@@ -20,130 +20,132 @@
         </div>
       </div>
     </div>
-    <details>
-      <summary class="form-toggle form-main-toggle">Make a new Juicebox</summary>
-      <div class="form-section">
-        <div class="form-section-description">Once deployed, you can find your Juicebox's project ID by looking for new projects at <a href="https://juicebox.money/projects?tab=new" target="_blank">https://juicebox.money/projects?tab=new</a>. The owner you set can edit this project at any time to change its description or set new money rules.</div>
-        <div class="form-item">
-          <div class="form-label">Collection name</div>
-          <div class="form-value">
-            <input type="text" placeholder="Your collection name" id="fork-form-new-jb-collection-name-input">
+    <div class="form-section">
+      <details>
+        <summary class="form-toggle form-main-toggle">Make a new Juicebox</summary>
+        <div class="form-section">
+          <div class="form-section-description">Once deployed, you can find your Juicebox's project ID by looking for new projects at <a href="https://juicebox.money/projects?tab=new" target="_blank">https://juicebox.money/projects?tab=new</a>. The owner you set can edit this project at any time to change its description or set new money rules.</div>
+          <div class="form-item">
+            <div class="form-label">Collection name</div>
+            <div class="form-value">
+              <input type="text" placeholder="Your collection name" id="fork-form-new-jb-collection-name-input">
+            </div>
+          </div>
+          <div class="form-item">
+            <div class="form-label">Collection Symbol</div>
+            <div class="form-value">
+              <input type="text" placeholder="POSTS" id="fork-form-new-jb-collection-symbol-input">
+            </div>
           </div>
         </div>
-        <div class="form-item">
-          <div class="form-label">Collection Symbol</div>
-          <div class="form-value">
-            <input type="text" placeholder="POSTS" id="fork-form-new-jb-collection-symbol-input">
+        <div class="form-section">
+          <div class="form-item form-item-large">
+            <div class="form-label">Owner 
+              <button id="fork-form-new-jb-load-address-button" class="form-load-address-button">[<span class="form-load-address-button-text">connect wallet</span>]</button>
+            </div>
+            <div class="form-value">
+              <input type="text" placeholder="Defaults to your address" id="fork-form-new-jb-project-owner-input">
+            </div>
           </div>
         </div>
-      </div>
-      <div class="form-section">
-        <div class="form-item form-item-large">
-          <div class="form-label">Owner 
-            <button id="fork-form-new-jb-load-address-button" class="form-load-address-button">[<span class="form-load-address-button-text">connect wallet</span>]</button>
+        <div class="form-section">
+          <div class="form-section-description">The price and total supply of posts onto your Juicebox collection are chosen by the collector at the time they record it onchain. Anyone can post any content from anywhere to your Juicebox, so long as these allowances that you set are met. Croptop websites just make it easy.</div>
+          <div class="form-item">
+            <div class="form-label">Minimum price</div>
+            <div class="form-value">
+              <span class="ether form-input-preface">Ξ</span><input type="number" placeholder="free" value="0.01" id="fork-form-new-jb-minimum-price-input">
+            </div>
           </div>
-          <div class="form-value">
-            <input type="text" placeholder="Defaults to your address" id="fork-form-new-jb-project-owner-input">
+          <div class="form-item">
+            <div class="form-label">Min total supply</div>
+            <div class="form-value">
+              <input type="number" value="1" id="fork-form-new-jb-minimum-total-supply-input">
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="form-section">
-        <div class="form-section-description">The price and total supply of posts onto your Juicebox collection are chosen by the collector at the time they record it onchain. Anyone can post any content from anywhere to your Juicebox, so long as these allowances that you set are met. Croptop websites just make it easy.</div>
-        <div class="form-item">
-          <div class="form-label">Minimum price</div>
-          <div class="form-value">
-            <span class="ether form-input-preface">Ξ</span><input type="number" placeholder="free" value="0.01" id="fork-form-new-jb-minimum-price-input">
-          </div>
-        </div>
-        <div class="form-item">
-          <div class="form-label">Min total supply</div>
-          <div class="form-value">
-            <input type="number" value="1" id="fork-form-new-jb-minimum-total-supply-input">
+          <div class="form-item">
+            <div class="form-label">Max total supply</div>
+            <div class="form-value">
+              <input type="number" placeholder="unlimited" id="fork-form-new-jb-maximum-total-supply-input">
+            </div>
           </div>
         </div>
-        <div class="form-item">
-          <div class="form-label">Max total supply</div>
-          <div class="form-value">
-            <input type="number" placeholder="unlimited" id="fork-form-new-jb-maximum-total-supply-input">
+        <div class="form-section">
+          <div class="form-item form-item-large">
+            <div class="form-label">Allowed posting addresses (one per line)</div>
+            <div class="form-value">
+              <textarea rows="4" id="fork-form-new-jb-addresses-input" placeholder="leave empty for no restrictions"></textarea>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="form-section">
-        <div class="form-item form-item-large">
-          <div class="form-label">Allowed posting addresses (one per line)</div>
-          <div class="form-value">
-            <textarea rows="4" id="fork-form-new-jb-addresses-input" placeholder="leave empty for no restrictions"></textarea>
+        <div id="fork-form-new-jb-error-message" class="form-error-message mobile-padding"></div>
+        <button id="fork-form-new-jb-submit-button" class="form-button">[<span id="fork-form-new-jb-submit-button-text" class="form-button-text">deploy project</span>]<span id="fork-form-new-jb-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
+      </details>
+      <details>
+        <summary class="form-toggle form-main-toggle">Let Croptop post to your Juicebox on your behalf</summary>
+        <div class="form-section">
+          <div class="form-section-description">Give the Croptop contract posting permissions to a Juicebox collection on your behalf. This will only be effective if you're the owner of the collection.</div>
+          <div class="form-item">
+            <div class="form-label">Project ID</div>
+            <div class="form-value">
+              <input type="number" placeholder="420" id="fork-form-operator-project-id-input">
+            </div>
           </div>
         </div>
-      </div>
-      <div id="fork-form-new-jb-error-message" class="form-error-message mobile-padding"></div>
-      <button id="fork-form-new-jb-submit-button" class="form-button">[<span id="fork-form-new-jb-submit-button-text" class="form-button-text">deploy project</span>]<span id="fork-form-new-jb-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
-    </details>
-    <details>
-      <summary class="form-toggle form-main-toggle">Let Croptop post to your Juicebox on your behalf</summary>
-      <div class="form-section">
-        <div class="form-section-description">Give the Croptop contract posting permissions to a Juicebox collection on your behalf. This will only be effective if you're the owner of the collection.</div>
-        <div class="form-item">
-          <div class="form-label">Project ID</div>
-          <div class="form-value">
-            <input type="number" placeholder="420" id="fork-form-operator-project-id-input">
+        <div id="fork-form-permission-error-message" class="form-error-message mobile-padding"></div>
+        <button id="fork-form-permission-submit-button" class="form-button">[<span id="fork-form-permission-submit-button-text" class="form-button-text">give permission</span>]<span id="fork-form-permission-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
+      </details>
+      <details>
+        <summary class="form-toggle form-main-toggle">Set who can post to your Juicebox through Croptop</summary>
+        <div class="form-section">
+          <div class="form-section-description">Add new conditions that posts must meet when made to your Juicebox through Croptop.</div>
+          <div class="form-item">
+            <div class="form-label">Project ID</div>
+            <div class="form-value">
+              <input type="number" placeholder="420" id="fork-form-allowance-project-id-input">
+            </div>
           </div>
         </div>
-      </div>
-      <div id="fork-form-permission-error-message" class="form-error-message mobile-padding"></div>
-      <button id="fork-form-permission-submit-button" class="form-button">[<span id="fork-form-permission-submit-button-text" class="form-button-text">give permission</span>]<span id="fork-form-permission-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
-    </details>
-    <details>
-      <summary class="form-toggle form-main-toggle">Set who can post to your Juicebox through Croptop</summary>
-      <div class="form-section">
-        <div class="form-section-description">Add new conditions that posts must meet when made to your Juicebox through Croptop.</div>
-        <div class="form-item">
-          <div class="form-label">Project ID</div>
-          <div class="form-value">
-            <input type="number" placeholder="420" id="fork-form-allowance-project-id-input">
+        <div class="form-section">
+          <div class="form-section-description">A post's minting parameters are chosen by the collector at the time they record it onchain. Anyone can post any content from anywhere to your Juicebox, so long as these allowances that you set are met.</div>
+          <div class="form-item">
+            <div class="form-label">Minimum price</div>
+            <div class="form-value">
+              <span class="ether form-input-preface">Ξ</span><input type="number" placeholder="free" value="0.01" id="fork-form-allowance-minimum-price-input">
+            </div>
+          </div>
+          <div class="form-item">
+            <div class="form-label">Min total supply</div>
+            <div class="form-value">
+              <input type="number" value="1" id="fork-form-allowance-minimum-total-supply-input">
+            </div>
+          </div>
+          <div class="form-item">
+            <div class="form-label">Max total supply</div>
+            <div class="form-value">
+              <input type="number" placeholder="unlimited" id="fork-form-allowance-maximum-total-supply-input">
+            </div>
           </div>
         </div>
-      </div>
-      <div class="form-section">
-        <div class="form-section-description">A post's minting parameters are chosen by the collector at the time they record it onchain. Anyone can post any content from anywhere to your Juicebox, so long as these allowances that you set are met.</div>
-        <div class="form-item">
-          <div class="form-label">Minimum price</div>
-          <div class="form-value">
-            <span class="ether form-input-preface">Ξ</span><input type="number" placeholder="free" value="0.01" id="fork-form-allowance-minimum-price-input">
+        <div class="form-section">
+          <div class="form-item form-item-large">
+            <div class="form-label">Allowed posting addresses (one per line)</div>
+            <div class="form-value">
+              <textarea rows="4" id="fork-form-allowance-addresses-input" placeholder="leave empty for no restrictions"></textarea>
+            </div>
           </div>
         </div>
-        <div class="form-item">
-          <div class="form-label">Min total supply</div>
-          <div class="form-value">
-            <input type="number" value="1" id="fork-form-allowance-minimum-total-supply-input">
+        <div class="form-section">
+          <div class="form-item">
+            <div class="form-label">NFT category on your Juicebox for which the above allowances apply</div>
+            <div class="form-value">
+              <input type="number" value="0" id="fork-form-allowance-nft-category-input">
+            </div>
           </div>
         </div>
-        <div class="form-item">
-          <div class="form-label">Max total supply</div>
-          <div class="form-value">
-            <input type="number" placeholder="unlimited" id="fork-form-allowance-maximum-total-supply-input">
-          </div>
-        </div>
-      </div>
-      <div class="form-section">
-        <div class="form-item form-item-large">
-          <div class="form-label">Allowed posting addresses (one per line)</div>
-          <div class="form-value">
-            <textarea rows="4" id="fork-form-allowance-addresses-input" placeholder="leave empty for no restrictions"></textarea>
-          </div>
-        </div>
-      </div>
-      <div class="form-section">
-        <div class="form-item">
-          <div class="form-label">NFT category on your Juicebox for which the above allowances apply</div>
-          <div class="form-value">
-            <input type="number" value="0" id="fork-form-allowance-nft-category-input">
-          </div>
-        </div>
-      </div>
-      <div id="fork-form-allowance-error-message" class="form-error-message mobile-padding"></div>
-      <button id="fork-form-allowance-submit-button" class="form-button">[<span id="fork-form-allowance-submit-button-text" class="form-button-text">save allowances</span>]<span id="fork-form-allowance-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
-    </details>
+        <div id="fork-form-allowance-error-message" class="form-error-message mobile-padding"></div>
+        <button id="fork-form-allowance-submit-button" class="form-button">[<span id="fork-form-allowance-submit-button-text" class="form-button-text">save allowances</span>]<span id="fork-form-allowance-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
+      </details>
+    </div>
   </div>
 </div>
 <script>

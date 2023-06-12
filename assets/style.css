@@ -970,6 +970,10 @@ details > summary:before {
     width: auto;
   }
 
+  #fork-form-chain  {
+    width: var(--reduced-width1);
+  }
+
   /* NAV STYLES */
 
   #nav-container {
