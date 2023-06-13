@@ -90,6 +90,9 @@ a:active {
 a:hover {
   text-decoration: underline;
 }
+details {
+  width: var(--max-width); 
+}
 details > summary {
   list-style: none;
   font-weight: var(--font-weight-1);
