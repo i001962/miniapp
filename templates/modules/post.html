@@ -288,7 +288,7 @@
             await switchChain(expectedChainId);
           } catch (e) {
             postFormErrorMessage.innerHTML = `Browser not connected to ${chain}.`;
-            postFormErrorMessage.classList.add("info");
+            postFormErrorMessage.classList.add("warn");
             postFormErrorMessage.style.display = "block";
 
             // Hide the loading animation.
