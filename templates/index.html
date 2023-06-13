@@ -741,8 +741,6 @@ window.onpopstate = function(event) {
     );
     const data = await response.json();
     const newPosts = data['articles'].slice(nextPageOffset, nextPageOffset + pageSize);
-      {# // Only if attachments have file extensions like ".jpg" ".jpeg" ".png" ".gif" ".webp" ".svg" ".avif" #}
-      {# .filter(post => post.hasVideo === true || post.attachments.some(attachment => attachment.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)$/i))); #}
 
     posts = posts.concat(newPosts);
 
