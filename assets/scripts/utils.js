@@ -65,7 +65,7 @@ const resolveChain = (chainId) => {
 const cpnProjectId = (chain) => {
   switch (chain) {
     case "goerli":
-      return 996;
+      return 1016;
   }
 }
 

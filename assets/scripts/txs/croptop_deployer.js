@@ -1,7 +1,7 @@
 const croptopDeployerContract = (chainId) => {
   switch (chainId) {
     case 5:
-      return "0xEf592b7751D9A254FFEF7697F66e93B1be5F1DC3";
+      return "0x0D45B6f63FE778e52b58F0120E3477d5D48c6AD4";
   }
 }
 
