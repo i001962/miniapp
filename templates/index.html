@@ -24,18 +24,20 @@ window.onpopstate = function(event) {
   {% include 'modules/header.html' %}
 </div>
 <div id="body-dom">
-  <div id="post-frames-container" style="display: none"></div>
-   <div id="post-list-container" style="display: none"></div>
-  <div id="posts-loading-animation" class="body-loading-animation loading-animation"></div>
+  <div class="body-content">
+    <div id="post-frames-container"></div>
+    <div id="post-list-container"></div>
+    <div id="posts-loading-animation" class="body-loading-animation loading-animation"></div>
+  </div>
 </div>
 <div id="fork-modal" class="modal negative-space">
-  <div class="modal-content content negative-space">
+  <div class="modal-content body-content centered-content negative-space">
     <div class="exit-button mobile-padding negative-space">[<span class="exit-button-text negative-space">close</span>]</div>
     {% include 'modules/fork.html' %}
   </div>
 </div>
 <div id="post-modal" class="modal negative-space">
-  <div class="modal-content content negative-space">
+  <div class="modal-content body-content centered-content negative-space">
     <div class="exit-button mobile-padding negative-space">[<span class="exit-button-text negative-space">close</span>]</div>
     {% include 'modules/post.html' %}
   </div>
@@ -738,8 +740,7 @@ window.onpopstate = function(event) {
       `{{ assets_prefix }}planet.json`
     );
     const data = await response.json();
-    const newPosts = data['articles']
-      .slice(nextPageOffset, nextPageOffset + pageSize);
+    const newPosts = data['articles'].slice(nextPageOffset, nextPageOffset + pageSize);
       {# // Only if attachments have file extensions like ".jpg" ".jpeg" ".png" ".gif" ".webp" ".svg" ".avif" #}
       {# .filter(post => post.hasVideo === true || post.attachments.some(attachment => attachment.match(/\.(jpg|jpeg|png|gif|webp|svg|avif)$/i))); #}
 

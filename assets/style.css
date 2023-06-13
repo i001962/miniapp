@@ -303,13 +303,11 @@ details > summary:before {
 
 /* COMMON STYLES */
 
-.content {
+.centered-content {
   margin: auto;
   width: 68vw;
   max-width: var(--max-content-width);
   float: center;
-  padding-top: var(--spacing-2);
-  padding-bottom: var(--spacing-scroll-padding);
 }
 
 .loading-animation {
@@ -525,6 +523,10 @@ details > summary:before {
 
 .body-header {
   padding: var(--spacing-6) 0 var(--spacing-3) 0;
+}
+
+.body-content {
+  padding: var(--spacing-4) 0 var(--spacing-scroll-padding) 0;
 }
 
 .body-loading-animation {
@@ -743,12 +745,6 @@ details > summary:before {
 #post-frames-container {
   text-align: left;
   margin-right: var(--spacing-4);
-  padding-top: var(--spacing-4);
-  padding-bottom: var(--spacing-6);
-}
-
-#body-dom {
-  padding-bottom: var(--spacing-scroll-padding);
 }
 
 .post-frame {
@@ -861,8 +857,6 @@ details > summary:before {
 
 #post-list-container {
   width: var(--max-width);
-  padding-top: var(--spacing-4);
-  padding-bottom: var(--spacing-6);
 }
 
 .post-row-container {
@@ -991,10 +985,6 @@ details > summary:before {
   }
 
   /* BODY STYLES */
-
-  .body-content {
-    padding-top: var(--spacing-3);
-  }
 
   .body-loading-animation {
     left: var(--spacing-2);
