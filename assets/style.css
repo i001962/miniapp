@@ -792,6 +792,7 @@ details > summary:before {
   color: var(--foreground-color);
   font-size: var(--font-size-2);
   font-weight: var(--font-weight-2);
+  line-break: anywhere;
 }
 
 .post-frame-info-container {
