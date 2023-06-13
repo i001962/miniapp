@@ -3,21 +3,21 @@
   "description": "For pictures and screenshots",
   "author": "Jango",
   "authorWebsite": "https://jango.eth.limo",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "idealItemsPerPage": 10,
-  "buildNumber": 346,
+  "buildNumber": 355,
   "generateNFTMetadata": true,
   "settings": {
     "juiceboxProjectID": {
       "name": "Juicebox Project ID",
       "type": "int",
-      "defaultValue": "758",
+      "defaultValue": "1016",
       "description": "ID of the Juicebox project to use for this Croptop website."
     },
     "juiceboxProjectIDGoerli": {
       "name": "Juicebox Project ID (Goerli)",
       "type": "int",
-      "defaultValue": "758",
+      "defaultValue": "1016",
       "description": "ID of the Juicebox project on the test net."
     },
     "ethAddress": {
