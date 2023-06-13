@@ -902,7 +902,7 @@ details > summary:before {
 }
 
 .post-row-thumbnail-text {
-  text-overflow: ellipsis;
+  line-break: anywhere;
   overflow: hidden;
   width: var(--max-width);
   height: var(--max-height);
