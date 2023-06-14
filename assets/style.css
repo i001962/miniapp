@@ -883,8 +883,8 @@ details > summary:before {
 }
 
 .post-row-thumbnail .row-thumbnail-image, .post-row-thumbnail .row-thumbnail-video {
-  max-width: var(--max-width);
-  height: var(--max-width);
+  max-width: calc(var(--max-width) - 2*var(--border-width));
+  height: calc(var(--max-width) - 2*var(--border-width));
   object-fit: cover;
   border: var(--border-width) solid var(--background-secondary-color);
 }
