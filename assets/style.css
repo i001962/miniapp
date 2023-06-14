@@ -817,6 +817,10 @@ details > summary:before {
   -webkit-backdrop-filter: var(--blur-intensity);
 }
 
+.post-frame-fade-in {
+  opacity: 1;
+}
+
 .post-frame:hover .post-frame-info {
   opacity: 1;
 }
@@ -839,10 +843,6 @@ details > summary:before {
 
 .post-frame-subtitle {
   color: var(--foreground-secondary-color);
-}
-
-.post-frame-fade-in {
-  opacity: 1;
 }
 
 .post-frame-w1 {
@@ -870,14 +870,9 @@ details > summary:before {
 .post-row {
   cursor: pointer;
   display: flex;
-  opacity: 0;
   align-items: center;
   gap: var(--spacing-5);
   padding: var(--spacing-4);
-}
-
-.post-row-fade-in {
-  opacity: 1;
 }
 
 .post-row-thumbnail {
