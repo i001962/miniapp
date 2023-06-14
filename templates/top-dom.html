@@ -1,27 +1,28 @@
-<div id="top-dom-shrink-wrapper">
-  <div id="header-container">
-    {% if has_avatar == true %}
-    <img src="{{ assets_prefix }}avatar.png" width="72" height="72" id="header-avatar">
-    {% endif %}
-    <div id="header-info">
-      <div id="header-title"><span id="header-title-button">{{ planet.name }}</span></div>
-      {% if page_description_html.count > 0 %}<div id="header-about">{{ page_description_html }}</div>{% endif %}
+<div id="top-dom">
+  <div id="top-dom-shrink-wrapper">
+    <div id="header-container">
+      {% if has_avatar == true %}
+      <img src="{{ assets_prefix }}avatar.png" width="72" height="72" id="header-avatar">
+      {% endif %}
+      <div id="header-info">
+        <div id="header-title"><span id="header-title-button">{{ planet.name }}</span></div>
+        {% if page_description_html.count > 0 %}<div id="header-about">{{ page_description_html }}</div>{% endif %}
+      </div>
+      <div id="fork-button">fork</div>
+      <a href="{{ assets_prefix }}rss.xml" target="_blank">
+        <img src="{{ assets_prefix }}assets/rss.svg" alt="RSS" class="header-social-icon" width="1em">
+      </a>
     </div>
-    <div id="fork-button">fork</div>
-    <a href="{{ assets_prefix }}rss.xml" target="_blank">
-      <img src="{{ assets_prefix }}assets/rss.svg" alt="RSS" class="header-social-icon" width="1em">
-    </a>
-  </div>
-  <div id="nav-container">
-    <div id="nav">
-      {% for item in site_navigation %}
-      <a href="{% if item.externalLink.count > 0 %}{{ item.externalLink }}{% else %}{{ assets_prefix }}{{ item.slug }}/{% endif %}" class="{% if article.slug == item.slug %}nav-current{% else %}nav-item{% endif %}"{% if item.externalLink.count > 0 %} target="_blank"{% endif %}>{{ item.title }}</a>
-      {% endfor %}
-      <div id="post-mode-button" class="post-mode-button"><span id="grid-post-mode-button" class="post-mode-button-active"> </span> | <span id="list-post-mode-button">☰</span></div>
+    <div id="nav-container">
+      <div id="nav">
+        {% for item in site_navigation %}
+        <a href="{% if item.externalLink.count > 0 %}{{ item.externalLink }}{% else %}{{ assets_prefix }}{{ item.slug }}/{% endif %}" class="{% if article.slug == item.slug %}nav-current{% else %}nav-item{% endif %}"{% if item.externalLink.count > 0 %} target="_blank"{% endif %}>{{ item.title }}</a>
+        {% endfor %}
+        <div id="post-mode-button" class="post-mode-button"><span id="grid-post-mode-button" class="post-mode-button-active"> </span> | <span id="list-post-mode-button">☰</span></div>
+      </div>
     </div>
   </div>
 </div>
-
 <script>
   let postMode = "frames";
   
@@ -64,15 +65,11 @@
     // Get references to elements that need decorating.
     const forkModal = document.getElementById("fork-modal");
     const topDomShrinkWrapper = document.getElementById("top-dom-shrink-wrapper");
-    const headerContainer = document.getElementById("header-container");
 
     // Adjust the size.
     requestAnimationFrame(() => {
-      const headerContainerHeight = headerContainer.offsetHeight;
-      const borderHeight = parseInt(topDomShrinkWrapper.style.borderBottomWidth, 10);
-      const paddingTop = headerContainerHeight + borderHeight;
-      forkModal.style.paddingTop = paddingTop + 'px';
-      forkModal.style.height = `calc(100vh - (${paddingTop + 'px'}))`;
+      forkModal.style.paddingTop = topDomShrinkWrapper.offsetHeight + 'px';
+      forkModal.style.height = `calc(100vh - (${topDomShrinkWrapper.offsetHeight + 'px'}))`;
     });
 
     // Make sure the modal is closeable when clicking on empty space.

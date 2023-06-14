@@ -179,7 +179,7 @@
     // Submit the form.
     forkFormNewJbSubmitButton.onclick = async () => {
       // Check for empty values.
-      if (forkFormNewJbCollectionNameInput.value == "" || forkFormNewJbCollectionSymbolInput.value == "") {
+      if (!forkFormNewJbCollectionNameInput.value || !forkFormNewJbCollectionSymbolInput.value) {
         forkFormNewJbErrorMessage.innerHTML = "Fill out the form.";
         forkFormNewJbErrorMessage.style.display = "block";
         return;
@@ -189,14 +189,14 @@
       }
 
       // Default to max
-      if (forkFormNewJbMaximumTotalSupplyInput.value == "") forkFormNewJbMaximumTotalSupplyInput.value = 1000000000;
+      if (!forkFormNewJbMaximumTotalSupplyInput.value) forkFormNewJbMaximumTotalSupplyInput.value = 1000000000;
       // Default to 1
-      if (forkFormNewJbMinimumTotalSupplyInput.value == "") forkFormNewJbMinimumTotalSupplyInput.value = 1;
+      if (!forkFormNewJbMinimumTotalSupplyInput.value) forkFormNewJbMinimumTotalSupplyInput.value = 1;
       // Default to free
-      if (forkFormNewJbMinimumPriceInput.value == "") forkFormNewJbMinimumPriceInput.value = 0;
+      if (!forkFormNewJbMinimumPriceInput.value) forkFormNewJbMinimumPriceInput.value = 0;
       // Default to the signer.
       signer = (await getSigner()).address;
-      if (forkFormNewJbProjectOwnerInput.value == "") forkFormNewJbProjectOwnerInput.value = signer;
+      if (!forkFormNewJbProjectOwnerInput.value) forkFormNewJbProjectOwnerInput.value = signer;
 
       // Show the loading animation.
       startLoadingAnimation('fork-form-new-jb-button-loading-animation');
@@ -225,7 +225,7 @@
       const minimumPrice = `${Number(forkFormNewJbMinimumPriceInput.value) * 1_000_000_000_000_000_000}`;
       const minimumTotalSupply = forkFormNewJbMinimumTotalSupplyInput.value;
       const maximumTotalSupply = forkFormNewJbMaximumTotalSupplyInput.value;
-      const allowedAddresses = forkFormNewJbAddressesInput.value == "" ? [] : forkFormNewJbAddressesInput.value.split('\n');
+      const allowedAddresses = !forkFormNewJbAddressesInput.value ? [] : forkFormNewJbAddressesInput.value.split('\n');
 
       try {
         // Try to process the transaction.
@@ -259,7 +259,7 @@
     // Submit the form.
     forkFormPermissionSubmitButton.onclick = async () => {
       // Check for empty values.
-      if (forkFormOperatorProjectIdInput.value == "") {
+      if (!forkFormOperatorProjectIdInput.value) {
         forkFormPermissionErrorMessage.innerHTML = "Fill out the form.";
         forkFormPermissionErrorMessage.style.display = "block";
         return;
@@ -328,7 +328,7 @@
     // Submit the form.
     forkFormAllowanceSubmitButton.onclick = async () => {
       // Check for empty values.
-      if (forkFormAllowanceProjectIdInput.value == "" || forkFormAllowanceCategoryInput.value == "") {
+      if (!forkFormAllowanceProjectIdInput.value || !forkFormAllowanceCategoryInput.value) {
         forkFormAllowanceErrorMessage.innerHTML = "Fill out the form.";
         forkFormAllowanceErrorMessage.style.display = "block";
         return;
@@ -337,11 +337,11 @@
         forkFormAllowanceErrorMessage.style.display = "none";
       }
       // Default to max
-      if (forkFormAllowanceMaximumTotalSupplyInput.value == "") forkFormAllowanceMaximumTotalSupplyInput.value = 1000000000;
+      if (!forkFormAllowanceMaximumTotalSupplyInput.value) forkFormAllowanceMaximumTotalSupplyInput.value = 1000000000;
       // Default to 1
-      if (forkFormAllowanceMinimumTotalSupplyInput.value == "") forkFormAllowanceMinimumTotalSupplyInput.value = 1;
+      if (!forkFormAllowanceMinimumTotalSupplyInput.value) forkFormAllowanceMinimumTotalSupplyInput.value = 1;
       // Default to free
-      if (forkFormAllowanceMinimumPriceInput.value == "") forkFormAllowanceMinimumPriceInput.value = 0;
+      if (!forkFormAllowanceMinimumPriceInput.value) forkFormAllowanceMinimumPriceInput.value = 0;
 
       // Show the loading animation.
       startLoadingAnimation('fork-form-allowance-button-loading-animation');
@@ -372,7 +372,7 @@
       const minimumPrice = `${Number(forkFormAllowanceMinimumPriceInput.value) * 1_000_000_000_000_000_000}`;
       const minimumTotalSupply = forkFormAllowanceMinimumTotalSupplyInput.value;
       const maximumTotalSupply = forkFormAllowanceMaximumTotalSupplyInput.value;
-      const allowedAddresses = forkFormAllowanceAddressesInput.value == "" ? [] : forkFormAllowanceAddressesInput.value.split('\n');
+      const allowedAddresses = !forkFormAllowanceAddressesInput.value ? [] : forkFormAllowanceAddressesInput.value.split('\n');
 
       try {
         // Try to process the transaction.
