@@ -41,50 +41,8 @@
     {% include 'modules/post.html' %}
   </div>
 </div>
-<div id="fork-modal" class="modal negative-space">
-  <div class="modal-content body-content centered-content negative-space">
-    <div class="exit-button negative-space">[<span class="exit-button-text negative-space">close</span>]</div>
-    {% include 'modules/fork.html' %}
-  </div>
-</div>
+{% include 'modules/fork-modal.html' %}
 <script>
-  // Get the fork modal set up.
-  const decorateForkModal = () => {
-    // Get references to elements that need decorating.
-    const forkModal = document.getElementById("fork-modal");
-    const topDom = document.getElementById('top-dom');
-
-    // Adjust the size.
-    requestAnimationFrame(() => {
-      const topDomHeight = topDom.offsetHeight;
-      const borderHeight = parseInt(topDom.style.borderBottomWidth, 10);
-      const paddingTop = topDomHeight + borderHeight;
-      forkModal.style.paddingTop = paddingTop + 'px';
-      forkModal.style.height = `calc(100vh - (${paddingTop + 'px'}))`;
-    });
-
-    // Make sure the modal is closeable when clicking on empty space.
-    let activeElementOnClose;
-    forkModal.addEventListener("mousedown", () => {
-      activeElementOnClose = document.activeElement;
-    });
-
-    forkModal.addEventListener("click", (e) => {
-      // Ignore if the clicked view shouldn't close the modal.
-      if (!e.target.classList.contains("negative-space")) return;
-
-      // Ignore if the clicked view comes while an input, select, or textarea field is selected.
-      if (activeElementOnClose.tagName === "INPUT" || activeElementOnClose.tagName === "SELECT" || activeElementOnClose.tagName === "TEXTAREA") return;
-
-      // Hide the modal.
-      forkModal.style.display = "none";
-    });
-
-    decorateNewJbForm();
-    decoratePermissionForm();
-    decorateAllowanceForm();
-  }
-
   const load = async () => {
     startLoadingAnimation('post-form-loading-animation');
 
