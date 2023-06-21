@@ -771,7 +771,7 @@ details > summary:before {
   opacity: 0;
 }
 
-.post-frame .frame-image, .post-frame .frame-video {
+.post-frame-image, .post-frame-video {
   width: var(--max-width);
   display: block;
   object-fit: cover;
@@ -1017,7 +1017,7 @@ details > summary:before {
     display: block;
     margin-left: 0;
     margin-top: var(--spacing-3);
-    margin-bottom: var(--spacing-5);
+    margin-bottom: var(--spacing-6);
     border: none;
     border-bottom: var(--border-width) solid var(--background-secondary-color);
   }
@@ -1026,6 +1026,10 @@ details > summary:before {
     border-left: none;
     border-right: none;
     border-top: none;
+  }
+
+  .post-frame-image, .post-frame-video, .post-frame-audio-container, .post-frame-text {
+    border-top: var(--border-width) solid var(--background-secondary-color);
   }
 
   .post-frame-info-container {
