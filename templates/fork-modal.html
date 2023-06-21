@@ -4,10 +4,13 @@
     <div class="fork-header body-header mobile-padding negative-space">
         To set up your site and learn how to start posting, check out <a href="https://croptop.eth.limo" target="_blank">https://croptop.eth</a>.
       <div class="fork-info">
-        If you want to let people pay you to record content onchain, you'll first need to create a Juicebox — an open source, community built & owned, and onchain programmable vending machine. You'll then add your Juicebox project ID into the settings of the Croptop app.
+        To let people pay you when collecting your posts, you'll need to make an onchain collection where your posts will go.
       </div>
       <div class="fork-info">
-        You can create a simple Croptop-compatible Juicebox below. You can adjust it later on <a href="https://juicebox.money" target="_blank">https://juicebox.money</a>. It's recommended to send these transactions from the same forms over at <a href="https://croptop.eth.limo" target="_blank">https://croptop.eth</a> to make sure they haven't been tampered with.
+        Croptop websites integrate with the Juicebox smart contracts for easy onchain publishing, while giving creators pro tools to manage their community and their money in the open. Your collection's info can be accessed publicly through sites like <a href="https://juicebox.money" target="_blank">https://juicebox.money</a>, and its rules can be adjusted only onchain by the owner of the project's keys. 
+      </div>
+      <div class="fork-info">
+        You can create and configure a collection where people can mint posts to below. Please send these transactions from the same forms over at <a href="https://croptop.eth.limo" target="_blank">https://croptop.eth</a> to make sure they haven't been tampered with... croptop websites are fully owned and tweakable by their publishers.
       </div>
     </div>
     <div id="fork-form" class="form mobile-padding negative-space">
@@ -25,9 +28,9 @@
         </div>
         <div class="form-section">
           <details>
-            <summary class="form-toggle form-main-toggle">Make a new Juicebox</summary>
+            <summary class="form-toggle form-main-toggle">Make a new onchain collection</summary>
             <div class="form-section">
-              <div class="form-section-description">Once deployed, you can find your Juicebox's project ID by looking for new projects at <a href="https://juicebox.money/projects?tab=new" target="_blank">https://juicebox.money/projects?tab=new</a>. The owner you set can edit this project at any time to change its description or set new money rules.</div>
+              <div class="form-section-description">Once deployed, you can find your collection's project ID by looking for new projects at <a href="https://juicebox.money/projects?tab=new" target="_blank">https://juicebox.money/projects?tab=new</a>. The admin you set can edit this project at any time to change its description or set new money rules.</div>
               <div class="form-item">
                 <div class="form-label">Collection name</div>
                 <div class="form-value">
@@ -43,7 +46,7 @@
             </div>
             <div class="form-section">
               <div class="form-item form-item-large">
-                <div class="form-label">Owner 
+                <div class="form-label">Admin 
                   <button id="fork-form-new-jb-load-address-button" class="form-load-address-button">[<span class="form-load-address-button-text">connect wallet</span>]</button>
                 </div>
                 <div class="form-value">
@@ -52,7 +55,7 @@
               </div>
             </div>
             <div class="form-section">
-              <div class="form-section-description">The price and total supply of posts onto your Juicebox collection are chosen by the collector at the time they record it onchain. Anyone can post any content from anywhere to your Juicebox, so long as these allowances that you set are met. Croptop websites just make it easy.</div>
+              <div class="form-section-description">The price and total supply of posts onto your collection are chosen by the collector at the time they record it onchain. Anyone can post any content from anywhere to your collection, so long as these allowances that you set are met. Croptop websites just make it easy.</div>
               <div class="form-item">
                 <div class="form-label">Minimum price</div>
                 <div class="form-value">
@@ -84,11 +87,11 @@
             <button id="fork-form-new-jb-submit-button" class="form-button">[<span id="fork-form-new-jb-submit-button-text" class="form-button-text">deploy project</span>]<span id="fork-form-new-jb-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
           </details>
           <details>
-            <summary class="form-toggle form-main-toggle">Let Croptop post to your Juicebox</summary>
+            <summary class="form-toggle form-main-toggle">Let Croptop post to your collection</summary>
             <div class="form-section">
-              <div class="form-section-description">Give the Croptop contract posting permissions to a Juicebox collection on your behalf. This will only be effective if you're the owner of the collection.</div>
+              <div class="form-section-description">Give the Croptop contract permission to post on your collection on your behalf. This will only be effective if you're the owner of the collection.</div>
               <div class="form-item">
-                <div class="form-label">Project ID</div>
+                <div class="form-label">Collection ID</div>
                 <div class="form-value">
                   <input type="number" placeholder="420" id="fork-form-operator-project-id-input">
                 </div>
@@ -98,18 +101,18 @@
             <button id="fork-form-permission-submit-button" class="form-button">[<span id="fork-form-permission-submit-button-text" class="form-button-text">give permission</span>]<span id="fork-form-permission-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
           </details>
           <details>
-            <summary class="form-toggle form-main-toggle">Set how Croptop posts to your Juicebox</summary>
+            <summary class="form-toggle form-main-toggle">Set how Croptop posts to your collection</summary>
             <div class="form-section">
-              <div class="form-section-description">Add new conditions that posts must meet when made to your Juicebox through Croptop.</div>
+              <div class="form-section-description">Add new conditions that posts must meet when made to your collection through Croptop.</div>
               <div class="form-item">
-                <div class="form-label">Project ID</div>
+                <div class="form-label">Collection ID</div>
                 <div class="form-value">
                   <input type="number" placeholder="420" id="fork-form-allowance-project-id-input">
                 </div>
               </div>
             </div>
             <div class="form-section">
-              <div class="form-section-description">A post's minting parameters are chosen by the collector at the time they record it onchain. Anyone can post any content from anywhere to your Juicebox, so long as these allowances that you set are met.</div>
+              <div class="form-section-description">A post's minting parameters are chosen by the collector at the time they record it onchain. Anyone can post any content from anywhere to your collection, so long as these allowances that you set are met.</div>
               <div class="form-item">
                 <div class="form-label">Minimum price</div>
                 <div class="form-value">
