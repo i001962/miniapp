@@ -313,6 +313,10 @@ details > summary:before {
   float: center;
 }
 
+.content-top-offset {
+  padding-top: var(--spacing-4);
+}
+
 .loading-animation {
   color: var(--foreground-color);
 }
@@ -388,6 +392,7 @@ details > summary:before {
   -webkit-animation-name: fadein;
   -webkit-animation-duration: 0.3s;
   animation-name: fadein;
+  padding-top: var(--spacing-4);
 }
 
 .exit-button {
@@ -528,7 +533,7 @@ details > summary:before {
 }
 
 .body-content {
-  padding: var(--spacing-4) 0 var(--spacing-scroll-padding) 0;
+  padding-bottom: var(--spacing-scroll-padding);
 }
 
 .body-loading-animation {
