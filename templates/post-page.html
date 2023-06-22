@@ -538,10 +538,10 @@
       postContent.style.display = "block";
       postContent.innerHTML = content;
       let imgs = postContent.getElementsByTagName("img");
-      for (let i = 0; i < imgs.length; i++) {
-        let src = imgs[i].getAttribute("src");
+      for (let img of imgs) {
+        let src = img.getAttribute("src");
         if (!src.startsWith("https://") && !src.startsWith("http://") && !src.startsWith("/")) {
-          postContent.removeChild(imgs[i]);
+          postContent.removeChild(img);
         }
       }
     } else {
