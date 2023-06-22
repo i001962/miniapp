@@ -705,8 +705,6 @@ details > summary:before {
   background: none;
   border: none;
   color: var(--foreground-secondary-color);
-  padding: 0;
-  line-height: 1;
   cursor: pointer;
 }
 .form-load-address-button:hover .form-load-address-button-text {
