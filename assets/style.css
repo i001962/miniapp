@@ -874,7 +874,6 @@ details > summary:before {
 .post-row {
   cursor: pointer;
   display: flex;
-  align-items: center;
   gap: var(--spacing-5);
   padding: var(--spacing-4);
 }
