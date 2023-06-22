@@ -595,7 +595,6 @@ details > summary:before {
   border: var(--border-width) solid var(--background-secondary-color);
   width: var(--reduced-width2);
   max-width: var(--max-width);
-  max-height: 700px;
   object-position: left;
   object-fit: cover;
 }
