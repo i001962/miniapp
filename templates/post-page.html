@@ -7,122 +7,127 @@
   </div>
 </div>
 <div id="post-onchain">
-  <div id="post-form-state" class="negative-space">
-    <details id="post-form-state-reveal">
-      <summary id="post-form-state-toggle" class="form-toggle"><span id="post-form-state-chain" class="post-form-state-item-value"></span>, project:<a id="post-form-state-project-id" class="post-form-state-item-value" target="_blank"></a>, category:<span id="post-form-state-nft-category" class="post-form-state-item-value"></span></summary>
-      <div class="form-section-description">Specify the Juicebox project that is being funded from this NFT sale and the category under which it will appear. Changing these values will change the availability of this NFT.</div>
-      <div class="form-section">
-        <div class="form-item">
-          <div class="form-label">Chain</div>
-          <div class="form-value form-select-value">
-            <select id="post-form-state-chain-input" name="chain">
-              {# <option value="mainnet">mainnet</option> #}
-              <option value="goerli">goerli</option>
-            </select>
+  <details id="post-form-collect-reveal">
+    <summary id="post-form-collect-toggle" class="form-toggle">collect</summary>
+    <div id="post-form-collect-container">
+      <div id="post-form-state" class="negative-space">
+        <details id="post-form-state-reveal">
+          <summary id="post-form-state-toggle" class="form-toggle"><span id="post-form-state-chain" class="post-form-state-item-value"></span> collection <a id="post-form-state-project-id" class="post-form-state-item-value" target="_blank"></a>, category <span id="post-form-state-nft-category" class="post-form-state-item-value"></span></summary>
+          <div class="form-section-description">Specify the Juicebox project that is being funded from this NFT sale and the category under which it will appear. Changing these values will change the availability of this NFT.</div>
+          <div class="form-section">
+            <div class="form-item">
+              <div class="form-label">Chain</div>
+              <div class="form-value form-select-value">
+                <select id="post-form-state-chain-input" name="chain">
+                  {# <option value="mainnet">mainnet</option> #}
+                  <option value="goerli">goerli</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-item">
+              <div class="form-label">Collection ID</div>
+              <div class="form-value"><input type="number" value="" id="post-form-state-project-id-input"></div>
+            </div>
+            <div class="form-item">
+              <div class="form-label">NFT category ID</div>
+              <div class="form-value"><input type="number" value="" id="post-form-state-nft-category-input"></div>
+            </div>
           </div>
-        </div>
-        <div class="form-item">
-          <div class="form-label">Project ID</div>
-          <div class="form-value"><input type="number" value="" id="post-form-state-project-id-input"></div>
-        </div>
-        <div class="form-item">
-          <div class="form-label">NFT category ID</div>
-          <div class="form-value"><input type="number" value="" id="post-form-state-nft-category-input"></div>
+          <div id="post-form-state-error-message" class="form-error-message mobile-padding"></div>
+          <button id="post-form-state-button" class="form-button">[<span id="post-form-state-button-text" class="form-button-text">update</span>]</button>
+        </details>
+      </div>
+      <div id="collect-post-form" class="form mobile-padding negative-space">
+        <span id="collect-post-form-header" class="form-header"></span>
+        <div class="form-body">
+          <details id="collect-post-form-options-reveal">
+            <summary id="collect-post-form-options-toggle" class="form-toggle form-main-toggle">options</summary>
+            <div class="form-section-description">Set the address that will get the copies you are paying for.</div>
+            <div class="form-section">
+              <div class="form-item">
+                <div class="form-label">Mint count</div>
+                <div class="form-value">
+                  <input type="number" value="1" id="collect-post-form-quantity-input">
+                </div>
+              </div>
+              <div class="form-item form-item-large">
+                <div class="form-label">Address <button id="collect-post-form-load-address-button" class="form-load-address-button">[<span class="form-load-address-button-text">connect wallet</span>]</button></div>
+                <div class="form-value">
+                  <input type="text" placeholder="Defaults to your address" id="collect-post-form-beneficiary-input">
+                </div>
+              </div>
+            </div>
+            <div class="form-section-disclaimer">An added 5% is sent to the <a href="https://goerli.juicebox.money/v2/p/669" target="_blank">Croptop Publishing Network</a> in exchange for $CPN to this site's author.</div>
+            <details id="collect-post-form-disclaimer-reveal">
+              <summary id="collect-post-form-disclaimer-toggle" class="form-toggle form-disclaimer-toggle">customize</summary>
+              <div class="form-section-description">Change who gets the $CPN</div>
+              <div class="form-section">
+                <div class="form-item form-item-large">
+                  <div class="form-label">Address</div>
+                  <div class="form-value">
+                    <input type="text" placeholder="Defaults to the address of this site's author" id="collect-post-form-cpn-beneficiary-input">
+                  </div>
+                </div>
+              </div>
+            </details>
+          </details>
         </div>
       </div>
-      <div id="post-form-state-error-message" class="form-error-message mobile-padding"></div>
-      <button id="post-form-state-button" class="form-button">[<span id="post-form-state-button-text" class="form-button-text">update</span>]</button>
-    </details>
-  </div>
-  <div id="collect-post-form" class="form mobile-padding negative-space">
-    <span id="collect-post-form-header" class="form-header"></span>
-    <div class="form-body">
-      <details id="collect-post-form-options-reveal">
-        <summary id="collect-post-form-options-toggle" class="form-toggle form-main-toggle">options</summary>
-        <div class="form-section-description">Set the address that will get the copies you are paying for.</div>
-        <div class="form-section">
-          <div class="form-item">
-            <div class="form-label">Mint count</div>
-            <div class="form-value">
-              <input type="number" value="1" id="collect-post-form-quantity-input">
-            </div>
-          </div>
-          <div class="form-item form-item-large">
-            <div class="form-label">Address <button id="collect-post-form-load-address-button" class="form-load-address-button">[<span class="form-load-address-button-text">connect wallet</span>]</button></div>
-            <div class="form-value">
-              <input type="text" placeholder="Defaults to your address" id="collect-post-form-beneficiary-input">
-            </div>
-          </div>
-        </div>
-        <div class="form-section-disclaimer">An added 5% is sent to the <a href="https://goerli.juicebox.money/v2/p/669" target="_blank">Croptop Publishing Network</a> in exchange for $CPN to this site's author.</div>
-        <details id="collect-post-form-disclaimer-reveal">
-          <summary id="collect-post-form-disclaimer-toggle" class="form-toggle form-disclaimer-toggle">customize</summary>
-          <div class="form-section-description">Change who gets the $CPN</div>
-          <div class="form-section">
-            <div class="form-item form-item-large">
-              <div class="form-label">Address</div>
-              <div class="form-value">
-                <input type="text" placeholder="Defaults to the address of this site's author" id="collect-post-form-cpn-beneficiary-input">
+      <div id="record-post-form" class="form mobile-padding negative-space">
+        <span class="form-header">Record this file onchain to collect a first copy.</span>
+        <div class="form-body">
+          <details id="record-post-form-options-reveal">
+            <summary id="record-post-form-options-toggle" class="form-toggle form-main-toggle">options</summary>
+            <div class="form-section-description">Set the NFT's price, how many editions of this NFT will be made available for collecting, and the address that will be sent its first copies that you are paying for.</div>
+            <div class="form-section">
+              <div class="form-item">
+                <div class="form-label">Price</div>
+                <div class="form-value">
+                  <span class="ether form-input-preface">Ξ</span><input type="number" value="" id="record-post-form-price-input">
+                </div>
+              </div>
+              <div class="form-item">
+                <div class="form-label">Total supply</div>
+                <div class="form-value">
+                  <input type="number" placeholder="10" value="" id="record-post-form-total-supply-input">
+                </div>
+              </div>
+              <div class="form-item">
+                <div class="form-label">Mint count</div>
+                <div class="form-value">
+                  <input type="number" value="1" id="record-post-form-quantity-input">
+                </div>
+              </div>
+              <div class="form-item form-item-large">
+                <div class="form-label">Address
+                  <button id="record-post-form-load-address-button" class="form-load-address-button">[<span class="form-load-addres-button-text">connect wallet</span>]</button>
+                </div>
+                <div class="form-value">
+                  <input type="text" placeholder="Defaults to your address" id="record-post-form-beneficiary-input">
+                </div>
               </div>
             </div>
-          </div>
-        </details>
-      </details>
-    </div>
-  </div>
-  <div id="record-post-form" class="form mobile-padding negative-space">
-    <span class="form-header">Record this file onchain to collect a first copy.</span>
-    <div class="form-body">
-      <details id="record-post-form-options-reveal">
-        <summary id="record-post-form-options-toggle" class="form-toggle form-main-toggle">options</summary>
-        <div class="form-section-description">Set the NFT's price, how many editions of this NFT will be made available for collecting, and the address that will be sent its first copies that you are paying for.</div>
-        <div class="form-section">
-          <div class="form-item">
-            <div class="form-label">Price</div>
-            <div class="form-value">
-              <span class="ether form-input-preface">Ξ</span><input type="number" value="" id="record-post-form-price-input">
-            </div>
-          </div>
-          <div class="form-item">
-            <div class="form-label">Total supply</div>
-            <div class="form-value">
-              <input type="number" placeholder="10" value="" id="record-post-form-total-supply-input">
-            </div>
-          </div>
-          <div class="form-item">
-            <div class="form-label">Mint count</div>
-            <div class="form-value">
-              <input type="number" value="1" id="record-post-form-quantity-input">
-            </div>
-          </div>
-          <div class="form-item form-item-large">
-            <div class="form-label">Address
-              <button id="record-post-form-load-address-button" class="form-load-address-button">[<span class="form-load-addres-button-text">connect wallet</span>]</button>
-            </div>
-            <div class="form-value">
-              <input type="text" placeholder="Defaults to your address" id="record-post-form-beneficiary-input">
-            </div>
-          </div>
-        </div>
-        <div class="form-section-disclaimer">An added 5% is sent to the <a href="https://goerli.juicebox.money/v2/p/669" target="_blank">Croptop Publishing Network</a> in exchange for $CPN to this site's author.</div>
-        <details id="record-post-form-disclaimer-reveal">
-          <summary id="record-post-form-disclaimer-toggle" class="form-toggle form-disclaimer-toggle">customize</summary>
-          <div class="form-section-description">Change who gets the $CPN</div>
-          <div class="form-section">
-            <div class="form-item form-item-large">
-              <div class="form-label">Address</div>
-              <div class="form-value">
-                <input type="text" placeholder="Defaults to the address of this site's author" id="record-post-form-cpn-beneficiary-input">
+            <div class="form-section-disclaimer">An added 5% is sent to the <a href="https://goerli.juicebox.money/v2/p/669" target="_blank">Croptop Publishing Network</a> in exchange for $CPN to this site's author.</div>
+            <details id="record-post-form-disclaimer-reveal">
+              <summary id="record-post-form-disclaimer-toggle" class="form-toggle form-disclaimer-toggle">customize</summary>
+              <div class="form-section-description">Change who gets the $CPN</div>
+              <div class="form-section">
+                <div class="form-item form-item-large">
+                  <div class="form-label">Address</div>
+                  <div class="form-value">
+                    <input type="text" placeholder="Defaults to the address of this site's author" id="record-post-form-cpn-beneficiary-input">
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </details>
-      </details>
+            </details>
+          </details>
+        </div>
+      </div>
+      <div id="post-form-loading-animation" class="loading-animation mobile-padding"></div>
+      <div id="post-form-error-message" class="form-error-message mobile-padding"></div>
+      <button id="post-form-button" class="form-button form-main-button mobile-padding">[<span id="post-form-button-text" class="form-button-text">collect</span>]<span id="post-form-button-loading-animation" class="loading-animation button-loading-animation"></span></button>
     </div>
-  </div>
-  <div id="post-form-loading-animation" class="loading-animation mobile-padding"></div>
-  <div id="post-form-error-message" class="form-error-message mobile-padding"></div>
-  <button id="post-form-button" class="form-button form-main-button mobile-padding">[<span id="post-form-button-text" class="form-button-text">collect</span>]<span id="post-form-button-loading-animation" class="loading-animation button-loading-animation"></span></button>
+  </details>
 </div>
 <img id="post-cover-image"></img>
 <video id="post-cover-video"></video>
@@ -199,14 +204,14 @@
     const checkState = async () => {
       // Set error message if not allowed.
       if (signer && formattedAllowedAddresses.length && !formattedAllowedAddresses.includes(signer)) {
-        postFormErrorMessage.innerHTML = `Project ${projectId} has reserved posting to category ${category} for these addresses: ${formattedAllowedAddresses}.`;
+        postFormErrorMessage.innerHTML = `Collection ${projectId} has reserved posting to category ${category} for these addresses: ${formattedAllowedAddresses}.`;
         postFormErrorMessage.classList.add("warn");
         postFormErrorMessage.style.display = "block";
         postFormButton.disabled = true;
         postFormButton.style.display = "block";
       // Set error messages if the currently inputted values are too small.
       } else if (Number(recordPostFormPriceInput.value) < formattedMinPrice || Number(recordPostFormTotalSupplyInput.value) < formattedMinTotalSupply || Number(recordPostFormTotalSupplyInput.value) > formattedMaxTotalSupply) {
-        postFormErrorMessage.innerHTML = `Project ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedMinPrice}, a minimum total supply of ${formattedMinTotalSupply}, and a maximum total supply of ${formattedMaxTotalSupply} to record on category ${category}.`;
+        postFormErrorMessage.innerHTML = `Collection ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedMinPrice}, a minimum total supply of ${formattedMinTotalSupply}, and a maximum total supply of ${formattedMaxTotalSupply} to record on category ${category}.`;
         postFormErrorMessage.classList.add("warn");
         postFormErrorMessage.style.display = "block";
         postFormButton.disabled = true;
@@ -713,7 +718,7 @@
         // Show an error message if there's no allowance set.
         if (formattedMinTotalSupply == 0) {
           // Show the error message.
-          postFormErrorMessage.innerHTML = `Project ${projectId} isn't accepting posts on category ${category} yet. Click "fork" up top.`;
+          postFormErrorMessage.innerHTML = `Collection ${projectId} isn't accepting posts on category ${category} yet. Click "fork" up top.`;
           postFormErrorMessage.classList.add("info");
           postFormErrorMessage.style.display = "block";
           // Hide forms.

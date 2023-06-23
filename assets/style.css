@@ -568,6 +568,10 @@ details > summary:before {
   margin-bottom: var(--spacing-5);
 }
 
+#post-form-collect-toggle {
+  margin: var(--spacing-2) 0; 
+}
+
 #post-form-state {
   display: flex;
   flex-direction: row;
@@ -576,10 +580,6 @@ details > summary:before {
 }
 #post-form-state-button {
   color: var(--foreground-color);
-}
-#post-form-state-toggle {
- color: var(--foreground-secondary-color);
- cursor: pointer;
 }
 .post-form-state-item-value {
   margin-left: var(--spacing-1);
