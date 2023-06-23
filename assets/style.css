@@ -563,7 +563,7 @@ details > summary:before {
 
 #post-onchain {
   border-left: var(--spacing-1) solid var(--background-secondary-color);
-  padding: var(--spacing-3);
+  padding: 0 var(--spacing-3);
   display: inline-block;
   margin-bottom: var(--spacing-5);
 }
