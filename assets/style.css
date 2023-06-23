@@ -554,9 +554,11 @@ details > summary:before {
 }
 #post-subtitle {
   margin-top: var(--spacing-1);
+  line-break: anywhere;
 }
 #post-link {
   color: var(--foreground-secondary-color);
+  line-break: anywhere;
 }
 
 #post-onchain {
