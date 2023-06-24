@@ -584,9 +584,6 @@ details > summary:before {
 #post-form-state-button {
   color: var(--foreground-color);
 }
-.post-form-state-item-value {
-  margin-left: var(--spacing-1);
-}
 
 #post-body {
   margin-top: var(--spacing-5);
