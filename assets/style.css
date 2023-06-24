@@ -529,7 +529,7 @@ details > summary:before {
 /* BODY STYLES */
 
 .body-header {
-  padding: var(--spacing-6) 0 var(--spacing-3) 0;
+  padding: 0 0 var(--spacing-3) 0;
 }
 
 .body-content {
@@ -954,7 +954,7 @@ details > summary:before {
 
   .exit-button {
     padding-top: 0;
-    padding-bottom: var(--spacing-2);
+    padding-bottom: 0;
   }
 
   /* HEADER STYLES */
