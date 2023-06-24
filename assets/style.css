@@ -400,7 +400,6 @@ details > summary:before {
   float: right;
   cursor: pointer;
   text-align: right;
-  padding: var(--spacing-3) 0 var(--spacing-3) var(--spacing-5);
   color: var(--foreground-secondary-color);
 }
 
@@ -950,11 +949,6 @@ details > summary:before {
 
   .centered-content {
     width: var(--max-width);
-  }
-
-  .exit-button {
-    padding-top: 0;
-    padding-bottom: 0;
   }
 
   /* HEADER STYLES */
