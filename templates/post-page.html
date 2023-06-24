@@ -1,6 +1,7 @@
 <div id="post-header" class="post-header body-header mobile-padding negative-space">
   <div id="post-title">
-    <span id="post-date"></span><span id="post-name"></span>
+    <div id="post-date"></div>
+    <div id="post-name"></div>
   </div>
   <div id="post-subtitle" class="negative-space">
       <span id="post-link"></span>
@@ -559,7 +560,7 @@
 
     // Decorate the frame's title.
     postName.innerHTML = name;
-    postDate.innerHTML = `${date} | `;
+    postDate.innerHTML = `${date} `;
 
     // Show and populate the frame's subtitle if there's a link.
     if (link) {

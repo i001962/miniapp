@@ -545,12 +545,15 @@ details > summary:before {
 
 /* POST BODY STYLES */
 
+#post-date {
+  color: var(--foreground-secondary-color);
+  display: inline-block;
+  margin-bottom: var(--spacing-1);
+}
 #post-name {
   color: var(--foreground-color);
   font-weight: var(--font-weight-2);
-}
-#post-date {
-  color: var(--foreground-secondary-color);
+  display: inline-block;
 }
 #post-subtitle {
   margin-top: var(--spacing-1);
