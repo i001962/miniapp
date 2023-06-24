@@ -553,7 +553,7 @@ details > summary:before {
 #post-name {
   color: var(--foreground-color);
   font-weight: var(--font-weight-2);
-  display: inline-block;
+  display: block;
 }
 #post-subtitle {
   margin-top: var(--spacing-1);
