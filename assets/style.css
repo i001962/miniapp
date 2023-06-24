@@ -948,7 +948,7 @@ details > summary:before {
 
   /* COMMON MODAL STYLES */
 
-  .modal-content {
+  .centered-content {
     width: var(--max-width);
   }
 
