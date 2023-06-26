@@ -32,20 +32,22 @@
   
   const showNav = () => {
     const topDomShrinkWrapper = document.getElementById('top-dom-shrink-wrapper');
+    const headerAbout = document.getElementById('header-about');
     const navContainer = document.getElementById('nav-container');
     const headerContainer = document.getElementById('header-container');
     navContainer.style.visibility = "visible";
-    navContainer.style.opacity = 1;
+    headerAbout.style.display = "initial";
     topDomShrinkWrapper.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + "px";
   }
 
   const hideNav = () => {
     const topDom = document.getElementById('top-dom');
     const topDomShrinkWrapper = document.getElementById('top-dom-shrink-wrapper');
+    const headerAbout = document.getElementById('header-about');
     const navContainer = document.getElementById('nav-container');
     const headerContainer = document.getElementById('header-container');
     navContainer.style.visibility = "hidden";
-    navContainer.style.opacity = 0;
+    headerAbout.style.display = "none";
     topDom.style.height = topDom.offsetHeight + "px";
     topDomShrinkWrapper.style.height = headerContainer.offsetHeight + "px";
   }
