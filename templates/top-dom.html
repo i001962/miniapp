@@ -35,8 +35,12 @@
     const headerAbout = document.getElementById('header-about');
     const navContainer = document.getElementById('nav-container');
     const headerContainer = document.getElementById('header-container');
+    const headerAvatar = document.getElementById('header-avatar');
+    const headerTitle = document.getElementById('header-title');
     navContainer.style.visibility = "visible";
-    headerAbout.style.display = "initial";
+    if (headerAbout) headerAbout.style.display = "initial";
+    if (headerAvatar) headerAvatar.classList.remove("small");
+    headerTitle.classList.remove("small");
     topDomShrinkWrapper.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + "px";
   }
 
@@ -46,8 +50,12 @@
     const headerAbout = document.getElementById('header-about');
     const navContainer = document.getElementById('nav-container');
     const headerContainer = document.getElementById('header-container');
+    const headerAvatar = document.getElementById('header-avatar');
+    const headerTitle = document.getElementById('header-title');
     navContainer.style.visibility = "hidden";
-    headerAbout.style.display = "none";
+    if (headerAbout) headerAbout.style.display = "none";
+    if (headerAvatar) headerAvatar.classList.add("small"); 
+    headerTitle.classList.add("small");
     topDom.style.height = topDom.offsetHeight + "px";
     topDomShrinkWrapper.style.height = headerContainer.offsetHeight + "px";
   }

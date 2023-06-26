@@ -71,6 +71,7 @@ body {
   background-color: var(--background-color);
   color: var(--foreground-color);
   text-align: left;
+  font-size: var(--font-size-1);
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -435,15 +436,24 @@ details > summary:before {
 }
 
 #header-avatar {
-  width: 60px;
-  height: 60px;
+  width: 4em;
+  height: 4em;
   border: var(--border-width) solid var(--background-secondary-color);
+}
+
+#header-avatar.small {
+  width: 1em;
+  height: 1em;
 }
 
 #header-title {
   font-size: var(--font-size-2);
   font-weight: var(--font-weight-2);
   color: var(--foreground-color);
+}
+
+#header-title.small {
+  font-size: var(--font-size-1);
 }
 
 #header-title-button {
@@ -470,7 +480,7 @@ details > summary:before {
 
 .header-social-icon {
   width: 1em;
-  height: 1.2em;
+  height: 1em;
   filter: var(--icon-social-filter);
 }
 
@@ -518,6 +528,7 @@ details > summary:before {
   cursor: pointer;
   display: inline-block;
   margin-right: var(--spacing-2);
+  color: var(--foreground-secondary-color);
 }
 #fork-button:hover {
   color: var(--link-color);
