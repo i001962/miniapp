@@ -417,6 +417,16 @@ details > summary:before {
   padding: var(--spacing-4) var(--spacing-3) var(--spacing-4) var(--spacing-4);
 }
 
+#header-top {
+  display: flex;
+  justify-content: space-between;
+}
+
+#header-aux {
+  text-align: right; 
+  display: flex;
+}
+
 #header-info {
   flex: 1;
   display: flex;
@@ -507,6 +517,8 @@ details > summary:before {
 }
 #fork-button {
   cursor: pointer;
+  display: inline-block;
+  margin-right: var(--spacing-2);
 }
 #fork-button:hover {
   color: var(--link-color);
