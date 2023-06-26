@@ -288,7 +288,7 @@ details > summary:before {
 /* DOM STYLES */
 
 #top-dom {
-  position: sticky;
+  position: fixed;
   top: 0;
   z-index: var(--top-dom-z-index);
   width: var(--max-width);

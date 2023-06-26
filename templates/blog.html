@@ -95,10 +95,17 @@
     });
   }
 
+  const setupBodyPadding = () => {
+    const topDom = document.getElementById('top-dom');
+    const bodyDom = document.getElementById('body-dom');
+    bodyDom.style.paddingTop = topDom.offsetHeight + "px";
+  }
+
   load();
   setupForking();
   setupResetButton();
   setupPostMode();
+  setBodyPadding();
 
   let isUserScroll = false;
   window.addEventListener('load', function() {

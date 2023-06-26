@@ -758,6 +758,12 @@ window.onpopstate = function(event) {
     toggleView();
   }
 
+  const setupBodyPadding = () => {
+    const topDom = document.getElementById('top-dom');
+    const bodyDom = document.getElementById('body-dom');
+    bodyDom.style.paddingTop = topDom.offsetHeight + "px";
+  }
+
   // if there is ?id= in the url, open the object page.
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get('id');
@@ -769,6 +775,7 @@ window.onpopstate = function(event) {
     setupForking();
     loadPosts(defaultPageSize);
     setupPostMode();
+    setupBodyPadding();
   }
 
   let isUserScroll = false;
