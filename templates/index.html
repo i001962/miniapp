@@ -716,7 +716,7 @@ window.onpopstate = function(event) {
           else showNav();
         }
       }
-      lastScrollTop = currentScrollTop;
+      lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
     }
   }
 
