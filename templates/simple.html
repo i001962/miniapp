@@ -4,7 +4,8 @@
   <div class="body-content centered-content content-top-offset">
     <div id="post-header" class="post-header body-header mobile-padding negative-space">
       <div id="post-title">
-        <span id="post-date">{{ article.created|mdyydot }} | </span><span id="post-name">{{ article.title }}</span>
+        <span id="post-date">{{ article.created|mdyydot }}</span>
+        <span id="post-name">{{ article.title }}</span>
       </div>
       {% if article.externalLink != nil %}
       <div id="post-subtitle" class="negative-space">
