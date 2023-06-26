@@ -470,8 +470,7 @@ details > summary:before {
 
 .header-social-icon {
   width: 1em;
-  height: 0.8em;
-  vertical-align: middle;
+  height: 1.2em;
   filter: var(--icon-social-filter);
 }
 
