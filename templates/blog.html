@@ -2,10 +2,6 @@
 {% block head %}
 {% include 'modules/post_seo.html' %}
 <script>
-  const noScrollEffectEdgeDistance = 80;
-  const toggleNavVisibilityScrollThreshold = 50;
-  let lastScrollTop = 0;
-
   document.addEventListener('DOMContentLoaded', () => {
     if (!window.PLANET.visitedFromPlanetClient) {
       if(document.getElementById('audio-container')){
@@ -67,19 +63,8 @@
   }
 
   const toggleNavVisibility = () => {
-    const topDom = document.getElementById('top-dom');
-    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-
-    if (currentScrollTop <= 0) showNav();
-    else {
-      if (Math.abs(currentScrollTop - lastScrollTop) < toggleNavVisibilityScrollThreshold) return;
-      if (lastScrollTop > noScrollEffectEdgeDistance && maxScrollTop - lastScrollTop > noScrollEffectEdgeDistance) {
-        if (currentScrollTop > lastScrollTop) hideNav();
-        else showNav();
-      }
-    }
-    lastScrollTop = currentScrollTop;
+    const topDomShrinkWrapper = document.getElementById('top-dom-shrink-wrapper');
+    topDomShrinkWrapper.style.borderBottomWidth = "1px";     
   }
 
   const setupResetButton = () => {
@@ -105,18 +90,8 @@
   setupForking();
   setupResetButton();
   setupPostMode();
-  setBodyPadding();
-
-  let isUserScroll = false;
-  window.addEventListener('load', function() {
-    window.requestAnimationFrame(() => {
-      window.addEventListener('scroll', function() {
-        if (isUserScroll) toggleNavVisibility();
-      });
-      window.requestAnimationFrame(() => {
-        isUserScroll = true;
-      });
-    });
-  });
+  hideNav();
+  toggleNavVisibility();
+  setupBodyPadding();
 </script>
 {% endblock %}

@@ -521,6 +521,10 @@ details > summary:before {
   z-index: calc(var(--modal-z-index) + 1);
 }
 
+#fork-header {
+  padding-top: var(--spacing-6); 
+}
+
 #fork-form .main-toggle {
   margin-top: var(--spacing-4);
 }
