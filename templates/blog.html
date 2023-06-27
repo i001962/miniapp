@@ -12,7 +12,9 @@
       }
     } else {
       const topDom = document.getElementById('top-dom');
-      topDom.style.display = "none"
+      topDom.style.display = "none";
+      const bodyDom = document.getElementById('body-dom');
+      bodyDom.style.paddingTop = "0px";
       const bodyResetButton = document.getElementById('body-reset-button');
       bodyResetButton.style.display = "none";
     }
@@ -64,7 +66,7 @@
 
   const toggleNavVisibility = () => {
     const topDomShrinkWrapper = document.getElementById('top-dom-shrink-wrapper');
-    topDomShrinkWrapper.style.borderBottomWidth = "1px";     
+    topDomShrinkWrapper.style.borderBottomWidth = "1px";
   }
 
   const setupResetButton = () => {
