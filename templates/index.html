@@ -66,7 +66,7 @@ window.onpopstate = function(event) {
     const postFormStateProjectId = document.getElementById("post-form-state-project-id");
     const chain = postFormStateChain.innerHTML;
     const projectId = parseInt(postFormStateProjectId.innerHTML);
-    
+
     const tiers = await tx_view_tiers(projectId, encodedIPFSUris, resolveChainId(chain));
 
     for (let i in tiers) {
@@ -563,7 +563,7 @@ window.onpopstate = function(event) {
     const postVideo = document.getElementById("post-cover-video");
     const postAudio = document.getElementById("post-cover-audio");
     const postContent = document.getElementById("post-content");
-    
+
     requestAnimationFrame(() => {
       const headerContainerHeight = headerContainer.offsetHeight;
       const borderHeight = parseInt(topDomShrinkWrapper.style.borderBottomWidth, 10);
@@ -667,8 +667,11 @@ window.onpopstate = function(event) {
 
     startLoadingAnimation('posts-loading-animation');
 
+    const now = Math.floor(Date.now() / 1000);
+    const t = now - (now % 60);
+
     const response = await fetch(
-      `{{ assets_prefix }}planet.json`
+      `{{ assets_prefix }}planet.json?t=${t}`
     );
     const data = await response.json();
     const newPosts = data['articles'].slice(nextPageOffset, nextPageOffset + pageSize);
@@ -700,7 +703,7 @@ window.onpopstate = function(event) {
 
     const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    
+
     if (postModal.style.display == "block" || forkModal.style.display == "block") {
       hideNav();
       topDomShrinkWrapper.style.borderBottomWidth = "1px";
@@ -749,8 +752,8 @@ window.onpopstate = function(event) {
 
     postModeButton.addEventListener('click', async () => {
       toggleView();
-      const numberOfPostFrames = framesContainer.children.length;  
-      const numberOfPostRows = listContainer.children.length;  
+      const numberOfPostFrames = framesContainer.children.length;
+      const numberOfPostRows = listContainer.children.length;
       // Load any necessary frames.
       postMode == "frames" ? numberOfPostFrames < numberOfPostRows && await showPostFrames(posts.slice(numberOfPostFrames)) : numberOfPostRows < numberOfPostFrames && showPostList(posts.slice(numberOfPostRows));
     });
