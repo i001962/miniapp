@@ -3,9 +3,9 @@
   "description": "For pictures and screenshots",
   "author": "Jango",
   "authorWebsite": "https://jango.eth.limo",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "idealItemsPerPage": 10,
-  "buildNumber": 405,
+  "buildNumber": 407,
   "generateNFTMetadata": true,
   "settings": {
     "juiceboxProjectID": {
