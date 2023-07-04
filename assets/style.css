@@ -630,10 +630,6 @@ details > summary:before {
   width: var(--reduced-width2);
 }
 
-#post-content {
-  width: var(--max-width);
-}
-
 #post-content iframe {
   margin-top: var(--spacing-3);
   margin-bottom: var(--spacing-3);
