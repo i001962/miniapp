@@ -169,7 +169,11 @@
         if (data.chain != null) postFormStateProjectId.innerHTML = Number(data.juiceboxProjectID);
         if (data.juiceboxProjectID != null) postFormStateProjectId.innerHTML = Number(data.juiceboxProjectID);
         // data.juiceboxProjectIDGoerli is also available if you need it
-        if (data.nftCategory != null) postFormStateNftCategory.innerHTML = Number(data.nftCategory);
+        if (data.defaultNFTCategory != null) postFormStateNftCategory.innerHTML = Number(data.defaultNFTCategory);
+        // data.defaultNFTCategoryGoerli is also available if you need it
+        // Other settings are available if you need them
+        // - data.ethereumRPC
+        // - data.ethereumRPCGoerli
         if (data.ethAddress) defaultEthAddress = data.ethAddress;
         if (data.highlightColor) highlightColor = data.highlightColor;
         const r = document.querySelector(':root');
@@ -318,7 +322,7 @@
         const accepted = await tx_collect(projectId, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, resolveChainId(chain));
 
           // Show incompatible network if needed.
-        if (!accepted) { 
+        if (!accepted) {
           // Show the error message.
           postFormErrorMessage.innerHTML = "The connected network isn't supported.";
           postFormErrorMessage.classList.add("info");
