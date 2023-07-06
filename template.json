@@ -3,9 +3,9 @@
   "description": "For pictures and screenshots",
   "author": "Jango",
   "authorWebsite": "https://jango.eth.limo",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "idealItemsPerPage": 10,
-  "buildNumber": 409,
+  "buildNumber": 410,
   "generateNFTMetadata": true,
   "settings": {
     "juiceboxProjectID": {
@@ -31,6 +31,12 @@
       "type": "int",
       "defaultValue": "0",
       "description": "Default category of the NFTs"
+    },
+    "defaultNFTCategoryGoerli": {
+      "name": "Default NFT Category (Goerli)",
+      "type": "int",
+      "defaultValue": "0",
+      "description": "Default category of the NFTs on the test net."
     },
     "ethereumRPC": {
       "name": "Ethereum RPC",
