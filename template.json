@@ -9,46 +9,52 @@
   "generateNFTMetadata": true,
   "settings": {
     "juiceboxProjectID": {
-      "name": "Juicebox Project ID",
+      "name": "Mainnet NFT Collection ID",
       "type": "int",
       "defaultValue": "1016",
-      "description": "ID of the Juicebox project to use for this Croptop website."
-    },
-    "juiceboxProjectIDGoerli": {
-      "name": "Juicebox Project ID (Goerli)",
-      "type": "int",
-      "defaultValue": "1016",
-      "description": "ID of the Juicebox project on the test net."
-    },
-    "ethAddress": {
-      "name": "ETH Address",
-      "type": "string",
-      "defaultValue": "",
-      "description": "Ethereum address of the owner of this Croptop website."
+      "description": "Your collection ID is the ID of your Juicebox project where your collection is configured. Your site will record posts onto this collection by default."
     },
     "defaultNFTCategory": {
-      "name": "Default NFT Category",
+      "name": "Mainnet NFT Category",
       "type": "int",
       "defaultValue": "0",
-      "description": "Default category of the NFTs"
+      "description": "The category within your collection where posts will be recorded by default."
+    },
+    "ethereumRPC": {
+      "name": "Mainnet RPC",
+      "type": "string",
+      "defaultValue": "",
+      "description": "A URL where your site will access onchain data from."
+    },
+    "ethAddress": {
+      "name": "Mainnet address",
+      "type": "string",
+      "defaultValue": "",
+      "description": "The address where $CPN resulting from your site's recorded posts will be sent."
+    },
+    "juiceboxProjectIDGoerli": {
+      "name": "Goerli NFT Collection ID",
+      "type": "int",
+      "defaultValue": "1016",
+      "description": ""
     },
     "defaultNFTCategoryGoerli": {
       "name": "Default NFT Category (Goerli)",
       "type": "int",
       "defaultValue": "0",
-      "description": "Default category of the NFTs on the test net."
-    },
-    "ethereumRPC": {
-      "name": "Ethereum RPC",
-      "type": "string",
-      "defaultValue": "",
-      "description": "Ethereum RPC endpoint to use"
+      "description": ""
     },
     "ethereumRPCGoerli": {
-      "name": "Ethereum RPC (Goerli)",
+      "name": "Goerli RPC",
       "type": "string",
       "defaultValue": "",
-      "description": "Ethereum RPC endpoint to use for the test net."
+      "description": ""
+    },
+    "ethAddressGoerli": {
+      "name": "Goerli address",
+      "type": "string",
+      "defaultValue": "",
+      "description": ""
     },
     "highlightColor": {
       "name": "Highlight Color",
