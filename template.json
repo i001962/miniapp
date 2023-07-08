@@ -5,7 +5,7 @@
   "authorWebsite": "https://jango.eth.limo",
   "version": "1.0.16",
   "idealItemsPerPage": 10,
-  "buildNumber": 411,
+  "buildNumber": 413,
   "generateNFTMetadata": true,
   "settings": {
     "juiceboxProjectID": {
@@ -39,7 +39,7 @@
       "description": ""
     },
     "defaultNFTCategoryGoerli": {
-      "name": "Default NFT Category (Goerli)",
+      "name": "Goerli NFT Category",
       "type": "int",
       "defaultValue": "0",
       "description": ""
