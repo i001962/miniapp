@@ -1,7 +1,7 @@
 const getProvider = (chainId) => {
   switch (chainId) {
-    case 1: return new ethers.JsonRpcProvider("https://rpc.ankr.com/eth");
-    case 5: return new ethers.JsonRpcProvider("https://rpc.ankr.com/eth_goerli");
+    case 1: return new ethers.JsonRpcProvider(env.MAINNET_RPC || "https://rpc.ankr.com/eth");
+    case 5: return new ethers.JsonRpcProvider(env.GOERLI_RPC || "https://rpc.ankr.com/eth_goerli");
     default: return new ethers.BrowserProvider(window.ethereum);
   }
 }

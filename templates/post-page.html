@@ -166,14 +166,15 @@
         return response.json();
       })
       .then(data => {
+        console.log({  data });
         if (data.chain != null) postFormStateProjectId.innerHTML = Number(data.juiceboxProjectID);
         if (data.juiceboxProjectID != null) postFormStateProjectId.innerHTML = Number(data.juiceboxProjectID);
         // data.juiceboxProjectIDGoerli is also available if you need it
         if (data.defaultNFTCategory != null) postFormStateNftCategory.innerHTML = Number(data.defaultNFTCategory);
         // data.defaultNFTCategoryGoerli is also available if you need it
         // Other settings are available if you need them
-        // - data.ethereumRPC
-        // - data.ethereumRPCGoerli
+        env.MAINNET_RPC = data.ethereumRPC;
+        env.GOERLI_RPC = data.ethereumRPCGoerli;
         if (data.ethAddress) defaultEthAddress = data.ethAddress;
         if (data.highlightColor) highlightColor = data.highlightColor;
         const r = document.querySelector(':root');
