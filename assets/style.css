@@ -782,7 +782,6 @@ details > summary:before {
   opacity: 0;
   position: relative;
   cursor: pointer;
-  overflow: hidden;
   border: var(--border-width) solid var(--background-secondary-color);
   transition: border-color var(--transition-duration) var(--transition-timing-function), opacity var(--transition-duration) var(--transition-timing-function), margin-top var(--transition-duration) var(--transition-timing-function);
 }
@@ -811,7 +810,6 @@ details > summary:before {
 }
 
 .post-frame-text {
-  width: var(--max-width);
   min-height: 300px;
   max-height: 500px;
   background: var(--background-color);

@@ -87,7 +87,7 @@
                   <span class="ether form-input-preface">Ξ</span><input type="number" value="" id="record-post-form-price-input">
                 </div>
               </div>
-              <div class="form-item">
+              <div id="record-post-form-total-supply-field" class="form-item">
                 <div class="form-label">Total supply</div>
                 <div class="form-value">
                   <input type="number" placeholder="10" value="" id="record-post-form-total-supply-input">
@@ -185,7 +185,7 @@
     // Get references to record form elements that need decorating.
     const recordPostFormBeneficiaryInput = document.getElementById("record-post-form-beneficiary-input");
     const recordPostFormCpnBeneficiaryInput = document.getElementById("record-post-form-cpn-beneficiary-input");
-    const recordPostFormTotalSupplyInput = document.getElementById("record-post-form-total-supply-input");
+    const recordPostFormTotalSupplyField = document.getElementById("record-post-form-total-supply-field");
     const recordPostFormPriceInput = document.getElementById("record-post-form-price-input");
     const recordPostFormQuantityInput = document.getElementById("record-post-form-quantity-input");
     const recordPostFormOptionsReveal = document.getElementById("record-post-form-options-reveal");
@@ -200,6 +200,13 @@
 
     // Change the button text.
     postFormButtonText.innerHTML = "record & collect";
+
+    // If the min and max total supplies are the same, hide the total supply field.
+    if (formattedMinTotalSupply == formattedMaxTotalSupply) {
+      recordPostFormTotalSupplyField.display = "none";   
+    } else {
+      recordPostFormTotalSupplyField.display = "initial";   
+    }
 
     // Toggle off the sections.
     recordPostFormOptionsReveal.open = false;
@@ -543,6 +550,8 @@
     const postContent = document.getElementById("post-content");
     const recordPostForm = document.getElementById("record-post-form");
     const collectPostForm = document.getElementById("collect-post-form");
+    const postFormCollectReveal = document.getElementById("post-form-collect-reveal");
+    const postFormCollectToggle = document.getElementById("post-form-collect-toggle");
 
     if (content) {
       postContent.style.display = "block";
@@ -565,6 +574,19 @@
     // Decorate the frame's title.
     postName.innerHTML = name;
     postDate.innerHTML = `${date} `;
+
+    // Reset the label for the collect toggle.
+    postFormCollectToggle.innerHTML = 'collect'; 
+    let storedPostFormCollectToggleText;
+    const postFormCollectRevealOpenText = '---';
+    postFormCollectReveal.addEventListener('toggle', function() {
+      if (postFormCollectReveal.open) {
+        storedPostFormCollectToggleText = postFormCollectToggle.innerHTML;
+        postFormCollectToggle.innerHTML = postFormCollectRevealOpenText;
+      } else {
+        postFormCollectToggle.innerHTML = storedPostFormCollectToggleText;
+      }
+    });
 
     // Show and populate the frame's subtitle if there's a link.
     if (link) {
@@ -651,6 +673,7 @@
           // Disable the button.
           postFormButton.disabled = true;
           postFormButton.style.display = "none";
+          postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : 'collect';
           return;
         }
 
@@ -680,6 +703,7 @@
           // Disable the button.
           postFormButton.disabled = true;
           postFormButton.style.display = "none";
+          postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : 'sold out';
           return;
         }
 
@@ -693,9 +717,18 @@
         // Get a reference to the tier's price.
         const formattedPrice = ethers.formatEther(tier[1]);
         const formattedInitialSupply = parseInt(tier[3].toString());
+        
+        // The supply that has been minted.
+        const formattedMintedSupply = formattedInitialSupply - formattedRemainingSupply;
+
+        if (formattedRemainingSupply == 1) {
+          postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : `${formattedMintedSupply} minted, only 1 remaining`;
+        } else {
+          postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : `${formattedMintedSupply} minted, ${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } remaining`;
+        }
 
         // Show the form.
-        await decorateCollectForm(chain, projectId, category, encodedIPFSUri, formattedInitialSupply - formattedRemainingSupply, formattedRemainingSupply, formattedPrice);
+        await decorateCollectForm(chain, projectId, category, encodedIPFSUri, formattedMintedSupply, formattedRemainingSupply, formattedPrice);
       } else {
         // Check to see if the project and category allow posting.
 
@@ -732,6 +765,7 @@
           // Hide and disable the button.
           postFormButton.disabled = true;
           postFormButton.style.display = "none";
+          postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : 'collect';
           return;
         }
 
@@ -750,6 +784,8 @@
 
         // Get a reference to the allowance max total supply.
         const formattedAllowedAddresses = allowance[3];
+
+        postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : 'collect';
 
         await decorateRecordForm(chain, projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice, formattedAllowedAddresses);
       }
