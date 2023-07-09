@@ -166,16 +166,24 @@
         return response.json();
       })
       .then(data => {
-        console.log({  data });
-        if (data.chain != null) postFormStateProjectId.innerHTML = Number(data.juiceboxProjectID);
-        if (data.juiceboxProjectID != null) postFormStateProjectId.innerHTML = Number(data.juiceboxProjectID);
-        // data.juiceboxProjectIDGoerli is also available if you need it
-        if (data.defaultNFTCategory != null) postFormStateNftCategory.innerHTML = Number(data.defaultNFTCategory);
-        // data.defaultNFTCategoryGoerli is also available if you need it
-        // Other settings are available if you need them
-        env.MAINNET_RPC = data.ethereumRPC;
-        env.GOERLI_RPC = data.ethereumRPCGoerli;
-        if (data.ethAddress) defaultEthAddress = data.ethAddress;
+        console.log({ data });
+        // Two sets of variables are available if the user is using the latest template.
+        // Mainnet:
+        // - mainnetCollectionID
+        // - mainnetCollectionCategory
+        // - mainnetRPC
+        // - mainnetCPNBeneficiaryAddress
+        // Goerli:
+        // - goerliCollectionID
+        // - goerliCollectionCategory
+        // - goerliRPC
+        // - goerliCPNBeneficiaryAddress
+        if (data.chain != null) postFormStateProjectId.innerHTML = Number(data.mainnetCollectionID);
+        if (data.mainnetCollectionID != null) postFormStateProjectId.innerHTML = Number(data.mainnetCollectionID);
+        if (data.mainnetCollectionCategory != null) postFormStateNftCategory.innerHTML = Number(data.mainnetCollectionCategory);
+        if (data.mainnetRPC) env.MAINNET_RPC = data.mainnetRPC;
+        if (data.goerliRPC) env.GOERLI_RPC = data.goerliRPC;
+        if (data.mainnetCPNBeneficiaryAddress) defaultEthAddress = data.mainnetCPNBeneficiaryAddress;
         if (data.highlightColor) highlightColor = data.highlightColor;
         const r = document.querySelector(':root');
         r.style.setProperty('--link-color', highlightColor);
@@ -204,9 +212,9 @@
 
     // If the min and max total supplies are the same, hide the total supply field.
     if (formattedMinTotalSupply == formattedMaxTotalSupply) {
-      recordPostFormTotalSupplyField.display = "none";   
+      recordPostFormTotalSupplyField.display = "none";
     } else {
-      recordPostFormTotalSupplyField.display = "initial";   
+      recordPostFormTotalSupplyField.display = "initial";
     }
 
     // Toggle off the sections.
@@ -577,7 +585,7 @@
     postDate.innerHTML = `${date} `;
 
     // Reset the label for the collect toggle.
-    postFormCollectToggle.innerHTML = 'collect'; 
+    postFormCollectToggle.innerHTML = 'collect';
     let storedPostFormCollectToggleText;
     const postFormCollectRevealOpenText = '---';
     postFormCollectReveal.addEventListener('toggle', function() {
@@ -718,7 +726,7 @@
         // Get a reference to the tier's price.
         const formattedPrice = ethers.formatEther(tier[1]);
         const formattedInitialSupply = parseInt(tier[3].toString());
-        
+
         // The supply that has been minted.
         const formattedMintedSupply = formattedInitialSupply - formattedRemainingSupply;
 

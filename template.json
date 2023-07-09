@@ -3,54 +3,54 @@
   "description": "For pictures and screenshots",
   "author": "Jango",
   "authorWebsite": "https://jango.eth.limo",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "idealItemsPerPage": 10,
-  "buildNumber": 413,
+  "buildNumber": 417,
   "generateNFTMetadata": true,
   "settings": {
-    "juiceboxProjectID": {
+    "mainnetCollectionID": {
       "name": "Mainnet NFT Collection ID",
       "type": "int",
       "defaultValue": "1016",
       "description": "Your collection ID is the ID of your Juicebox project where your collection is configured. Your site will record posts onto this collection by default."
     },
-    "defaultNFTCategory": {
+    "mainnetCollectionCategory": {
       "name": "Mainnet NFT Category",
       "type": "int",
       "defaultValue": "0",
       "description": "The category within your collection where posts will be recorded by default."
     },
-    "ethereumRPC": {
+    "mainnetRPC": {
       "name": "Mainnet RPC",
       "type": "string",
       "defaultValue": "",
       "description": "A URL where your site will access onchain data from."
     },
-    "ethAddress": {
+    "mainnetCPNBeneficiaryAddress": {
       "name": "Mainnet address",
       "type": "string",
       "defaultValue": "",
       "description": "The address where $CPN resulting from your site's recorded posts will be sent."
     },
-    "juiceboxProjectIDGoerli": {
+    "goerliCollectionID": {
       "name": "Goerli NFT Collection ID",
       "type": "int",
       "defaultValue": "1016",
       "description": ""
     },
-    "defaultNFTCategoryGoerli": {
+    "goerliCollectionCategory": {
       "name": "Goerli NFT Category",
       "type": "int",
       "defaultValue": "0",
       "description": ""
     },
-    "ethereumRPCGoerli": {
+    "goerliRPC": {
       "name": "Goerli RPC",
       "type": "string",
       "defaultValue": "",
       "description": ""
     },
-    "ethAddressGoerli": {
+    "goerliCPNBeneficiaryAddress": {
       "name": "Goerli address",
       "type": "string",
       "defaultValue": "",
