@@ -195,6 +195,7 @@
     const recordPostFormBeneficiaryInput = document.getElementById("record-post-form-beneficiary-input");
     const recordPostFormCpnBeneficiaryInput = document.getElementById("record-post-form-cpn-beneficiary-input");
     const recordPostFormTotalSupplyField = document.getElementById("record-post-form-total-supply-field");
+    const recordPostFormTotalSupplyInput = document.getElementById("record-post-form-total-supply-input");
     const recordPostFormPriceInput = document.getElementById("record-post-form-price-input");
     const recordPostFormQuantityInput = document.getElementById("record-post-form-quantity-input");
     const recordPostFormOptionsReveal = document.getElementById("record-post-form-options-reveal");
@@ -231,7 +232,7 @@
         postFormButton.disabled = true;
         postFormButton.style.display = "block";
       // Set error messages if the currently inputted values are too small.
-      } else if (Number(recordPostFormPriceInput.value) < formattedMinPrice || Number(recordPostFormTotalSupplyInput.value) < formattedMinTotalSupply || Number(recordPostFormTotalSupplyInput.value) > formattedMaxTotalSupply) {
+      } else if (Number(recordPostFormPriceInput.value) < formattedMinPrice || Number((recordPostFormTotalSupplyInput.value) < formattedMinTotalSupply || Number(recordPostFormTotalSupplyInput.value) > formattedMaxTotalSupply) {
         postFormErrorMessage.innerHTML = `Collection ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedMinPrice}, a minimum total supply of ${formattedMinTotalSupply}, and a maximum total supply of ${formattedMaxTotalSupply} to record on category ${category}.`;
         postFormErrorMessage.classList.add("warn");
         postFormErrorMessage.style.display = "block";
