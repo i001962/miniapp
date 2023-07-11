@@ -232,7 +232,7 @@
         postFormButton.disabled = true;
         postFormButton.style.display = "block";
       // Set error messages if the currently inputted values are too small.
-      } else if (Number(recordPostFormPriceInput.value) < formattedMinPrice || Number((recordPostFormTotalSupplyInput.value) < formattedMinTotalSupply || Number(recordPostFormTotalSupplyInput.value) > formattedMaxTotalSupply) {
+      } else if (Number(recordPostFormPriceInput.value) < formattedMinPrice || Number(recordPostFormTotalSupplyInput.value) < formattedMinTotalSupply || Number(recordPostFormTotalSupplyInput.value) > formattedMaxTotalSupply) {
         postFormErrorMessage.innerHTML = `Collection ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedMinPrice}, a minimum total supply of ${formattedMinTotalSupply}, and a maximum total supply of ${formattedMaxTotalSupply} to record on category ${category}.`;
         postFormErrorMessage.classList.add("warn");
         postFormErrorMessage.style.display = "block";
