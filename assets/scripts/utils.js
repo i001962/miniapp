@@ -51,7 +51,8 @@ const resolveChainId = (value) => {
 
 const resolveChainSelectIndex = (chain) => {
   switch (chain) {
-    case "goerli": return 0; 
+    case "mainnet": return 0; 
+    case "goerli": return 1; 
   }
 }
 
@@ -64,13 +65,44 @@ const resolveChain = (chainId) => {
 
 const cpnProjectId = (chain) => {
   switch (chain) {
+    case "mainnet":
+      return 1016;
     case "goerli":
       return 1016;
   }
 }
 
+const resolveCollectionId = (chain) => {
+  switch (chain) {
+    case "mainnet":
+      return env.mainnetCollectionID || cpnProjectId(chain);
+    case "goerli":
+      return env.goerliCollectionID || cpnProjectId(chain);
+  }
+}
+
+const resolveCollectionCategory = (chain) => {
+  switch (chain) {
+    case "mainnet":
+      return env.mainnetCollectionCategory || 0;
+    case "goerli":
+      return env.goerliCollectionCategory || 0;
+  }
+}
+
+const resolveCPNBeneficiaryAddress = (chain) => {
+  switch (chain) {
+    case "mainnet":
+      return env.mainnetCPNBeneficiaryAddress;
+    case "goerli":
+      return env.goerliCPNBeneficiaryAddress;
+  }
+}
+
 const projectLinkBase = (chain) => {
   switch (chain) {
+    case "mainnet": 
+      return "https://juicebox.money/v2/p/";
     case "goerli": 
       return "https://goerli.juicebox.money/v2/p/";
   }

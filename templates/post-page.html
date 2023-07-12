@@ -14,14 +14,14 @@
       <div id="post-form-state" class="negative-space">
         <details id="post-form-state-reveal">
           <summary id="post-form-state-toggle" class="form-toggle"><span id="post-form-state-chain" class="post-form-state-item-value"></span> collection <a id="post-form-state-project-id" class="post-form-state-item-value" target="_blank"></a>:<span id="post-form-state-nft-category" class="post-form-state-item-value"></span></summary>
-          <div class="form-section-description">Specify the collection that is being funded from this NFT sale and the category under which it will appear. Changing these values will change the availability of this NFT.</div>
+          <div class="form-section-description">Specify the collection that is being funded from this post's sale and the category under which it will appear. Changing these values will change the availability of this post to be collected.</div>
           <div class="form-section">
             <div class="form-item">
               <div class="form-label">Chain</div>
               <div class="form-value form-select-value">
                 <select id="post-form-state-chain-input" name="chain">
-                  {# <option value="mainnet">mainnet</option> #}
                   <option value="goerli">goerli</option>
+                  <option value="mainnet">mainnet</option>
                 </select>
               </div>
             </div>
@@ -30,7 +30,7 @@
               <div class="form-value"><input type="number" value="" id="post-form-state-project-id-input"></div>
             </div>
             <div class="form-item">
-              <div class="form-label">NFT category ID</div>
+              <div class="form-label">Collection category</div>
               <div class="form-value"><input type="number" value="" id="post-form-state-nft-category-input"></div>
             </div>
           </div>
@@ -58,7 +58,7 @@
                 </div>
               </div>
             </div>
-            <div class="form-section-disclaimer">An added 5% is sent to the <a href="https://goerli.juicebox.money/v2/p/669" target="_blank">Croptop Publishing Network</a> in exchange for $CPN to this site's author.</div>
+            <div class="form-section-disclaimer">An added 5% is sent to the <a id="collect-post-form-cpn-anchor" href="https://goerli.juicebox.money/v2/p/669" target="_blank">Croptop Publishing Network</a> in exchange for $CPN to this site's author.</div>
             <details id="collect-post-form-disclaimer-reveal">
               <summary id="collect-post-form-disclaimer-toggle" class="form-toggle form-disclaimer-toggle">customize</summary>
               <div class="form-section-description">Change who gets the $CPN</div>
@@ -79,7 +79,7 @@
         <div class="form-body">
           <details id="record-post-form-options-reveal">
             <summary id="record-post-form-options-toggle" class="form-toggle form-main-toggle">options</summary>
-            <div class="form-section-description">Set the NFT's price, how many editions of this NFT will be made available for collecting, and the address that will be sent its first copies that you are paying for.</div>
+            <div class="form-section-description">Set the post's price, how many editions of this post will be made available for collecting, and the address that will be sent its first copies that you are paying for.</div>
             <div class="form-section">
               <div class="form-item">
                 <div class="form-label">Price</div>
@@ -108,7 +108,7 @@
                 </div>
               </div>
             </div>
-            <div class="form-section-disclaimer">An added 5% is sent to the <a href="https://goerli.juicebox.money/v2/p/669" target="_blank">Croptop Publishing Network</a> in exchange for $CPN to this site's author.</div>
+            <div class="form-section-disclaimer">An added 5% is sent to the <a id="record-post-form-cpn-anchor" href="https://goerli.juicebox.money/v2/p/669" target="_blank">Croptop Publishing Network</a> in exchange for $CPN to this site's author.</div>
             <details id="record-post-form-disclaimer-reveal">
               <summary id="record-post-form-disclaimer-toggle" class="form-toggle form-disclaimer-toggle">customize</summary>
               <div class="form-section-description">Change who gets the $CPN</div>
@@ -143,7 +143,6 @@
   let allowanceCache = {};
   let defaultChain = "goerli";
   let defaultNftCategory = 0;
-  let defaultEthAddress;
   let highlightColor = "#f056c1";
   let signer;
 
@@ -166,7 +165,6 @@
         return response.json();
       })
       .then(data => {
-        console.log({ data });
         // Two sets of variables are available if the user is using the latest template.
         // Mainnet:
         // - mainnetCollectionID
@@ -178,12 +176,12 @@
         // - goerliCollectionCategory
         // - goerliRPC
         // - goerliCPNBeneficiaryAddress
-        if (data.chain != null) postFormStateProjectId.innerHTML = Number(data.mainnetCollectionID);
+        env = {
+          ...env,
+          ...data
+        };
         if (data.mainnetCollectionID != null) postFormStateProjectId.innerHTML = Number(data.mainnetCollectionID);
         if (data.mainnetCollectionCategory != null) postFormStateNftCategory.innerHTML = Number(data.mainnetCollectionCategory);
-        if (data.mainnetRPC) env.MAINNET_RPC = data.mainnetRPC;
-        if (data.goerliRPC) env.GOERLI_RPC = data.goerliRPC;
-        if (data.mainnetCPNBeneficiaryAddress) defaultEthAddress = data.mainnetCPNBeneficiaryAddress;
         if (data.highlightColor) highlightColor = data.highlightColor;
         const r = document.querySelector(':root');
         r.style.setProperty('--link-color', highlightColor);
@@ -199,6 +197,7 @@
     const recordPostFormPriceInput = document.getElementById("record-post-form-price-input");
     const recordPostFormQuantityInput = document.getElementById("record-post-form-quantity-input");
     const recordPostFormOptionsReveal = document.getElementById("record-post-form-options-reveal");
+    const recordPostFormCpnAnchor = document.getElementById("record-post-form-cpn-anchor");
     const recordPostFormDisclaimerReveal = document.getElementById("record-post-form-disclaimer-reveal");
     const postFormErrorMessage = document.getElementById("post-form-error-message");
     const postFormButtonText = document.getElementById("post-form-button-text");
@@ -220,7 +219,10 @@
 
     // Toggle off the sections.
     recordPostFormOptionsReveal.open = false;
-    recordPostFormDisclaimerReveal.open = false;
+    recordPostFormDisclaimerReveal.open = false; 
+
+    // Set the correct link given the chain.
+    recordPostFormCpnAnchor.href = `${projectLinkBase(chain)}${cpnProjectId(chain)}`;
 
     // Re-decorate some input fields depending on the allowances set for the project and category.
     const checkState = async () => {
@@ -296,7 +298,7 @@
       // Default to the signer.
       if (!recordPostFormBeneficiaryInput.value) recordPostFormBeneficiaryInput.value = signer;
       // Default to the eth address, or the signer;
-      if (!recordPostFormCpnBeneficiaryInput.value) recordPostFormCpnBeneficiaryInput.value = defaultEthAddress || signer;
+      if (!recordPostFormCpnBeneficiaryInput.value) recordPostFormCpnBeneficiaryInput.value = resolveCPNBeneficiaryAddress(chain) || signer;
 
       // Make sure the form contents make sense.
       await checkState();
@@ -374,6 +376,7 @@
     const collectPostFormQuantityInput = document.getElementById("collect-post-form-quantity-input");
     const collectPostFormOptionsReveal = document.getElementById("collect-post-form-options-reveal");
     const collectPostFormDisclaimerReveal = document.getElementById("collect-post-form-disclaimer-reveal");
+    const collectPostFormCpnAnchor = document.getElementById("collect-post-form-cpn-anchor");
     const postFormErrorMessage = document.getElementById("post-form-error-message");
     const postFormButtonText = document.getElementById("post-form-button-text");
     const postFormButton = document.getElementById("post-form-button");
@@ -395,6 +398,9 @@
     // Disable the button.
     postFormButton.disabled = true;
     postFormButton.style.display = "none";
+    
+    // Set the correct link given the chain.
+    collectPostFormCpnAnchor.href = `${projectLinkBase(chain)}${cpnProjectId(chain)}`;
 
     // Re-decorate some input fields depending on the allowances set for the project and category.
     const checkState = async () => {
@@ -457,7 +463,7 @@
       // Default to the signer.
       if (!collectPostFormBeneficiaryInput.value) collectPostFormBeneficiaryInput.value = signer;
       // Default to the eth address, or the signer;
-      if (!collectPostFormCpnBeneficiaryInput.value) collectPostFormCpnBeneficiaryInput.value = defaultEthAddress || signer;
+      if (!collectPostFormCpnBeneficiaryInput.value) collectPostFormCpnBeneficiaryInput.value = resolveCPNBeneficiaryAddress(chain) || signer;
 
       // Make sure the form contents make sense.
       await checkState();
@@ -655,15 +661,18 @@
 
       // Set the project ID href.
       postFormStateProjectId.setAttribute('href', `${projectLinkBase(chain)}${postFormStateProjectId.innerHTML}`);
+      
+      // Set a chain object.
+      if (!tiersCache[chain]] tiersCache[chain] = {};
 
       // Look in the cache for tiers within the project ID.
-      const projectIdTiers = tiersCache[projectId];
+      const projectIdTiers = tiersCache[chain][projectId];
 
       // If there's no cache for the project ID, set it to an empty object.
-      if (!projectIdTiers) tiersCache[projectId] = {};
+      if (!projectIdTiers) tiersCache[chain][projectId] = {};
 
       // Look in the cache for a tier for the project ID and encodedIPFSUri.
-      let tier = tiersCache[projectId][encodedIPFSUri];
+      let tier = tiersCache[chain][projectId][encodedIPFSUri];
 
       // If nothing is cached, load from the contract.
       if (!tier) {
@@ -688,7 +697,7 @@
         }
 
         // Cache the value.
-        tiersCache[projectId][encodedIPFSUri] = tier;
+        tiersCache[chain][projectId][encodedIPFSUri] = tier;
       }
 
       // Get a reference to the tier's ID.
@@ -704,7 +713,7 @@
         // If there's no remaining supply, the form's state is in SOLD_OUT mode, meaning it can't be minted anymore.
         if (formattedRemainingSupply == 0) {
           // Show the error message.
-          postFormErrorMessage.innerHTML = "This NFT is sold out";
+          postFormErrorMessage.innerHTML = "This post is sold out";
           postFormErrorMessage.classList.add("info");
           postFormErrorMessage.style.display = "block";
           // Hide the forms.
@@ -827,8 +836,14 @@
 
       // Reload the mint state if the chain changed.
       if (postFormStateChain.innerHTML != postFormStateChainInput.value) {
-        // Reload the state.
-        await loadFrameState();
+        // Set the collection ID value to the default if it hasn't changed.
+        if (postFormStateProjectId.innerHTML == postFormStateProjectIdInput.value && postFormStateProjectIdInput.value == resolveCollectionID(postFormStateChain.innerHTML)) {
+          postFormStateProjectIdInput.value = resolveCollectionId(postFormStateChainInput.value);
+        }
+        // Set the collection category value to the default if it hasn't changed.
+        if (postFormStateNftCategory.innerHTML == postFormStateNftCategoryInput.value && postFormStateNftCategoryInput.value == resolveCollectionCategory(postFormStateChain.innerHTML)) {
+          postFormStateNftCategoryInput.value = resolveCollectionCategory(postFormStateChainInput.value);
+        }
 
         postFormStateChain.innerHTML = postFormStateChainInput.value;
       }

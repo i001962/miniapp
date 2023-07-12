@@ -73,15 +73,22 @@ window.onpopstate = function(event) {
       const tier = tiers[i];
       if (tier[0] == 0) continue;
 
+      // Set a chain object.
+      if (!tiersCache[chain]] tiersCache[chain] = {};
+
       // Cache the value.
-      if (!tiersCache[projectId]) tiersCache[projectId] = {};
-      tiersCache[projectId][encodedIPFSUris[i]] = tier;
+      if (!tiersCache[chain][projectId]) tiersCache[chain][projectId] = {};
+      tiersCache[chain][projectId][encodedIPFSUris[i]] = tier;
     }
   }
 
   const decoratePostFrameState = (postFrame,  projectId, encodedIPFSUri) => {
-    if (!tiersCache[projectId]) tiersCache[projectId] = {};
-    const tier = tiersCache[projectId][encodedIPFSUri];
+    const postFormStateChain = document.getElementById("post-form-state-chain");
+    const chain = postFormStateChain.innerHTML;
+
+    if (!tiersCache[chain]) tiersCache[chain] = {};
+    if (!tiersCache[chain][projectId]) tiersCache[chain][projectId] = {};
+    const tier = tiersCache[chain][projectId][encodedIPFSUri];
     if (!tier) return;
 
     const state = postFrame.querySelector(".post-frame-state");
@@ -100,8 +107,12 @@ window.onpopstate = function(event) {
   }
 
   const decoratePostRowState = (postRow,  projectId, encodedIPFSUri) => {
-    if (!tiersCache[projectId]) tiersCache[projectId] = {};
-    const tier = tiersCache[projectId][encodedIPFSUri];
+    const postFormStateChain = document.getElementById("post-form-state-chain");
+    const chain = postFormStateChain.innerHTML;
+
+    if (!tiersCache[chain]) tiersCache[chain] = {};
+    if (!tiersCache[chain][projectId]) tiersCache[chain][projectId] = {};
+    const tier = tiersCache[chain][projectId][encodedIPFSUri];
     if (!tier) return;
 
     const state = postRow.querySelector(".post-row-state");
