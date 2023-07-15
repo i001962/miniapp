@@ -219,7 +219,7 @@
 
     // Toggle off the sections.
     recordPostFormOptionsReveal.open = false;
-    recordPostFormDisclaimerReveal.open = false; 
+    recordPostFormDisclaimerReveal.open = false;
 
     // Set the correct link given the chain.
     recordPostFormCpnAnchor.href = `${projectLinkBase(chain)}${cpnProjectId(chain)}`;
@@ -398,7 +398,7 @@
     // Disable the button.
     postFormButton.disabled = true;
     postFormButton.style.display = "none";
-    
+
     // Set the correct link given the chain.
     collectPostFormCpnAnchor.href = `${projectLinkBase(chain)}${cpnProjectId(chain)}`;
 
@@ -661,9 +661,9 @@
 
       // Set the project ID href.
       postFormStateProjectId.setAttribute('href', `${projectLinkBase(chain)}${postFormStateProjectId.innerHTML}`);
-      
+
       // Set a chain object.
-      if (!tiersCache[chain]] tiersCache[chain] = {};
+      if (!tiersCache[chain]) tiersCache[chain] = {};
 
       // Look in the cache for tiers within the project ID.
       const projectIdTiers = tiersCache[chain][projectId];

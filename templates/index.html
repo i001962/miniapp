@@ -74,7 +74,7 @@ window.onpopstate = function(event) {
       if (tier[0] == 0) continue;
 
       // Set a chain object.
-      if (!tiersCache[chain]] tiersCache[chain] = {};
+      if (!tiersCache[chain]) tiersCache[chain] = {};
 
       // Cache the value.
       if (!tiersCache[chain][projectId]) tiersCache[chain][projectId] = {};

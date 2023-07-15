@@ -3,9 +3,9 @@
   "description": "For pictures and screenshots",
   "author": "Jango",
   "authorWebsite": "https://jango.eth.limo",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "idealItemsPerPage": 10,
-  "buildNumber": 420,
+  "buildNumber": 424,
   "generateNFTMetadata": true,
   "settings": {
     "mainnetCollectionID": {
