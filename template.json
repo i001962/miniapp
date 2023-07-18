@@ -5,7 +5,7 @@
   "authorWebsite": "https://jango.eth.limo",
   "version": "1.0.22",
   "idealItemsPerPage": 10,
-  "buildNumber": 425,
+  "buildNumber": 426,
   "generateNFTMetadata": true,
   "settings": {
     "mainnetCollectionID": {

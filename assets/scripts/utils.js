@@ -114,7 +114,7 @@ const renderMarkdown = function(text) {
     xhtmlOut: false,
     linkify: true
   });
-  md.use(window.markdownItAnchor, { permalink: false, permalinkBefore: false, permalinkSymbol: '§' })
+  md.use(window.markdownItAnchor, { permalink: true, permalinkBefore: true, permalinkSymbol: '' })
   .use(window.markdownitTaskLists);
   return md.render(text);
 }
