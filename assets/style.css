@@ -32,6 +32,7 @@
   --transition-duration: 0.2s;
   --transition-timing-function: ease;
   --blur-intensity: blur(3px);
+  --anchor-color: #e2e2e2;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -43,6 +44,7 @@
     --foreground-color: #fff;
     --foreground-secondary-color: #adadaf;
     --icon-social-filter: invert(24%) sepia(11%) saturate(0%) hue-rotate(188deg) brightness(95%) contrast(95%);
+    --anchor-color: #3f3f3f;
   }
 }
 
@@ -92,7 +94,7 @@ a:hover {
   text-decoration: underline;
 }
 details {
-  width: var(--max-width); 
+  width: var(--max-width);
 }
 details > summary {
   list-style: none;
@@ -424,7 +426,7 @@ details > summary:before {
 }
 
 #header-aux {
-  text-align: right; 
+  text-align: right;
   display: flex;
 }
 
@@ -484,6 +486,10 @@ details > summary:before {
   filter: var(--icon-social-filter);
 }
 
+.header-anchor:link, .header-anchor:visited {
+  color: var(--anchor-color);
+}
+
 .post-mode-button {
   color: var(--foreground-secondary-color);
   cursor: pointer;
@@ -522,7 +528,7 @@ details > summary:before {
 }
 
 #fork-header {
-  padding-top: var(--spacing-6); 
+  padding-top: var(--spacing-6);
 }
 
 #fork-form .main-toggle {
@@ -597,7 +603,7 @@ details > summary:before {
 }
 
 #post-form-collect-toggle {
-  margin: var(--spacing-2) 0; 
+  margin: var(--spacing-2) 0;
 }
 
 #post-form-state {
