@@ -776,6 +776,8 @@ window.onpopstate = function(event) {
     const topDom = document.getElementById('top-dom');
     const bodyDom = document.getElementById('body-dom');
     bodyDom.style.paddingTop = topDom.offsetHeight + "px";
+    // Adjust scroll top to the offset.
+    document.documentElement.style.scrollPaddingTop = topDom.offsetHeight + "px";
   }
 
   // if there is ?id= in the url, open the object page.
