@@ -580,7 +580,7 @@ window.onpopstate = function(event) {
       const borderHeight = parseInt(topDomShrinkWrapper.style.borderBottomWidth, 10);
       const paddingTop = headerContainerHeight + borderHeight;
       postModal.style.paddingTop = paddingTop + 'px';
-      postModal.style.scrollPaddingTop = paddingTop + "px";
+      postModal.style.scrollPaddingTop = parseFloat(window.getComputedStyle(postModal).getPropertyValue('scroll-padding-top')) + paddingTop + "px";
       postModal.style.height = `calc(100vh - (${paddingTop + 'px'}))`;
     });
 

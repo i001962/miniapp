@@ -398,6 +398,7 @@ details > summary:before {
   overflow: auto;
   background-color: var(--background-color-opacity);
   padding-bottom: var(--spacing-6);
+  scroll-padding-top: var(--spacing-3);
   backdrop-filter: var(--blur-intensity);
   -webkit-backdrop-filter: var(--blur-intensity);
 }
