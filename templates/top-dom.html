@@ -82,6 +82,7 @@
     // Adjust the size.
     requestAnimationFrame(() => {
       forkModal.style.paddingTop = topDomShrinkWrapper.offsetHeight + 'px';
+      forkModal.style.scrollPaddingTop = topDom.offsetHeight + "px";
       forkModal.style.height = `calc(100vh - (${topDomShrinkWrapper.offsetHeight + 'px'}))`;
     });
 
