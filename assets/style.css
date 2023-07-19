@@ -160,6 +160,10 @@ hr {
   max-width: var(--max-width);
 }
 
+p {
+  line-height: 1.375rem; 
+}
+
 ul:has(input[type="checkbox"]) {
     padding-inline-start: 0px;
 }
