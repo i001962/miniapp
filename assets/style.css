@@ -492,6 +492,7 @@ details > summary:before {
 
 .header-anchor:link, .header-anchor:visited {
   color: var(--anchor-color);
+  font-weight: var(--font-weight-1);
 }
 
 .post-mode-button {
