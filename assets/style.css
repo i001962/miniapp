@@ -32,7 +32,6 @@
   --transition-duration: 0.2s;
   --transition-timing-function: ease;
   --blur-intensity: blur(3px);
-  --anchor-color: #e2e2e2;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -44,7 +43,6 @@
     --foreground-color: #fff;
     --foreground-secondary-color: #adadaf;
     --icon-social-filter: invert(24%) sepia(11%) saturate(0%) hue-rotate(188deg) brightness(95%) contrast(95%);
-    --anchor-color: #3f3f3f;
   }
 }
 
@@ -158,6 +156,15 @@ hr {
   margin-left: auto;
   margin-right: auto;
   max-width: var(--max-width);
+}
+
+h1:hover .header-anchor,
+h2:hover .header-anchor,
+h3:hover .header-anchor,
+h4:hover .header-anchor,
+h5:hover .header-anchor,
+h6:hover .header-anchor {
+  visibility: visible; 
 }
 
 p {
@@ -491,8 +498,8 @@ details > summary:before {
 }
 
 .header-anchor:link, .header-anchor:visited {
-  color: var(--anchor-color);
   font-weight: var(--font-weight-1);
+  visibility: hidden;
 }
 
 .post-mode-button {
