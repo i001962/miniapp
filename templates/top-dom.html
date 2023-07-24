@@ -37,10 +37,13 @@
     const headerContainer = document.getElementById('header-container');
     const headerAvatar = document.getElementById('header-avatar');
     const headerTitle = document.getElementById('header-title');
+    const headerAux = document.getElementById('header-aux');
     navContainer.style.visibility = "visible";
     if (headerAbout) headerAbout.style.display = "initial";
     if (headerAvatar) headerAvatar.classList.remove("small");
     headerTitle.classList.remove("small");
+    headerAux.classList.remove("small");
+    headerContainer.classList.remove("small");
     topDomShrinkWrapper.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + "px";
   }
 
@@ -52,10 +55,13 @@
     const headerContainer = document.getElementById('header-container');
     const headerAvatar = document.getElementById('header-avatar');
     const headerTitle = document.getElementById('header-title');
+    const headerAux = document.getElementById('header-aux');
     navContainer.style.visibility = "hidden";
     if (headerAbout) headerAbout.style.display = "none";
     if (headerAvatar) headerAvatar.classList.add("small"); 
     headerTitle.classList.add("small");
+    headerAux.classList.add("small");
+    headerContainer.classList.add("small");
     topDomShrinkWrapper.style.height = headerContainer.offsetHeight + "px";
   }
 
