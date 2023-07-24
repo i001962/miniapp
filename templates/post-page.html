@@ -146,6 +146,20 @@
   let highlightColor = "#f056c1";
   let signer;
 
+  const loadAndRenderArticle = (articleID) => {
+    return fetch(`{{ assets_prefix }}${articleID}/article.json`)
+      // only if response is 200 OK, parse the JSON
+      .then(response => {
+        if (!response.ok) {
+          throw Error(response.statusText); // Throw an error if response is not OK.
+        }
+        return response.json();
+      })
+      .then(data => {
+        return renderMarkdown(data.content);
+      });
+  }
+
   /// Get admin settings.
   const loadSettings = () => {
     const postFormStateChain = document.getElementById("post-form-state-chain");
