@@ -686,6 +686,18 @@ window.onpopstate = function(event) {
       `{{ assets_prefix }}planet.json?t=${t}`
     );
     const data = await response.json();
+
+    const tags = data['tags'];
+
+    console.log('this site has these tags: ');
+    console.log(tags);
+
+    for (article of data['articles']) {
+      const articleTags = article['tags'];
+      console.log(article['title'] + ' has these tags: ');
+      console.log(articleTags);
+    }
+
     const newPosts = data['articles'].slice(nextPageOffset, nextPageOffset + pageSize);
 
     posts = posts.concat(newPosts);
