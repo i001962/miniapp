@@ -699,7 +699,7 @@ window.onpopstate = function(event) {
     }
 
     {% if tag_key %}
-    var articles = data['articles'].filter(article => '{{ tag_key }}' in article.tags);
+    var articles = data['articles'].filter(article => article.tags && '{{ tag_key }}' in article.tags);
     {% else %}
     var articles = data['articles'];
     {% endif %}
