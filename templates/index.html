@@ -815,6 +815,11 @@ window.onpopstate = function(event) {
     const allCustomTags = tagsContainer.querySelectorAll('.custom-tag');
     const tagsKey = 'tags';
     const tagValuePrefix = "custom-tag-";
+    
+    if (!projectTags.length) {
+      tagsContainer.style.display = "none"; 
+      return;
+    }
 
     // If no tags are active, set the default tag to active.
     if (!activeTags.length) defaultTag.classList.add("active");
