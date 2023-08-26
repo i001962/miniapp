@@ -3,10 +3,11 @@
   "description": "For pictures and screenshots",
   "author": "Jango",
   "authorWebsite": "https://jango.eth.limo",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "idealItemsPerPage": 10,
-  "buildNumber": 439,
+  "buildNumber": 440,
   "generateNFTMetadata": true,
+  "generateTagPages": true,
   "settings": {
     "mainnetCollectionID": {
       "name": "Mainnet NFT Collection ID",

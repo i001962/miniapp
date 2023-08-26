@@ -698,7 +698,13 @@ window.onpopstate = function(event) {
       console.log(articleTags);
     }
 
-    const newPosts = data['articles'].slice(nextPageOffset, nextPageOffset + pageSize);
+    {% if tag_key %}
+    var articles = data['articles'].filter(article => '{{ tag_key }}' in article.tags);
+    {% else %}
+    var articles = data['articles'];
+    {% endif %}
+
+    const newPosts = articles.slice(nextPageOffset, nextPageOffset + pageSize);
 
     posts = posts.concat(newPosts);
 
