@@ -1050,6 +1050,10 @@ details > summary:before {
     padding: var(--spacing-1) var(--spacing-2) var(--spacing-2) var(--spacing-2);
   }
 
+  #tags-container {
+    padding: var(--spacing-3) var(--spacing-2) var(--spacing-2) var(--spacing-2);
+  }
+
   /* BODY STYLES */
 
   .body-loading-animation {

@@ -61,6 +61,7 @@ window.onpopstate = function(event) {
   let canLoadNewPosts = true;
   let hasDecoratedTags = false;
   let activeTags = [];
+  let projectTags =  {};
 
   const loadPostsState = async (encodedIPFSUris) => {
     // Load tiers.
@@ -692,7 +693,8 @@ window.onpopstate = function(event) {
     
     // Decorate the tags the first time around.
     if (!hasDecoratedTags) {
-      decorateTags(data.tags);
+      projectTags = data.tags;
+      decorateTags();
       hasDecoratedTags = true;
     }
 
@@ -810,16 +812,18 @@ window.onpopstate = function(event) {
     await loadPosts(defaultPageSize);  
   }
 
-  const decorateTags = (projectTags) => {
+  const decorateTags = () => {
     const tagsContainer = document.getElementById("tags-container");
     const defaultTag = document.getElementById("default-tag");
     const allCustomTags = tagsContainer.querySelectorAll('.custom-tag');
     const tagsKey = 'tags';
     const tagValuePrefix = "custom-tag-";
     
-    if (!projectTags.length) {
+    if (!Object.keys(projectTags).length) {
       tagsContainer.style.display = "none"; 
       return;
+    } else {
+      tagsContainer.style.display = "block"; 
     }
 
     // If no tags are active, set the default tag to active.
@@ -860,6 +864,9 @@ window.onpopstate = function(event) {
 
       // Set the active tags.
       if (activeTags.includes(tagValue)) tag.classList.add("active");
+      
+      // Set the tag text.
+      tag.querySelector('.tag-text').innerHTML = projectTags[tagValue];
 
       // Add/remove tag on click.
       tag.addEventListener('click', (e) => {
