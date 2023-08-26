@@ -523,6 +523,7 @@ details > summary:before {
 .post-mode-button {
   color: var(--foreground-secondary-color);
   cursor: pointer;
+  display: inline;
 }
 
 .post-mode-button-active {
@@ -539,12 +540,18 @@ details > summary:before {
 }
 
 #nav-container {
-  padding: 0 var(--spacing-3) var(--spacing-3) var(--spacing-4);
+  padding-bottom: var(--spacing-3);
+  overflow: scroll;
 }
 
 #tags-container {
-  padding: var(--spacing-1) var(--spacing-3) var(--spacing-3) var(--spacing-4);
+  padding: var(--spacing-1) 0 var(--spacing-3) 0;
+  overflow: scroll;
   color: var(--foreground-secondary-color);
+}
+
+.nav-item {
+  margin-right: var(--spacing-1); 
 }
 
 .tag.active {
@@ -557,26 +564,14 @@ details > summary:before {
 }
 
 #nav {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: var(--spacing-4);
-  row-gap: var(--spacing-3);
-  padding: 0px;
-  box-sizing: border-box;
-  margin: 0px auto 0px auto;
-  align-items: center;
+  padding: 0 var(--spacing-3) 0 var(--spacing-4);
+  white-space: nowrap;
   font-weight: var(--font-weight-2);
 }
 
 #tags {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: var(--spacing-2);
-  row-gap: var(--spacing-3);
-  padding: 0px;
-  box-sizing: border-box;
-  margin: 0px auto 0px auto;
-  align-items: center;
+  padding: 0 var(--spacing-3) 0 var(--spacing-4);
+  white-space: nowrap;
 }
 
 /* FORK MODAL STYLES */
@@ -1059,11 +1054,19 @@ details > summary:before {
   /* NAV STYLES */
 
   #nav-container {
-    padding: var(--spacing-1) var(--spacing-2) var(--spacing-2) var(--spacing-2);
+    padding: var(--spacing-1) 0 var(--spacing-2) 0;
   }
 
   #tags-container {
-    padding: var(--spacing-3) var(--spacing-2) var(--spacing-2) var(--spacing-2);
+    padding: var(--spacing-3) 0 var(--spacing-2) 0;
+  }
+
+  #nav {
+    padding: 0 var(--spacing-2) 0 var(--spacing-2);
+  }
+
+  #tags {
+    padding: 0 var(--spacing-2) 0 var(--spacing-2);
   }
 
   /* BODY STYLES */
