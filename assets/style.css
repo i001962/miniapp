@@ -532,11 +532,28 @@ details > summary:before {
 
 /* NAV STYLES */
 
-#nav-container {
+#nav-container, #tags-container {
   text-align: left;
   margin-left: auto;
   margin-right: auto;
+}
+
+#nav-container {
   padding: 0 var(--spacing-3) var(--spacing-3) var(--spacing-4);
+}
+
+#tags-container {
+  padding: var(--spacing-1) var(--spacing-3) var(--spacing-3) var(--spacing-4);
+  color: var(--foreground-secondary-color);
+}
+
+.tag.active {
+  color: var(--foreground-color);
+}
+
+.tag-text:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 #nav {

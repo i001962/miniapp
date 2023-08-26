@@ -25,6 +25,14 @@
         <div id="post-mode-button" class="post-mode-button"><span id="grid-post-mode-button" class="post-mode-button-active"> </span> | <span id="list-post-mode-button">☰</span></div>
       </div>
     </div>
+    <div id="tags-container">
+      <div id="tags">
+        <span id="default-tag" class="tag">(<span class="tag-text">all</span>)</span> | 
+        {% for tag in planet.tags %}
+          <span id="custom-tag-{{ tag }}" class="tag custom-tag">(<span class="tag-text">{{ tag }}</span>)</span>
+        {% endfor %}
+      </div>
+    </div>
   </div>
 </div>
 <script>
@@ -34,17 +42,19 @@
     const topDomShrinkWrapper = document.getElementById('top-dom-shrink-wrapper');
     const headerAbout = document.getElementById('header-about');
     const navContainer = document.getElementById('nav-container');
+    const tagsContainer = document.getElementById('tags-container');
     const headerContainer = document.getElementById('header-container');
     const headerAvatar = document.getElementById('header-avatar');
     const headerTitle = document.getElementById('header-title');
     const headerAux = document.getElementById('header-aux');
     navContainer.style.visibility = "visible";
+    tagsContainer.style.visibility = "visible";
     if (headerAbout) headerAbout.style.display = "initial";
     if (headerAvatar) headerAvatar.classList.remove("small");
     headerTitle.classList.remove("small");
     headerAux.classList.remove("small");
     headerContainer.classList.remove("small");
-    topDomShrinkWrapper.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + "px";
+    topDomShrinkWrapper.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + tagsContainer.offsetHeight + "px";
   }
 
   const hideNav = () => {
@@ -52,11 +62,13 @@
     const topDomShrinkWrapper = document.getElementById('top-dom-shrink-wrapper');
     const headerAbout = document.getElementById('header-about');
     const navContainer = document.getElementById('nav-container');
+    const tagsContainer = document.getElementById('tags-container');
     const headerContainer = document.getElementById('header-container');
     const headerAvatar = document.getElementById('header-avatar');
     const headerTitle = document.getElementById('header-title');
     const headerAux = document.getElementById('header-aux');
     navContainer.style.visibility = "hidden";
+    tagsContainer.style.visibility = "hidden";
     if (headerAbout) headerAbout.style.display = "none";
     if (headerAvatar) headerAvatar.classList.add("small"); 
     headerTitle.classList.add("small");

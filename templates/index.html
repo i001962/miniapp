@@ -44,6 +44,7 @@ window.onpopstate = function(event) {
   const toggleNavVisibilityScrollThreshold = 50;
   const pagingMargingBottom = 100;
   const timeTillIdle = 2000;
+  const defaultPageSize = 20;
 
   // State constants.
   const feeDivisor = 20;
@@ -55,10 +56,11 @@ window.onpopstate = function(event) {
   let rows = [];
   let lastScrollTop = 0;
 
-  // State variables.
-  let defaultPageSize = 20;
+  // State variables.  
   let nextPageOffset = 0;
   let canLoadNewPosts = true;
+  let hasDecoratedTags = false;
+  let activeTags = [];
 
   const loadPostsState = async (encodedIPFSUris) => {
     // Load tiers.
@@ -686,25 +688,24 @@ window.onpopstate = function(event) {
       `{{ assets_prefix }}planet.json?t=${t}`
     );
     const data = await response.json();
-
-    const tags = data['tags'];
-
-    console.log('this site has these tags: ');
-    console.log(tags);
-
-    for (article of data['articles']) {
-      const articleTags = article['tags'];
-      console.log(article['title'] + ' has these tags: ');
-      console.log(articleTags);
+    
+    // Decorate the tags the first time around.
+    if (!hasDecoratedTags) {
+      decorateTags(data.tags);
+      hasDecoratedTags = true;
     }
 
     {% if tag_key %}
-    var articles = data['articles'].filter(article => article.tags && '{{ tag_key }}' in article.tags);
+      const articles = data['articles'].filter(article => article.tags && '{{ tag_key }}' in article.tags);
     {% else %}
-    var articles = data['articles'];
+      const articles = data['articles'];
     {% endif %}
 
-    const newPosts = articles.slice(nextPageOffset, nextPageOffset + pageSize);
+    // Filter articles by tags.
+    const filteredPosts = !activeTags.length ? data['articles'] : articles.filter(article => activeTags.every(tag => article.tags[tag]));
+
+    // Get the current page.
+    const newPosts = filteredPosts.slice(nextPageOffset, nextPageOffset + pageSize);
 
     posts = posts.concat(newPosts);
 
@@ -757,7 +758,7 @@ window.onpopstate = function(event) {
     const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
 
-    if (maxScrollTop - currentScrollTop < pagingMargingBottom) loadPosts(defaultPageSize);
+    if (maxScrollTop - currentScrollTop < pagingMargingBottom) loadPosts(defaultPageSize, activeTags);
   }
 
   const didScroll = () => {
@@ -790,6 +791,110 @@ window.onpopstate = function(event) {
 
     toggleView();
   }
+  
+  const resetPage = async () => {
+    const framesContainer = document.getElementById("post-frames-container");
+    const listContainer = document.getElementById("post-list-container");
+
+    framesContainer.innerHTML = "";
+    listContainer.innerHTML = "";
+
+    posts = [];
+    nextPageOffset = 0;
+    currentRow = 1;
+    greatestRightInRow = 0;
+    rows = [];
+    lastScrollTop = 0;
+    await loadPosts(defaultPageSize);  
+  }
+
+  const decorateTags = (projectTags) => {
+    const tagsContainer = document.getElementById("tags-container");
+    const defaultTag = document.getElementById("default-tag");
+    const allCustomTags = tagsContainer.querySelectorAll('.custom-tag');
+    const tagsKey = 'tags';
+    const tagValuePrefix = "custom-tag-";
+
+    // If no tags are active, set the default tag to active.
+    if (!activeTags.length) defaultTag.classList.add("active");
+    // Clear tags when the default is clicked.
+    defaultTag.addEventListener('click', (e) => {
+      // Prevent the default action
+      e.preventDefault();
+      
+      // Nothing to do if the default is already selected.
+      if (defaultTag.classList.contains("active")) return;
+      
+      // Make it active.
+      defaultTag.classList.add("active");
+      
+      // No more active tags.
+      for (const customTag of allCustomTags) 
+        if (customTag.classList.contains("active")) customTag.classList.remove("active");
+
+      activeTags = [];
+
+      // Get a reference to the current URL. 
+      const url = new URL(window.location.href);
+
+      // Create the base URL (protocol + host + pathname)
+      const baseUrl = `${url.protocol}//${url.host}${url.pathname}`;
+      
+      history.replaceState(null, "", baseUrl.toString());
+
+      // Reset the page.
+      resetPage();
+    });
+
+    // Loop through the project's tags to set up click behavior.
+    for (let tag of Array.from(allCustomTags)) {
+      // Get the tag value.
+      const tagValue = tag.id.replace(tagValuePrefix, "");
+
+      // Set the active tags.
+      if (activeTags.includes(tagValue)) tag.classList.add("active");
+
+      // Set the href of the tag
+      tag.addEventListener('click', (e) => {
+        // Prevent the default action
+        e.preventDefault();
+
+        // Get a reference to the current URL. 
+        const url = new URL(window.location.href);
+
+        if (!activeTags.length) defaultTag.classList.remove("active");
+
+        // Set the active tags.
+        if (activeTags.includes(tagValue)) {
+          tag.classList.remove("active");
+          
+          if (activeTags.length == 1) {
+             defaultTag.click();
+          } else {
+            // Get the values that'll be set after a click.
+            // Get a reference to tags not including the active one.
+            activeTags = activeTags.filter(activeTag => activeTag !== tagValue);
+            
+            url.searchParams.delete(tagsKey);
+            
+            // Set all tags except the active one.
+            for (const activeTag of activeTags) url.searchParams.append(tagsKey, activeTag);
+          }
+        } else {
+          tag.classList.add("active");
+
+          // Add a new parameter to the URL
+          url.searchParams.append(tagsKey, tagValue);
+          activeTags.push(tagValue);
+        }
+
+        history.pushState(null, "", url.toString());
+
+        // Reset the page.
+        resetPage();
+      });
+    }
+  }
 
   const setupBodyPadding = () => {
     const topDom = document.getElementById('top-dom');
@@ -805,6 +910,7 @@ window.onpopstate = function(event) {
   if (id) {
     window.location.href = './' + id + '/';
   } else {
+    activeTags = urlParams.getAll('tags');
     window.addEventListener("scroll", didScroll);
     loadSettings();
     setupForking();
