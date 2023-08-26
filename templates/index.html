@@ -702,7 +702,7 @@ window.onpopstate = function(event) {
     {% endif %}
 
     // Filter articles by tags.
-    const filteredPosts = !activeTags.length ? data['articles'] : articles.filter(article => activeTags.every(tag => article.tags[tag]));
+    const filteredPosts = !activeTags.length ? articles : articles.filter(article => activeTags.every(tag => article.tags[tag]));
 
     // Get the current page.
     const newPosts = filteredPosts.slice(nextPageOffset, nextPageOffset + pageSize);
