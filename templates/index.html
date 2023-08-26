@@ -805,6 +805,7 @@ window.onpopstate = function(event) {
     greatestRightInRow = 0;
     rows = [];
     lastScrollTop = 0;
+    canLoadNewPosts = true;
     await loadPosts(defaultPageSize);  
   }
 
@@ -854,14 +855,15 @@ window.onpopstate = function(event) {
       // Set the active tags.
       if (activeTags.includes(tagValue)) tag.classList.add("active");
 
-      // Set the href of the tag
+      // Add/remove tag on click.
       tag.addEventListener('click', (e) => {
         // Prevent the default action
         e.preventDefault();
 
         // Get a reference to the current URL. 
         const url = new URL(window.location.href);
-
+        
+        // If there weren't 
         if (!activeTags.length) defaultTag.classList.remove("active");
 
         // Set the active tags.
@@ -869,7 +871,7 @@ window.onpopstate = function(event) {
           tag.classList.remove("active");
           
           if (activeTags.length == 1) {
-             defaultTag.click();
+             return defaultTag.click();
           } else {
             // Get the values that'll be set after a click.
             // Get a reference to tags not including the active one.
