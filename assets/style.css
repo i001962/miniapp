@@ -551,7 +551,7 @@ details > summary:before {
 }
 
 .nav-item {
-  margin-right: var(--spacing-1); 
+  margin-right: var(--spacing-2); 
 }
 
 .tag.active {

@@ -19,7 +19,7 @@
     </div>
     <div id="nav-container">
       <div id="nav">
-        <div id="post-mode-button" class="post-mode-button nav-item"><span id="grid-post-mode-button" class="post-mode-button-active"> </span> | <span id="list-post-mode-button">☰</span></div>
+        <div id="post-mode-button" class="post-mode-button nav-item"><span id="grid-post-mode-button" class="post-mode-button-active"> </span> | <span id="list-post-mode-button">☰</span> | <span id="money-post-mode-button">$</span></div>
         {% for item in site_navigation %}
         <a href="{% if item.externalLink.count > 0 %}{{ item.externalLink }}{% else %}{{ assets_prefix }}{{ item.slug }}/{% endif %}" class="{% if article.slug == item.slug %}nav-current{% else %}nav-item{% endif %}"{% if item.externalLink.count > 0 %} target="_blank"{% endif %}>{{ item.title }}</a>
         {% endfor %}
@@ -27,7 +27,7 @@
     </div>
     <div id="tags-container">
       <div id="tags">
-        <span id="default-tag" class="tag">(<span class="tag-text">all</span>)</span> | 
+        <span id="default-tag" class="tag">(<span class="tag-text">all</span>)</span> 
         {% for tag in planet.tags %}
           <span id="custom-tag-{{ tag }}" class="tag custom-tag">(<span class="tag-text">{{ tag }}</span>)</span>
         {% endfor %}
