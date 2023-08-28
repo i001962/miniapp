@@ -898,6 +898,7 @@ details > summary:before {
 .post-frame-info {
   padding: var(--spacing-2);
   color: var(--foreground-color);
+  border-top: 1px solid var(--background-secondary-color);
   opacity: 0;
   transition: opacity var(--transition-duration) var(--transition-timing-function);
   gap: var(--spacing-2);
