@@ -56,7 +56,7 @@ window.onpopstate = function(event) {
   let rows = [];
   let lastScrollTop = 0;
 
-  // State variables.  
+  // State variables.
   let nextPageOffset = 0;
   let canLoadNewPosts = true;
   let hasDecoratedTags = false;
@@ -689,7 +689,7 @@ window.onpopstate = function(event) {
       `{{ assets_prefix }}planet.json?t=${t}`
     );
     const data = await response.json();
-    
+
     // Decorate the tags the first time around.
     if (!hasDecoratedTags) {
       projectTags = data.tags;
@@ -793,7 +793,7 @@ window.onpopstate = function(event) {
 
     toggleView();
   }
-  
+
   const resetPage = async () => {
     const framesContainer = document.getElementById("post-frames-container");
     const listContainer = document.getElementById("post-list-container");
@@ -808,7 +808,7 @@ window.onpopstate = function(event) {
     rows = [];
     lastScrollTop = 0;
     canLoadNewPosts = true;
-    await loadPosts(defaultPageSize);  
+    await loadPosts(defaultPageSize);
   }
 
   const decorateTags = () => {
@@ -817,12 +817,40 @@ window.onpopstate = function(event) {
     const allCustomTags = tagsContainer.querySelectorAll('.custom-tag');
     const tagsKey = 'tags';
     const tagValuePrefix = "custom-tag-";
-    
+
     if (!Object.keys(projectTags).length) {
-      tagsContainer.style.display = "none"; 
+      tagsContainer.style.display = "none";
       return;
     } else {
-      tagsContainer.style.display = "block"; 
+      tagsContainer.style.display = "block";
+
+      const slider = document.getElementById("tags-container");
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+
+      slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        slider.classList.add('active');
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+      });
+      slider.addEventListener('mouseleave', () => {
+        isDown = false;
+        slider.classList.remove('active');
+      });
+      slider.addEventListener('mouseup', () => {
+        isDown = false;
+        slider.classList.remove('active');
+      });
+      slider.addEventListener('mousemove', (e) => {
+        if(!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 3; //scroll-fast
+        slider.scrollLeft = scrollLeft - walk;
+        console.log(walk);
+      });
     }
 
     // If no tags are active, set the default tag to active.
@@ -831,25 +859,25 @@ window.onpopstate = function(event) {
     defaultTag.addEventListener('click', (e) => {
       // Prevent the default action
       e.preventDefault();
-      
+
       // Nothing to do if the default is already selected.
       if (defaultTag.classList.contains("active")) return;
-      
+
       // Make it active.
       defaultTag.classList.add("active");
-      
+
       // No more active tags.
-      for (const customTag of allCustomTags) 
+      for (const customTag of allCustomTags)
         if (customTag.classList.contains("active")) customTag.classList.remove("active");
 
       activeTags = [];
 
-      // Get a reference to the current URL. 
+      // Get a reference to the current URL.
       const url = new URL(window.location.href);
 
       // Create the base URL (protocol + host + pathname)
       const baseUrl = `${url.protocol}//${url.host}${url.pathname}`;
-      
+
       history.replaceState(null, "", baseUrl.toString());
 
       // Reset the page.
@@ -863,7 +891,7 @@ window.onpopstate = function(event) {
 
       // Set the active tags.
       if (activeTags.includes(tagValue)) tag.classList.add("active");
-      
+
       // Set the tag text.
       tag.querySelector('.tag-text').innerHTML = projectTags[tagValue];
 
@@ -872,25 +900,25 @@ window.onpopstate = function(event) {
         // Prevent the default action
         e.preventDefault();
 
-        // Get a reference to the current URL. 
+        // Get a reference to the current URL.
         const url = new URL(window.location.href);
-        
-        // If there weren't 
+
+        // If there weren't
         if (!activeTags.length) defaultTag.classList.remove("active");
 
         // Set the active tags.
         if (activeTags.includes(tagValue)) {
           tag.classList.remove("active");
-          
+
           if (activeTags.length == 1) {
              return defaultTag.click();
           } else {
             // Get the values that'll be set after a click.
             // Get a reference to tags not including the active one.
             activeTags = activeTags.filter(activeTag => activeTag !== tagValue);
-            
+
             url.searchParams.delete(tagsKey);
-            
+
             // Set all tags except the active one.
             for (const activeTag of activeTags) url.searchParams.append(tagsKey, activeTag);
           }

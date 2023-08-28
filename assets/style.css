@@ -175,7 +175,7 @@ h3:hover .header-anchor,
 h4:hover .header-anchor,
 h5:hover .header-anchor,
 h6:hover .header-anchor {
-  visibility: visible; 
+  visibility: visible;
 }
 
 ul:has(input[type="checkbox"]) {
@@ -550,8 +550,15 @@ details > summary:before {
   color: var(--foreground-secondary-color);
 }
 
+#tags-container.active {
+  background: rgba(255,255,255,0.3);
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+  transform: scale(1);
+}
+
 .nav-item {
-  margin-right: var(--spacing-2); 
+  margin-right: var(--spacing-2);
 }
 
 .tag.active {
