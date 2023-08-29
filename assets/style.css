@@ -548,6 +548,8 @@ details > summary:before {
   padding: var(--spacing-1) 0 var(--spacing-3) 0;
   overflow: scroll;
   color: var(--foreground-secondary-color);
+  user-select: none;
+  cursor: grab;
 }
 
 #tags-container.active {
@@ -563,6 +565,7 @@ details > summary:before {
 
 .tag.active {
   color: var(--foreground-color);
+  font-weight: var(--font-weight-2);
 }
 
 .tag-text:hover {
