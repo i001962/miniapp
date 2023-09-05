@@ -166,7 +166,8 @@ window.onpopstate = function(event) {
       frameVideo.style.display = "block"
       frameVideo.autoplay = false;
       frameVideo.loop = true;
-      frameVideo.muted = false;
+      frameVideo.muted = true;  // So hover to play works. See https://developer.chrome.com/blog/autoplay/
+      // TODO: If user has interacted with the page, unmute.
       frameVideo.controls = false;
       // Mark videos with playback info.
       subtitle.appendChild(document.createTextNode(" | "));
