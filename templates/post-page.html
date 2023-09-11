@@ -606,16 +606,12 @@
     postDate.innerHTML = `${date} `;
 
     // Reset the label for the collect toggle.
-    postFormCollectToggle.innerHTML = 'collect';
     let storedPostFormCollectToggleText;
     const postFormCollectRevealOpenText = '---';
-    postFormCollectReveal.addEventListener('toggle', function() {
-      if (postFormCollectReveal.open) {
-        storedPostFormCollectToggleText = postFormCollectToggle.innerHTML;
-        postFormCollectToggle.innerHTML = postFormCollectRevealOpenText;
-      } else {
-        postFormCollectToggle.innerHTML = storedPostFormCollectToggleText;
-      }
+    const postFormCollectRevealCloseText = 'collect';
+    postFormCollectToggle.innerHTML = postFormCollectRevealCloseText;
+    postFormCollectReveal.addEventListener('toggle', () => {
+       postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : postFormCollectRevealCloseText;
     });
 
     // Show and populate the frame's subtitle if there's a link.
