@@ -494,6 +494,7 @@ details > summary:before {
 
 #header-about {
   color: var(--foreground-color);
+  width: 50%;
 }
 
 #header-about p {
@@ -1049,6 +1050,10 @@ details > summary:before {
 
   #header-container {
     padding: var(--spacing-2);
+  }
+
+  #header-about {
+    width: 100%;
   }
 
   /* FORK MODAL STYLES */
