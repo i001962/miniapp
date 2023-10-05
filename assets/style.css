@@ -437,7 +437,7 @@ details > summary:before {
   display: flex;
   align-items: top;
   gap: var(--spacing-3);
-  padding: var(--spacing-4) var(--spacing-3) var(--spacing-4) var(--spacing-4);
+  padding: var(--spacing-4); 
 }
 
 #header-container.small {
@@ -599,13 +599,16 @@ details > summary:before {
 #fork-form .main-toggle {
   margin-top: var(--spacing-4);
 }
-#fork-button {
+#fork-button, #rss-button {
   cursor: pointer;
   display: inline-block;
-  margin-right: var(--spacing-2);
   color: var(--foreground-secondary-color);
+  font-size: var(--font-size-2);
 }
-#fork-button:hover {
+#fork-button {
+  margin-right: var(--spacing-3);
+}
+#fork-button:hover, #rss-button:hover {
   color: var(--link-color);
 }
 #fork-form {
