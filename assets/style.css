@@ -5,7 +5,7 @@
   --background-secondary-color-opacity: rgba(226, 226, 226, 0.7);
   --foreground-color: #000;
   --foreground-secondary-color: #555;
-  --link-color: #f056c1;
+  --link-color: rgba(0,0,0,0);
   --alert-color: #efab1d;
   --icon-social-filter: invert(100%) sepia(0%) saturate(7460%) hue-rotate(186deg) brightness(107%) contrast(77%);
   --font-size-1: 16px;
@@ -551,6 +551,7 @@ details > summary:before {
   color: var(--foreground-secondary-color);
   user-select: none;
   cursor: grab;
+  display: none;
 }
 
 #tags-container.active {
