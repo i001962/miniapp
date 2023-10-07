@@ -437,7 +437,7 @@ details > summary:before {
   display: flex;
   align-items: top;
   gap: var(--spacing-3);
-  padding: var(--spacing-4); 
+  padding: var(--spacing-4);
 }
 
 #header-container.small {
@@ -551,6 +551,10 @@ details > summary:before {
   color: var(--foreground-secondary-color);
   user-select: none;
   cursor: grab;
+  display: none;
+}
+
+#nav-container::-webkit-scrollbar, #tags-container::-webkit-scrollbar {
   display: none;
 }
 
