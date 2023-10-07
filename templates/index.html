@@ -824,6 +824,7 @@ window.onpopstate = function(event) {
       return;
     } else {
       tagsContainer.style.display = "block";
+      setupBodyPadding();
 
       const slider = document.getElementById("tags-container");
       let isDown = false;
