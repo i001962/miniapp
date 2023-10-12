@@ -467,14 +467,14 @@ details > summary:before {
 }
 
 #header-avatar {
-  width: 4em;
-  height: 4em;
+  width: 6em;
+  height: 6em;
   border: var(--border-width) solid var(--background-secondary-color);
 }
 
 #header-avatar.small {
-  width: 1em;
-  height: 1em;
+  width: 3em;
+  height: 3em;
 }
 
 #header-title {
