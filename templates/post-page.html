@@ -199,6 +199,12 @@
         if (data.highlightColor) highlightColor = data.highlightColor;
         const r = document.querySelector(':root');
         r.style.setProperty('--link-color', highlightColor);
+      })
+      .catch(error => {
+        console.error('Error occurred when fetching templateSettings.json:', error);
+        // Set highlightColor with the default value
+        const r = document.querySelector(':root');
+        r.style.setProperty('--link-color', highlightColor);
       });
   }
 
