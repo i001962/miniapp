@@ -25,7 +25,7 @@
   --base-z-index: 1;
   --modal-z-index: 10;
   --top-dom-z-index: 100;
-  --max-content-width: 1000px;
+  --max-content-width: 800px;
   --reduced-width1: 65%;
   --reduced-width2: 80%;
   --max-width: 100%;
@@ -37,14 +37,38 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background-color: #111;
+    --background-color: #171717;
     --background-secondary-color: #2a2a2a;
-    --background-color-opacity: rgba(17, 17, 17, 0.9);
+    --background-color-opacity: rgba(23, 23, 23, 0.9);
     --background-secondary-color-opacity: rgba(42, 42, 42, 0.7);
-    --foreground-color: #fff;
+    --foreground-color: #eee;
     --foreground-secondary-color: #adadaf;
     --icon-social-filter: invert(24%) sepia(11%) saturate(0%) hue-rotate(188deg) brightness(95%) contrast(95%);
   }
+}
+
+@font-face{
+  font-family: "Simplon Mono";
+  src: url(./SimplonMono-Bold-WebS.woff2) format("woff2");
+  font-weight: 600;
+}
+
+@font-face{
+  font-family: "Simplon Mono";
+  src: url(./SimplonMono-Regular-WebS.woff2) format("woff2");
+  font-weight: 300;
+}
+
+@font-face{
+  font-family: "Simplon Norm";
+  src: url(./SimplonNorm-Bold-WebS.woff2) format("woff2");
+  font-weight: 600;
+}
+
+@font-face{
+  font-family: "Simplon Norm";
+  src: url(./SimplonNorm-Regular-WebS.woff2) format("woff2");
+  font-weight: 300;
 }
 
 @font-face{
@@ -66,6 +90,7 @@ html {
   margin: 0;
   background-color: var(--background-color);
 }
+
 body {
   padding: 0;
   margin: 0;
@@ -80,9 +105,12 @@ body {
 body::-webkit-scrollbar {
   display: none;
 }
+
 body, button, input, select, textarea {
-  font-family: "Capsules", "Inconsolata", monospace;
+  font-family: "Simplon Norm", "Capsules", "Inconsolata", monospace;
+  letter-spacing: 0.5px;
 }
+
 a,
 a:link,
 a:visited,
@@ -453,6 +481,7 @@ details > summary:before {
   text-align: right;
   display: flex;
   align-items: top;
+  font-family: "Capsules", "Inconsolata", monospace;
 }
 
 #header-aux.small {
@@ -525,6 +554,7 @@ details > summary:before {
   color: var(--foreground-secondary-color);
   cursor: pointer;
   display: inline;
+  font-family: "Capsules", "Inconsolata", monospace;
 }
 
 .post-mode-button-active {
@@ -541,7 +571,7 @@ details > summary:before {
 }
 
 #nav-container {
-  padding-bottom: var(--spacing-3);
+  padding-bottom: var(--spacing-4);
   overflow: scroll;
 }
 

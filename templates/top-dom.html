@@ -27,9 +27,9 @@
     </div>
     <div id="tags-container">
       <div id="tags">
-        <span id="default-tag" class="tag">(<span class="tag-text">all</span>)</span> 
+        <span id="default-tag" class="tag">( <span class="tag-text">all</span> ) - </span> 
         {% for tag in planet.tags %}
-          <span id="custom-tag-{{ tag }}" class="tag custom-tag">(<span class="tag-text">{{ tag }}</span>)</span>
+          <span id="custom-tag-{{ tag }}" class="tag custom-tag">( <span class="tag-text">{{ tag }}</span> )</span>
         {% endfor %}
       </div>
     </div>
