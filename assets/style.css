@@ -584,6 +584,10 @@ details > summary:before {
   display: none;
 }
 
+.tag {
+  margin-right: var(--spacing-1); 
+}
+
 #nav-container::-webkit-scrollbar, #tags-container::-webkit-scrollbar {
   display: none;
 }
