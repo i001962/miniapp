@@ -97,11 +97,10 @@ body {
   background-color: var(--background-color);
   color: var(--foreground-color);
   text-align: left;
-  font-size: var(--font-size-1);
-  line-height: var(--line-height-1);
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 body::-webkit-scrollbar {
   display: none;
 }
@@ -109,6 +108,8 @@ body::-webkit-scrollbar {
 body, button, input, select, textarea {
   font-family: "Simplon Norm", "Capsules", "Inconsolata", monospace;
   letter-spacing: 0.5px;
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-1);
 }
 
 a,
@@ -690,7 +691,7 @@ details > summary:before {
 }
 #post-name {
   color: var(--foreground-color);
-  font-weight: var(--font-weight-2);
+  font-weight: var(--font-weight-1);
   display: block;
 }
 #post-subtitle {
