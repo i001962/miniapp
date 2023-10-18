@@ -1,7 +1,7 @@
 :root {
   --background-color: #fff;
   --background-secondary-color: #e2e2e2;
-  --background-color-opacity: rgba(255, 255, 255, 0.9);
+  --background-color-opacity: rgba(255, 255, 255, 0.98);
   --background-secondary-color-opacity: rgba(226, 226, 226, 0.7);
   --foreground-color: #000;
   --foreground-secondary-color: #555;
@@ -39,7 +39,7 @@
   :root {
     --background-color: #171717;
     --background-secondary-color: #2a2a2a;
-    --background-color-opacity: rgba(23, 23, 23, 0.9);
+    --background-color-opacity: rgba(23, 23, 23, 0.98);
     --background-secondary-color-opacity: rgba(42, 42, 42, 0.7);
     --foreground-color: #eee;
     --foreground-secondary-color: #adadaf;
