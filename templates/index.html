@@ -695,6 +695,8 @@ window.onpopstate = function(event) {
     if (!hasDecoratedTags) {
       projectTags = data.tags;
       decorateTags();
+      // Setup body padding again after decorating tags.
+      setupBodyPadding();
       hasDecoratedTags = true;
     }
 
@@ -824,7 +826,6 @@ window.onpopstate = function(event) {
       return;
     } else {
       tagsContainer.style.display = "block";
-      setupBodyPadding();
 
       const slider = document.getElementById("tags-container");
       let isDown = false;
