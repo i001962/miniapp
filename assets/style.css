@@ -49,25 +49,25 @@
 
 @font-face{
   font-family: "Simplon Mono";
-  src: url(./SimplonMono-Bold-WebS.woff2) format("woff2");
+  src: url(./SimplonMono-Bold-WebXL.woff2) format("woff2");
   font-weight: 600;
 }
 
 @font-face{
   font-family: "Simplon Mono";
-  src: url(./SimplonMono-Regular-WebS.woff2) format("woff2");
+  src: url(./SimplonMono-Regular-WebXL.woff2) format("woff2");
   font-weight: 300;
 }
 
 @font-face{
   font-family: "Simplon Norm";
-  src: url(./SimplonNorm-Bold-WebS.woff2) format("woff2");
+  src: url(./SimplonNorm-Bold-WebXL.woff2) format("woff2");
   font-weight: 600;
 }
 
 @font-face{
   font-family: "Simplon Norm";
-  src: url(./SimplonNorm-Regular-WebS.woff2) format("woff2");
+  src: url(./SimplonNorm-Regular-WebXL.woff2) format("woff2");
   font-weight: 300;
 }
 
@@ -843,7 +843,7 @@ details > summary:before {
   color: var(--foreground-secondary-color);
   cursor: pointer;
 }
-.form-load-address-button:hover .form-load-address-button-text {
+.form-load-address-button:hover .form-load-addres-button-text {
   text-decoration: underline;
 }
 .form-error-message {
