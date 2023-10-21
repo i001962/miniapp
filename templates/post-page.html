@@ -559,7 +559,7 @@
       const firstChild = postContent.firstChild;
   }
 
-  const getClenerURL = (url) => {
+  const getCleanerURL = (url) => {
     const parsedUrl = new URL(url);
     return `${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.pathname}`;
   }
@@ -607,7 +607,7 @@
           // Fix relative paths for homepage.
           // No need to fix on /UUID/ pages.
           // No need to fix on /slug/ pages.
-          let prefix = getClenerURL(window.location.href);
+          let prefix = getCleanerURL(window.location.href);
           if (slug.length > 0) {
             if (!prefix.includes(slug) && !prefix.includes(postId)) {
               let fixedSrc = `${prefix}${slug}/${src}`;
