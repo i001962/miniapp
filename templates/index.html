@@ -953,7 +953,12 @@ window.onpopstate = function(event) {
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get('id');
   if (id) {
-    window.location.href = './' + id + '/';
+    const anchor = window.location.hash.substring(1);
+    if (anchor) {
+      window.location.href = './' + id + '/#' + anchor;
+    } else {
+      window.location.href = './' + id + '/';
+    }
   } else {
     activeTags = urlParams.getAll('tags');
     window.addEventListener("scroll", didScroll);
