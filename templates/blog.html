@@ -63,7 +63,7 @@
 
     const anchor = window.location.hash.substring(1);
     if (anchor) {
-      window.location = (""+window.location).replace(/#[A-Za-z0-9_\-]*$/,'')+"#"+anchor;
+      window.location = (""+window.location).replace(/#[A-Za-z0-9_\-%]*$/,'')+"#"+anchor;
     }
 
     stopLoadingAnimation('post-form-loading-animation');
