@@ -9,7 +9,7 @@
 </div>
 <div id="post-onchain" class="mobile-padding">
   <details id="post-form-collect-reveal">
-    <summary id="post-form-collect-toggle" class="form-toggle">collect</summary>
+    <summary id="post-form-collect-toggle" class="form-toggle">buy</summary>
     <div id="post-form-collect-container">
       <div id="post-form-state" class="negative-space">
         <details id="post-form-state-reveal">
@@ -75,11 +75,11 @@
         </div>
       </div>
       <div id="record-post-form" class="form negative-space">
-        <span class="form-header">Record this file onchain to collect a first copy.</span>
+        <span class="form-header">Mint a first copy.</span>
         <div class="form-body">
           <details id="record-post-form-options-reveal">
             <summary id="record-post-form-options-toggle" class="form-toggle form-main-toggle">options</summary>
-            <div class="form-section-description">Set the post's price, how many editions of this post will be made available for collecting, and the address that will be sent its first copies that you are paying for.</div>
+            <div class="form-section-description">As the first minter, you're in control. Set the price, how many editions of this post will be made available for collecting, and the address that will be sent its first copies that you are paying for.</div>
             <div class="form-section">
               <div class="form-item">
                 <div class="form-label">Price</div>
@@ -126,7 +126,7 @@
       </div>
       <div id="post-form-loading-animation" class="loading-animation"></div>
       <div id="post-form-error-message" class="form-error-message"></div>
-      <button id="post-form-button" class="form-button form-main-button">[ <span id="post-form-button-text" class="form-button-text">collect</span> ]<span id="post-form-button-loading-animation" class="loading-animation button-loading-animation"></span></button>
+      <button id="post-form-button" class="form-button form-main-button">[ <span id="post-form-button-text" class="form-button-text">mint</span> ]<span id="post-form-button-loading-animation" class="loading-animation button-loading-animation"></span></button>
     </div>
   </details>
 </div>
@@ -228,7 +228,7 @@
     postFormButton.style.display = "none";
 
     // Change the button text.
-    postFormButtonText.innerHTML = "record & collect";
+    postFormButtonText.innerHTML = "mint";
 
     // If the min and max total supplies are the same, hide the total supply field.
     if (formattedMinTotalSupply == formattedMaxTotalSupply) {
@@ -413,7 +413,7 @@
     }
 
     // Change the button text.
-    postFormButtonText.innerHTML = "collect";
+    postFormButtonText.innerHTML = "mint";
 
     // Disable the button.
     postFormButton.disabled = true;
@@ -742,7 +742,7 @@
           // Disable the button.
           postFormButton.disabled = true;
           postFormButton.style.display = "none";
-          postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : 'collect';
+          postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : 'mint';
           return;
         }
 
@@ -854,7 +854,7 @@
         // Get a reference to the allowance max total supply.
         const formattedAllowedAddresses = allowance[3];
 
-        postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : 'collect';
+        postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : 'mint';
 
         await decorateRecordForm(chain, projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice, formattedAllowedAddresses);
       }
