@@ -8,7 +8,6 @@
   --link-color: rgba(0,0,0,0);
   --alert-color: #efab1d;
   --icon-social-filter: invert(100%) sepia(0%) saturate(7460%) hue-rotate(186deg) brightness(107%) contrast(77%);
-  --font-size-button: 12px;
   --font-size-1: 16px;
   --font-size-2: 28px;
   --line-height-1: 1.375rem;
@@ -523,7 +522,6 @@ details > summary:before {
 
 #header-treasury {
   color: var(--foreground-secondary-color);
-  margin-bottom: var(--spacing-2);
 }
 
 #header-treasury .value {
@@ -569,7 +567,8 @@ details > summary:before {
   color: var(--foreground-secondary-color);
   cursor: pointer;
   font-family: "Capsules", "Inconsolata", monospace;
-  font-size: var(--font-size-button);
+  font-size: var(--font-size-1);
+  flex-shrink: 0;
 }
 
 .post-mode-button-active {
@@ -693,7 +692,7 @@ details > summary:before {
 #body-header {
   display: flex;
   flex-direction: row;
-  gap: var(--spacing-1);
+  gap: var(--spacing-3);
 }
 
 .body-content {
