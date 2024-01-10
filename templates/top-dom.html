@@ -25,14 +25,6 @@
         </div>
       </div>
     </div>
-    <div id="tags-container">
-      <div id="tags">
-        <span id="default-tag" class="tag">( <span class="tag-text">all</span> )</span> 
-        {% for tag in planet.tags %}
-          <span id="custom-tag-{{ tag }}" class="tag custom-tag">( <span class="tag-text">{{ tag }}</span> )</span>
-        {% endfor %}
-      </div>
-    </div>
   </div>
 </div>
 <script> 
@@ -42,20 +34,18 @@
     const headerAbout = document.getElementById('header-about');
     const navContainer = document.getElementById('nav-container');
     const nav = document.getElementById('nav');
-    const tagsContainer = document.getElementById('tags-container');
     const headerContainer = document.getElementById('header-container');
     const headerAvatar = document.getElementById('header-avatar');
     const headerTitle = document.getElementById('header-title');
     const headerAux = document.getElementById('header-aux');
     navContainer.style.display = nav.children.length == 0 ? "none" :  "block";
-    tagsContainer.style.visibility = "visible";
     if (headerTreasury) headerTreasury.style.display = "initial";
     if (headerAbout) headerAbout.style.display = "initial";
     if (headerAvatar) headerAvatar.classList.remove("small");
     headerTitle.classList.remove("small");
     headerAux.classList.remove("small");
     headerContainer.classList.remove("small");
-    topDomShrinkWrapper.style.height = headerContainer.offsetHeight + tagsContainer.offsetHeight + "px";
+    topDomShrinkWrapper.style.height = headerContainer.offsetHeight + "px";
   }
 
   const hideNav = () => {
@@ -64,13 +54,11 @@
     const headerTreasury = document.getElementById('header-treasury');
     const headerAbout = document.getElementById('header-about');
     const navContainer = document.getElementById('nav-container');
-    const tagsContainer = document.getElementById('tags-container');
     const headerContainer = document.getElementById('header-container');
     const headerAvatar = document.getElementById('header-avatar');
     const headerTitle = document.getElementById('header-title');
     const headerAux = document.getElementById('header-aux');
     navContainer.style.display = "none";
-    tagsContainer.style.visibility = "hidden";
     if (headerTreasury) headerTreasury.style.display = "none";
     if (headerAbout) headerAbout.style.display = "none";
     if (headerAvatar) headerAvatar.classList.add("small"); 

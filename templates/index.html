@@ -22,7 +22,17 @@ window.onpopstate = function(event) {
 {% block main %}
 {% include './top-dom.html' %}
 <div id="body-dom">
-  <div id="post-mode-button" class="post-mode-button"><span class="post-mode-button-frame-start">[</span><span id="grid-post-mode-button" class="post-mode-button-active"> </span> | <span id="list-post-mode-button">☰</span><span class="post-mode-button-frame-end">]<span></div>
+  <div id="body-header">
+    <div id="tags-container">
+      <div id="tags">
+        <span id="default-tag" class="tag">( <span class="tag-text">all</span> )</span> 
+        {% for tag in planet.tags %}
+          <span id="custom-tag-{{ tag }}" class="tag custom-tag">( <span class="tag-text">{{ tag }}</span> )</span>
+        {% endfor %}
+      </div>
+    </div>
+    <div id="post-mode-button" class="post-mode-button"><span class="post-mode-button-frame-start">[</span><span id="grid-post-mode-button" class="post-mode-button-active"> </span> | <span id="list-post-mode-button">☰</span><span class="post-mode-button-frame-end">]<span></div>
+  </div>
   <div class="body-content">
     <div id="post-frames-container"></div>
     <div id="post-list-container"></div>

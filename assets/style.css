@@ -592,7 +592,6 @@ details > summary:before {
 }
 
 #tags-container {
-  margin-left: auto;
   margin-right: auto;
 }
 
@@ -691,8 +690,10 @@ details > summary:before {
 
 /* BODY STYLES */
 
-.body-header {
-  padding: 0 0 var(--spacing-3) 0;
+#body-header {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-1);
 }
 
 .body-content {
