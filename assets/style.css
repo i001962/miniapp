@@ -596,12 +596,11 @@ details > summary:before {
 }
 
 #nav-container {
-  padding-bottom: var(--spacing-4);
   overflow: scroll;
 }
 
 #tags-container {
-  padding: var(--spacing-1) 0 var(--spacing-3) 0;
+  padding: 0 0 var(--spacing-3) 0;
   overflow: scroll;
   color: var(--foreground-secondary-color);
   user-select: none;
@@ -1138,11 +1137,11 @@ details > summary:before {
   /* NAV STYLES */
 
   #nav-container {
-    padding: var(--spacing-1) 0 var(--spacing-2) 0;
+    padding-top: var(--spacing-1);
   }
 
   #tags-container {
-    padding: var(--spacing-3) 0 var(--spacing-2) 0;
+    padding: 0 0 var(--spacing-2) 0;
   }
 
   #tags {
