@@ -1141,10 +1141,6 @@ details > summary:before {
     padding-top: var(--spacing-1);
   }
 
-  #tags-container {
-    padding: 0 0 var(--spacing-2) 0;
-  }
-
   #tags {
     padding: 0 var(--spacing-2) 0 var(--spacing-2);
   }
