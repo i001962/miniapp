@@ -22,6 +22,7 @@ window.onpopstate = function(event) {
 {% block main %}
 {% include './top-dom.html' %}
 <div id="body-dom">
+  <div id="post-mode-button" class="post-mode-button"><span class="post-mode-button-frame-start">[</span><span id="grid-post-mode-button" class="post-mode-button-active"> </span> | <span id="list-post-mode-button">☰</span><span class="post-mode-button-frame-end">]<span></div>
   <div class="body-content">
     <div id="post-frames-container"></div>
     <div id="post-list-container"></div>
@@ -62,6 +63,7 @@ window.onpopstate = function(event) {
   let hasDecoratedTags = false;
   let activeTags = [];
   let projectTags =  {};
+  let postMode = "frames";
 
   const loadPostsState = async (encodedIPFSUris) => {
     // Load tiers.
@@ -787,11 +789,25 @@ window.onpopstate = function(event) {
     }
 
     postModeButton.addEventListener('click', async () => {
-      toggleView();
+      const gridPostModeButton = document.getElementById("grid-post-mode-button");
+      const listPostModeButton = document.getElementById("list-post-mode-button");
+
       const numberOfPostFrames = framesContainer.children.length;
       const numberOfPostRows = listContainer.children.length;
-      // Load any necessary frames.
-      postMode == "frames" ? numberOfPostFrames < numberOfPostRows && await showPostFrames(posts.slice(numberOfPostFrames)) : numberOfPostRows < numberOfPostFrames && showPostList(posts.slice(numberOfPostRows));
+      if (postMode == "frames") {
+        postMode = "list"; 
+        listPostModeButton.classList.add("post-mode-button-active");
+        gridPostModeButton.classList.remove("post-mode-button-active");
+        // Load any necessary frames.
+        if (numberOfPostRows < numberOfPostFrames) await showPostList(posts.slice(numberOfPostRows));
+      } else {
+        postMode = "frames"; 
+        gridPostModeButton.classList.add("post-mode-button-active");
+        listPostModeButton.classList.remove("post-mode-button-active");
+        // Load any necessary frames.
+        if (numberOfPostFrames < numberOfPostRows) await showPostFrames(posts.slice(numberOfPostFrames));
+      }
+      toggleView();
     });
 
     toggleView();

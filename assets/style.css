@@ -8,6 +8,7 @@
   --link-color: rgba(0,0,0,0);
   --alert-color: #efab1d;
   --icon-social-filter: invert(100%) sepia(0%) saturate(7460%) hue-rotate(186deg) brightness(107%) contrast(77%);
+  --font-size-button: 12px;
   --font-size-1: 16px;
   --font-size-2: 28px;
   --line-height-1: 1.375rem;
@@ -461,10 +462,7 @@ details > summary:before {
 /* HEADER STYLES */
 
 #header-container {
-  margin-left: auto;
-  margin-right: auto;
   display: flex;
-  align-items: top;
   gap: var(--spacing-3);
   padding: var(--spacing-4);
 }
@@ -494,6 +492,7 @@ details > summary:before {
   display: flex;
   flex-direction: column;
   color: var(--foreground-color);
+  overflow: hidden;
 }
 
 #header-avatar {
@@ -520,6 +519,18 @@ details > summary:before {
 
 #header-title-button {
   cursor: pointer;
+}
+
+#header-treasury {
+  color: var(--foreground-secondary-color);
+}
+
+#header-treasury .value {
+  font-weight: var(--font-weight-2);
+}
+#header-treasury .spaced {
+  margin-left: var(--spacing-1);
+  margin-right: var(--spacing-1);
 }
 
 #header-about {
@@ -552,10 +563,12 @@ details > summary:before {
 }
 
 .post-mode-button {
+  text-align: right;
+  margin-right: var(--spacing-4);
   color: var(--foreground-secondary-color);
   cursor: pointer;
-  display: inline;
   font-family: "Capsules", "Inconsolata", monospace;
+  font-size: var(--font-size-button);
 }
 
 .post-mode-button-active {
@@ -563,10 +576,21 @@ details > summary:before {
   font-weight: var(--font-weight-2);
 }
 
+.post-mode-button-frame-start {
+  margin-right: var(--spacing-2);   
+}
+
+.post-mode-button-frame-end {
+  margin-left: var(--spacing-2);
+}
+
 /* NAV STYLES */
 
 #nav-container, #tags-container {
   text-align: left;
+}
+
+#tags-container {
   margin-left: auto;
   margin-right: auto;
 }
@@ -614,7 +638,8 @@ details > summary:before {
 }
 
 #nav {
-  padding: 0 var(--spacing-3) 0 var(--spacing-4);
+  margin-top: var(--spacing-2);
+  margin-bottom: var(--spacing-2);
   white-space: nowrap;
   font-weight: var(--font-weight-2);
 }
@@ -1120,12 +1145,12 @@ details > summary:before {
     padding: var(--spacing-3) 0 var(--spacing-2) 0;
   }
 
-  #nav {
+  #tags {
     padding: 0 var(--spacing-2) 0 var(--spacing-2);
   }
 
-  #tags {
-    padding: 0 var(--spacing-2) 0 var(--spacing-2);
+  .post-mode-button {
+    margin-right: var(--spacing-2);
   }
 
   /* BODY STYLES */

@@ -5,6 +5,7 @@
       <img src="{{ assets_prefix }}avatar.png" width="72" height="72" id="header-avatar">
       {% endif %}
       <div id="header-info">
+        <div id="header-treasury">Balance: <span class="value">$0</span> <span class="spaced">|</span> Mints:  <span class="value">0</span></div>
         <div id="header-top">
           <div id="header-title"><span id="header-title-button">{{ planet.name }}</span></div>
           <div id="header-aux">
@@ -15,14 +16,13 @@
           </div>
         </div>
         {% if page_description_html.count > 0 %}<div id="header-about">{{ page_description_html }}</div>{% endif %}
-      </div>
-    </div>
-    <div id="nav-container">
-      <div id="nav">
-        <div id="post-mode-button" class="post-mode-button nav-item"><span id="grid-post-mode-button" class="post-mode-button-active"> </span> | <span id="list-post-mode-button">☰</span> | <span id="money-post-mode-button">$</span></div>
-        {% for item in site_navigation %}
-        <a href="{% if item.externalLink.count > 0 %}{{ item.externalLink }}{% else %}{{ assets_prefix }}{{ item.slug }}/{% endif %}" class="{% if article.slug == item.slug %}nav-current{% else %}nav-item{% endif %}"{% if item.externalLink.count > 0 %} target="_blank"{% endif %}>{{ item.title }}</a>
-        {% endfor %}
+        <div id="nav-container">
+          <div id="nav">
+            {% for item in site_navigation %}
+            <a href="{% if item.externalLink.count > 0 %}{{ item.externalLink }}{% else %}{{ assets_prefix }}{{ item.slug }}/{% endif %}" class="{% if article.slug == item.slug %}nav-current{% else %}nav-item{% endif %}"{% if item.externalLink.count > 0 %} target="_blank"{% endif %}>{{ item.title }}</a>
+            {% endfor %}
+          </div>
+        </div>
       </div>
     </div>
     <div id="tags-container">
@@ -35,31 +35,33 @@
     </div>
   </div>
 </div>
-<script>
-  let postMode = "frames";
-  
+<script> 
   const showNav = () => {
     const topDomShrinkWrapper = document.getElementById('top-dom-shrink-wrapper');
+    const headerTreasury = document.getElementById('header-treasury');
     const headerAbout = document.getElementById('header-about');
     const navContainer = document.getElementById('nav-container');
+    const nav = document.getElementById('nav');
     const tagsContainer = document.getElementById('tags-container');
     const headerContainer = document.getElementById('header-container');
     const headerAvatar = document.getElementById('header-avatar');
     const headerTitle = document.getElementById('header-title');
     const headerAux = document.getElementById('header-aux');
-    navContainer.style.visibility = "visible";
+    navContainer.style.display = nav.children.length == 0 ? "none" :  "block";
     tagsContainer.style.visibility = "visible";
+    if (headerTreasury) headerTreasury.style.display = "initial";
     if (headerAbout) headerAbout.style.display = "initial";
     if (headerAvatar) headerAvatar.classList.remove("small");
     headerTitle.classList.remove("small");
     headerAux.classList.remove("small");
     headerContainer.classList.remove("small");
-    topDomShrinkWrapper.style.height = headerContainer.offsetHeight + navContainer.offsetHeight + tagsContainer.offsetHeight + "px";
+    topDomShrinkWrapper.style.height = headerContainer.offsetHeight + tagsContainer.offsetHeight + "px";
   }
 
   const hideNav = () => {
     const topDom = document.getElementById('top-dom');
     const topDomShrinkWrapper = document.getElementById('top-dom-shrink-wrapper');
+    const headerTreasury = document.getElementById('header-treasury');
     const headerAbout = document.getElementById('header-about');
     const navContainer = document.getElementById('nav-container');
     const tagsContainer = document.getElementById('tags-container');
@@ -67,8 +69,9 @@
     const headerAvatar = document.getElementById('header-avatar');
     const headerTitle = document.getElementById('header-title');
     const headerAux = document.getElementById('header-aux');
-    navContainer.style.visibility = "hidden";
+    navContainer.style.display = "none";
     tagsContainer.style.visibility = "hidden";
+    if (headerTreasury) headerTreasury.style.display = "none";
     if (headerAbout) headerAbout.style.display = "none";
     if (headerAvatar) headerAvatar.classList.add("small"); 
     headerTitle.classList.add("small");
@@ -77,20 +80,6 @@
     topDomShrinkWrapper.style.height = headerContainer.offsetHeight + "px";
   }
 
-  const togglePostMode = () => {
-    const gridPostModeButton = document.getElementById("grid-post-mode-button");
-    const listPostModeButton = document.getElementById("list-post-mode-button");
-
-    if (postMode == "frames") {
-      postMode = "list"; 
-      listPostModeButton.classList.add("post-mode-button-active");
-      gridPostModeButton.classList.remove("post-mode-button-active");
-    } else {
-      postMode = "frames"; 
-      gridPostModeButton.classList.add("post-mode-button-active");
-      listPostModeButton.classList.remove("post-mode-button-active");
-    }
-  }
 
   const decorateForkModal = () => {
     // Get references to elements that need decorating.
@@ -160,7 +149,4 @@
     window.location.href = './';
     {% endif %}
   });
-
-  const postModeButton = document.getElementById("post-mode-button");
-  postModeButton.addEventListener('click', togglePostMode);
 </script>
