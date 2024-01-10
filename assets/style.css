@@ -464,7 +464,7 @@ details > summary:before {
 #header-container {
   display: flex;
   gap: var(--spacing-3);
-  padding: var(--spacing-4);
+  padding: var(--spacing-4) var(--spacing-4) var(--spacing-2) var(--spacing-4)
 }
 
 #header-container.small {
@@ -523,6 +523,7 @@ details > summary:before {
 
 #header-treasury {
   color: var(--foreground-secondary-color);
+  margin-bottom: var(--spacing-2);
 }
 
 #header-treasury .value {
@@ -600,7 +601,6 @@ details > summary:before {
 }
 
 #tags-container {
-  padding: 0 0 var(--spacing-3) 0;
   overflow: scroll;
   color: var(--foreground-secondary-color);
   user-select: none;
