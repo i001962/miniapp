@@ -81,12 +81,6 @@
     });
   }
 
-  const setupPostMode = () => {
-    postModeButton.addEventListener('click', async () => {
-      window.location.href = '../';
-    });
-  }
-
   const setupBodyPadding = () => {
     const topDom = document.getElementById('top-dom');
     const bodyDom = document.getElementById('body-dom');
@@ -98,7 +92,6 @@
   load();
   setupForking();
   setupResetButton();
-  setupPostMode();
   hideNav();
   toggleNavVisibility();
   setupBodyPadding();

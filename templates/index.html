@@ -31,7 +31,7 @@ window.onpopstate = function(event) {
         {% endfor %}
       </div>
     </div>
-    <div id="post-mode-button" class="post-mode-button"><span class="post-mode-button-frame-start">[</span><span id="grid-post-mode-button" class="post-mode-button-active"> </span> | <span id="list-post-mode-button">☰</span><span class="post-mode-button-frame-end">]<span></div>
+    <div id="post-mode-button" class="post-mode-button"><span class="post-mode-button-frame-start">[</span><span id="grid-post-mode-button" class="post-mode-button-icon post-mode-button-active"> </span>|<span id="list-post-mode-button" class="post-mode-button-icon"> ☰</span><span class="post-mode-button-frame-end">]<span></div>
   </div>
   <div class="body-content">
     <div id="post-frames-container"></div>
@@ -878,7 +878,6 @@ window.onpopstate = function(event) {
         const x = e.pageX - slider.offsetLeft;
         const walk = (x - startX) * 3; //scroll-fast
         slider.scrollLeft = scrollLeft - walk;
-        console.log(walk);
       });
     }
 
