@@ -9,7 +9,7 @@
 </div>
 <div id="post-onchain" class="mobile-padding">
   <details id="post-form-collect-reveal">
-    <summary id="post-form-collect-toggle" class="form-toggle">buy</summary>
+    <summary id="post-form-collect-toggle" class="form-toggle">mint</summary>
     <div id="post-form-collect-container">
       <div id="post-form-state" class="negative-space">
         <details id="post-form-state-reveal">
@@ -20,18 +20,18 @@
               <div class="form-label">Chain</div>
               <div class="form-value form-select-value">
                 <select id="post-form-state-chain-input" name="chain">
-                  <option value="mainnet">mainnet</option>
-                  <option value="goerli">goerli</option>
+                  <option value="ethereum sepolia">Ethereum Sepolia</option>
+                  <option value="optimism sepolia">Optimism Sepolia</option>
                 </select>
               </div>
             </div>
             <div class="form-item">
               <div class="form-label">Collection ID</div>
-              <div class="form-value"><input type="number" value="" id="post-form-state-project-id-input"></div>
+              <div class="form-value"><input type="number" value="" id="post-form-state-project-id-input" min="1"></div>
             </div>
             <div class="form-item">
               <div class="form-label">Collection category</div>
-              <div class="form-value"><input type="number" value="" id="post-form-state-nft-category-input"></div>
+              <div class="form-value"><input type="number" value="" id="post-form-state-nft-category-input" min="1"></div>
             </div>
           </div>
           <div id="post-form-state-error-message" class="form-error-message mobile-padding"></div>
@@ -48,7 +48,7 @@
               <div class="form-item">
                 <div class="form-label">Mint count</div>
                 <div class="form-value">
-                  <input type="number" value="1" id="collect-post-form-quantity-input">
+                  <input type="number" value="1" id="collect-post-form-quantity-input" min="1">
                 </div>
               </div>
               <div class="form-item form-item-large">
@@ -84,19 +84,19 @@
               <div class="form-item">
                 <div class="form-label">Price</div>
                 <div class="form-value">
-                  <span class="ether form-input-preface">Ξ</span><input type="number" value="" id="record-post-form-price-input">
+                  <span class="ether form-input-prefix">Ξ</span><input type="number" value="" id="record-post-form-price-input" min="0">
                 </div>
               </div>
               <div id="record-post-form-total-supply-field" class="form-item">
                 <div class="form-label">Total supply</div>
                 <div class="form-value">
-                  <input type="number" placeholder="10" value="" id="record-post-form-total-supply-input">
+                  <input type="number" placeholder="10" value="" id="record-post-form-total-supply-input" min="1">
                 </div>
               </div>
               <div class="form-item">
                 <div class="form-label">Mint count</div>
                 <div class="form-value">
-                  <input type="number" value="1" id="record-post-form-quantity-input">
+                  <input type="number" value="1" id="record-post-form-quantity-input" min="1">
                 </div>
               </div>
               <div class="form-item form-item-large">
@@ -137,11 +137,14 @@
 </div>
 <div id="post-content" class="mobile-padding"></div>
 <script>
+
+  // State constants.
+  const feeDivisor = 20;
   const formInputReactionTimeDelay = 600;
 
   let tiersCache = {};
   let allowanceCache = {};
-  let defaultChain = "goerli";
+  let defaultChain = "ethereum sepolia";
   let defaultNftCategory = 0;
   let highlightColor = "#f056c1";
   let signer;
@@ -276,9 +279,9 @@
 
     // Prevent excessive calls.
     let checkStateTimer;
-      const queueCheckState = async () => {
-        clearTimeout(checkStateTimer);
-        checkStateTimer = setTimeout(checkState, formInputReactionTimeDelay);
+    const queueCheckState = async () => {
+      clearTimeout(checkStateTimer);
+      checkStateTimer = setTimeout(checkState, formInputReactionTimeDelay);
     }
 
     // Update the form's state each time the price, total supply, or quantity changes.
@@ -302,7 +305,7 @@
     // Submit the form.
     postFormButton.onclick = async () => {
       // Check for empty values.
-      if (!recordPostFormPriceInput.value || !recordPostFormTotalSupplyInput.value || !recordPostFormQuantityInput.value) {
+      if (recordPostFormPriceInput.value == "" || !recordPostFormTotalSupplyInput.value || !recordPostFormQuantityInput.value) {
         postFormErrorMessage.innerHTML = "Fill out the form.";
         postFormErrorMessage.classList.add("warn");
         postFormErrorMessage.style.display = "block";
@@ -350,7 +353,7 @@
       // Normalize values from the form.
       const totalSupply = recordPostFormTotalSupplyInput.value;
       const quantity = recordPostFormQuantityInput.value;
-      const price = `${Number(recordPostFormPriceInput.value) * 1_000_000_000_000_000_000}`;
+      const price = fixedPointNumber(recordPostFormPriceInput.value, 18); 
       const beneficiary = recordPostFormBeneficiaryInput.value;
       const cpnBeneficiary = recordPostFormCpnBeneficiaryInput.value;
       const totalPrice = BigInt(price) * BigInt(quantity);
@@ -515,7 +518,7 @@
 
       // Normalize values from the form.
       const totalSupply = 1;
-      const price = `${Number(formattedPrice) * 1_000_000_000_000_000_000}`;
+      const price = fixedPointNumber(formattedPrice, 18);
       const quantity = collectPostFormQuantityInput.value;
       const beneficiary = collectPostFormBeneficiaryInput.value;
       const cpnBeneficiary = collectPostFormCpnBeneficiaryInput.value;
@@ -641,12 +644,6 @@
 
     // Reset the label for the collect toggle.
     let storedPostFormCollectToggleText;
-    const postFormCollectRevealOpenText = '---';
-    const postFormCollectRevealCloseText = 'mint';
-    postFormCollectToggle.innerHTML = postFormCollectRevealCloseText;
-    postFormCollectReveal.addEventListener('toggle', () => {
-       postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : postFormCollectRevealCloseText;
-    });
 
     // Show and populate the frame's subtitle if there's a link.
     if (link) {
@@ -742,7 +739,7 @@
           // Disable the button.
           postFormButton.disabled = true;
           postFormButton.style.display = "none";
-          postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : 'mint';
+          postFormCollectToggle.innerHTML = 'mint';
           return;
         }
 
@@ -772,7 +769,7 @@
           // Disable the button.
           postFormButton.disabled = true;
           postFormButton.style.display = "none";
-          postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : 'sold out';
+          postFormCollectToggle.innerHTML = 'sold out';
           return;
         }
 
@@ -791,9 +788,9 @@
         const formattedMintedSupply = formattedInitialSupply - formattedRemainingSupply;
 
         if (formattedRemainingSupply == 1) {
-          postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : `${formattedMintedSupply} minted, only 1 remaining`;
+          postFormCollectToggle.innerHTML = `${formattedMintedSupply} minted, only 1 remaining`;
         } else {
-          postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : `${formattedMintedSupply} minted, ${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } remaining`;
+          postFormCollectToggle.innerHTML = `${formattedMintedSupply} minted, ${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } remaining`;
         }
 
         // Show the form.
@@ -825,7 +822,7 @@
         // Show an error message if there's no allowance set.
         if (formattedMinTotalSupply == 0) {
           // Show the error message.
-          postFormErrorMessage.innerHTML = `Collection ${projectId} isn't accepting posts on category ${category} yet. Click "fork" up top.`;
+          postFormErrorMessage.innerHTML = `Collection ${projectId} isn't accepting mints on category ${category} yet. Click "+" up top.`;
           postFormErrorMessage.classList.add("info");
           postFormErrorMessage.style.display = "block";
           // Hide forms.
@@ -834,7 +831,7 @@
           // Hide and disable the button.
           postFormButton.disabled = true;
           postFormButton.style.display = "none";
-          postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : 'collect';
+          postFormCollectToggle.innerHTML = 'mint';
           return;
         }
 
@@ -854,7 +851,7 @@
         // Get a reference to the allowance max total supply.
         const formattedAllowedAddresses = allowance[3];
 
-        postFormCollectToggle.innerHTML = postFormCollectReveal.open ? postFormCollectRevealOpenText : 'mint';
+        postFormCollectToggle.innerHTML = 'mint';
 
         await decorateRecordForm(chain, projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice, formattedAllowedAddresses);
       }

@@ -9,7 +9,7 @@
         <div id="header-top">
           <div id="header-title"><span id="header-title-button">{{ planet.name }}</span></div>
           <div id="header-aux">
-            <div id="fork-button"></div>
+            <div id="fork-button">+</div>
             <a href="{{ assets_prefix }}rss.xml" target="_blank">
               <div id="rss-button"></div>
             </a>
@@ -87,7 +87,24 @@
       activeElementOnClose = document.activeElement;
     });
 
+    let isMouseDownOnInput = false;
+
+    // Event listener for mousedown - sets the flag if mouse is down on an input, select, or textarea
+    forkModal.addEventListener("mousedown", (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT" || e.target.tagName === "TEXTAREA") {
+        isMouseDownOnInput = true;
+      }
+    });
+
+    // Event listener for mouseup - resets the flag on mouse up
+    forkModal.addEventListener("mouseup", () => {
+      isMouseDownOnInput = false;
+    });
+
     forkModal.addEventListener("click", (e) => {
+      // Ignore if the click stared in a field.
+      if (isMouseDownOnInput) return;
+
       // Ignore if the clicked view shouldn't close the modal.
       if (!e.target.classList.contains("negative-space")) return;
 

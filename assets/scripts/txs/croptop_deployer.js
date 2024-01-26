@@ -1,232 +1,88 @@
 const croptopDeployerContract = (chainId) => {
   switch (chainId) {
-    case 5:
-      return "0x0D45B6f63FE778e52b58F0120E3477d5D48c6AD4";
+    case 11155111:
+      return "0x6dD0da77bB5d47E604063671583C97451E0781E5";
   }
 }
 
-const ethPaymentTerminalContract = (chainId) => {
+const revnetDeployerContract = (chainId) => {
   switch (chainId) {
-    case 1:
-      return "0x97a5b9D9F0F7cD676B69f584F29048D0Ef4BB59b";
-    case 5:
-      return "0x0baCb87Cf7DbDdde2299D92673A938E067a9eb29";
+    case 11155111:
+      return "0xAB03289b007a5De4fdAa7465521D918e49A4e60d";
   }
 }
 
-const croptopDeployerContractABI = [{
-  "inputs": [
-    {
-      "internalType": "contract IJBController3_1",
-      "name": "_controller",
-      "type": "address"
-    },
-    {
-      "internalType": "contract IJBTiered721DelegateProjectDeployer",
-      "name": "_deployer",
-      "type": "address"
-    },
-    {
-      "internalType": "contract IJBTiered721DelegateStore",
-      "name": "_store",
-      "type": "address"
-    },
-    {
-      "internalType": "contract CroptopPublisher",
-      "name": "_publisher",
-      "type": "address"
-    }
-  ],
-  "stateMutability": "nonpayable",
-  "type": "constructor"
-},
-{
-  "inputs": [],
-  "name": "controller",
-  "outputs": [
-    {
-      "internalType": "contract IJBController3_1",
-      "name": "",
-      "type": "address"
-    }
-  ],
-  "stateMutability": "view",
-  "type": "function"
-},
-{
-  "inputs": [
-    {
-      "internalType": "address",
-      "name": "_owner",
-      "type": "address"
-    },
-    {
-      "internalType": "contract IJBPaymentTerminal",
-      "name": "_terminal",
-      "type": "address"
-    },
-    {
-      "components": [
-        {
-          "internalType": "string",
-          "name": "content",
-          "type": "string"
-        },
-        {
-          "internalType": "uint256",
-          "name": "domain",
-          "type": "uint256"
-        }
-      ],
-      "internalType": "struct JBProjectMetadata",
-      "name": "_projectMetadata",
-      "type": "tuple"
-    },
-    {
-      "components": [
-        {
-          "internalType": "address",
-          "name": "nft",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "category",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "minimumPrice",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "minimumTotalSupply",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "maximumTotalSupply",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address[]",
-          "name": "allowedAddresses",
-          "type": "address[]"
-        }
-      ],
-      "internalType": "struct AllowedPost[]",
-      "name": "_allowedPosts",
-      "type": "tuple[]"
-    },
-    {
-      "internalType": "string",
-      "name": "_contractUri",
-      "type": "string"
-    },
-    {
-      "internalType": "string",
-      "name": "_name",
-      "type": "string"
-    },
-    {
-      "internalType": "string",
-      "name": "_symbol",
-      "type": "string"
-    }
-  ],
-  "name": "deployProjectFor",
-  "outputs": [
-    {
-      "internalType": "uint256",
-      "name": "projectId",
-      "type": "uint256"
-    }
-  ],
-  "stateMutability": "nonpayable",
-  "type": "function"
-},
-{
-  "inputs": [],
-  "name": "deployer",
-  "outputs": [
-    {
-      "internalType": "contract IJBTiered721DelegateProjectDeployer",
-      "name": "",
-      "type": "address"
-    }
-  ],
-  "stateMutability": "view",
-  "type": "function"
-},
-{
-  "inputs": [
-    {
-      "internalType": "address",
-      "name": "_operator",
-      "type": "address"
-    },
-    {
-      "internalType": "address",
-      "name": "_from",
-      "type": "address"
-    },
-    {
-      "internalType": "uint256",
-      "name": "_tokenId",
-      "type": "uint256"
-    },
-    {
-      "internalType": "bytes",
-      "name": "_data",
-      "type": "bytes"
-    }
-  ],
-  "name": "onERC721Received",
-  "outputs": [
-    {
-      "internalType": "bytes4",
-      "name": "",
-      "type": "bytes4"
-    }
-  ],
-  "stateMutability": "view",
-  "type": "function"
-},
-{
-  "inputs": [],
-  "name": "publisher",
-  "outputs": [
-    {
-      "internalType": "contract CroptopPublisher",
-      "name": "",
-      "type": "address"
-    }
-  ],
-  "stateMutability": "view",
-  "type": "function"
-},
-{
-  "inputs": [],
-  "name": "store",
-  "outputs": [
-    {
-      "internalType": "contract IJBTiered721DelegateStore",
-      "name": "",
-      "type": "address"
-    }
-  ],
-  "stateMutability": "view",
-  "type": "function"
-}];
+const terminalContract = (chainId) => {
+  switch (chainId) {
+    case 11155111:
+      return "0xc1Ce30883c7C25050BFE1F3e9139842bAc809E3a";
+  }
+}
+
+const rulesetsContract = (chainId) => {
+  switch (chainId) {
+    case 11155111:
+      return "0x9e5e08Af158b4E4fdb77ee68873FE9Ac582BF4bC";
+  }
+}
+
+const hookStoreContract = (chainId) => {
+  switch (chainId) {
+    case 11155111:
+      return "0xEb127d8d8c82439B4eE69d077755254E7B55eB82";
+  }
+}
+
+const croptopDeployerContractABI = [{"type":"constructor","inputs":[{"name":"controller","type":"address","internalType":"contract IJBController"},{"name":"deployer","type":"address","internalType":"contract IJB721TiersHookProjectDeployer"},{"name":"store","type":"address","internalType":"contract IJB721TiersHookStore"},{"name":"publisher","type":"address","internalType":"contract CroptopPublisher"}],"stateMutability":"nonpayable"},{"type":"function","name":"CONTROLLER","inputs":[],"outputs":[{"name":"","type":"address","internalType":"contract IJBController"}],"stateMutability":"view"},{"type":"function","name":"DEPLOYER","inputs":[],"outputs":[{"name":"","type":"address","internalType":"contract IJB721TiersHookProjectDeployer"}],"stateMutability":"view"},{"type":"function","name":"PUBLISHER","inputs":[],"outputs":[{"name":"","type":"address","internalType":"contract CroptopPublisher"}],"stateMutability":"view"},{"type":"function","name":"STORE","inputs":[],"outputs":[{"name":"","type":"address","internalType":"contract IJB721TiersHookStore"}],"stateMutability":"view"},{"type":"function","name":"deployProjectFor","inputs":[{"name":"owner","type":"address","internalType":"address"},{"name":"terminalConfigurations","type":"tuple[]","internalType":"struct JBTerminalConfig[]","components":[{"name":"terminal","type":"address","internalType":"contract IJBTerminal"},{"name":"tokensToAccept","type":"address[]","internalType":"address[]"}]},{"name":"projectMetadata","type":"string","internalType":"string"},{"name":"allowedPosts","type":"tuple[]","internalType":"struct AllowedPost[]","components":[{"name":"nft","type":"address","internalType":"address"},{"name":"category","type":"uint256","internalType":"uint256"},{"name":"minimumPrice","type":"uint256","internalType":"uint256"},{"name":"minimumTotalSupply","type":"uint256","internalType":"uint256"},{"name":"maximumTotalSupply","type":"uint256","internalType":"uint256"},{"name":"allowedAddresses","type":"address[]","internalType":"address[]"}]},{"name":"contractUri","type":"string","internalType":"string"},{"name":"name","type":"string","internalType":"string"},{"name":"symbol","type":"string","internalType":"string"}],"outputs":[{"name":"projectId","type":"uint256","internalType":"uint256"}],"stateMutability":"nonpayable"},{"type":"function","name":"onERC721Received","inputs":[{"name":"operator","type":"address","internalType":"address"},{"name":"from","type":"address","internalType":"address"},{"name":"tokenId","type":"uint256","internalType":"uint256"},{"name":"data","type":"bytes","internalType":"bytes"}],"outputs":[{"name":"","type":"bytes4","internalType":"bytes4"}],"stateMutability":"view"}];
+
+const revnetDeployerContractABI = [{"type":"constructor","inputs":[{"name":"controller","type":"address","internalType":"contract IJBController"},{"name":"hookDeployer","type":"address","internalType":"contract IJB721TiersHookDeployer"},{"name":"publisher","type":"address","internalType":"contract CroptopPublisher"}],"stateMutability":"nonpayable"},{"type":"function","name":"CONTROLLER","inputs":[],"outputs":[{"name":"","type":"address","internalType":"contract IJBController"}],"stateMutability":"view"},{"type":"function","name":"HOOK_DEPLOYER","inputs":[],"outputs":[{"name":"","type":"address","internalType":"contract IJB721TiersHookDeployer"}],"stateMutability":"view"},{"type":"function","name":"PUBLISHER","inputs":[],"outputs":[{"name":"","type":"address","internalType":"contract CroptopPublisher"}],"stateMutability":"view"},{"type":"function","name":"beforePayRecordedWith","inputs":[{"name":"context","type":"tuple","internalType":"struct JBBeforePayRecordedContext","components":[{"name":"terminal","type":"address","internalType":"address"},{"name":"payer","type":"address","internalType":"address"},{"name":"amount","type":"tuple","internalType":"struct JBTokenAmount","components":[{"name":"token","type":"address","internalType":"address"},{"name":"value","type":"uint256","internalType":"uint256"},{"name":"decimals","type":"uint256","internalType":"uint256"},{"name":"currency","type":"uint256","internalType":"uint256"}]},{"name":"projectId","type":"uint256","internalType":"uint256"},{"name":"rulesetId","type":"uint256","internalType":"uint256"},{"name":"beneficiary","type":"address","internalType":"address"},{"name":"weight","type":"uint256","internalType":"uint256"},{"name":"reservedRate","type":"uint256","internalType":"uint256"},{"name":"metadata","type":"bytes","internalType":"bytes"}]}],"outputs":[{"name":"weight","type":"uint256","internalType":"uint256"},{"name":"hookSpecifications","type":"tuple[]","internalType":"struct JBPayHookSpecification[]","components":[{"name":"hook","type":"address","internalType":"contract IJBPayHook"},{"name":"amount","type":"uint256","internalType":"uint256"},{"name":"metadata","type":"bytes","internalType":"bytes"}]}],"stateMutability":"view"},{"type":"function","name":"beforeRedeemRecordedWith","inputs":[{"name":"context","type":"tuple","internalType":"struct JBBeforeRedeemRecordedContext","components":[{"name":"terminal","type":"address","internalType":"address"},{"name":"holder","type":"address","internalType":"address"},{"name":"projectId","type":"uint256","internalType":"uint256"},{"name":"rulesetId","type":"uint256","internalType":"uint256"},{"name":"redeemCount","type":"uint256","internalType":"uint256"},{"name":"totalSupply","type":"uint256","internalType":"uint256"},{"name":"surplus","type":"uint256","internalType":"uint256"},{"name":"reclaimAmount","type":"tuple","internalType":"struct JBTokenAmount","components":[{"name":"token","type":"address","internalType":"address"},{"name":"value","type":"uint256","internalType":"uint256"},{"name":"decimals","type":"uint256","internalType":"uint256"},{"name":"currency","type":"uint256","internalType":"uint256"}]},{"name":"useTotalSurplus","type":"bool","internalType":"bool"},{"name":"redemptionRate","type":"uint256","internalType":"uint256"},{"name":"metadata","type":"bytes","internalType":"bytes"}]}],"outputs":[{"name":"","type":"uint256","internalType":"uint256"},{"name":"specifications","type":"tuple[]","internalType":"struct JBRedeemHookSpecification[]","components":[{"name":"hook","type":"address","internalType":"contract IJBRedeemHook"},{"name":"amount","type":"uint256","internalType":"uint256"},{"name":"metadata","type":"bytes","internalType":"bytes"}]}],"stateMutability":"view"},{"type":"function","name":"buybackHookOf","inputs":[{"name":"revnetId","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"buybackHook","type":"address","internalType":"contract IJBRulesetDataHook"}],"stateMutability":"view"},{"type":"function","name":"deployCroptopRevnetFor","inputs":[{"name":"name","type":"string","internalType":"string"},{"name":"symbol","type":"string","internalType":"string"},{"name":"metadata","type":"string","internalType":"string"},{"name":"configuration","type":"tuple","internalType":"struct REVConfig","components":[{"name":"baseCurrency","type":"uint32","internalType":"uint32"},{"name":"premintTokenAmount","type":"uint256","internalType":"uint256"},{"name":"initialBoostOperator","type":"address","internalType":"address"},{"name":"stageConfigurations","type":"tuple[]","internalType":"struct REVStageConfig[]","components":[{"name":"startsAtOrAfter","type":"uint40","internalType":"uint40"},{"name":"boostRate","type":"uint16","internalType":"uint16"},{"name":"initialIssuanceRate","type":"uint112","internalType":"uint112"},{"name":"priceCeilingIncreaseFrequency","type":"uint40","internalType":"uint40"},{"name":"priceCeilingIncreasePercentage","type":"uint32","internalType":"uint32"},{"name":"priceFloorTaxIntensity","type":"uint16","internalType":"uint16"}]}]},{"name":"terminalConfigurations","type":"tuple[]","internalType":"struct JBTerminalConfig[]","components":[{"name":"terminal","type":"address","internalType":"contract IJBTerminal"},{"name":"tokensToAccept","type":"address[]","internalType":"address[]"}]},{"name":"buybackHookConfiguration","type":"tuple","internalType":"struct REVBuybackHookConfig","components":[{"name":"hook","type":"address","internalType":"contract IJBBuybackHook"},{"name":"poolConfigurations","type":"tuple[]","internalType":"struct REVBuybackPoolConfig[]","components":[{"name":"token","type":"address","internalType":"address"},{"name":"fee","type":"uint24","internalType":"uint24"},{"name":"twapWindow","type":"uint32","internalType":"uint32"},{"name":"twapSlippageTolerance","type":"uint32","internalType":"uint32"}]}]},{"name":"hookConfiguration","type":"tuple","internalType":"struct JBDeploy721TiersHookConfig","components":[{"name":"name","type":"string","internalType":"string"},{"name":"symbol","type":"string","internalType":"string"},{"name":"rulesets","type":"address","internalType":"contract IJBRulesets"},{"name":"baseUri","type":"string","internalType":"string"},{"name":"tokenUriResolver","type":"address","internalType":"contract IJB721TokenUriResolver"},{"name":"contractUri","type":"string","internalType":"string"},{"name":"tiersConfig","type":"tuple","internalType":"struct JB721InitTiersConfig","components":[{"name":"tiers","type":"tuple[]","internalType":"struct JB721TierConfig[]","components":[{"name":"price","type":"uint104","internalType":"uint104"},{"name":"initialSupply","type":"uint32","internalType":"uint32"},{"name":"votingUnits","type":"uint32","internalType":"uint32"},{"name":"reserveFrequency","type":"uint16","internalType":"uint16"},{"name":"reserveBeneficiary","type":"address","internalType":"address"},{"name":"encodedIPFSUri","type":"bytes32","internalType":"bytes32"},{"name":"category","type":"uint24","internalType":"uint24"},{"name":"allowOwnerMint","type":"bool","internalType":"bool"},{"name":"useReserveBeneficiaryAsDefault","type":"bool","internalType":"bool"},{"name":"transfersPausable","type":"bool","internalType":"bool"},{"name":"useVotingUnits","type":"bool","internalType":"bool"}]},{"name":"currency","type":"uint32","internalType":"uint32"},{"name":"decimals","type":"uint8","internalType":"uint8"},{"name":"prices","type":"address","internalType":"contract IJBPrices"}]},{"name":"reserveBeneficiary","type":"address","internalType":"address"},{"name":"store","type":"address","internalType":"contract IJB721TiersHookStore"},{"name":"flags","type":"tuple","internalType":"struct JB721TiersHookFlags","components":[{"name":"noNewTiersWithReserves","type":"bool","internalType":"bool"},{"name":"noNewTiersWithVotes","type":"bool","internalType":"bool"},{"name":"noNewTiersWithOwnerMinting","type":"bool","internalType":"bool"},{"name":"preventOverspending","type":"bool","internalType":"bool"}]}]},{"name":"otherPayHooksSpecifications","type":"tuple[]","internalType":"struct JBPayHookSpecification[]","components":[{"name":"hook","type":"address","internalType":"contract IJBPayHook"},{"name":"amount","type":"uint256","internalType":"uint256"},{"name":"metadata","type":"bytes","internalType":"bytes"}]},{"name":"extraHookMetadata","type":"uint16","internalType":"uint16"},{"name":"allowedPosts","type":"tuple[]","internalType":"struct AllowedPost[]","components":[{"name":"nft","type":"address","internalType":"address"},{"name":"category","type":"uint256","internalType":"uint256"},{"name":"minimumPrice","type":"uint256","internalType":"uint256"},{"name":"minimumTotalSupply","type":"uint256","internalType":"uint256"},{"name":"maximumTotalSupply","type":"uint256","internalType":"uint256"},{"name":"allowedAddresses","type":"address[]","internalType":"address[]"}]}],"outputs":[{"name":"revnetId","type":"uint256","internalType":"uint256"}],"stateMutability":"nonpayable"},{"type":"function","name":"deployPayHookRevnetWith","inputs":[{"name":"name","type":"string","internalType":"string"},{"name":"symbol","type":"string","internalType":"string"},{"name":"metadata","type":"string","internalType":"string"},{"name":"configuration","type":"tuple","internalType":"struct REVConfig","components":[{"name":"baseCurrency","type":"uint32","internalType":"uint32"},{"name":"premintTokenAmount","type":"uint256","internalType":"uint256"},{"name":"initialBoostOperator","type":"address","internalType":"address"},{"name":"stageConfigurations","type":"tuple[]","internalType":"struct REVStageConfig[]","components":[{"name":"startsAtOrAfter","type":"uint40","internalType":"uint40"},{"name":"boostRate","type":"uint16","internalType":"uint16"},{"name":"initialIssuanceRate","type":"uint112","internalType":"uint112"},{"name":"priceCeilingIncreaseFrequency","type":"uint40","internalType":"uint40"},{"name":"priceCeilingIncreasePercentage","type":"uint32","internalType":"uint32"},{"name":"priceFloorTaxIntensity","type":"uint16","internalType":"uint16"}]}]},{"name":"terminalConfigurations","type":"tuple[]","internalType":"struct JBTerminalConfig[]","components":[{"name":"terminal","type":"address","internalType":"contract IJBTerminal"},{"name":"tokensToAccept","type":"address[]","internalType":"address[]"}]},{"name":"buybackHookConfiguration","type":"tuple","internalType":"struct REVBuybackHookConfig","components":[{"name":"hook","type":"address","internalType":"contract IJBBuybackHook"},{"name":"poolConfigurations","type":"tuple[]","internalType":"struct REVBuybackPoolConfig[]","components":[{"name":"token","type":"address","internalType":"address"},{"name":"fee","type":"uint24","internalType":"uint24"},{"name":"twapWindow","type":"uint32","internalType":"uint32"},{"name":"twapSlippageTolerance","type":"uint32","internalType":"uint32"}]}]},{"name":"payHookSpecifications","type":"tuple[]","internalType":"struct JBPayHookSpecification[]","components":[{"name":"hook","type":"address","internalType":"contract IJBPayHook"},{"name":"amount","type":"uint256","internalType":"uint256"},{"name":"metadata","type":"bytes","internalType":"bytes"}]},{"name":"extraHookMetadata","type":"uint16","internalType":"uint16"}],"outputs":[{"name":"revnetId","type":"uint256","internalType":"uint256"}],"stateMutability":"nonpayable"},{"type":"function","name":"deployRevnetWith","inputs":[{"name":"name","type":"string","internalType":"string"},{"name":"symbol","type":"string","internalType":"string"},{"name":"metadata","type":"string","internalType":"string"},{"name":"configuration","type":"tuple","internalType":"struct REVConfig","components":[{"name":"baseCurrency","type":"uint32","internalType":"uint32"},{"name":"premintTokenAmount","type":"uint256","internalType":"uint256"},{"name":"initialBoostOperator","type":"address","internalType":"address"},{"name":"stageConfigurations","type":"tuple[]","internalType":"struct REVStageConfig[]","components":[{"name":"startsAtOrAfter","type":"uint40","internalType":"uint40"},{"name":"boostRate","type":"uint16","internalType":"uint16"},{"name":"initialIssuanceRate","type":"uint112","internalType":"uint112"},{"name":"priceCeilingIncreaseFrequency","type":"uint40","internalType":"uint40"},{"name":"priceCeilingIncreasePercentage","type":"uint32","internalType":"uint32"},{"name":"priceFloorTaxIntensity","type":"uint16","internalType":"uint16"}]}]},{"name":"terminalConfigurations","type":"tuple[]","internalType":"struct JBTerminalConfig[]","components":[{"name":"terminal","type":"address","internalType":"contract IJBTerminal"},{"name":"tokensToAccept","type":"address[]","internalType":"address[]"}]},{"name":"buybackHookConfiguration","type":"tuple","internalType":"struct REVBuybackHookConfig","components":[{"name":"hook","type":"address","internalType":"contract IJBBuybackHook"},{"name":"poolConfigurations","type":"tuple[]","internalType":"struct REVBuybackPoolConfig[]","components":[{"name":"token","type":"address","internalType":"address"},{"name":"fee","type":"uint24","internalType":"uint24"},{"name":"twapWindow","type":"uint32","internalType":"uint32"},{"name":"twapSlippageTolerance","type":"uint32","internalType":"uint32"}]}]}],"outputs":[{"name":"revnetId","type":"uint256","internalType":"uint256"}],"stateMutability":"nonpayable"},{"type":"function","name":"deployTiered721RevnetFor","inputs":[{"name":"name","type":"string","internalType":"string"},{"name":"symbol","type":"string","internalType":"string"},{"name":"metadata","type":"string","internalType":"string"},{"name":"configuration","type":"tuple","internalType":"struct REVConfig","components":[{"name":"baseCurrency","type":"uint32","internalType":"uint32"},{"name":"premintTokenAmount","type":"uint256","internalType":"uint256"},{"name":"initialBoostOperator","type":"address","internalType":"address"},{"name":"stageConfigurations","type":"tuple[]","internalType":"struct REVStageConfig[]","components":[{"name":"startsAtOrAfter","type":"uint40","internalType":"uint40"},{"name":"boostRate","type":"uint16","internalType":"uint16"},{"name":"initialIssuanceRate","type":"uint112","internalType":"uint112"},{"name":"priceCeilingIncreaseFrequency","type":"uint40","internalType":"uint40"},{"name":"priceCeilingIncreasePercentage","type":"uint32","internalType":"uint32"},{"name":"priceFloorTaxIntensity","type":"uint16","internalType":"uint16"}]}]},{"name":"terminalConfigurations","type":"tuple[]","internalType":"struct JBTerminalConfig[]","components":[{"name":"terminal","type":"address","internalType":"contract IJBTerminal"},{"name":"tokensToAccept","type":"address[]","internalType":"address[]"}]},{"name":"buybackHookConfiguration","type":"tuple","internalType":"struct REVBuybackHookConfig","components":[{"name":"hook","type":"address","internalType":"contract IJBBuybackHook"},{"name":"poolConfigurations","type":"tuple[]","internalType":"struct REVBuybackPoolConfig[]","components":[{"name":"token","type":"address","internalType":"address"},{"name":"fee","type":"uint24","internalType":"uint24"},{"name":"twapWindow","type":"uint32","internalType":"uint32"},{"name":"twapSlippageTolerance","type":"uint32","internalType":"uint32"}]}]},{"name":"hookConfiguration","type":"tuple","internalType":"struct JBDeploy721TiersHookConfig","components":[{"name":"name","type":"string","internalType":"string"},{"name":"symbol","type":"string","internalType":"string"},{"name":"rulesets","type":"address","internalType":"contract IJBRulesets"},{"name":"baseUri","type":"string","internalType":"string"},{"name":"tokenUriResolver","type":"address","internalType":"contract IJB721TokenUriResolver"},{"name":"contractUri","type":"string","internalType":"string"},{"name":"tiersConfig","type":"tuple","internalType":"struct JB721InitTiersConfig","components":[{"name":"tiers","type":"tuple[]","internalType":"struct JB721TierConfig[]","components":[{"name":"price","type":"uint104","internalType":"uint104"},{"name":"initialSupply","type":"uint32","internalType":"uint32"},{"name":"votingUnits","type":"uint32","internalType":"uint32"},{"name":"reserveFrequency","type":"uint16","internalType":"uint16"},{"name":"reserveBeneficiary","type":"address","internalType":"address"},{"name":"encodedIPFSUri","type":"bytes32","internalType":"bytes32"},{"name":"category","type":"uint24","internalType":"uint24"},{"name":"allowOwnerMint","type":"bool","internalType":"bool"},{"name":"useReserveBeneficiaryAsDefault","type":"bool","internalType":"bool"},{"name":"transfersPausable","type":"bool","internalType":"bool"},{"name":"useVotingUnits","type":"bool","internalType":"bool"}]},{"name":"currency","type":"uint32","internalType":"uint32"},{"name":"decimals","type":"uint8","internalType":"uint8"},{"name":"prices","type":"address","internalType":"contract IJBPrices"}]},{"name":"reserveBeneficiary","type":"address","internalType":"address"},{"name":"store","type":"address","internalType":"contract IJB721TiersHookStore"},{"name":"flags","type":"tuple","internalType":"struct JB721TiersHookFlags","components":[{"name":"noNewTiersWithReserves","type":"bool","internalType":"bool"},{"name":"noNewTiersWithVotes","type":"bool","internalType":"bool"},{"name":"noNewTiersWithOwnerMinting","type":"bool","internalType":"bool"},{"name":"preventOverspending","type":"bool","internalType":"bool"}]}]},{"name":"otherPayHooksSpecifications","type":"tuple[]","internalType":"struct JBPayHookSpecification[]","components":[{"name":"hook","type":"address","internalType":"contract IJBPayHook"},{"name":"amount","type":"uint256","internalType":"uint256"},{"name":"metadata","type":"bytes","internalType":"bytes"}]},{"name":"extraHookMetadata","type":"uint16","internalType":"uint16"}],"outputs":[{"name":"revnetId","type":"uint256","internalType":"uint256"}],"stateMutability":"nonpayable"},{"type":"function","name":"hasMintPermissionFor","inputs":[{"name":"revnetId","type":"uint256","internalType":"uint256"},{"name":"addr","type":"address","internalType":"address"}],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"view"},{"type":"function","name":"onERC721Received","inputs":[{"name":"operator","type":"address","internalType":"address"},{"name":"from","type":"address","internalType":"address"},{"name":"tokenId","type":"uint256","internalType":"uint256"},{"name":"data","type":"bytes","internalType":"bytes"}],"outputs":[{"name":"","type":"bytes4","internalType":"bytes4"}],"stateMutability":"view"},{"type":"function","name":"payHookSpecificationsOf","inputs":[{"name":"revnetId","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"","type":"tuple[]","internalType":"struct JBPayHookSpecification[]","components":[{"name":"hook","type":"address","internalType":"contract IJBPayHook"},{"name":"amount","type":"uint256","internalType":"uint256"},{"name":"metadata","type":"bytes","internalType":"bytes"}]}],"stateMutability":"view"},{"type":"function","name":"replaceBoostOperatorOf","inputs":[{"name":"revnetId","type":"uint256","internalType":"uint256"},{"name":"newBoostOperator","type":"address","internalType":"address"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"supportsInterface","inputs":[{"name":"interfaceId","type":"bytes4","internalType":"bytes4"}],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"view"},{"type":"error","name":"REVBasicDeployer_Unauthorized","inputs":[]}];
 
 const tx_deploy_project = async (name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, chainId) => {
   const contract = croptopDeployerContract(chainId);
   if (!contract) return false;
-  const terminal = ethPaymentTerminalContract(chainId);
-  const projectMetadata = {  domain: 0, content: "QmaJzQjaFKxU2LLyqPTpZoGU47owQcmmvVCP1p4YqeuMUy" };
+  const terminal = terminalContract(chainId);
+  const projectMetadata = "QmaJzQjaFKxU2LLyqPTpZoGU47owQcmmvVCP1p4YqeuMUy";
   const contractUri = "";
   const allowedPost = { nft: "0x0000000000000000000000000000000000000000", category: 0, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses};
-  await sign(contract, croptopDeployerContractABI, "deployProjectFor", [owner, terminal, projectMetadata, [allowedPost], contractUri, name, symbol]);
+  const terminalConfiguration = { terminal, tokensToAccept: ["0x000000000000000000000000000000000000EEEe"] };
+  await sign(contract, croptopDeployerContractABI, "deployProjectFor", [owner, [terminalConfiguration], projectMetadata, [allowedPost], contractUri, name, symbol]);
+  return true;
+}
+
+const tx_deploy_revnet = async (name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, premintTokenAmount, stage1InitialIssuanceRate, stage2InitialIssuanceRate, stage3InitialIssuanceRate, stage1BoostRate, stage2BoostRate, stage3BoostRate, stage1PriceCeilingIncreasePercentage, stage2PriceCeilingIncreasePercentage, stage3PriceCeilingIncreasePercentage, stage1PriceCeilingIncreaseFrequency, stage2PriceCeilingIncreaseFrequency, stage3PriceCeilingIncreaseFrequency, stage1PriceFloorTaxIntensity, stage2PriceFloorTaxIntensity, stage3PriceFloorTaxIntensity, stage2StartsAtOrAfter, stage3StartsAtOrAfter, chainId) => {
+  console.log("a");
+  console.log({name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, premintTokenAmount, stage1InitialIssuanceRate, stage2InitialIssuanceRate, stage3InitialIssuanceRate, stage1BoostRate, stage2BoostRate, stage3BoostRate, stage1PriceCeilingIncreasePercentage, stage2PriceCeilingIncreasePercentage, stage3PriceCeilingIncreasePercentage, stage1PriceCeilingIncreaseFrequency, stage2PriceCeilingIncreaseFrequency, stage3PriceCeilingIncreaseFrequency, stage1PriceFloorTaxIntensity, stage2PriceFloorTaxIntensity, stage3PriceFloorTaxIntensity, stage2StartsAtOrAfter, stage3StartsAtOrAfter, chainId });
+  const contract = revnetDeployerContract(chainId);
+  if (!contract) return false;
+  const terminal = terminalContract(chainId);
+  const projectMetadata = "QmaJzQjaFKxU2LLyqPTpZoGU47owQcmmvVCP1p4YqeuMUy";
+  const contractUri = "";
+  const allowedPost = { nft: "0x0000000000000000000000000000000000000000", category: 0, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses};
+  const terminalConfiguration = { terminal, tokensToAccept: ["0x000000000000000000000000000000000000EEEe"] };
+  const baseCurrency = 61166;
+  const stage1StartsAtOrAfter = 0;
+  const stageConfiguration1 = {  startsAtOrAfter: stage1StartsAtOrAfter, boostRate: stage1BoostRate, initialIssuanceRate: stage1InitialIssuanceRate, priceCeilingIncreaseFrequency: stage1PriceCeilingIncreaseFrequency, priceCeilingIncreasePercentage: stage1PriceCeilingIncreasePercentage, priceFloorTaxIntensity: stage1PriceFloorTaxIntensity };
+  const stageConfigurations = [stageConfiguration1];
+  if (stage2StartsAtOrAfter != 0) {
+    stageConfigurations.push({startsAtOrAfter: stage2StartsAtOrAfter, boostRate: stage2BoostRate, initialIssuanceRate: stage2InitialIssuanceRate, priceCeilingIncreaseFrequency: stage2PriceCeilingIncreaseFrequency, priceCeilingIncreasePercentage: stage2PriceCeilingIncreasePercentage, priceFloorTaxIntensity: stage2PriceFloorTaxIntensity }); 
+  }
+  if (stage3StartsAtOrAfter != 0) {
+    stageConfigurations.push({startsAtOrAfter: stage3StartsAtOrAfter, boostRate: stage3BoostRate, initialIssuanceRate: stage3InitialIssuanceRate, priceCeilingIncreaseFrequency: stage3PriceCeilingIncreaseFrequency, priceCeilingIncreasePercentage: stage3PriceCeilingIncreasePercentage, priceFloorTaxIntensity: stage3PriceFloorTaxIntensity }); 
+  }
+  const revnetConfiguration = { baseCurrency, premintTokenAmount, initialBoostOperator: owner, stageConfigurations };
+  const buybackHookConfiguration = { hook: "0x0000000000000000000000000000000000000000", poolConfigurations: []};
+  const rulesetsAddress = rulesetsContract(chainId); 
+  const baseUri = "ipfs://";
+  const tokenUriResolver = "0x0000000000000000000000000000000000000000";
+  const tiers = [];
+  const currency = 61166;
+  const decimals = 18;
+  const prices = "0x0000000000000000000000000000000000000000";
+  const tiersConfig = { tiers, currency, decimals, prices };
+  const reserveBeneficiary = "0x0000000000000000000000000000000000000000";
+  const storeAddress = hookStoreContract(chainId); 
+  const flags = { noNewTiersWithReserves: false, noNewTiersWithVotes: false, noNewTiersWithOwnerMinting: false, preventOverspending: false };
+  const hookConfiguration = { name, symbol, rulesets: rulesetsAddress, baseUri, tokenUriResolver, contractUri, tiersConfig, reserveBeneficiary, store: storeAddress, flags };
+  await sign(contract, revnetDeployerContractABI, "deployCroptopRevnetFor", [name, symbol, projectMetadata, revnetConfiguration, [terminalConfiguration], buybackHookConfiguration, hookConfiguration, [], 0, [allowedPost]]);
   return true;
 }

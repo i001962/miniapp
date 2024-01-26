@@ -44,71 +44,71 @@ const formatPlayclock = (seconds) => {
 
 const resolveChainId = (value) => {
   switch (value) {
-    case "mainnet": return 1; 
-    case "goerli": return 5; 
+    case "ethereum sepolia": return 11155111; 
+    case "optimism sepolia": return 11155420; 
   }
 }
 
 const resolveChainSelectIndex = (chain) => {
   switch (chain) {
-    case "mainnet": return 0; 
-    case "goerli": return 1; 
+    case "ethereum sepolia": return 0; 
+    case "optimism sepolia": return 1; 
   }
 }
 
 const resolveChain = (chainId) => {
   switch (chainId) {
-    case 1: return "mainnet"; 
-    case 5: return "goerli"; 
+    case 11155111: return "ethereum sepolia"; 
+    case 11155420: return "optimism sepolia"; 
   }
 }
 
 const cpnProjectId = (chain) => {
   switch (chain) {
-    case "mainnet":
-      return 1016;
-    case "goerli":
-      return 1016;
+    case "ethereum sepolia":
+      return 1;
+    case "optimism sepolia":
+      return 1;
   }
 }
 
 const resolveCollectionId = (chain) => {
   switch (chain) {
-    case "mainnet":
-      return env.mainnetCollectionID || cpnProjectId(chain);
-    case "goerli":
-      return env.goerliCollectionID || cpnProjectId(chain);
+    case "ethereum sepolia":
+      return env.ethereumSepoliaCollectionID || cpnProjectId(chain);
+    case "optimism sepolia":
+      return env.optimismSepoliaCollectionID || cpnProjectId(chain);
   }
 }
 
 const resolveCollectionCategory = (chain) => {
   switch (chain) {
-    case "mainnet":
-      return env.mainnetCollectionCategory || 0;
-    case "goerli":
-      return env.goerliCollectionCategory || 0;
+    case "ethereum sepolia":
+      return env.ethereumSepoliaCollectionCategory || 0;
+    case "optimism sepolia":
+      return env.optimismSepoliaCollectionCategory || 0;
   }
 }
 
 const resolveCPNBeneficiaryAddress = (chain) => {
   switch (chain) {
-    case "mainnet":
-      return env.mainnetCPNBeneficiaryAddress;
-    case "goerli":
-      return env.goerliCPNBeneficiaryAddress;
+    case "ethereum sepolia":
+      return env.ethereumSepoliaCPNBeneficiaryAddress;
+    case "optimism sepolia":
+      return env.optimismSepoliaCPNBeneficiaryAddress;
   }
 }
 
 const projectLinkBase = (chain) => {
   switch (chain) {
-    case "mainnet": 
+    case "ethereum sepolia":
       return "https://juicebox.money/v2/p/";
-    case "goerli": 
+    case "optimism sepolia":
       return "https://goerli.juicebox.money/v2/p/";
   }
 }
 
-const renderMarkdown = function(text) {
+const renderMarkdown = (text) => {
   const md = window.markdownit({
     html: true,
     xhtmlOut: false,
@@ -118,6 +118,30 @@ const renderMarkdown = function(text) {
   .use(window.markdownitTaskLists)
   .use(window.markdownitFootnote);
   return md.render(text);
+}
+
+const fixedPointNumber = (numberString, decimals) => {
+  // Find the position of the decimal point
+  let decimalPos = numberString.indexOf('.');
+  let fixedString;
+
+  if (decimalPos !== -1) {
+    // Split the number into whole and decimal parts
+    let wholePart = numberString.substring(0, decimalPos);
+    let decimalPart = numberString.substring(decimalPos + 1);
+    // If the decimal part is shorter than the desired precision, pad it with zeros
+    while (decimalPart.length < decimals) {
+      decimalPart += '0';
+    }
+    // Combine the whole part and the truncated/padded decimal part
+    fixedString = wholePart + decimalPart.substring(0, decimals);
+  } else {
+    // If there is no decimal part, just pad the number with zeros
+    fixedString = numberString + '0'.repeat(decimals);
+  }
+
+  // Convert the string to a BigInt
+  return BigInt(fixedString);
 }
 
 const loadingAnimationPace = 100;

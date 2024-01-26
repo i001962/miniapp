@@ -6,7 +6,7 @@
 {% include 'modules/tx.html' %}
 {% include 'modules/croptop_publisher.html' %}
 {% include 'modules/croptop_deployer.html' %}
-{% include 'modules/operator_store.html' %}
+{% include 'modules/permissions.html' %}
 {% include 'modules/planet_seo.html' %}
 {% endblock %}
 
@@ -56,9 +56,6 @@ window.onpopstate = function(event) {
   const pagingMargingBottom = 100;
   const timeTillIdle = 2000;
   const defaultPageSize = 20;
-
-  // State constants.
-  const feeDivisor = 20;
 
   // Layout variables.
   let posts = [];
@@ -609,8 +606,25 @@ window.onpopstate = function(event) {
       activeElementOnClose = document.activeElement;
     });
 
+    let isMouseDownOnInput = false;
+
+    // Event listener for mousedown - sets the flag if mouse is down on an input, select, or textarea
+    postModal.addEventListener("mousedown", (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT" || e.target.tagName === "TEXTAREA") {
+        isMouseDownOnInput = true;
+      }
+    });
+
+    // Event listener for mouseup - resets the flag on mouse up
+    postModal.addEventListener("mouseup", () => {
+      isMouseDownOnInput = false;
+    });
+
     // Close the modal.
     postModal.addEventListener("click", (e) => {
+      // Ignore if the click stared in a field.
+      if (isMouseDownOnInput) return;
+
       // Ignore if the clicked view shouldn't close the modal.
       if (!e.target.classList.contains("negative-space")) return;
 

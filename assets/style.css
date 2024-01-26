@@ -338,6 +338,7 @@ details > summary:before {
 
 #top-dom {
   position: fixed;
+  max-width: min(1800px, calc(var(--max-width) - env(safe-area-inset-left) - env(safe-area-inset-left)));
   top: 0;
   z-index: var(--top-dom-z-index);
   width: var(--max-width);
@@ -595,6 +596,13 @@ details > summary:before {
 
 #fork-header {
   padding-top: var(--spacing-6);
+  padding-bottom: var(--spacing-4);
+}
+
+.fork-title {
+  margin-bottom: var(--spacing-4);
+  font-weight: var(--font-weight-2);
+  font-size: var(--font-size-2);
 }
 
 #fork-form .main-toggle {
@@ -605,7 +613,6 @@ details > summary:before {
   display: inline-block;
   color: var(--foreground-secondary-color);
   font-size: var(--font-size-2);
-  padding-top: var(--spacing-2);
 }
 #fork-button {
   margin-right: var(--spacing-3);
@@ -615,6 +622,9 @@ details > summary:before {
 }
 #fork-form {
   width: var(--reduced-width1);
+}
+#fork-form-new-jb-revnet-stage-2.hidden, #fork-form-new-jb-revnet-stage-3.hidden {
+  display: none;
 }
 #fork-form details .form-item {
   margin-top: var(--spacing-3);
@@ -739,6 +749,7 @@ details > summary:before {
   border-left: var(--spacing-1) solid var(--background-secondary-color);
   padding: 0 var(--spacing-3);
   display: inline-block;
+  margin-top: var(--spacing-3);
   margin-bottom: var(--spacing-4);
 }
 
@@ -799,7 +810,7 @@ details > summary:before {
   cursor: pointer;
 }
 .form-main-toggle {
-  margin-top: var(--spacing-3);
+  margin-top: var(--spacing-4);
 }
 .form-disclaimer-toggle {
   font-weight: var(--font-weight-1);
@@ -808,6 +819,7 @@ details > summary:before {
 .form-section-description {
   margin-top: var(--spacing-3);
   color: var(--foreground-color);
+  width: var(--max-width);
 }
 .form-section {
   margin-top: var(--spacing-3);
@@ -815,7 +827,7 @@ details > summary:before {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: end;
-  gap: var(--spacing-4);
+  column-gap: var(--spacing-4);
 }
 .form-section-disclaimer {
   margin-top: var(--spacing-3);
@@ -840,6 +852,7 @@ details > summary:before {
 }
 .form-label {
   color: var(--foreground-color);
+  font-weight: var(--font-weight-2);
 }
 .form-value {
   display: flex;
@@ -908,8 +921,13 @@ details > summary:before {
   color: var(--foreground-secondary-color);
 }
 
-.form-input-preface {
+.form-input-prefix {
   padding-right: var(--spacing-1);
+}
+
+.form-input-suffix {
+  padding-left: var(--spacing-2);
+  text-wrap: nowrap;
 }
 
 /* FRAMES STYLES */

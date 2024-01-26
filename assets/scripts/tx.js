@@ -1,7 +1,7 @@
 const getProvider = (chainId) => {
   switch (chainId) {
-    case 1: return new ethers.JsonRpcProvider(env.mainnetRPC || "https://rpc.ankr.com/eth");
-    case 5: return new ethers.JsonRpcProvider(env.goerliRPC || "https://rpc.ankr.com/eth_goerli");
+    case 11155111: return new ethers.JsonRpcProvider(env.ethereumSepoliaRPC || "https://rpc.ankr.com/eth_sepolia");
+    case 11155420: return new ethers.JsonRpcProvider(env.optimismSepoliaRPC || "https://rpc.ankr.com/optimism_sepolia");
     default: return new ethers.BrowserProvider(window.ethereum);
   }
 }
@@ -32,5 +32,6 @@ const view = async (chainId, contractAddress, contractAbi, fn, params) => {
 
 const sign = async (contractAddress, contractAbi, fn, params) => {
     const contract = new ethers.Contract(contractAddress, contractAbi, await getSigner());
+    console.log({ contract, fn , params });
     return await contract[fn](...params);
 }
