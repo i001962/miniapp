@@ -529,7 +529,7 @@ details > summary:before {
 }
 #header-treasury .spaced {
   margin-left: var(--spacing-1);
-  margin-right: var(--spacing-1);
+  margin-right: var(--spacing-2);
 }
 
 #header-about {
