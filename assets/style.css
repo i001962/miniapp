@@ -524,6 +524,10 @@ details > summary:before {
   color: var(--foreground-secondary-color);
 }
 
+#header-treasury a {
+  color: var(--foreground-secondary-color);
+}
+
 #header-treasury .value {
   font-weight: var(--font-weight-2);
 }
