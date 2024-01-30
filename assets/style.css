@@ -522,6 +522,8 @@ details > summary:before {
 
 #header-treasury {
   color: var(--foreground-secondary-color);
+  white-space: nowrap;
+  overflow: scroll;
 }
 
 #header-treasury a {
