@@ -161,7 +161,7 @@ window.onpopstate = function(event) {
 
     // Set the content.
     title.innerHTML = name;
-    subtitle.innerHTML = `${date} | <span class="post-frame-state">mintable</span> ${ Object.keys(tags).length ? "|" : "" } ${Object.values(tags).map(tag => `(${tag})`).join(" ")}`;
+    subtitle.innerHTML = `${date} | <span class="post-frame-state">click to mint</span> ${ Object.keys(tags).length ? "|" : "" } ${Object.values(tags).map(tag => `(${tag})`).join(" ")}`;
 
     if (name == "✃") title.classList.add("bigger-font");
 
@@ -319,7 +319,7 @@ window.onpopstate = function(event) {
 
     // Set the content.
     title.innerHTML = name;
-    subtitle.innerHTML = `${date} | <span class="post-row-state">mintable</span> ${ Object.keys(tags).length ? "|" : "" } ${Object.values(tags).map(tag => `(${tag})`).join(" ")}`;
+    subtitle.innerHTML = `${date} | <span class="post-row-state">click to mint</span> ${ Object.keys(tags).length ? "|" : "" } ${Object.values(tags).map(tag => `(${tag})`).join(" ")}`;
 
     if (name == "✃") title.classList.add("bigger-font");
 
