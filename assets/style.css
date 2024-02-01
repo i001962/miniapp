@@ -384,6 +384,11 @@ details > summary:before {
   color: var(--alert-color);
 }
 
+.space {
+  padding-right: var(--spacing-1); 
+  padding-left: var(--spacing-1); 
+}
+
 .bigger-font {
   font-size: var(--font-size-2);
   line-height: var(--line-height-2);

@@ -161,7 +161,7 @@ window.onpopstate = function(event) {
 
     // Set the content.
     title.innerHTML = name;
-    subtitle.innerHTML = `${date} | <span class="post-frame-state">click to mint</span> ${ Object.keys(tags).length ? "|" : "" } ${Object.values(tags).map(tag => `(${tag})`).join(" ")}`;
+    subtitle.innerHTML = `${date}<span class="space">•</span><span class="post-frame-state">Click to mint</span>${ Object.keys(tags).length ? '<span class="space">•</span>' : "" }${Object.values(tags).map(tag => `( ${tag} )`).join(" ")}`;
 
     if (name == "✃") title.classList.add("bigger-font");
 
@@ -179,7 +179,7 @@ window.onpopstate = function(event) {
       // TODO: If user has interacted with the page, unmute.
       frameVideo.controls = false;
       // Mark videos with playback info.
-      subtitle.appendChild(document.createTextNode(" | "));
+      subtitle.appendChild(document.createTextNode("   "));
       subtitle.appendChild(frameVideoAnimation);
       subtitle.appendChild(frameVideoCurrentTime);
       subtitle.appendChild(frameVideoDuration);
