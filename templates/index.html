@@ -25,7 +25,7 @@ window.onpopstate = function(event) {
   <div id="body-header">
     <div id="tags-container">
       <div id="tags">
-        <span id="default-tag" class="tag">( <span class="tag-text">all</span> )</span> 
+        <span id="default-tag" class="tag">( <span class="tag-text">all</span> )</span>
         {% for tag in planet.tags %}
           <span id="custom-tag-{{ tag }}" class="tag custom-tag">( <span class="tag-text">{{ tag }}</span> )</span>
         {% endfor %}
@@ -669,7 +669,7 @@ window.onpopstate = function(event) {
     const newPostFrames = newPosts.map((post) => {
       // if post.hasVideo, use _videoThumbnail.png
       // else use a random attachment
-      const coverImageName = post.hasVideo ? '_videoThumbnail.png' : post.hasAudio ? '_audioThumbnail.png' : post.attachments.length && post.attachments[Math.floor(Math.random() * post.attachments.length)];
+      const coverImageName = post.hasVideo ? '_videoThumbnail.png' : post.hasAudio ? '_audioThumbnail.png' : post.heroImageFilename ? post.heroImageFilename : post.attachments.length && post.attachments[Math.floor(Math.random() * post.attachments.length)];
       const coverImageSrc = coverImageName && './' + post.id + '/' + coverImageName;
       const coverVideoSrc = post.hasVideo ? './' + post.id + '/' + post.videoFilename : null;
       const coverAudioSrc = post.hasAudio ? './' + post.id + '/' + post.audioFilename : null;
@@ -819,13 +819,13 @@ window.onpopstate = function(event) {
       const numberOfPostFrames = framesContainer.children.length;
       const numberOfPostRows = listContainer.children.length;
       if (postMode == "frames") {
-        postMode = "list"; 
+        postMode = "list";
         listPostModeButton.classList.add("post-mode-button-active");
         gridPostModeButton.classList.remove("post-mode-button-active");
         // Load any necessary frames.
         if (numberOfPostRows < numberOfPostFrames) await showPostList(posts.slice(numberOfPostRows));
       } else {
-        postMode = "frames"; 
+        postMode = "frames";
         gridPostModeButton.classList.add("post-mode-button-active");
         listPostModeButton.classList.remove("post-mode-button-active");
         // Load any necessary frames.
