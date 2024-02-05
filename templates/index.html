@@ -158,10 +158,12 @@ window.onpopstate = function(event) {
 
     // Set the frame and img's ID.
     postFrame.id = 'frame-' + postId;
+    
+    const verb = content.length > 150 ? "read" : "mint";
 
     // Set the content.
     title.innerHTML = name;
-    subtitle.innerHTML = `${date}<span class="space">•</span><span class="post-frame-state">Click to mint</span>${ Object.keys(tags).length ? '<span class="space">•</span>' : "" }${Object.values(tags).map(tag => `( ${tag} )`).join(" ")}`;
+    subtitle.innerHTML = `${date}<span class="space">•</span><span class="post-frame-state">click to ${verb}</span>${ Object.keys(tags).length ? '<span class="space">•</span>' : "" }${Object.values(tags).map(tag => `( ${tag} )`).join(" ")}`;
 
     if (name == "✃") title.classList.add("bigger-font");
 
@@ -314,12 +316,14 @@ window.onpopstate = function(event) {
     const title = postRow.querySelector(".post-row-title");
     const thumbnail = postRow.querySelector(".post-row-thumbnail");
 
+    const verb = content.length > 150 ? "read" : "mint";
+
     // Set the frame and img's ID.
     postRow.id = 'row-' + postId;
 
     // Set the content.
     title.innerHTML = name;
-    subtitle.innerHTML = `${date} | <span class="post-row-state">click to mint</span> ${ Object.keys(tags).length ? "|" : "" } ${Object.values(tags).map(tag => `(${tag})`).join(" ")}`;
+    subtitle.innerHTML = `${date} | <span class="post-row-state">click to ${verb}</span> ${ Object.keys(tags).length ? "|" : "" } ${Object.values(tags).map(tag => `(${tag})`).join(" ")}`;
 
     if (name == "✃") title.classList.add("bigger-font");
 
