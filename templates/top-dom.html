@@ -5,22 +5,26 @@
       <img src="{{ assets_prefix }}avatar.png" width="72" height="72" id="header-avatar">
       {% endif %}
       <div id="header-info">
-        <div id="header-treasury">Peers: <span class="value">123</span><span class="spaced">•</span>Balance: <span class="value">$420,00</span><span class="spaced">•</span>Mints:  <span class="value">69</span><span class="spaced">•</span><a href="">Page metrics</a></div>
-        <div id="header-top">
-          <div id="header-title"><span id="header-title-button">{{ planet.name }}</span></div>
-          <div id="header-aux">
-            <div id="fork-button">+</div>
-            <a href="{{ assets_prefix }}rss.xml" target="_blank">
-              <div id="rss-button"></div>
-            </a>
+        <div id="header-info-top">
+          <div id="header-treasury">Peers: <span class="value">123</span><span class="spaced">•</span>Balance: <span class="value">$420,00</span><span class="spaced">•</span>Mints:  <span class="value">69</span><span class="spaced">•</span><a href="">Page metrics</a></div>
+          <div id="header-top">
+            <div id="header-title"><span id="header-title-button">{{ planet.name }}</span></div>
+            <div id="header-aux">
+              <div id="fork-button">+</div>
+              <a href="{{ assets_prefix }}rss.xml" target="_blank">
+                <div id="rss-button"></div>
+              </a>
+            </div>
           </div>
         </div>
-        {% if page_description_html.count > 0 %}<div id="header-about">{{ page_description_html }}</div>{% endif %}
-        <div id="nav-container">
-          <div id="nav">
-            {% for item in site_navigation %}
-            <a href="{% if item.externalLink.count > 0 %}{{ item.externalLink }}{% else %}{{ assets_prefix }}{{ item.slug }}/{% endif %}" class="{% if article.slug == item.slug %}nav-current{% else %}nav-item{% endif %}"{% if item.externalLink.count > 0 %} target="_blank"{% endif %}>{{ item.title }}</a>
-            {% endfor %}
+        <div id="header-info-bottom">
+          {% if page_description_html.count > 0 %}<div id="header-about">{{ page_description_html }}</div>{% endif %}
+          <div id="nav-container">
+            <div id="nav">
+              {% for item in site_navigation %}
+              <a href="{% if item.externalLink.count > 0 %}{{ item.externalLink }}{% else %}{{ assets_prefix }}{{ item.slug }}/{% endif %}" class="{% if article.slug == item.slug %}nav-current{% else %}nav-item{% endif %}"{% if item.externalLink.count > 0 %} target="_blank"{% endif %}>{{ item.title }}</a>
+              {% endfor %}
+            </div>
           </div>
         </div>
       </div>
