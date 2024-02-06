@@ -5,7 +5,7 @@
       <img src="{{ assets_prefix }}avatar.png" width="72" height="72" id="header-avatar">
       {% endif %}
       <div id="header-info">
-        <div id="header-treasury">Peers: <span class="value">123</span><span class="spaced">•</span>Balance: <span class="value">$420,00</span><span class="spaced">•</span>Mints:  <span class="value">69</span><span class="spaced">•</span><a href="">Page metrics</a></div>
+        <div id="header-treasury">Peers: <span class="value" id="peers-count">-</span><span class="spaced">•</span>Balance: <span class="value">$420,00</span><span class="spaced">•</span>Mints:  <span class="value">69</span><span class="spaced">•</span><a href="">Page metrics</a></div>
         <div id="header-top">
           <div id="header-title"><span id="header-title-button">{{ planet.name }}</span></div>
           <div id="header-aux">
@@ -29,15 +29,15 @@
     </div>
   </div>
 </div>
-<script> 
+<script>
 
   const adjustSubheaderPlacement = () => {
     const subheaderContainer = document.getElementById('subheader-container');
     const headerAvatar = document.getElementById('header-avatar');
-    
+
     // If there's an avatar, shift the subheader's placement next to it.
     if (headerAvatar.naturalWidth > 0) {
-      subheaderContainer.classList.add('shifted'); 
+      subheaderContainer.classList.add('shifted');
     }
   }
 
@@ -76,7 +76,7 @@
     navContainer.style.display = "none";
     if (headerTreasury) headerTreasury.style.display = "none";
     if (subheaderAbout) subheaderAbout.style.display = "none";
-    if (headerAvatar) headerAvatar.classList.add("small"); 
+    if (headerAvatar) headerAvatar.classList.add("small");
     headerTitle.classList.add("small");
     headerAux.classList.add("small");
     headerContainer.classList.add("small");
