@@ -1,12 +1,6 @@
 {% extends 'base.html' %}
 {% block head %}
-{% include 'modules/deps.html' %}
-{% include 'modules/ethers.html' %}
-{% include 'modules/utils.html' %}
-{% include 'modules/tx.html' %}
-{% include 'modules/croptop_publisher.html' %}
-{% include 'modules/croptop_deployer.html' %}
-{% include 'modules/permissions.html' %}
+{% include 'modules/head.html' %}
 {% include 'modules/planet_seo.html' %}
 {% endblock %}
 
@@ -20,7 +14,6 @@ window.onpopstate = function(event) {
 {% endblock %}
 
 {% block main %}
-{% include './top-dom.html' %}
 <div id="body-dom">
   <div id="body-header">
     <div id="tags-container">
