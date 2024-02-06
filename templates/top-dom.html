@@ -36,7 +36,7 @@
     const headerAvatar = document.getElementById('header-avatar');
 
     // If there's an avatar, shift the subheader's placement next to it.
-    if (headerAvatar.naturalWidth > 0) {
+    if (headerAvatar) {
       subheaderContainer.classList.add('shifted');
     }
   }
