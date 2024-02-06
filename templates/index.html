@@ -18,9 +18,9 @@ window.onpopstate = function(event) {
   <div id="body-header">
     <div id="tags-container">
       <div id="tags">
-        <span id="default-tag" class="tag">( <span class="tag-text">all</span> )</span>
+        <div id="default-tag" class="tag"><span class="tag-text">all</span></div>
         {% for tag in planet.tags %}
-          <span id="custom-tag-{{ tag }}" class="tag custom-tag">( <span class="tag-text">{{ tag }}</span> )</span>
+          <div id="custom-tag-{{ tag }}" class="tag custom-tag"><span class="tag-text">{{ tag }}</span></div>
         {% endfor %}
       </div>
     </div>
@@ -156,7 +156,7 @@ window.onpopstate = function(event) {
 
     // Set the content.
     title.innerHTML = name;
-    subtitle.innerHTML = `${date}<span class="space">•</span><span class="post-frame-state">click to ${verb}</span>${ Object.keys(tags).length ? '<span class="space">•</span>' : "" }${Object.values(tags).map(tag => `( ${tag} )`).join(" ")}`;
+    subtitle.innerHTML = `${date}<span class="space">•</span><span class="post-frame-state">click to ${verb}</span>${ Object.keys(tags).length ? '<span class="space">•</span>' : "" }${Object.values(tags).map(tag => `<div class="tag">${tag}</div>`).join(" ")}`;
 
     if (name == "✃") title.classList.add("bigger-font");
 
