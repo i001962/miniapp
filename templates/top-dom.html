@@ -30,6 +30,17 @@
   </div>
 </div>
 <script> 
+
+  const adjustSubheaderPlacement = () => {
+    const subheaderContainer = document.getElementById('subheader-container');
+    const headerAvatar = document.getElementById('header-avatar');
+    
+    // If there's an avatar, shift the subheader's placement next to it.
+    if (headerAvatar.naturalWidth > 0) {
+      subheaderContainer.classList.add('shifted'); 
+    }
+  }
+
   const showNav = () => {
     const topDomShrinkWrapper = document.getElementById('top-dom-shrink-wrapper');
     const headerTreasury = document.getElementById('header-treasury');
@@ -71,7 +82,6 @@
     headerContainer.classList.add("small");
     topDomShrinkWrapper.style.height = headerContainer.offsetHeight + "px";
   }
-
 
   const decorateForkModal = () => {
     // Get references to elements that need decorating.
