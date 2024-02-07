@@ -136,6 +136,7 @@
   <audio id="post-cover-audio"></audio>
 </div>
 <div id="post-content" class="mobile-padding"></div>
+<div id="post-attachments" class="mobile-padding"></div>
 <script>
 
   // State constants.
@@ -353,7 +354,7 @@
       // Normalize values from the form.
       const totalSupply = recordPostFormTotalSupplyInput.value;
       const quantity = recordPostFormQuantityInput.value;
-      const price = fixedPointNumber(recordPostFormPriceInput.value, 18); 
+      const price = fixedPointNumber(recordPostFormPriceInput.value, 18);
       const beneficiary = recordPostFormBeneficiaryInput.value;
       const cpnBeneficiary = recordPostFormCpnBeneficiaryInput.value;
       const totalPrice = BigInt(price) * BigInt(quantity);
@@ -918,6 +919,22 @@
 
     // Hide the loading animation.
     stopLoadingAnimation('post-form-loading-animation');
+  }
+
+  const decorateAttachments = async (post) => {
+    const container = document.getElementById("post-attachments")
+    for (const attachment of post.attachments) {
+      const attachmentFullURL = "{{ assets_prefix }}" + post.id + "/" + attachment;
+      if (attachment.endsWith(".pdf")) {
+        const link = document.createElement("a");
+        link.href = attachmentFullURL;
+        link.target = "_blank";
+        link.innerHTML = attachment;
+        link.className = "attachment-link";
+        container.appendChild(link);
+        container.style.paddingTop = "1em";
+      }
+    }
   }
 </script>
 {% if article_type == 1 %}

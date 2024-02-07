@@ -378,8 +378,8 @@ details > summary:before {
 }
 
 .space {
-  padding-right: var(--spacing-1); 
-  padding-left: var(--spacing-1); 
+  padding-right: var(--spacing-1);
+  padding-left: var(--spacing-1);
 }
 
 .bigger-font {
@@ -466,16 +466,16 @@ details > summary:before {
 #header-container {
   display: flex;
   gap: var(--spacing-3);
-  padding-top: var(--spacing-4); 
-  padding-bottom: var(--spacing-4); 
-  padding-left: var(--spacing-4); 
-  padding-right: var(--spacing-4); 
+  padding-top: var(--spacing-4);
+  padding-bottom: var(--spacing-4);
+  padding-left: var(--spacing-4);
+  padding-right: var(--spacing-4);
 }
 
 #subheader-container {
   padding-left: var(--spacing-4);
-  padding-right: var(--spacing-4); 
-  padding-bottom: var(--spacing-4); 
+  padding-right: var(--spacing-4);
+  padding-bottom: var(--spacing-4);
   margin-top: calc(-1 * var(--spacing-4));
 }
 
@@ -509,11 +509,11 @@ details > summary:before {
   color: var(--foreground-color);
   overflow: hidden;
   flex: 1;
-} 
+}
 
 #header-avatar {
   width: var(--avatar-size-3);
-  height:  var(--avatar-size-3); 
+  height:  var(--avatar-size-3);
   border: var(--border-width) solid var(--background-secondary-color);
 }
 
@@ -694,7 +694,7 @@ details > summary:before {
 
 .tag {
   background: var(--background-secondary-color);
-  margin-right: var(--spacing-1); 
+  margin-right: var(--spacing-1);
   display: inline-block;
   padding: var(--spacing-1) var(--spacing-2);
 }
@@ -1146,6 +1146,21 @@ details > summary:before {
   border-bottom: var(--border-width) solid var(--link-color);
 }
 
+.attachment-link:link, .attachment-link:visited {
+  display: block;
+  color: var(--link-color);
+  text-decoration: none;
+  margin-top: var(--spacing-3);
+  margin-bottom: var(--spacing-3);
+}
+
+.attachment-link:link::before, .attachment-link:visited::before {
+  content: '';
+  display: inline-block;
+  margin-right: var(--spacing-1);
+  font: "Capsules", "Inconsolata", monospace;
+}
+
 /**************/
 
 @media screen and (max-width: 600px) {
@@ -1166,7 +1181,7 @@ details > summary:before {
   /* HEADER STYLES */
 
   #header-avatar {
-    width: var(--avatar-size-2); 
+    width: var(--avatar-size-2);
     height: var(--avatar-size-2);
     border: var(--border-width) solid var(--background-secondary-color);
   }
