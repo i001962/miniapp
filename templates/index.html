@@ -855,6 +855,7 @@ window.onpopstate = function(event) {
   }
 
   const decorateHeader = async (data) => {
+    // peers
     let ipns = data.ipns;
     const response = await fetch(
       `https://www.pinnable.xyz/api/v0/ipfs/peers/${ipns}`
@@ -863,6 +864,13 @@ window.onpopstate = function(event) {
     const peersCount = peers["peers"].length;
     const peersCountLabel = document.getElementById("peers-count");
     peersCountLabel.innerHTML = peersCount;
+
+    // page metrics
+    let pageMetricsLink = document.getElementById("page-metrics-link");
+    if (data.plausibleEnabled && data.plausibleDomain && data.plausibleAPIServer) {
+      pageMetricsLink.href = `https://${data.plausibleAPIServer}/${data.plausibleDomain}`;
+      pageMetricsLink.target = "_blank";
+    }
   }
 
   const decorateTags = () => {
