@@ -3,57 +3,57 @@
   "description": "For pictures and screenshots",
   "author": "Jango",
   "authorWebsite": "https://jango.eth.limo",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "idealItemsPerPage": 10,
   "generateIndexPagination": false,
-  "buildNumber": 517,
+  "buildNumber": 521,
   "generateNFTMetadata": true,
   "generateTagPages": true,
   "settings": {
-    "mainnetCollectionID": {
-      "name": "Mainnet NFT Collection ID",
+    "EthereumSepoliaCollectionID": {
+      "name": "Ethereum Sepolia NFT Collection ID",
       "type": "int",
       "defaultValue": "1016",
-      "description": "Your collection ID is the ID of your Juicebox project where your collection is configured. Your site will record posts onto this collection by default."
+      "description": "The ID of your collection's Juicebox project on on this chain."
     },
-    "mainnetCollectionCategory": {
-      "name": "Mainnet NFT Category",
+    "EthereumSepoliaCollectionCategory": {
+      "name": "Ethereum Sepolia NFT Category",
       "type": "int",
       "defaultValue": "0",
-      "description": "The category within your collection where posts will be recorded by default."
+      "description": "The collection's category where posts will be recorded."
     },
-    "mainnetRPC": {
-      "name": "Mainnet RPC",
+    "EthereumSepoliaRPC": {
+      "name": "Ethereum Sepolia RPC",
       "type": "string",
       "defaultValue": "",
-      "description": "A URL where your site will access onchain data from."
+      "description": "The default gateway to this chain."
     },
-    "mainnetCPNBeneficiaryAddress": {
-      "name": "Mainnet address",
+    "EthereumSepoliaBeneficiaryAddress": {
+      "name": "Ethereum Sepolia address",
       "type": "string",
       "defaultValue": "",
-      "description": "The address where $CPN resulting from your site's recorded posts will be sent."
+      "description": "Where you'll be sent $CROPTOP tokens when people mint from your collection."
     },
-    "goerliCollectionID": {
-      "name": "Goerli NFT Collection ID",
+    "OptimismSepoliaCollectionID": {
+      "name": "Optimism Sepolia NFT Collection ID",
       "type": "int",
       "defaultValue": "1016",
       "description": ""
     },
-    "goerliCollectionCategory": {
-      "name": "Goerli NFT Category",
+    "OptimismSepoliaCollectionCategory": {
+      "name": "Optimism Sepolia NFT Category",
       "type": "int",
       "defaultValue": "0",
       "description": ""
     },
-    "goerliRPC": {
-      "name": "Goerli RPC",
+    "OptimismSepoliaRPC": {
+      "name": "Optimism Sepolia RPC",
       "type": "string",
       "defaultValue": "",
       "description": ""
     },
-    "goerliCPNBeneficiaryAddress": {
-      "name": "Goerli address",
+    "OptimismSepoliaBeneficiaryAddress": {
+      "name": "Optimism Sepolia address",
       "type": "string",
       "defaultValue": "",
       "description": ""
