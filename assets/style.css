@@ -455,6 +455,8 @@ details > summary:before {
   cursor: pointer;
   text-align: right;
   color: var(--foreground-secondary-color);
+  font-family: "Capsules", "Inconsolata", monospace;
+  font-size: var(--font-size-2);
 }
 
 .exit-button:hover .exit-button-text {
@@ -785,9 +787,6 @@ details > summary:before {
   align-items: center;
   gap: var(--spacing-1);
 }
-#post-form-state-button {
-  color: var(--foreground-color);
-}
 
 #post-body {
   margin-top: var(--spacing-5);
@@ -932,6 +931,7 @@ details > summary:before {
   border: none;
   padding: var(--spacing-1) 0px;
   cursor: pointer;
+  font-family: "Capsules", "Inconsolata", monospace;
 }
 .form-button:hover .form-button-text {
   text-decoration: underline;
@@ -939,6 +939,7 @@ details > summary:before {
 .form-button:disabled {
   color: var(--foreground-secondary-color);
   cursor: crosshair;
+  text-decoration: none;
 }
 .form-button:disabled .form-button-text {
   color: var(--foreground-secondary-color);

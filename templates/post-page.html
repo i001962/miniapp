@@ -11,21 +11,19 @@
   <details id="post-form-collect-reveal">
     <summary id="post-form-collect-toggle" class="form-toggle">mint</summary>
     <div id="post-form-collect-container">
-      <div id="post-form-state" class="negative-space">
-        <details id="post-form-state-reveal">
-          <summary id="post-form-state-toggle" class="form-toggle"><span id="post-form-state-chain" class="post-form-state-item-value"></span><span style="visibility: hidden;">collection <a id="post-form-state-project-id" class="post-form-state-item-value" target="_blank"></a>:<span id="post-form-state-nft-category" class="post-form-state-item-value"></span></span>
-            </summary>
-          <div class="form-section-description">Specify the chain you want to collect this post from. There may be different availabilities of the post on each chain.</div>
-          <div class="form-section">
-            <div class="form-item">
-              <div class="form-label">Chain</div>
-              <div class="form-value form-select-value">
-                <select id="post-form-state-chain-input" name="chain">
-                  <option value="ethereum sepolia">Ethereum Sepolia</option>
-                  <option value="optimism sepolia">Optimism Sepolia</option>
-                </select>
-              </div>
-            </div>
+    <div class="form-section">
+      <div class="form-item">
+        <div class="form-label">Chain</div>
+        <div class="form-value form-select-value">
+          <select id="post-form-state-chain-input" name="chain">
+            <option value="ethereum sepolia">Ethereum Sepolia</option>
+            <option value="optimism sepolia">Optimism Sepolia</option>
+          </select>
+        </div>
+      </div>
+      <div id="collect-post-form" class="form negative-space">
+        <span id="collect-post-form-header" class="form-header"></span>
+        <div class="form-body">
             <div class="form-item" style="visibility: hidden;">
               <div class="form-label">Collection ID</div>
               <div class="form-value"><input type="number" value="" id="post-form-state-project-id-input" min="1"></div>
@@ -35,13 +33,6 @@
               <div class="form-value"><input type="number" value="" id="post-form-state-nft-category-input" min="1"></div>
             </div>
           </div>
-          <div id="post-form-state-error-message" class="form-error-message mobile-padding"></div>
-          <button id="post-form-state-button" class="form-button">[ <span id="post-form-state-button-text" class="form-button-text">update</span> ]</button>
-        </details>
-      </div>
-      <div id="collect-post-form" class="form negative-space">
-        <span id="collect-post-form-header" class="form-header"></span>
-        <div class="form-body">
           <details id="collect-post-form-options-reveal">
             <summary id="collect-post-form-options-toggle" class="form-toggle form-main-toggle">options</summary>
             <div class="form-section-description">Set the address that will get the copies you are paying for.</div>
@@ -53,7 +44,7 @@
                 </div>
               </div>
               <div class="form-item form-item-large">
-                <div class="form-label">Address <button id="collect-post-form-load-address-button" class="form-load-address-button">[ <span class="form-load-address-button-text">connect wallet</span> ]</button></div>
+                <div class="form-label">Address <button id="collect-post-form-load-address-button" class="form-load-address-button"><span class="form-load-address-button-text">connect wallet</span></button></div>
                 <div class="form-value">
                   <input type="text" placeholder="Defaults to your address" id="collect-post-form-beneficiary-input">
                 </div>
@@ -102,7 +93,7 @@
               </div>
               <div class="form-item form-item-large">
                 <div class="form-label">Address
-                  <button id="record-post-form-load-address-button" class="form-load-address-button">[ <span class="form-load-addres-button-text">connect wallet</span> ]</button>
+                  <button id="record-post-form-load-address-button" class="form-load-address-button"><span class="form-load-addres-button-text">connect wallet</span></button>
                 </div>
                 <div class="form-value">
                   <input type="text" placeholder="Defaults to your address" id="record-post-form-beneficiary-input">
@@ -127,7 +118,7 @@
       </div>
       <div id="post-form-loading-animation" class="loading-animation"></div>
       <div id="post-form-error-message" class="form-error-message"></div>
-      <button id="post-form-button" class="form-button form-main-button">[ <span id="post-form-button-text" class="form-button-text">mint</span> ]<span id="post-form-button-loading-animation" class="loading-animation button-loading-animation"></span></button>
+      <button id="post-form-button" class="form-button form-main-button"><span id="post-form-button-text" class="form-button-text">mint</span><span id="post-form-button-loading-animation" class="loading-animation button-loading-animation"></span></button>
     </div>
   </details>
 </div>
@@ -167,13 +158,12 @@
 
   /// Get admin settings.
   const loadSettings = () => {
-    const postFormStateChain = document.getElementById("post-form-state-chain");
-    const postFormStateProjectId = document.getElementById("post-form-state-project-id");
-    const postFormStateNftCategory = document.getElementById("post-form-state-nft-category");
+    const postFormStateChainInput = document.getElementById("post-form-state-chain-input");
+    const postFormStateProjectIdInput = document.getElementById("post-form-state-project-id-input");
+    const postFormStateNftCategoryInput = document.getElementById("post-form-state-nft-category-input");
 
-    postFormStateChain.innerHTML = defaultChain;
-    postFormStateProjectId.innerHTML = cpnProjectId(defaultChain);
-    postFormStateNftCategory.innerHTML = defaultNftCategory;
+    postFormStateChainInput.value = defaultChain;
+    postFormStateNftCategoryInput.value = defaultNftCategory;
 
     fetch("{{ assets_prefix }}templateSettings.json")
       // only if response is 200 OK, parse the JSON
@@ -199,8 +189,8 @@
           ...env,
           ...data
         };
-        if (data.mainnetCollectionID != null) postFormStateProjectId.innerHTML = Number(data.mainnetCollectionID);
-        if (data.mainnetCollectionCategory != null) postFormStateNftCategory.innerHTML = Number(data.mainnetCollectionCategory);
+        if (data.mainnetCollectionID != null) postFormStateProjectIdInput.value = Number(data.mainnetCollectionID);
+        if (data.mainnetCollectionCategory != null) postFormStateNftCategoryInput.value = Number(data.mainnetCollectionCategory);
         if (data.highlightColor) highlightColor = data.highlightColor;
         const r = document.querySelector(':root');
         r.style.setProperty('--link-color', highlightColor);
@@ -578,15 +568,11 @@
     const postDate = document.getElementById("post-date");
     const postSubtitle = document.getElementById("post-subtitle");
     const postLink = document.getElementById("post-link");
-    const postFormStateChain = document.getElementById("post-form-state-chain");
-    const postFormStateProjectId = document.getElementById("post-form-state-project-id");
-    const postFormStateNftCategory = document.getElementById("post-form-state-nft-category");
     const postFormStateChainInput = document.getElementById("post-form-state-chain-input");
     const postFormStateProjectIdInput = document.getElementById("post-form-state-project-id-input");
     const postFormStateNftCategoryInput = document.getElementById("post-form-state-nft-category-input");
     const postFormStateReveal = document.getElementById("post-form-state-reveal");
     const postFormStateErrorMessage = document.getElementById("post-form-state-error-message");
-    const postFormStateButton = document.getElementById("post-form-state-button");
     const postFormErrorMessage = document.getElementById("post-form-error-message");
     const postFormButton = document.getElementById("post-form-button");
     const postCoverImage = document.getElementById("post-cover-image");
@@ -704,12 +690,9 @@
 
     const updateFormState = async () => {
       // Get a reference to the chain, project ID, and category fields.
-      const chain = postFormStateChain.innerHTML;
-      const projectId = parseInt(postFormStateProjectId.innerHTML);
-      const category = parseInt(postFormStateNftCategory.innerHTML);
-
-      // Set the project ID href.
-      postFormStateProjectId.setAttribute('href', `${projectLinkBase(chain)}${postFormStateProjectId.innerHTML}`);
+      const chain = postFormStateChainInput.value;
+      const projectId = parseInt(postFormStateProjectIdInput.value);
+      const category = parseInt(postFormStateNftCategoryInput.value);
 
       // Set a chain object.
       if (!tiersCache[chain]) tiersCache[chain] = {};
@@ -860,50 +843,12 @@
       }
     }
 
-    // Populate the state input values when opened.
-    postFormStateReveal.addEventListener("toggle", () => {
-      if (!this.open) return;
-      postFormStateChainInput.selectedIndex = resolveChainSelectIndex(postFormStateChain.innerHTML);
-      postFormStateProjectIdInput.value = postFormStateProjectId.innerHTML;
-      postFormStateNftCategoryInput.value = postFormStateNftCategory.innerHTML;
-    });
-
     // Change the project ID input on network change to the default.
-    postFormStateChainInput.addEventListener("change", () => {
-      postFormStateProjectIdInput.value = cpnProjectId(postFormStateChainInput.value);
-    });
+    postFormStateChainInput.addEventListener("change", async () => {
+      postFormStateProjectIdInput.value = resolveCollectionId(postFormStateChainInput.value);
 
-    // Submit the state change form.
-    postFormStateButton.onclick = async () => {
-      // Check for empty values.
-      if (!postFormStateProjectIdInput.value || !postFormStateNftCategoryInput.value) {
-        postFormStateErrorMessage.innerHTML = "Fill out the form.";
-        postFormStateErrorMessage.style.display = "block";
-        return;
-      } else {
-        postFormStateErrorMessage.style.display = "none";
-      }
-
-      // Reload the mint state if the chain changed.
-      if (postFormStateChain.innerHTML != postFormStateChainInput.value) {
-        // Set the collection ID value to the default if it hasn't changed.
-        if (postFormStateProjectId.innerHTML == postFormStateProjectIdInput.value && postFormStateProjectIdInput.value == resolveCollectionID(postFormStateChain.innerHTML)) {
-          postFormStateProjectIdInput.value = resolveCollectionId(postFormStateChainInput.value);
-        }
-        // Set the collection category value to the default if it hasn't changed.
-        if (postFormStateNftCategory.innerHTML == postFormStateNftCategoryInput.value && postFormStateNftCategoryInput.value == resolveCollectionCategory(postFormStateChain.innerHTML)) {
-          postFormStateNftCategoryInput.value = resolveCollectionCategory(postFormStateChainInput.value);
-        }
-
-        postFormStateChain.innerHTML = postFormStateChainInput.value;
-      }
-
-      postFormStateProjectId.innerHTML = postFormStateProjectIdInput.value;
-      postFormStateProjectId.setAttribute('href', `${projectLinkBase(postFormStateChain.innerHTML)}${postFormStateProjectId.innerHTML}`);
-      postFormStateNftCategory.innerHTML = postFormStateNftCategoryInput.value;
-
-      // Close the state change form.
-      postFormStateReveal.open = false;
+      // Set the collection category value to the default if it hasn't changed.
+      postFormStateNftCategoryInput.value = resolveCollectionCategory(postFormStateChainInput.value);
 
       // Show the loading animation.
       startLoadingAnimation('post-form-loading-animation');
@@ -913,7 +858,7 @@
 
       // Stop the loading animation.
       stopLoadingAnimation('post-form-loading-animation');
-    }
+    });
 
     await updateFormState();
 
