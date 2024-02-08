@@ -93,9 +93,9 @@ const resolveCollectionCategory = (chain) => {
 const resolveCPNBeneficiaryAddress = (chain) => {
   switch (chain) {
     case "ethereum sepolia":
-      return env.ethereumSepoliaCPNBeneficiaryAddress;
+      return env.ethereumSepoliaBeneficiaryAddress;
     case "optimism sepolia":
-      return env.optimismSepoliaCPNBeneficiaryAddress;
+      return env.optimismSepoliaBeneficiaryAddress;
   }
 }
 

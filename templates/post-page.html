@@ -175,22 +175,22 @@
       })
       .then(data => {
         // Two sets of variables are available if the user is using the latest template.
-        // Mainnet:
-        // - mainnetCollectionID
-        // - mainnetCollectionCategory
-        // - mainnetRPC
-        // - mainnetCPNBeneficiaryAddress
-        // Goerli:
-        // - goerliCollectionID
-        // - goerliCollectionCategory
-        // - goerliRPC
-        // - goerliCPNBeneficiaryAddress
+        // Ethereum Sepolia:
+        // - ethereumSepoliaCollectionID
+        // - ethereumSepoliaCollectionCategory
+        // - ethereumSepoliaRPC
+        // - ethereumSepoliaBeneficiaryAddress
+        // Optimism Sepolia:
+        // - optimismSepoliaCollectionID
+        // - optimismSepoliaCollectionCategory
+        // - optimismSepoliaRPC
+        // - optimismSepoliaBeneficiaryAddress
         env = {
           ...env,
           ...data
         };
-        if (data.mainnetCollectionID != null) postFormStateProjectIdInput.value = Number(data.mainnetCollectionID);
-        if (data.mainnetCollectionCategory != null) postFormStateNftCategoryInput.value = Number(data.mainnetCollectionCategory);
+        if (data.ethereumSepoliaCollectionID != null) postFormStateProjectIdInput.value = Number(data.ethereumSepoliaCollectionID);
+        if (data.ethereumSepoliaCollectionCategory != null) postFormStateNftCategoryInput.value = Number(data.ethereumSepoliaCollectionCategory);
         if (data.highlightColor) highlightColor = data.highlightColor;
         const r = document.querySelector(':root');
         r.style.setProperty('--link-color', highlightColor);
