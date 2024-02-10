@@ -712,11 +712,30 @@ details > summary:before {
   font-weight: var(--font-weight-2);
 }
 
-.tag-text:hover {
-  text-decoration: underline;
-  cursor: pointer;
+.tag .remove {
+  display: none;   
+  margin-left: var(--spacing-1);
+  font-weight: var(--font-weight-1);
 }
 
+.tag.active .remove {
+  display: inline; 
+}
+
+.tag:hover .tag-text {
+  text-decoration: underline;
+}
+.tag.active:hover .tag-text {
+  text-decoration: none;
+}
+
+.tag.active:hover .remove {
+  text-decoration: underline; 
+}
+
+.tag-text:hover {
+  cursor: pointer;
+}
 
 .post-mode-button {
   align-self: center;

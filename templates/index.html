@@ -20,7 +20,7 @@ window.onpopstate = function(event) {
       <div id="tags">
         <div id="default-tag" class="tag"><span class="tag-text">all</span></div>
         {% for tag in planet.tags %}
-          <div id="custom-tag-{{ tag }}" class="tag custom-tag"><span class="tag-text">{{ tag }}</span></div>
+        <div id="custom-tag-{{ tag }}" class="tag custom-tag"><span class="tag-text">{{ tag }}</span><span class="remove">×</span></div>
         {% endfor %}
       </div>
     </div>
