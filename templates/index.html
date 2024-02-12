@@ -172,6 +172,7 @@ window.onpopstate = function(event) {
       frameVideo.loop = true;
       frameVideo.poster = "{{ assets_prefix }}" + postId + "/_videoThumbnail.png";
       frameVideo.playsInline = true;
+      frameVideo.preload = "auto";
       frameVideo.muted = true;  // So hover to play works. See https://developer.chrome.com/blog/autoplay/
       // TODO: If user has interacted with the page, unmute.
       frameVideo.controls = false;
