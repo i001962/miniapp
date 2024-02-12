@@ -713,13 +713,13 @@ details > summary:before {
 }
 
 .tag .remove {
-  display: none;   
+  display: none;
   margin-left: var(--spacing-1);
   font-weight: var(--font-weight-1);
 }
 
 .tag.active .remove {
-  display: inline; 
+  display: inline;
 }
 
 .tag:hover .tag-text {
@@ -730,7 +730,7 @@ details > summary:before {
 }
 
 .tag.active:hover .remove {
-  text-decoration: underline; 
+  text-decoration: underline;
 }
 
 .tag-text:hover {
@@ -1176,6 +1176,21 @@ details > summary:before {
 
 .attachment-link:link::before, .attachment-link:visited::before {
   content: '';
+  display: inline-block;
+  margin-right: var(--spacing-1);
+  font: "Capsules", "Inconsolata", monospace;
+}
+
+.aggregation-link:link, .aggregation-link:visited {
+  display: block;
+  color: var(--link-color);
+  text-decoration: none;
+  margin-top: var(--spacing-3);
+  margin-bottom: var(--spacing-3);
+}
+
+.aggregation-link:link::before, .aggregation-link:visited::before {
+  content: '▰';
   display: inline-block;
   margin-right: var(--spacing-1);
   font: "Capsules", "Inconsolata", monospace;

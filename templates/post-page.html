@@ -129,6 +129,7 @@
 </div>
 <div id="post-content" class="mobile-padding"></div>
 <div id="post-attachments" class="mobile-padding"></div>
+<div id="post-aggregation" class="mobile-padding"></div>
 <script>
 
   // State constants.
@@ -883,6 +884,33 @@
         container.appendChild(link);
         container.style.paddingTop = "1em";
       }
+    }
+  }
+
+  const decorateAggregation = async (post) => {
+    const container = document.getElementById("post-aggregation")
+    const originalSiteDomain = post.originalSiteDomain;
+    const originalSiteName = post.originalSiteName;
+    const originalPostID = post.originalPostID;
+    if (originalSiteDomain && originalSiteName && originalPostID) {
+      let url = "https://"
+      if (originalSiteDomain.startsWith("k51")) {
+        url = url + originalSiteDomain + ".ipfs2.eth.limo";
+      }
+      else if (originalSiteDomain.endsWith(".eth")) {
+        url = url + originalSiteDomain + ".limo";
+      }
+      else {
+        url = url + originalSiteDomain;
+      }
+      url = url + "/" + originalPostID + "/";
+      const link = document.createElement("a");
+      link.href = url;
+      link.target = "_blank";
+      link.innerHTML = "Aggregated from " + originalSiteName;
+      link.className = "aggregation-link";
+      container.appendChild(link);
+      container.style.paddingTop = "1em";
     }
   }
 </script>
