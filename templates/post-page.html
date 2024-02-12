@@ -650,6 +650,9 @@
       postCoverVideo.loop = true;
       postCoverVideo.muted = true;
       postCoverVideo.controls = true;
+      postCoverVideo.playsInline = true;
+      postCoverVideo.preload = "auto";
+      postCoverVideo.poster = "{{ assets_prefix }}" + postId + "/_videoThumbnail.png";
       postCoverImage.src = "";
       postCoverVideo.src = videoSrc;
       postCoverVideo.addEventListener("click", (e) => e.stopPropagation());
