@@ -170,6 +170,8 @@ window.onpopstate = function(event) {
       frameVideo.style.display = "block"
       frameVideo.autoplay = false;
       frameVideo.loop = true;
+      frameVideo.poster = "{{ assets_prefix }}" + postId + "/_videoThumbnail.png";
+      frameVideo.playsInline = true;
       frameVideo.muted = true;  // So hover to play works. See https://developer.chrome.com/blog/autoplay/
       // TODO: If user has interacted with the page, unmute.
       frameVideo.controls = false;
@@ -179,7 +181,6 @@ window.onpopstate = function(event) {
       subtitle.appendChild(frameVideoCurrentTime);
       subtitle.appendChild(frameVideoDuration);
       frameVideo.src = coverVideoSrc;
-      frameVideo.loading = "lazy";
       prepareAudioAnimation(frameVideoAnimation.id);
       postFrame.appendChild(frameVideo);
 
