@@ -379,8 +379,8 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
         forkFormNewJbErrorMessage.classList.add("warn");
         forkFormNewJbErrorMessage.style.display = "block";
         forkFormNewJbSubmitButton.disabled = true;
-      } else if ((forkFormNewJbRevnetDurationInput.value != "0" && forkFormNewJbRevnetBonusFrequencyInput.value > forkFormNewJbRevnetDurationInput.value) || (forkFormNewJbRevnetDurationInput2.value != "0" && forkFormNewJbRevnetBonusFrequencyInput2.value > forkFormNewJbRevnetDurationInput2.value)) { 
-        forkFormNewJbErrorMessage.innerHTML = `The bonus frequency must be less than the stage duration.`;
+      } else if ((forkFormNewJbRevnetDurationInput.value != "0" &&  forkFormNewJbRevnetDurationInput.value & forkFormNewJbRevnetBonusFrequencyInput.value != 0) || (forkFormNewJbRevnetDurationInput2.value != "0" && forkFormNewJbRevnetDurationInput2.value % forkFormNewJbRevnetBonusFrequencyInput2.value != 0)) { 
+        forkFormNewJbErrorMessage.innerHTML = `The stage duration must be a multiple of the bonus frequency.`;
         forkFormNewJbErrorMessage.classList.add("warn");
         forkFormNewJbErrorMessage.style.display = "block";
         forkFormNewJbSubmitButton.disabled = true;
