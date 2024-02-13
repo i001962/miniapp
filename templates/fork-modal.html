@@ -360,6 +360,7 @@
       forkFormNewJbProjectOwnerInput.value = signer;
     };
 
+
     const checkState = async () => {
       // Set error messages if the currently inputted values are too small.
       if (Number(forkFormNewJbRevnetBonusPercentInput.value) > 100 || Number(forkFormNewJbRevnetBonusPercentInput2.value) > 100 || Number(forkFormNewJbRevnetBonusPercentInput2.value) > 100 || 
@@ -378,7 +379,7 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
         forkFormNewJbErrorMessage.classList.add("warn");
         forkFormNewJbErrorMessage.style.display = "block";
         forkFormNewJbSubmitButton.disabled = true;
-      } else if ((forkFormNewJbRevnetDurationInput.value != 0 && forkFormNewJbRevnetBonusFrequencyInput.value > forkFormNewJbRevnetDurationInput.value) || (forkFormNewJbRevnetDurationInput2.value != 0 && forkFormNewJbRevnetBonusFrequencyInput2.value > forkFormNewJbRevnetDurationInput2.value)) { 
+      } else if ((forkFormNewJbRevnetDurationInput.value != "0" && forkFormNewJbRevnetBonusFrequencyInput.value > forkFormNewJbRevnetDurationInput.value) || (forkFormNewJbRevnetDurationInput2.value != "0" && forkFormNewJbRevnetBonusFrequencyInput2.value > forkFormNewJbRevnetDurationInput2.value)) { 
         forkFormNewJbErrorMessage.innerHTML = `The bonus frequency must be less than the stage duration.`;
         forkFormNewJbErrorMessage.classList.add("warn");
         forkFormNewJbErrorMessage.style.display = "block";
@@ -506,8 +507,8 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
       const stage1PriceFloorTaxIntensity = Math.round(forkFormNewJbRevnetExitInput.value * 10000);
       const stage2PriceFloorTaxIntensity = Math.round(forkFormNewJbRevnetExitInput2.value * 10000);
       const stage3PriceFloorTaxIntensity = Math.round(forkFormNewJbRevnetExitInput3.value * 10000);
-      const stage2StartsAtOrAfter = forkFormNewJbRevnetDurationInput.value == 0 ? 0 : Math.floor(Date.now() / 1000) + forkFormNewJbRevnetDurationInput.value * 86400;
-      const stage3StartsAtOrAfter = forkFormNewJbRevnetDurationInput2.value == 0 ? 0 : stage2StartsAtOrAfter + forkFormNewJbRevnetDurationInput2.value * 86400;
+      const stage2StartsAtOrAfter = forkFormNewJbRevnetDurationInput.value == "0" ? 0 : Math.floor(Date.now() / 1000) + forkFormNewJbRevnetDurationInput.value * 86400;
+      const stage3StartsAtOrAfter = forkFormNewJbRevnetDurationInput2.value == "0" ? 0 : stage2StartsAtOrAfter + forkFormNewJbRevnetDurationInput2.value * 86400;
 
       try {
         // Try to process the transaction.
@@ -616,12 +617,12 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
     
     // Get Duration input 1, onchange either show or hide section 2 and 3.
     forkFormNewJbRevnetDurationInput.addEventListener("input", () => {
-      if (forkFormNewJbRevnetDurationInput.value === "" || forkFormNewJbRevnetDurationInput.value === 0) {
+      if (forkFormNewJbRevnetDurationInput.value === "" || forkFormNewJbRevnetDurationInput.value === "0") {
          forkFormNewJbRevnetStage2.classList.add("hidden");
          forkFormNewJbRevnetStage3.classList.add("hidden");
       } else {
         forkFormNewJbRevnetStage2.classList.remove("hidden");
-        if (forkFormNewJbRevnetDurationInput2.value == "" || forkFormNewJbRevnetDurationInput2.value == 0) {
+        if (forkFormNewJbRevnetDurationInput2.value == "" || forkFormNewJbRevnetDurationInput2.value == "0") {
           forkFormNewJbRevnetStage3.classList.add("hidden");
         } else {
           forkFormNewJbRevnetStage3.classList.remove("hidden");

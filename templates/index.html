@@ -89,7 +89,7 @@ window.onpopstate = function(event) {
 
   const decoratePostFrameState = (postFrame,  projectId, encodedIPFSUri) => {
     const postFormStateChainInput = document.getElementById("post-form-state-chain-input");
-    const chain = postFormStateChain.value;
+    const chain = postFormStateChainInput.value;
 
     if (!tiersCache[chain]) tiersCache[chain] = {};
     if (!tiersCache[chain][projectId]) tiersCache[chain][projectId] = {};
@@ -113,7 +113,7 @@ window.onpopstate = function(event) {
 
   const decoratePostRowState = (postRow,  projectId, encodedIPFSUri) => {
     const postFormStateChainInput = document.getElementById("post-form-state-chain-input");
-    const chain = postFormStateChain.value;
+    const chain = postFormStateChainInput.value;
 
     if (!tiersCache[chain]) tiersCache[chain] = {};
     if (!tiersCache[chain][projectId]) tiersCache[chain][projectId] = {};
