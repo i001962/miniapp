@@ -8,7 +8,7 @@
         To let people pay you when minting your posts, you'll need to make an onchain collection below.
       </div>
       <div class="fork-info">
-        Croptop websites connect to smart contracts on Ethereum for easy minting while giving creators pro tools to manage their money with their community. Your collection's info can be accessed publicly, and its money rules can be adjusted only onchain by the admin of the collection. 
+        Croptop websites connect to blockchains for easy minting while giving creators pro tools to manage their money with their community. Your collection's info can be viewed by anyone, and its onchain money rules can only be adjusted by the admin of the collection. 
       </div>
       <div class="fork-info">
         Below, you can create a collection. When deploying, make sure the current website you're on is https://croptop.eth.limo, or another croptop website you trust. 
@@ -346,6 +346,8 @@
     const forkFormNewJbRevnetExitInput3 = document.getElementById("fork-form-new-jb-revnet-exit-input-3");
     const forkFormNewJbRevnetIssuanceInput3 = document.getElementById("fork-form-new-jb-revnet-issuance-input-3");
     const forkFormNewJbRevnetDurationInput3 = document.getElementById("fork-form-new-jb-revnet-duration-input-3");
+    const forkFormNewJbRevnetStage2 = document.getElementById("fork-form-new-jb-revnet-stage-2");
+    const forkFormNewJbRevnetStage3 = document.getElementById("fork-form-new-jb-revnet-stage-3");
 
     // Disable the button.
     forkFormNewJbSubmitButton.disabled = true;
@@ -359,6 +361,30 @@
       signer = (await getSigner()).address;
       forkFormNewJbProjectOwnerInput.value = signer;
     };
+
+    // Get Duration input 1, onchange either show or hide section 2 and 3.
+    forkFormNewJbRevnetDurationInput.addEventListener("input", () => {
+      if (forkFormNewJbRevnetDurationInput.value == "" || forkFormNewJbRevnetDurationInput.value == "0") {
+         forkFormNewJbRevnetStage2.classList.add("hidden");
+         forkFormNewJbRevnetStage3.classList.add("hidden");
+      } else if (parseInt(forkFormNewJbRevnetDurationInput.value) % parseInt(forkFormNewJbRevnetBonusFrequencyInput.value) == 0) {
+        forkFormNewJbRevnetStage2.classList.remove("hidden");
+        if (forkFormNewJbRevnetDurationInput2.value == "" || forkFormNewJbRevnetDurationInput2.value == "0") {
+          forkFormNewJbRevnetStage3.classList.add("hidden");
+        } else if (parseInt(forkFormNewJbRevnetDurationInput2.value) % parseInt(forkFormNewJbRevnetBonusFrequencyInput2.value) == 0) {
+          forkFormNewJbRevnetStage3.classList.remove("hidden");
+        } 
+      }
+    })
+
+    // Get Duration input 2, onchange either show or hide section 3.
+    forkFormNewJbRevnetDurationInput2.addEventListener("input", (input) => {
+      if (forkFormNewJbRevnetDurationInput2.value == "" || forkFormNewJbRevnetDurationInput2.value == "0") {
+         forkFormNewJbRevnetStage3.classList.add("hidden");
+      } else if (parseInt(forkFormNewJbRevnetDurationInput2.value) % parseInt(forkFormNewJbRevnetBonusFrequencyInput2.value) == 0) {
+        forkFormNewJbRevnetStage3.classList.remove("hidden");
+      }
+    });
 
 
     const checkState = async () => {
@@ -379,8 +405,13 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
         forkFormNewJbErrorMessage.classList.add("warn");
         forkFormNewJbErrorMessage.style.display = "block";
         forkFormNewJbSubmitButton.disabled = true;
-      } else if ((forkFormNewJbRevnetDurationInput.value != "0" && forkFormNewJbRevnetDurationInput.value % forkFormNewJbRevnetBonusFrequencyInput.value != 0) || (forkFormNewJbRevnetDurationInput2.value != "0" && forkFormNewJbRevnetDurationInput2.value % forkFormNewJbRevnetBonusFrequencyInput2.value != 0)) { 
-        forkFormNewJbErrorMessage.innerHTML = `The stage duration must be a multiple of the bonus frequency.`;
+      } else if (forkFormNewJbRevnetDurationInput.value != "" && forkFormNewJbRevnetDurationInput.value != "0" && parseInt(forkFormNewJbRevnetDurationInput.value) % parseInt(forkFormNewJbRevnetBonusFrequencyInput.value) != 0) { 
+        forkFormNewJbErrorMessage.innerHTML = `The stage duration (${forkFormNewJbRevnetDurationInput.value}) must be a multiple of the bonus frequency (${forkFormNewJbRevnetBonusFrequencyInput.value}).`;
+        forkFormNewJbErrorMessage.classList.add("warn");
+        forkFormNewJbErrorMessage.style.display = "block";
+        forkFormNewJbSubmitButton.disabled = true;
+      } else if (forkFormNewJbRevnetDurationInput2.value != "" && forkFormNewJbRevnetDurationInput2.value != "0" && parseInt(forkFormNewJbRevnetDurationInput2.value) % parseInt(forkFormNewJbRevnetBonusFrequencyInput2.value) != 0) { 
+        forkFormNewJbErrorMessage.innerHTML = `The second stage duration (${forkFormNewJbRevnetDurationInput2.value}) must be a multiple of the bonus frequency (${forkFormNewJbRevnetBonusFrequencyInput2.value}).`;
         forkFormNewJbErrorMessage.classList.add("warn");
         forkFormNewJbErrorMessage.style.display = "block";
         forkFormNewJbSubmitButton.disabled = true;
@@ -610,34 +641,6 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
     const forkFormAllowanceMaximumTotalSupplyInput = document.getElementById("fork-form-allowance-maximum-total-supply-input");
     const forkFormAllowanceAddressesInput = document.getElementById("fork-form-allowance-addresses-input");
     const forkFormAllowanceErrorMessage = document.getElementById("fork-form-allowance-error-message");
-    const forkFormNewJbRevnetStage2 = document.getElementById("fork-form-new-jb-revnet-stage-2");
-    const forkFormNewJbRevnetStage3 = document.getElementById("fork-form-new-jb-revnet-stage-3");
-    const forkFormNewJbRevnetDurationInput = document.getElementById("fork-form-new-jb-revnet-duration-input");
-    const forkFormNewJbRevnetDurationInput2 = document.getElementById("fork-form-new-jb-revnet-duration-input-2");
-    
-    // Get Duration input 1, onchange either show or hide section 2 and 3.
-    forkFormNewJbRevnetDurationInput.addEventListener("input", () => {
-      if (forkFormNewJbRevnetDurationInput.value === "" || forkFormNewJbRevnetDurationInput.value === "0") {
-         forkFormNewJbRevnetStage2.classList.add("hidden");
-         forkFormNewJbRevnetStage3.classList.add("hidden");
-      } else {
-        forkFormNewJbRevnetStage2.classList.remove("hidden");
-        if (forkFormNewJbRevnetDurationInput2.value == "" || forkFormNewJbRevnetDurationInput2.value == "0") {
-          forkFormNewJbRevnetStage3.classList.add("hidden");
-        } else {
-          forkFormNewJbRevnetStage3.classList.remove("hidden");
-        } 
-      }
-    })
-
-    // Get Duration input 2, onchange either show or hide section 3.
-    forkFormNewJbRevnetDurationInput2.addEventListener("input", (input) => {
-      if (forkFormNewJbRevnetDurationInput2.value === "" || forkFormNewJbRevnetDurationInput2.value === 0) {
-         forkFormNewJbRevnetStage3.classList.add("hidden");
-      } else {
-        forkFormNewJbRevnetStage3.classList.remove("hidden");
-      }
-    });
 
     // Submit the form.
     forkFormAllowanceSubmitButton.onclick = async () => {
