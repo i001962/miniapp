@@ -858,7 +858,8 @@ details > summary:before {
 }
 .form-section-description {
   margin-top: var(--spacing-3);
-  color: var(--foreground-color);
+  margin-bottom: var(--spacing-2);
+  color: var(--foreground-secondary-color);
   width: var(--max-width);
 }
 .form-section {
