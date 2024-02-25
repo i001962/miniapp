@@ -547,6 +547,10 @@ details > summary:before {
   margin-bottom: var(--spacing-3);
 }
 
+#header-treasury::-webkit-scrollbar {
+  display: none;
+}
+
 #header-treasury a {
   color: var(--foreground-secondary-color);
 }
