@@ -817,7 +817,6 @@ details > summary:before {
 
 #post-cover-image, #post-cover-video, #post-content img {
   border: var(--border-width) solid var(--background-secondary-color);
-  width: var(--reduced-width2);
   max-width: var(--max-width);
   object-position: left;
   object-fit: cover;
