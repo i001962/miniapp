@@ -43,7 +43,7 @@ window.onpopstate = function(event) {
   // Layout constants.
   const horizontalMargin = 20;
   const verticalMargin = 20;
-  const postFrameWidthClasses = ["post-frame-w1", "post-frame-w2", "post-frame-w3"];
+  const postFrameWidthClasses = ["post-frame-w1"]; //, "post-frame-w2", "post-frame-w3"];
   const noScrollEffectEdgeDistance = 80;
   const toggleNavVisibilityScrollThreshold = 50;
   const pagingMargingBottom = 100;
@@ -592,7 +592,6 @@ window.onpopstate = function(event) {
       const paddingTop = headerContainerHeight + borderHeight;
       postModal.style.paddingTop = paddingTop + 'px';
       postModal.style.scrollPaddingTop = parseFloat(window.getComputedStyle(postModal).getPropertyValue('scroll-padding-top')) + paddingTop + "px";
-      postModal.style.height = `calc(100vh - (${paddingTop + 'px'}))`;
     });
 
     // Track the modal in browse history.
