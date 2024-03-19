@@ -247,69 +247,72 @@ Coarsely: 0 - none. 0.3 - some. 0.7 - more. 1 - lots.
             <button id="fork-form-new-jb-submit-button" class="form-button"><span id="fork-form-new-jb-submit-button-text" class="form-button-text">deploy collection</span><span id="fork-form-new-jb-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
           </details>
           <details>
-            <summary class="form-toggle form-main-toggle">Let Croptop post to your existing collection</summary>
-            <div class="form-section">
-              <div class="form-section-description">Give the Croptop contract permission to mint to your existing collection.</div>
-              <div class="form-item">
-                <div class="form-label">Collection ID</div>
-                <div class="form-value">
-                  <input type="number" placeholder="1" id="fork-form-operator-project-id-input" min="1">
+            <summary class="form-toggle form-main-toggle">Extras</summary>
+            <details>
+              <summary class="form-toggle form-main-toggle">Let Croptop post to your existing collection</summary>
+              <div class="form-section">
+                <div class="form-section-description">Give the Croptop contract permission to mint to your existing collection.</div>
+                <div class="form-item">
+                  <div class="form-label">Collection ID</div>
+                  <div class="form-value">
+                    <input type="number" placeholder="1" id="fork-form-operator-project-id-input" min="1">
+                  </div>
                 </div>
               </div>
-            </div>
-            <div id="fork-form-permission-error-message" class="form-error-message mobile-padding"></div>
-            <button id="fork-form-permission-submit-button" class="form-button"><span id="fork-form-permission-submit-button-text" class="form-button-text">give permission</span><span id="fork-form-permission-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
-          </details>
-          <details>
-            <summary class="form-toggle form-main-toggle">Set how Croptop posts to your existing collection</summary>
-            <div class="form-section">
-              <div class="form-section-description">Add new restrictions that mints to your existing collection must meet.</div>
-              <div class="form-item">
-                <div class="form-label">Collection ID</div>
-                <div class="form-value">
-                  <input type="number" placeholder="1" id="fork-form-allowance-project-id-input" min="1">
+              <div id="fork-form-permission-error-message" class="form-error-message mobile-padding"></div>
+              <button id="fork-form-permission-submit-button" class="form-button"><span id="fork-form-permission-submit-button-text" class="form-button-text">give permission</span><span id="fork-form-permission-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
+            </details>
+            <details>
+              <summary class="form-toggle form-main-toggle">Set how Croptop posts to your existing collection</summary>
+              <div class="form-section">
+                <div class="form-section-description">Add new restrictions that mints to your existing collection must meet.</div>
+                <div class="form-item">
+                  <div class="form-label">Collection ID</div>
+                  <div class="form-value">
+                    <input type="number" placeholder="1" id="fork-form-allowance-project-id-input" min="1">
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="form-section">
-              <div class="form-section-description">The price and total supply of each item in your collection are set by the first minter. Anyone can mint any content from anywhere to your collection, so long as the following restrictions that you set are met.</div>
-              <div class="form-item">
-                <div class="form-label">Minimum price</div>
-                <div class="form-value">
-                  <span class="ether form-input-prefix">Ξ</span><input type="number" placeholder="free" value="0.01" id="fork-form-allowance-minimum-price-input" min="0">
+              <div class="form-section">
+                <div class="form-section-description">The price and total supply of each item in your collection are set by the first minter. Anyone can mint any content from anywhere to your collection, so long as the following restrictions that you set are met.</div>
+                <div class="form-item">
+                  <div class="form-label">Minimum price</div>
+                  <div class="form-value">
+                    <span class="ether form-input-prefix">Ξ</span><input type="number" placeholder="free" value="0.01" id="fork-form-allowance-minimum-price-input" min="0">
+                  </div>
+                </div>
+                <div class="form-item">
+                  <div class="form-label">Min total supply</div>
+                  <div class="form-value">
+                    <input type="number" value="1" id="fork-form-allowance-minimum-total-supply-input" min="1">
+                  </div>
+                </div>
+                <div class="form-item">
+                  <div class="form-label">Max total supply</div>
+                  <div class="form-value">
+                    <input type="number" placeholder="unlimited" id="fork-form-allowance-maximum-total-supply-input" min="1">
+                  </div>
                 </div>
               </div>
-              <div class="form-item">
-                <div class="form-label">Min total supply</div>
-                <div class="form-value">
-                  <input type="number" value="1" id="fork-form-allowance-minimum-total-supply-input" min="1">
+              <div class="form-section">
+                <div class="form-item form-item-large">
+                  <div class="form-label">Addresses allowed to mint (one per line)</div>
+                  <div class="form-value">
+                    <textarea rows="4" id="fork-form-allowance-addresses-input" placeholder="leave empty for no restrictions"></textarea>
+                  </div>
                 </div>
               </div>
-              <div class="form-item">
-                <div class="form-label">Max total supply</div>
-                <div class="form-value">
-                  <input type="number" placeholder="unlimited" id="fork-form-allowance-maximum-total-supply-input" min="1">
+              <div class="form-section">
+                <div class="form-item">
+                  <div class="form-label">Category on your collection for which the above restrictions apply</div>
+                  <div class="form-value">
+                    <input type="number" value="0" id="fork-form-allowance-nft-category-input" min="0">
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="form-section">
-              <div class="form-item form-item-large">
-                <div class="form-label">Addresses allowed to mint (one per line)</div>
-                <div class="form-value">
-                  <textarea rows="4" id="fork-form-allowance-addresses-input" placeholder="leave empty for no restrictions"></textarea>
-                </div>
-              </div>
-            </div>
-            <div class="form-section">
-              <div class="form-item">
-                <div class="form-label">Category on your collection for which the above restrictions apply</div>
-                <div class="form-value">
-                  <input type="number" value="0" id="fork-form-allowance-nft-category-input" min="0">
-                </div>
-              </div>
-            </div>
-            <div id="fork-form-allowance-error-message" class="form-error-message mobile-padding"></div>
-            <button id="fork-form-allowance-submit-button" class="form-button"><span id="fork-form-allowance-submit-button-text" class="form-button-text">save restrictions</span><span id="fork-form-allowance-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
+              <div id="fork-form-allowance-error-message" class="form-error-message mobile-padding"></div>
+              <button id="fork-form-allowance-submit-button" class="form-button"><span id="fork-form-allowance-submit-button-text" class="form-button-text">save restrictions</span><span id="fork-form-allowance-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
+            </details>
           </details>
         </div>
       </div>
