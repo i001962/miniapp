@@ -873,6 +873,7 @@
 
   const decorateAttachments = async (post) => {
     const container = document.getElementById("post-attachments")
+    container.innerHTML = '';
     for (const attachment of post.attachments) {
       const attachmentFullURL = "{{ assets_prefix }}" + post.id + "/" + attachment;
       if (attachment.endsWith(".pdf")) {
@@ -889,6 +890,7 @@
 
   const decorateAggregation = async (post) => {
     const container = document.getElementById("post-aggregation")
+    container.innerHTML = '';
     const originalSiteDomain = post.originalSiteDomain;
     const originalSiteName = post.originalSiteName;
     const originalPostID = post.originalPostID;
