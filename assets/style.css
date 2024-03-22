@@ -822,12 +822,19 @@ details > summary:before {
 #post-cover-image, #post-cover-video, #post-content img {
   border: var(--border-width) solid var(--background-secondary-color);
   max-width: var(--max-width);
-  max-height: calc(100vh - 220px);
   margin-left: auto;
   margin-right: auto;
   object-position: left;
   object-fit: cover;
   display: block;
+}
+
+#post-cover-image, #post-content img {
+  max-height: calc(200vh);
+}
+
+#post-cover-video {
+  max-height: calc(100vh - 220px);
 }
 
 #post-cover-audio {
