@@ -318,7 +318,7 @@ window.onpopstate = function(event) {
 
     // Set the content.
     title.innerHTML = name;
-    subtitle.innerHTML = `${date} • <span class="post-row-state">click to ${verb}</span> ${ Object.keys(tags).length ? "•" : "" } ${Object.values(tags).map(tag => `(${tag})`).join(" ")}`;
+    subtitle.innerHTML = `${date} • <span class="post-row-state">click to ${verb}</span> ${ Object.keys(tags).length ? "•" : "" }${Object.values(tags).map(tag => `<div class="tag">${tag}</div>`).join(" ")}`;
 
     if (name == "✃") title.classList.add("bigger-font");
 

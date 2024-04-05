@@ -703,6 +703,7 @@ details > summary:before {
   margin-right: var(--spacing-1);
   display: inline-block;
   padding: var(--spacing-1) var(--spacing-2);
+  margin-bottom: var(--spacing-1);
 }
 
 #tags-container.active {
