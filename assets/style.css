@@ -120,6 +120,7 @@ a:visited,
 a:active {
   color: var(--link-color);
   text-decoration: none;
+  line-break: anywhere;
 }
 a:hover {
   text-decoration: underline;
