@@ -89,10 +89,10 @@
               <details id="fork-form-new-jb-revnet-reveal">
                 <summary class="form-toggle form-main-toggle">advanced</summary>
                 <div class="form-section">
-                  <div class="form-section-description">If you want a maintenance-free collection, you can make it automatically share revenues back to loyal supporters. Minters will have access to the collection's revenues alongside the admin, with preference to those who mint sooner and stick around longer.
+                  <div class="form-section-description">You can give minters access to the collection's revenues alongside the admin, with preference to those who mint sooner and stick around longer.
                   </div>
                   <div class="form-item">
-                    <div class="form-label">Share revenue with admin</div>
+                    <div class="form-label">Share revenue with minters</div>
                     <div class="form-value">
                       <input type="number" placeholder="0" value="50" id="fork-form-new-jb-revnet-share-input" min="0" max="100"><span class="form-input-suffix">%</span>
                     </div>
@@ -532,9 +532,9 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
       const stage1InitialIssuanceRate = fixedPointNumber(forkFormNewJbRevnetIssuanceInput.value, 18);
       const stage2InitialIssuanceRate = fixedPointNumber(forkFormNewJbRevnetIssuanceInput2.value, 18);
       const stage3InitialIssuanceRate = fixedPointNumber(forkFormNewJbRevnetIssuanceInput3.value, 18); 
-      const stage1BoostRate = Math.round(forkFormNewJbRevnetShareInput.value * 100);
-      const stage2BoostRate = Math.round(forkFormNewJbRevnetShareInput2.value * 100);
-      const stage3BoostRate = Math.round(forkFormNewJbRevnetShareInput3.value * 100);
+      const stage1BoostRate = 10000 - Math.round(forkFormNewJbRevnetShareInput.value * 100);
+      const stage2BoostRate = 10000 - Math.round(forkFormNewJbRevnetShareInput2.value * 100);
+      const stage3BoostRate = 10000 - Math.round(forkFormNewJbRevnetShareInput3.value * 100);
       const stage1PriceCeilingIncreasePercentage = Math.round(forkFormNewJbRevnetBonusPercentInput.value * 100);
       const stage2PriceCeilingIncreasePercentage = Math.round(forkFormNewJbRevnetBonusPercentInput2.value * 100);
       const stage3PriceCeilingIncreasePercentage = Math.round(forkFormNewJbRevnetBonusPercentInput3.value * 100);
