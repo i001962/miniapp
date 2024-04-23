@@ -39,7 +39,7 @@
                 </div>
               </div>
               <div class="form-item">
-                <div class="form-label">Collection Symbol</div>
+                <div class="form-label">Collection Ticker</div>
                 <div class="form-value">
                   <input type="text" placeholder="POSTS" id="fork-form-new-jb-collection-symbol-input">
                 </div>
@@ -324,7 +324,7 @@ Coarsely: 0 - none. 0.3 - some. 0.7 - more. 1 - lots.
   const decorateNewJbForm = () => {
     const forkFormChainInput = document.getElementById("fork-form-state-chain-input");
     const forkFormNewJbCollectionNameInput = document.getElementById("fork-form-new-jb-collection-name-input");
-    const forkFormNewJbCollectionSymbolInput = document.getElementById("fork-form-new-jb-collection-symbol-input");
+    const forkFormNewJbCollectionTickerInput = document.getElementById("fork-form-new-jb-collection-symbol-input");
     const forkFormNewJbProjectOwnerInput = document.getElementById("fork-form-new-jb-project-owner-input");
     const forkFormNewJbMinimumPriceInput = document.getElementById("fork-form-new-jb-minimum-price-input");
     const forkFormNewJbMinimumTotalSupplyInput = document.getElementById("fork-form-new-jb-minimum-total-supply-input");
@@ -437,7 +437,7 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
 
     // Update the form's state each time the values change.
     forkFormNewJbCollectionNameInput.addEventListener("input", queueCheckState);
-    forkFormNewJbCollectionSymbolInput.addEventListener("input", queueCheckState);
+    forkFormNewJbCollectionTickerInput.addEventListener("input", queueCheckState);
     forkFormNewJbMinimumPriceInput.addEventListener("input", queueCheckState);
     forkFormNewJbMinimumTotalSupplyInput.addEventListener("input", queueCheckState);
     forkFormNewJbMaximumTotalSupplyInput.addEventListener("input", queueCheckState);
@@ -489,7 +489,7 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
     // Submit the form.
     forkFormNewJbSubmitButton.onclick = async () => {
       // Check for empty values.
-      if (!forkFormNewJbCollectionNameInput.value || !forkFormNewJbCollectionSymbolInput.value || forkFormNewJbMinimumPriceInput.value == "" || !forkFormNewJbMaximumTotalSupplyInput.value || !forkFormNewJbMinimumTotalSupplyInput.value || forkFormNewJbRevnetPremintInput.value == "" || forkFormNewJbRevnetIssuanceInput.value == "" || forkFormNewJbRevnetShareInput.value == "" || forkFormNewJbRevnetBonusPercentInput.value == "" || !forkFormNewJbRevnetBonusFrequencyInput.value || forkFormNewJbRevnetExitInput.value == "" || (Number(forkFormNewJbRevnetDurationInput.value) && (forkFormNewJbRevnetIssuanceInput2.value == "" || forkFormNewJbRevnetShareInput2.value == "" || forkFormNewJbRevnetBonusPercentInput2.value == "" || !forkFormNewJbRevnetBonusFrequencyInput2.value || forkFormNewJbRevnetExitInput2.value == "")) || (Number(forkFormNewJbRevnetDurationInput2.value) && (forkFormNewJbRevnetIssuanceInput3.value == "" || forkFormNewJbRevnetShareInput3.value == "" || forkFormNewJbRevnetBonusPercentInput3.value == "" || !forkFormNewJbRevnetBonusFrequencyInput3.value || forkFormNewJbRevnetExitInput3.value == "" ))) {
+      if (!forkFormNewJbCollectionNameInput.value || !forkFormNewJbCollectionTickerInput.value || forkFormNewJbMinimumPriceInput.value == "" || !forkFormNewJbMaximumTotalSupplyInput.value || !forkFormNewJbMinimumTotalSupplyInput.value || forkFormNewJbRevnetPremintInput.value == "" || forkFormNewJbRevnetIssuanceInput.value == "" || forkFormNewJbRevnetShareInput.value == "" || forkFormNewJbRevnetBonusPercentInput.value == "" || !forkFormNewJbRevnetBonusFrequencyInput.value || forkFormNewJbRevnetExitInput.value == "" || (Number(forkFormNewJbRevnetDurationInput.value) && (forkFormNewJbRevnetIssuanceInput2.value == "" || forkFormNewJbRevnetShareInput2.value == "" || forkFormNewJbRevnetBonusPercentInput2.value == "" || !forkFormNewJbRevnetBonusFrequencyInput2.value || forkFormNewJbRevnetExitInput2.value == "")) || (Number(forkFormNewJbRevnetDurationInput2.value) && (forkFormNewJbRevnetIssuanceInput3.value == "" || forkFormNewJbRevnetShareInput3.value == "" || forkFormNewJbRevnetBonusPercentInput3.value == "" || !forkFormNewJbRevnetBonusFrequencyInput3.value || forkFormNewJbRevnetExitInput3.value == "" ))) {
         forkFormNewJbErrorMessage.innerHTML = "Fill out the form.";
         forkFormNewJbErrorMessage.style.display = "block";
         return;
@@ -522,7 +522,7 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
 
       // Normalize values from the form.
       const name = forkFormNewJbCollectionNameInput.value;
-      const symbol = forkFormNewJbCollectionSymbolInput.value;
+      const symbol = forkFormNewJbCollectionTickerInput.value;
       const owner = forkFormNewJbProjectOwnerInput.value;
       const minimumPrice = fixedPointNumber(forkFormNewJbMinimumPriceInput.value, 18);
       const minimumTotalSupply = forkFormNewJbMinimumTotalSupplyInput.value;
