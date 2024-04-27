@@ -3,7 +3,7 @@
   "description": "For pictures and screenshots",
   "author": "Jango",
   "authorWebsite": "https://jango.eth.limo",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "idealItemsPerPage": 10,
   "generateIndexPagination": false,
   "buildNumber": 563,
