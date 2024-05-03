@@ -151,6 +151,10 @@ window.onpopstate = function(event) {
 
     // Set the frame and img's ID.
     postFrame.id = 'frame-' + postId;
+    if (post.heroImageWidth && post.heroImageHeight) {
+      postFrame.setAttribute("data-mediaWidth", post.heroImageWidth);
+      postFrame.setAttribute("data-mediaHeight", post.heroImageHeight);
+    }
 
     const verb = content.length > 150 ? "read" : "mint";
 
@@ -442,9 +446,17 @@ window.onpopstate = function(event) {
   const loadMedia = async (container) => {
     const media = container.querySelector('img:first-of-type') || container.querySelector('video:first-of-type');
     if (!media) return;
+    const mediaWidth = container.getAttribute("data-mediaWidth");
+    const mediaHeight = container.getAttribute("data-mediaHeight");
+    if (mediaWidth && mediaHeight) {
+      media.style.width = "100%";
+      media.style.aspectRatio = `${mediaWidth}/${mediaHeight}`;
+    }
     return new Promise((resolve) => {
       // Resolve if the image if done.
       if (media.complete) return resolve();
+
+      if (mediaWidth && mediaHeight) return resolve();
 
       const checkForDimensions = () => {
         // Resolve if the img has dimensions.
