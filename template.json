@@ -3,10 +3,10 @@
   "description": "For pictures and screenshots",
   "author": "Jango",
   "authorWebsite": "https://jango.eth.limo",
-  "version": "1.1.14",
+  "version": "1.1.15",
   "idealItemsPerPage": 10,
   "generateIndexPagination": false,
-  "buildNumber": 574,
+  "buildNumber": 575,
   "generateNFTMetadata": true,
   "generateTagPages": true,
   "settings": {

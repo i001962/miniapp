@@ -723,7 +723,7 @@ window.onpopstate = function(event) {
     const t = now - (now % 60);
 
     const response = await fetch(
-      `{{ assets_prefix }}planet.json?t=${t}`
+      `{{ assets_prefix }}planet.json`
     );
     const data = await response.json();
 
