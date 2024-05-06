@@ -720,10 +720,10 @@ window.onpopstate = function(event) {
     startLoadingAnimation('posts-loading-animation');
 
     const now = Math.floor(Date.now() / 1000);
-    const t = now - (now % 60);
+    const t = now - (now % 10);
 
     const response = await fetch(
-      `{{ assets_prefix }}planet.json`
+      `{{ assets_prefix }}planet.json?t=${t}`
     );
     const data = await response.json();
 
