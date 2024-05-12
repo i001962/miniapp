@@ -874,15 +874,35 @@
   const decorateAttachments = async (post) => {
     const container = document.getElementById("post-attachments")
     container.innerHTML = '';
+    const previousPreview = document.getElementById("preview-pdf");
+    if (previousPreview) {
+      previousPreview.remove();
+    }
     for (const attachment of post.attachments) {
       const attachmentFullURL = "{{ assets_prefix }}" + post.id + "/" + attachment;
       if (attachment.endsWith(".pdf")) {
+        const preview = document.createElement("embed");
+        preview.src = attachmentFullURL;
+        preview.className = "preview-pdf";
+        preview.id = "preview-pdf";
+
+        const postCoverImage = document.getElementById("post-cover-image");
+        if (postCoverImage) {
+          postCoverImage.style.display = "none";
+        }
+
+        const postOnchain = document.getElementById("post-onchain");
+        if (postOnchain) {
+          postOnchain.parentNode.insertBefore(preview, postOnchain.nextSibling);
+        }
+
         const link = document.createElement("a");
         link.href = attachmentFullURL;
         link.target = "_blank";
         link.innerHTML = attachment;
         link.className = "attachment-link";
         container.appendChild(link);
+
         container.style.paddingTop = "1em";
       }
     }

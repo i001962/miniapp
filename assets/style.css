@@ -1183,6 +1183,12 @@ details > summary:before {
   border-bottom: var(--border-width) solid var(--link-color);
 }
 
+.preview-pdf {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1/1.2;
+}
+
 .attachment-link:link, .attachment-link:visited {
   display: block;
   color: var(--link-color);
