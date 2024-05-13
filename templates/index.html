@@ -879,10 +879,15 @@ window.onpopstate = function(event) {
     peersCountLabel.innerHTML = peersCount;
 
     // page metrics
+    let featurePageMetrics = document.getElementById("feature-page-metrics");
     let pageMetricsLink = document.getElementById("page-metrics-link");
     if (data.plausibleEnabled && data.plausibleDomain && data.plausibleAPIServer) {
       pageMetricsLink.href = `https://${data.plausibleAPIServer}/${data.plausibleDomain}`;
       pageMetricsLink.target = "_blank";
+    } else {
+      if (featurePageMetrics) {
+        featurePageMetrics.remove();
+      }
     }
   }
 
