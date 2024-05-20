@@ -175,17 +175,18 @@
         return response.json();
       })
       .then(data => {
-        // Two sets of variables are available if the user is using the latest template.
-        // Ethereum Sepolia:
-        // - ethereumSepoliaCollectionID
-        // - ethereumSepoliaCollectionCategory
-        // - ethereumSepoliaRPC
-        // - ethereumSepoliaBeneficiaryAddress
-        // Optimism Sepolia:
-        // - optimismSepoliaCollectionID
-        // - optimismSepoliaCollectionCategory
-        // - optimismSepoliaRPC
-        // - optimismSepoliaBeneficiaryAddress
+        // Variables from user settings:
+        //
+        // - collectionAddress
+        // - collectionCategory
+        // - curatorAddress
+
+        // And RPC addresses:
+        //
+        // - ethereumMainnetAddress
+        // - ethereumSepoliaAddress
+        // - optimismMainnetAddress
+        // - optimismSepoliaAddress
         env = {
           ...env,
           ...data

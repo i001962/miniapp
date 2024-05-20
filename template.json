@@ -1,61 +1,55 @@
 {
   "name": "Croptop",
-  "description": "For pictures and screenshots",
+  "description": "Publish and access indie content freely through .eth domains",
   "author": "Jango",
-  "authorWebsite": "https://jango.eth.limo",
-  "version": "1.1.16",
+  "authorWebsite": "https://croptop.eth.sucks",
+  "version": "1.1.17",
   "idealItemsPerPage": 10,
   "generateIndexPagination": false,
-  "buildNumber": 576,
+  "buildNumber": 579,
   "generateNFTMetadata": true,
   "generateTagPages": true,
   "settings": {
-    "ethereumSepoliaCollectionID": {
-      "name": "Ethereum Sepolia NFT Collection ID",
-      "type": "int",
-      "defaultValue": "1016",
-      "description": "The ID of your collection's Juicebox project on on this chain."
+    "collectionAddress": {
+      "name": "Collection Address",
+      "type": "string",
+      "defaultValue": "",
+      "description": "The Ethereum contract address of the collection."
     },
-    "ethereumSepoliaCollectionCategory": {
-      "name": "Ethereum Sepolia NFT Category",
+    "collectionCategory": {
+      "name": "Collection Category",
       "type": "int",
       "defaultValue": "0",
       "description": "The collection's category where posts will be recorded."
     },
+    "curatorAddress": {
+      "name": "Curator Address",
+      "type": "string",
+      "defaultValue": "",
+      "description": "The Ethereum address of the curator of this collection."
+    },
+    "ethereumMainnetRPC": {
+      "name": "Ethereum Mainnet RPC",
+      "type": "string",
+      "defaultValue": "https://eth.llamarpc.com",
+      "description": ""
+    },
     "ethereumSepoliaRPC": {
       "name": "Ethereum Sepolia RPC",
       "type": "string",
-      "defaultValue": "",
-      "description": "The default gateway to this chain."
-    },
-    "ethereumSepoliaBeneficiaryAddress": {
-      "name": "Ethereum Sepolia Address",
-      "type": "string",
-      "defaultValue": "",
-      "description": "Where you'll be sent $CROPTOP tokens when people mint from your collection."
-    },
-    "optimismSepoliaCollectionID": {
-      "name": "Optimism Sepolia NFT Collection ID",
-      "type": "int",
-      "defaultValue": "1016",
+      "defaultValue": "https://ethereum-sepolia-rpc.publicnode.com",
       "description": ""
     },
-    "optimismSepoliaCollectionCategory": {
-      "name": "Optimism Sepolia NFT Category",
-      "type": "int",
-      "defaultValue": "0",
+    "optimismMainnetRPC": {
+      "name": "Optimism Mainnet RPC",
+      "type": "string",
+      "defaultValue": "https://optimism.llamarpc.com",
       "description": ""
     },
     "optimismSepoliaRPC": {
       "name": "Optimism Sepolia RPC",
       "type": "string",
-      "defaultValue": "",
-      "description": ""
-    },
-    "optimismSepoliaBeneficiaryAddress": {
-      "name": "Optimism Sepolia Address",
-      "type": "string",
-      "defaultValue": "",
+      "defaultValue": "https://sepolia.optimism.io",
       "description": ""
     },
     "highlightColor": {
