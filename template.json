@@ -6,7 +6,7 @@
   "version": "1.1.17",
   "idealItemsPerPage": 10,
   "generateIndexPagination": false,
-  "buildNumber": 579,
+  "buildNumber": 580,
   "generateNFTMetadata": true,
   "generateTagPages": true,
   "settings": {
@@ -50,6 +50,30 @@
       "name": "Optimism Sepolia RPC",
       "type": "string",
       "defaultValue": "https://sepolia.optimism.io",
+      "description": ""
+    },
+    "baseMainnetRPC": {
+      "name": "Base Mainnet RPC",
+      "type": "string",
+      "defaultValue": "https://base.llamarpc.com",
+      "description": ""
+    },
+    "baseSepoliaRPC": {
+      "name": "Base Sepolia RPC",
+      "type": "string",
+      "defaultValue": "https://sepolia.base.org",
+      "description": ""
+    },
+    "arbitrumMainnetRPC": {
+      "name": "Arbitrum Mainnet RPC",
+      "type": "string",
+      "defaultValue": "https://arbitrum.llamarpc.com",
+      "description": ""
+    },
+    "arbitrumSepoliaRPC": {
+      "name": "Arbitrum Sepolia RPC",
+      "type": "string",
+      "defaultValue": "https://sepolia-rollup.arbitrum.io/rpc",
       "description": ""
     },
     "highlightColor": {
