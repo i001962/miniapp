@@ -156,11 +156,18 @@ window.onpopstate = function(event) {
       postFrame.setAttribute("data-mediaHeight", post.heroImageHeight);
     }
 
+    if (post.pinned && post.pinned > 0) {
+      const icon = document.createElement("div");
+      icon.innerHTML = "";
+      icon.classList.add("post-frame-pinned-icon");
+      postFrame.appendChild(icon);
+    }
+
     const verb = content.length > 150 ? "read" : "mint";
 
     // Set the content.
     title.innerHTML = name;
-    subtitle.innerHTML = `${date}<span class="space">•</span><span class="post-frame-state">click to ${verb}</span>${ Object.keys(tags).length ? '<span class="space">•</span>' : "" }${Object.values(tags).map(tag => `<div class="tag">${tag}</div>`).join(" ")}`;
+    subtitle.innerHTML = `${date}${ (post.pinned && post.pinned > 0 ) ? '<span class="space">•</span>pinned' : "" }<span class="space">•</span><span class="post-frame-state">click to ${verb}</span>${ Object.keys(tags).length ? '<span class="space">•</span>' : "" }${Object.values(tags).map(tag => `<div class="tag">${tag}</div>`).join(" ")}`;
 
     if (name == "✃") title.classList.add("bigger-font");
 

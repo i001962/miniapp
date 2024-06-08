@@ -1063,6 +1063,15 @@ details > summary:before {
   -webkit-backdrop-filter: var(--blur-intensity);
 }
 
+.post-frame-pinned-icon {
+  position: absolute;
+  top: -14px;
+  right: 5px;
+  font-family: "Capsules";
+  font-size: var(--font-size-2);
+  color: var(--foreground-secondary-color);
+}
+
 .post-frame-fade-in {
   opacity: 1;
 }
