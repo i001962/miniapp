@@ -1070,6 +1070,11 @@ details > summary:before {
   font-family: "Capsules";
   font-size: var(--font-size-2);
   color: var(--foreground-secondary-color);
+  transition: color var(--transition-duration) var(--transition-timing-function);
+}
+
+.post-frame:hover .post-frame-pinned-icon {
+  color: var(--link-color);
 }
 
 .post-frame-fade-in {
@@ -1342,6 +1347,10 @@ details > summary:before {
     border-left: none;
     border-right: none;
     border-top: none;
+  }
+
+  .post-frame-pinned-icon {
+    top: 30px;
   }
 
   .post-frame-image, .post-frame-video, .post-frame-audio-container, .post-frame-text {
