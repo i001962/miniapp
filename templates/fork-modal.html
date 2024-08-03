@@ -2,10 +2,10 @@
   <div class="modal-content body-content centered-content content-top-offset negative-space">
     <div class="exit-button mobile-padding negative-space"><span class="exit-button-text negative-space">×</span></div>
     <div id="fork-header" class="body-header mobile-padding negative-space">
-      <div class="fork-title">Fork this website onto your own .eth.sucks</div>
-        To set up your site and learn how to start curating posts, check out <a href="https://croptop.eth.sucks" target="_blank">https://croptop.eth</a> and download the miniapp.
+      <div class="fork-title">Monetize your media with your own Croptop site</div>
+        To set up your site and learn how to start curating posts, check out <a href="https://croptop.eth.sucks" target="_blank">https://croptop.eth.sucks</a> and download the Croptop miniapp onto your computer.
       <div class="fork-info">
-        To let people pay you when minting your posts, you'll need to make an onchain collection below.
+        In order to let people pay you when minting your posts, you'll need to also make an onchain collection below.
       </div>
       <div class="fork-info">
         Croptop websites connect to blockchains for easy minting while giving creators pro tools to manage their money with their community. Your collection's info can be viewed by anyone, and its onchain money rules can only be adjusted by the admin of the collection. 
@@ -23,6 +23,8 @@
               <select id="fork-form-state-chain-input" name="chain">
                 <option value="ethereum sepolia">Ethereum Sepolia</option>
                 <option value="optimism sepolia">Optimism Sepolia</option>
+                <option value="optimism sepolia">Arbitrum Sepolia</option>
+                <option value="optimism sepolia">Base Sepolia</option>
               </select>
             </div>
           </div>
@@ -65,13 +67,13 @@
                 </div>
               </div>
               <div class="form-item">
-                <div class="form-label">Min total supply</div>
+                <div class="form-label">Minimum total supply</div>
                 <div class="form-value">
                   <input type="number" value="1" id="fork-form-new-jb-minimum-total-supply-input" min="1">
                 </div>
               </div>
               <div class="form-item">
-                <div class="form-label">Max total supply</div>
+                <div class="form-label">Maximum total supply</div>
                 <div class="form-value">
                   <input type="number" placeholder="unlimited" id="fork-form-new-jb-maximum-total-supply-input" min="1">
                 </div>
@@ -87,7 +89,7 @@
             </div>
             <div class="form-section">
               <details id="fork-form-new-jb-revnet-reveal">
-                <summary class="form-toggle form-main-toggle">advanced</summary>
+                <summary class="form-toggle form-main-toggle">advanced – make it a <a href="https://rev.eth.sucks">revnet</a></summary>
                 <div class="form-section">
                   <div class="form-section-description">You can give minters access to the collection's revenues alongside the admin, with preference to those who mint sooner and stick around longer.
                   </div>
@@ -114,12 +116,12 @@
                   </div>
                 </div>
                 <div class="form-section">
-                  <div class="form-section-description">If you want to reward longer term participation from everyone including the admin, add a tax when accessing the collection's revenues sooner rather than later. The tax rate is derived from a tunable intensity value between 0 and 1, where 0 means no tax and 1 is a aggressive tax that makes it very expensive to access the revenue. The tax benefits those who are not exiting equally.
+                  <div class="form-section-description">If you want to reward longer term participation from everyone including the admin, add a cash-out tax when accessing the collection's revenues sooner rather than later. The cash out tax is set by a value between 0 and 1, where 0 means no tax and 1 is a aggressive tax that makes it very expensive to access the revenue. The tax is shared between the folks remaining.
 
-Coarsely: 0 - none. 0.3 - some. 0.7 - more. 1 - lots.  
+0 - none. 0.3 - some. 0.7 - more. 1 - lots.  
                   </div>
                   <div class="form-item">
-                    <div class="form-label">Earlier exit tax intensity</div>
+                    <div class="form-label">Cash out tax</div>
                     <div class="form-value">
                       <input type="number" placeholder="0" value="0.5" id="fork-form-new-jb-revnet-exit-input" min="0" max="1">
                     </div>
@@ -129,7 +131,7 @@ Coarsely: 0 - none. 0.3 - some. 0.7 - more. 1 - lots.
                   <div class="form-section-description">As mints and contributions are made to the collection, access to revenue is tracked and distributed using a token. If you'd like, you can premint some tokens to the admin for preferencial access to revenue.
                   </div>
                   <div class="form-item">
-                    <div class="form-label">Tokens made on day 1 per unit of revenue received</div>
+                    <div class="form-label">The price of a token made on the first day of the stage, per unit of revenue received</div>
                     <div class="form-value">
                       <input type="number" placeholder="1000000" value="1000000" id="fork-form-new-jb-revnet-issuance-input" min="0">
                     </div>
@@ -137,14 +139,14 @@ Coarsely: 0 - none. 0.3 - some. 0.7 - more. 1 - lots.
                 </div>
                 <div class="form-section">
                   <div class="form-item">
-                    <div class="form-label">Tokens to premint</div>
+                    <div class="form-label">Tokens to automint</div>
                     <div class="form-value">
                       <input type="number" placeholder="0" value="0" id="fork-form-new-jb-revnet-premint-input" min="0">
                     </div>
                   </div>
                 </div>
                 <div class="form-section">
-                  <div class="form-section-description">Some values you just set can evolve over time in stages. If you'd like to schedule a second stage with a new revenue share percent, minter bonus rate, or exit tax, specify the amount of time that these first rules above should last for. 
+                  <div class="form-section-description">Some values you just set can evolve over time in stages. If you'd like to schedule a second stage with a new revenue share percent, minter bonus rate, automint, or cash out tax, specify the amount of time that these first rules above should last for. 
                   </div>
                   <div class="form-item">
                     <div class="form-label">Duration (days)</div>
@@ -178,7 +180,7 @@ Coarsely: 0 - none. 0.3 - some. 0.7 - more. 1 - lots.
                   </div>
                   <div class="form-section">
                     <div class="form-item">
-                      <div class="form-label">Earlier exit tax intensity</div>
+                      <div class="form-label">Cash out tax</div>
                       <div class="form-value">
                         <input type="number" placeholder="0" value="0.5" id="fork-form-new-jb-revnet-exit-input-2" min="0" max="1">
                       </div>
@@ -186,7 +188,7 @@ Coarsely: 0 - none. 0.3 - some. 0.7 - more. 1 - lots.
                   </div>
                   <div class="form-section">
                     <div class="form-item">
-                      <div class="form-label">Tokens made on day 1 per unit of revenue received</div>
+                      <div class="form-label">The price of a token made on the first day of the stage, per unit of revenue received</div>
                       <div class="form-value">
                         <input type="number" placeholder="1000000" value="1000000" id="fork-form-new-jb-revnet-issuance-input-2" min="0">
                       </div>
@@ -226,7 +228,7 @@ Coarsely: 0 - none. 0.3 - some. 0.7 - more. 1 - lots.
                   </div>
                   <div class="form-section">
                     <div class="form-item">
-                      <div class="form-label">Stage 3 | Earlier exit tax intensity</div>
+                      <div class="form-label">Cash out tax</div>
                       <div class="form-value">
                         <input type="number" placeholder="0" value="0.5" id="fork-form-new-jb-revnet-exit-input-3" min="0" max="1">
                       </div>
@@ -234,7 +236,7 @@ Coarsely: 0 - none. 0.3 - some. 0.7 - more. 1 - lots.
                   </div>
                   <div class="form-section">
                     <div class="form-item">
-                      <div class="form-label">Tokens made on day 1 per unit of revenue received</div>
+                      <div class="form-label">The price of a token made on the first day of the stage, per unit of revenue received</div>
                       <div class="form-value">
                         <input type="number" placeholder="1000000" value="1000000" id="fork-form-new-jb-revnet-issuance-input-3" min="0">
                       </div>
@@ -282,13 +284,13 @@ Coarsely: 0 - none. 0.3 - some. 0.7 - more. 1 - lots.
                   </div>
                 </div>
                 <div class="form-item">
-                  <div class="form-label">Min total supply</div>
+                  <div class="form-label">Minimum total supply</div>
                   <div class="form-value">
                     <input type="number" value="1" id="fork-form-allowance-minimum-total-supply-input" min="1">
                   </div>
                 </div>
                 <div class="form-item">
-                  <div class="form-label">Max total supply</div>
+                  <div class="form-label">Maximum total supply</div>
                   <div class="form-value">
                     <input type="number" placeholder="unlimited" id="fork-form-allowance-maximum-total-supply-input" min="1">
                   </div>
