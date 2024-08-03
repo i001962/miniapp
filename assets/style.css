@@ -648,6 +648,8 @@ details > summary:before {
 }
 #fork-button {
   margin-right: var(--spacing-3);
+  font-size: 22px;
+  margin-top: 3px;
 }
 #fork-button:hover, #rss-button:hover {
   color: var(--link-color);
