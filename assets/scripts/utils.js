@@ -69,7 +69,7 @@ const resolveChain = (chainId) => {
   }
 }
 
-const cpnHookAddress = (chain) => {
+const cpnHook = (chain) => {
   switch (chain) {
     case "ethereum sepolia":
       return "0x929B6c04fE40fb265Cd0AbB7928826DC965E540D";
@@ -82,17 +82,17 @@ const cpnHookAddress = (chain) => {
   }
 }
 
-const resolveHookAddress = (chain) => {
+const resolveCollectionHookAddress = (chain) => {
   // use sepolia as default.
   switch (chain) {
     case "ethereum sepolia":
-      return env.ethereumSepoliaHookAddress || cpnHookAddress(chain);
+      return env.collectionAddress || env.ethereumSepoliaHookAddress || cpnHook(chain);
     case "optimism sepolia":
-      return env.optimismSepoliaHookAddress || env.ethereumSepoliaHookAddress || cpnHookAddress(chain);
+      return env.optimismSepoliaHookAddress || env.ethereumSepoliaHookAddress || cpnHook(chain);
     case "base sepolia":
-      return env.baseSepoliaHookAddress || env.ethereumSepoliaHookAddress || cpnHookAddress(chain);
+      return env.baseSepoliaHookAddress || env.ethereumSepoliaHookAddress || cpnHook(chain);
     case "arbitrum sepolia":
-      return env.arbitrumSepoliaHookAddress || env.ethereumSepoliaHookAddress || cpnHookAddress(chain);
+      return env.arbitrumSepoliaHookAddress || env.ethereumSepoliaHookAddress || cpnHook(chain);
   }
 }
 

@@ -194,7 +194,8 @@
           ...data
         };
         console.log({ env, data });
-        if (data.ethereumSepoliaCollectionAddress != null) postFormStateHookInput.value = data.ethereumSepoliaCollectionAddress;
+        if (data.ethereumSepoliaCollectionAddress != null) postFormStateHookInput.value = data.ethereumSepoliaCollectionAddress; // cant get this one to come thru
+        if (data.collectionAddress != null) postFormStateHookInput.value = data.collectionAddress; // temp. this is the only property coming back
         if (data.ethereumSepoliaCollectionCategory != null) postFormStateNftCategoryInput.value = Number(data.ethereumSepoliaCollectionCategory);
         if (data.highlightColor) highlightColor = data.highlightColor;
         const r = document.querySelector(':root');
@@ -698,7 +699,7 @@
     const updateFormState = async () => {
       // Get a reference to the chain, hook, and category fields.
       const chain = postFormStateChainInput.value;
-      const hook = parseInt(postFormStateHookInput.value);
+      const hook = postFormStateHookInput.value;
       const category = parseInt(postFormStateNftCategoryInput.value);
 
       // Set a chain object.
@@ -715,7 +716,6 @@
 
       // If nothing is cached, load from the contract.
       if (!tier) {
-
         // Check to see if there's a tier for this content.
         [tier] = await tx_view_tiers(hook, [encodedIPFSUri], resolveChainId(chain));
 

@@ -508,11 +508,8 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
       // Make sure the client is connected to the right network.
       const chainId = await getChainId();
       const expectedChainId = resolveChainId(forkFormChainInput.value);
-      console.log("boo4p");
-      console.log({ chainId, expectedChainId });
       if (chainId != expectedChainId) {
           try {
-            console.log("boo3p");
             await switchChain(expectedChainId); 
           } catch (e) {
             forkFormNewJbErrorMessage.innerHTML = `Browser not connected to ${forkFormChainInput.value}.`;
@@ -525,7 +522,6 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
           }
       }
 
-      console.log("boo2p");
       // Normalize values from the form.
       const name = forkFormNewJbCollectionNameInput.value;
       const symbol = forkFormNewJbCollectionTickerInput.value;
@@ -553,12 +549,9 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
       const stage2StartsAtOrAfter = forkFormNewJbRevnetDurationInput.value == "0" ? 0 : Math.floor(Date.now() / 1000) + forkFormNewJbRevnetDurationInput.value * 86400;
       const stage3StartsAtOrAfter = forkFormNewJbRevnetDurationInput2.value == "0" ? 0 : stage2StartsAtOrAfter + forkFormNewJbRevnetDurationInput2.value * 86400;
       
-      console.log("boop");
       try {
         // Try to process the transaction.
         const accepted = forkFormNewJbRevnetReveal.open ? await tx_deploy_revnet(name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, premintTokenAmount, stage1InitialIssuanceRate, stage2InitialIssuanceRate, stage3InitialIssuanceRate, stage1BoostRate, stage2BoostRate, stage3BoostRate, stage1PriceCeilingIncreasePercentage, stage2PriceCeilingIncreasePercentage, stage3PriceCeilingIncreasePercentage, stage1PriceCeilingIncreaseFrequency, stage2PriceCeilingIncreaseFrequency, stage3PriceCeilingIncreaseFrequency, stage1PriceFloorTaxIntensity, stage2PriceFloorTaxIntensity, stage3PriceFloorTaxIntensity, stage2StartsAtOrAfter, stage3StartsAtOrAfter, expectedChainId) : await tx_deploy_project(name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, expectedChainId);
-      
-        console.log({ accepted });
 
         // Show incompatible network if needed.
         if (!accepted) { 

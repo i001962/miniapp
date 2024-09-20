@@ -10,10 +10,16 @@
   "generateNFTMetadata": true,
   "generateTagPages": true,
   "settings": {
-    "collectionAddress": {
-      "name": "Collection Address",
+    "curatorAddress": {
+      "name": "Your Address",
       "type": "string",
       "defaultValue": "",
+      "description": "The Ethereum address of the curator of this collection where you'll receive rewards."
+    },
+    "collectionHookAddress": {
+      "name": "Ethereum Sepolia Collection Address",
+      "type": "string",
+      "defaultValue": "0x929B6c04fE40fb265Cd0AbB7928826DC965E540D",
       "description": "The Ethereum contract address of the collection."
     },
     "collectionCategory": {
@@ -21,12 +27,6 @@
       "type": "int",
       "defaultValue": "0",
       "description": "The collection's category where posts will be recorded."
-    },
-    "curatorAddress": {
-      "name": "Curator Address",
-      "type": "string",
-      "defaultValue": "",
-      "description": "The Ethereum address of the curator of this collection."
     },
     "ethereumMainnetRPC": {
       "name": "Ethereum Mainnet RPC",
