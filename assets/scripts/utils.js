@@ -46,6 +46,8 @@ const resolveChainId = (value) => {
   switch (value) {
     case "ethereum sepolia": return 11155111; 
     case "optimism sepolia": return 11155420; 
+    case "base sepolia": return 84532; 
+    case "arbitrum sepolia": return 421614; 
   }
 }
 
@@ -53,6 +55,8 @@ const resolveChainSelectIndex = (chain) => {
   switch (chain) {
     case "ethereum sepolia": return 0; 
     case "optimism sepolia": return 1; 
+    case "arbitrum sepolia": return 2; 
+    case "base sepolia": return 3; 
   }
 }
 
@@ -60,24 +64,35 @@ const resolveChain = (chainId) => {
   switch (chainId) {
     case 11155111: return "ethereum sepolia"; 
     case 11155420: return "optimism sepolia"; 
+    case 84532: return "base sepolia"; 
+    case 421614: return "arbitrum sepolia"; 
   }
 }
 
-const cpnProjectId = (chain) => {
+const cpnHookAddress = (chain) => {
   switch (chain) {
     case "ethereum sepolia":
-      return 1;
+      return "0x929B6c04fE40fb265Cd0AbB7928826DC965E540D";
     case "optimism sepolia":
-      return 1;
+      return "0x929B6c04fE40fb265Cd0AbB7928826DC965E540D";
+    case "base sepolia":
+      return "0x929B6c04fE40fb265Cd0AbB7928826DC965E540D";
+    case "arbitrum sepolia":
+      return "0x929B6c04fE40fb265Cd0AbB7928826DC965E540D";
   }
 }
 
-const resolveCollectionId = (chain) => {
+const resolveHookAddress = (chain) => {
+  // use sepolia as default.
   switch (chain) {
     case "ethereum sepolia":
-      return env.ethereumSepoliaCollectionID || cpnProjectId(chain);
+      return env.ethereumSepoliaHookAddress || cpnHookAddress(chain);
     case "optimism sepolia":
-      return env.optimismSepoliaCollectionID || cpnProjectId(chain);
+      return env.optimismSepoliaHookAddress || env.ethereumSepoliaHookAddress || cpnHookAddress(chain);
+    case "base sepolia":
+      return env.baseSepoliaHookAddress || env.ethereumSepoliaHookAddress || cpnHookAddress(chain);
+    case "arbitrum sepolia":
+      return env.arbitrumSepoliaHookAddress || env.ethereumSepoliaHookAddress || cpnHookAddress(chain);
   }
 }
 
@@ -86,7 +101,11 @@ const resolveCollectionCategory = (chain) => {
     case "ethereum sepolia":
       return env.ethereumSepoliaCollectionCategory || 0;
     case "optimism sepolia":
-      return env.optimismSepoliaCollectionCategory || 0;
+      return env.optimismSepoliaCollectionCategory || env.ethereumSepoliaCollectionCategory || 0;
+    case "base sepolia":
+      return env.baseSepoliaCollectionCategory || env.ethereumSepoliaCollectionCategory || 0;
+    case "arbitrum sepolia":
+      return env.arbitrumSepoliaCollectionCategory || env.ethereumSepoliaCollectionCategory || 0;
   }
 }
 
@@ -95,16 +114,20 @@ const resolveCPNBeneficiaryAddress = (chain) => {
     case "ethereum sepolia":
       return env.ethereumSepoliaBeneficiaryAddress;
     case "optimism sepolia":
-      return env.optimismSepoliaBeneficiaryAddress;
+      return env.optimismSepoliaBeneficiaryAddress || env.ethereumSepoliaBeneficiaryAddress;;
+    case "base sepolia":
+      return env.baseSepoliaBeneficiaryAddress || env.ethereumSepoliaBeneficiaryAddress;;
+    case "arbitrum sepolia":
+      return env.arbitrumSepoliaBeneficiaryAddress || env.ethereumSepoliaBeneficiaryAddress;;
   }
 }
 
 const projectLinkBase = (chain) => {
   switch (chain) {
     case "ethereum sepolia":
-      return "https://juicebox.money/v2/p/";
+      return "https://juicebox.money/v4/p/";
     case "optimism sepolia":
-      return "https://goerli.juicebox.money/v2/p/";
+      return "https://sepolia.juicebox.money/v4/p/";
   }
 }
 

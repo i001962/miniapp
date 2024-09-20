@@ -23,8 +23,8 @@
               <select id="fork-form-state-chain-input" name="chain">
                 <option value="ethereum sepolia">Ethereum Sepolia</option>
                 <option value="optimism sepolia">Optimism Sepolia</option>
-                <option value="optimism sepolia">Arbitrum Sepolia</option>
-                <option value="optimism sepolia">Base Sepolia</option>
+                <option value="arbitrum sepolia">Arbitrum Sepolia</option>
+                <option value="base sepolia">Base Sepolia</option>
               </select>
             </div>
           </div>
@@ -33,8 +33,9 @@
           <details>
             <summary class="form-toggle form-main-toggle">Create a collection</summary>
             <div class="form-section">
-              <div class="form-section-description">Name and symbol are permanent.</div> 
+              <div class="form-section-description">Name and ticker are permanent.</div> 
               <div class="form-item">
+
                 <div class="form-label">Collection name</div>
                 <div class="form-value">
                   <input type="text" placeholder="Your collection name" id="fork-form-new-jb-collection-name-input">
@@ -257,7 +258,7 @@
                 <div class="form-item">
                   <div class="form-label">Collection ID</div>
                   <div class="form-value">
-                    <input type="number" placeholder="1" id="fork-form-operator-project-id-input" min="1">
+                    <input type="number" placeholder="1" id="fork-form-operator-hook-input" min="1">
                   </div>
                 </div>
               </div>
@@ -271,7 +272,7 @@
                 <div class="form-item">
                   <div class="form-label">Collection ID</div>
                   <div class="form-value">
-                    <input type="number" placeholder="1" id="fork-form-allowance-project-id-input" min="1">
+                    <input type="number" placeholder="1" id="fork-form-allowance-hook-input" min="1">
                   </div>
                 </div>
               </div>
@@ -507,9 +508,11 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
       // Make sure the client is connected to the right network.
       const chainId = await getChainId();
       const expectedChainId = resolveChainId(forkFormChainInput.value);
-      console.log({  chainId, expectedChainId });
+      console.log("boo4p");
+      console.log({ chainId, expectedChainId });
       if (chainId != expectedChainId) {
           try {
+            console.log("boo3p");
             await switchChain(expectedChainId); 
           } catch (e) {
             forkFormNewJbErrorMessage.innerHTML = `Browser not connected to ${forkFormChainInput.value}.`;
@@ -522,6 +525,7 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
           }
       }
 
+      console.log("boo2p");
       // Normalize values from the form.
       const name = forkFormNewJbCollectionNameInput.value;
       const symbol = forkFormNewJbCollectionTickerInput.value;
@@ -541,17 +545,20 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
       const stage2PriceCeilingIncreasePercentage = Math.round(forkFormNewJbRevnetBonusPercentInput2.value * 100);
       const stage3PriceCeilingIncreasePercentage = Math.round(forkFormNewJbRevnetBonusPercentInput3.value * 100);
       const stage1PriceCeilingIncreaseFrequency = forkFormNewJbRevnetBonusFrequencyInput.value * 86400;
-      const stage2PriceCeilingIncreaseFrequency = forkFormNewJbRevnetBonusFrequencyInput.value2 * 86400;
-      const stage3PriceCeilingIncreaseFrequency = forkFormNewJbRevnetBonusFrequencyInput.value3 * 86400;
+      const stage2PriceCeilingIncreaseFrequency = forkFormNewJbRevnetBonusFrequencyInput2.value * 86400;
+      const stage3PriceCeilingIncreaseFrequency = forkFormNewJbRevnetBonusFrequencyInput3.value * 86400;
       const stage1PriceFloorTaxIntensity = Math.round(forkFormNewJbRevnetExitInput.value * 10000);
       const stage2PriceFloorTaxIntensity = Math.round(forkFormNewJbRevnetExitInput2.value * 10000);
       const stage3PriceFloorTaxIntensity = Math.round(forkFormNewJbRevnetExitInput3.value * 10000);
       const stage2StartsAtOrAfter = forkFormNewJbRevnetDurationInput.value == "0" ? 0 : Math.floor(Date.now() / 1000) + forkFormNewJbRevnetDurationInput.value * 86400;
       const stage3StartsAtOrAfter = forkFormNewJbRevnetDurationInput2.value == "0" ? 0 : stage2StartsAtOrAfter + forkFormNewJbRevnetDurationInput2.value * 86400;
-
+      
+      console.log("boop");
       try {
         // Try to process the transaction.
         const accepted = forkFormNewJbRevnetReveal.open ? await tx_deploy_revnet(name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, premintTokenAmount, stage1InitialIssuanceRate, stage2InitialIssuanceRate, stage3InitialIssuanceRate, stage1BoostRate, stage2BoostRate, stage3BoostRate, stage1PriceCeilingIncreasePercentage, stage2PriceCeilingIncreasePercentage, stage3PriceCeilingIncreasePercentage, stage1PriceCeilingIncreaseFrequency, stage2PriceCeilingIncreaseFrequency, stage3PriceCeilingIncreaseFrequency, stage1PriceFloorTaxIntensity, stage2PriceFloorTaxIntensity, stage3PriceFloorTaxIntensity, stage2StartsAtOrAfter, stage3StartsAtOrAfter, expectedChainId) : await tx_deploy_project(name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, expectedChainId);
+      
+        console.log({ accepted });
 
         // Show incompatible network if needed.
         if (!accepted) { 
@@ -574,14 +581,14 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
 
   const decoratePermissionForm = () => {
     const forkFormChainInput = document.getElementById("fork-form-state-chain-input");
-    const forkFormOperatorProjectIdInput = document.getElementById("fork-form-operator-project-id-input");
+    const forkFormOperatorHookInput = document.getElementById("fork-form-operator-hook-input");
     const forkFormPermissionSubmitButton = document.getElementById("fork-form-permission-submit-button");
     const forkFormPermissionErrorMessage = document.getElementById("fork-form-permission-error-message");
 
     // Submit the form.
     forkFormPermissionSubmitButton.onclick = async () => {
       // Check for empty values.
-      if (!forkFormOperatorProjectIdInput.value) {
+      if (!forkFormOperatorHookInput.value) {
         forkFormPermissionErrorMessage.innerHTML = "Fill out the form.";
         forkFormPermissionErrorMessage.style.display = "block";
         return;
@@ -611,14 +618,14 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
       }
 
       // Normalize values from the form.
-      const projectId = forkFormOperatorProjectIdInput.value;
+      const hook = forkFormOperatorHookInput.value;
 
       try {
         // Get the signer.
         signer = (await getSigner()).address;
 
         // Try to process the transaction.
-        const accepted = await tx_set_permissions(projectId, signer, expectedChainId);
+        const accepted = await tx_set_permissions(hook, signer, expectedChainId);
 
         // Show incompatible network if needed.
         if (!accepted) { 
@@ -642,7 +649,7 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
   const decorateAllowanceForm = () => {
     const forkFormChainInput = document.getElementById("fork-form-state-chain-input");
     const forkFormAllowanceSubmitButton = document.getElementById("fork-form-allowance-submit-button");
-    const forkFormAllowanceProjectIdInput = document.getElementById("fork-form-allowance-project-id-input");
+    const forkFormAllowanceHookInput = document.getElementById("fork-form-allowance-hook-input");
     const forkFormAllowanceCategoryInput = document.getElementById("fork-form-allowance-nft-category-input");
     const forkFormAllowanceMinimumPriceInput = document.getElementById("fork-form-allowance-minimum-price-input");
     const forkFormAllowanceMinimumTotalSupplyInput = document.getElementById("fork-form-allowance-minimum-total-supply-input");
@@ -653,7 +660,7 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
     // Submit the form.
     forkFormAllowanceSubmitButton.onclick = async () => {
       // Check for empty values.
-      if (!forkFormAllowanceProjectIdInput.value || !forkFormAllowanceCategoryInput.value) {
+      if (!forkFormAllowanceHookInput.value || !forkFormAllowanceCategoryInput.value) {
         forkFormAllowanceErrorMessage.innerHTML = "Fill out the form.";
         forkFormAllowanceErrorMessage.style.display = "block";
         return;
@@ -692,7 +699,7 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
       }
 
       // Normalize values from the form.
-      const projectId = forkFormAllowanceProjectIdInput.value;
+      const hook = forkFormAllowanceHookInput.value;
       const category = forkFormAllowanceCategoryInput.value;
       const minimumPrice = fixedPointNumber(forkFormAllowanceMinimumPriceInput.value, 18); 
       const minimumTotalSupply = forkFormAllowanceMinimumTotalSupplyInput.value;
@@ -701,7 +708,7 @@ Number(forkFormNewJbRevnetShareInput.value) > 100 || Number(forkFormNewJbRevnetS
 
       try {
         // Try to process the transaction.
-        const accepted = await tx_configure(projectId, category, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, expectedChainId);
+        const accepted = await tx_configure(hook, category, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, expectedChainId);
 
         // Show incompatible network if needed.
         if (!accepted) { 

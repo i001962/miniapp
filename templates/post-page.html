@@ -18,6 +18,8 @@
           <select id="post-form-state-chain-input" name="chain">
             <option value="ethereum sepolia">Ethereum Sepolia</option>
             <option value="optimism sepolia">Optimism Sepolia</option>
+            <option value="arbitrum sepolia">Arbitrum Sepolia</option>
+            <option value="base sepolia">Base Sepolia</option>
           </select>
         </div>
       </div>
@@ -25,8 +27,8 @@
         <span id="collect-post-form-header" class="form-header"></span>
         <div class="form-body">
             <div class="form-item" style="visibility: hidden;">
-              <div class="form-label">Collection ID</div>
-              <div class="form-value"><input type="number" value="" id="post-form-state-project-id-input" min="1"></div>
+              <div class="form-label">Collection address</div>
+              <div class="form-value"><input type="text" placeholder="0x..." value="" id="post-form-state-hook-input" min="1"></div>
             </div>
             <div class="form-item" style="visibility: hidden;">
               <div class="form-label">Collection category</div>
@@ -160,7 +162,7 @@
   /// Get admin settings.
   const loadSettings = () => {
     const postFormStateChainInput = document.getElementById("post-form-state-chain-input");
-    const postFormStateProjectIdInput = document.getElementById("post-form-state-project-id-input");
+    const postFormStateHookInput = document.getElementById("post-form-state-hook-input");
     const postFormStateNftCategoryInput = document.getElementById("post-form-state-nft-category-input");
 
     postFormStateChainInput.value = defaultChain;
@@ -191,7 +193,8 @@
           ...env,
           ...data
         };
-        if (data.ethereumSepoliaCollectionID != null) postFormStateProjectIdInput.value = Number(data.ethereumSepoliaCollectionID);
+        console.log({ env, data });
+        if (data.ethereumSepoliaCollectionAddress != null) postFormStateHookInput.value = data.ethereumSepoliaCollectionAddress;
         if (data.ethereumSepoliaCollectionCategory != null) postFormStateNftCategoryInput.value = Number(data.ethereumSepoliaCollectionCategory);
         if (data.highlightColor) highlightColor = data.highlightColor;
         const r = document.querySelector(':root');
@@ -205,7 +208,7 @@
       });
   }
 
-  const decorateRecordForm = async (chain, projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice, formattedAllowedAddresses) => {
+  const decorateRecordForm = async (chain, hook, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice, formattedAllowedAddresses) => {
     // Get references to record form elements that need decorating.
     const recordPostFormBeneficiaryInput = document.getElementById("record-post-form-beneficiary-input");
     const recordPostFormCpnBeneficiaryInput = document.getElementById("record-post-form-cpn-beneficiary-input");
@@ -239,20 +242,20 @@
     recordPostFormDisclaimerReveal.open = false;
 
     // Set the correct link given the chain.
-    recordPostFormCpnAnchor.href = `${projectLinkBase(chain)}${cpnProjectId(chain)}`;
+    recordPostFormCpnAnchor.href = `${projectLinkBase(chain)}${cpnHook(chain)}`;
 
     // Re-decorate some input fields depending on the allowances set for the project and category.
     const checkState = async () => {
       // Set error message if not allowed.
       if (signer && formattedAllowedAddresses.length && !formattedAllowedAddresses.includes(signer)) {
-        postFormErrorMessage.innerHTML = `Collection ${projectId} has reserved posting to category ${category} for these addresses: ${formattedAllowedAddresses}.`;
+        postFormErrorMessage.innerHTML = `Collection ${hook} has reserved posting to category ${category} for these addresses: ${formattedAllowedAddresses}.`;
         postFormErrorMessage.classList.add("warn");
         postFormErrorMessage.style.display = "block";
         postFormButton.disabled = true;
         postFormButton.style.display = "block";
       // Set error messages if the currently inputted values are too small.
       } else if (Number(recordPostFormPriceInput.value) < formattedMinPrice || Number(recordPostFormTotalSupplyInput.value) < formattedMinTotalSupply || Number(recordPostFormTotalSupplyInput.value) > formattedMaxTotalSupply) {
-        postFormErrorMessage.innerHTML = `Collection ${projectId} has a minimum price of <span class="ether">Ξ</span>${formattedMinPrice}, a minimum total supply of ${formattedMinTotalSupply}, and a maximum total supply of ${formattedMaxTotalSupply} to record on category ${category}.`;
+        postFormErrorMessage.innerHTML = `Collection ${hook} has a minimum price of <span class="ether">Ξ</span>${formattedMinPrice}, a minimum total supply of ${formattedMinTotalSupply}, and a maximum total supply of ${formattedMaxTotalSupply} to record on category ${category}.`;
         postFormErrorMessage.classList.add("warn");
         postFormErrorMessage.style.display = "block";
         postFormButton.disabled = true;
@@ -351,11 +354,11 @@
       const beneficiary = recordPostFormBeneficiaryInput.value;
       const cpnBeneficiary = recordPostFormCpnBeneficiaryInput.value;
       const totalPrice = BigInt(price) * BigInt(quantity);
-      const value = totalPrice + ((projectId == await cpnProjectId(chain)) ? BigInt(0) : (totalPrice / BigInt(feeDivisor)));
+      const value = totalPrice + ((hook == await cpnHook(chain)) ? BigInt(0) : (totalPrice / BigInt(feeDivisor)));
 
       try {
         // Try to process the transaction.
-        const accepted = await tx_collect(projectId, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, resolveChainId(chain));
+        const accepted = await tx_collect(hook, category, totalSupply, price, quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, resolveChainId(chain));
 
           // Show incompatible network if needed.
         if (!accepted) {
@@ -385,7 +388,7 @@
     await checkState();
   }
 
-  const decorateCollectForm = async (chain, projectId, category, encodedIPFSUri, formattedMintedSupply, formattedRemainingSupply, formattedPrice) => {
+  const decorateCollectForm = async (chain, hook, category, encodedIPFSUri, formattedMintedSupply, formattedRemainingSupply, formattedPrice) => {
     // Get references to record form elements that need decorating.
     const collectPostFormHeader = document.getElementById("collect-post-form-header");
     const collectPostFormBeneficiaryInput = document.getElementById("collect-post-form-beneficiary-input");
@@ -417,7 +420,7 @@
     postFormButton.style.display = "none";
 
     // Set the correct link given the chain.
-    collectPostFormCpnAnchor.href = `${projectLinkBase(chain)}${cpnProjectId(chain)}`;
+    collectPostFormCpnAnchor.href = `${projectLinkBase(chain)}${cpnHook(chain)}`;
 
     // Re-decorate some input fields depending on the allowances set for the project and category.
     const checkState = async () => {
@@ -516,13 +519,13 @@
       const quantity = collectPostFormQuantityInput.value;
       const beneficiary = collectPostFormBeneficiaryInput.value;
       const cpnBeneficiary = collectPostFormCpnBeneficiaryInput.value;
-      // Add a fee if the project being paid isn't the fee project ID.
+      // Add a fee if the project being paid isn't the fee hook.
       const totalPrice = BigInt(price) * BigInt(quantity);
-      const value = totalPrice + ((projectId == await cpnProjectId(chain)) ? BigInt(0) : (totalPrice / BigInt(feeDivisor)));
+      const value = totalPrice + ((hook == await cpnHook(chain)) ? BigInt(0) : (totalPrice / BigInt(feeDivisor)));
 
       try {
         // Try to process the transaction.
-        const accepted = await tx_collect(projectId, category, totalSupply, BigInt(price), quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, resolveChainId(chain));
+        const accepted = await tx_collect(hook, category, totalSupply, BigInt(price), quantity, encodedIPFSUri, beneficiary, cpnBeneficiary, value, resolveChainId(chain));
         // Show incompatible network if needed.
         if (!accepted) {
           // Show the error message.
@@ -571,7 +574,7 @@
     const postSubtitle = document.getElementById("post-subtitle");
     const postLink = document.getElementById("post-link");
     const postFormStateChainInput = document.getElementById("post-form-state-chain-input");
-    const postFormStateProjectIdInput = document.getElementById("post-form-state-project-id-input");
+    const postFormStateHookInput = document.getElementById("post-form-state-hook-input");
     const postFormStateNftCategoryInput = document.getElementById("post-form-state-nft-category-input");
     const postFormStateErrorMessage = document.getElementById("post-form-state-error-message");
     const postFormErrorMessage = document.getElementById("post-form-error-message");
@@ -693,28 +696,28 @@
     }
 
     const updateFormState = async () => {
-      // Get a reference to the chain, project ID, and category fields.
+      // Get a reference to the chain, hook, and category fields.
       const chain = postFormStateChainInput.value;
-      const projectId = parseInt(postFormStateProjectIdInput.value);
+      const hook = parseInt(postFormStateHookInput.value);
       const category = parseInt(postFormStateNftCategoryInput.value);
 
       // Set a chain object.
       if (!tiersCache[chain]) tiersCache[chain] = {};
 
-      // Look in the cache for tiers within the project ID.
-      const projectIdTiers = tiersCache[chain][projectId];
+      // Look in the cache for tiers within the hook.
+      const hookTiers = tiersCache[chain][hook];
 
-      // If there's no cache for the project ID, set it to an empty object.
-      if (!projectIdTiers) tiersCache[chain][projectId] = {};
+      // If there's no cache for the hook, set it to an empty object.
+      if (!hookTiers) tiersCache[chain][hook] = {};
 
-      // Look in the cache for a tier for the project ID and encodedIPFSUri.
-      let tier = tiersCache[chain][projectId][encodedIPFSUri];
+      // Look in the cache for a tier for the hook and encodedIPFSUri.
+      let tier = tiersCache[chain][hook][encodedIPFSUri];
 
       // If nothing is cached, load from the contract.
       if (!tier) {
 
         // Check to see if there's a tier for this content.
-        [tier] = await tx_view_tiers(projectId, [encodedIPFSUri], resolveChainId(chain));
+        [tier] = await tx_view_tiers(hook, [encodedIPFSUri], resolveChainId(chain));
 
         // If no tier, don't show the form.
         if (!tier) {
@@ -733,7 +736,7 @@
         }
 
         // Cache the value.
-        tiersCache[chain][projectId][encodedIPFSUri] = tier;
+        tiersCache[chain][hook][encodedIPFSUri] = tier;
       }
 
       // Get a reference to the tier's ID.
@@ -783,26 +786,26 @@
         }
 
         // Show the form.
-        await decorateCollectForm(chain, projectId, category, encodedIPFSUri, formattedMintedSupply, formattedRemainingSupply, formattedPrice);
+        await decorateCollectForm(chain, hook, category, encodedIPFSUri, formattedMintedSupply, formattedRemainingSupply, formattedPrice);
       } else {
         // Check to see if the project and category allow posting.
 
-        // Look in the cache for allowances within the project ID.
-        const projectIdAllowances = allowanceCache[projectId];
+        // Look in the cache for allowances within the hook.
+        const hookAllowances = allowanceCache[hook];
 
-        // If there's no cache for the project ID, set it to an empty object.
-        if (!projectIdAllowances) allowanceCache[projectId] = {};
+        // If there's no cache for the hook, set it to an empty object.
+        if (!hookAllowances) allowanceCache[hook] = {};
 
-        // Look in the cache for an allowance for the category within the allowances for the project ID.
-        let allowance = allowanceCache[projectId][category];
+        // Look in the cache for an allowance for the category within the allowances for the hook.
+        let allowance = allowanceCache[hook][category];
 
         // If nothing is cached, load from the contract.
         if (!allowance) {
           // Get the allowance.
-          allowance = await tx_view_allowance(projectId, category, resolveChainId(chain));
+          allowance = await tx_view_allowance(hook, category, resolveChainId(chain));
 
           // Cache the value.
-          allowanceCache[projectId][category] = allowance;
+          allowanceCache[hook][category] = allowance;
         }
 
         // Get a reference to the allowance min total supply.
@@ -811,7 +814,7 @@
         // Show an error message if there's no allowance set.
         if (formattedMinTotalSupply == 0) {
           // Show the error message.
-          // postFormErrorMessage.innerHTML = `Collection ${projectId} isn't accepting mints on category ${category} yet. Click "$" up top.`;
+          // postFormErrorMessage.innerHTML = `Collection ${hook} isn't accepting mints on category ${category} yet. Click "$" up top.`;
           postFormErrorMessage.innerHTML = `This site isn't accepting mints on ${chain} yet. Click "$" up top.`;
           postFormErrorMessage.classList.add("info");
           postFormErrorMessage.style.display = "block";
@@ -843,13 +846,13 @@
 
         postFormCollectToggle.innerHTML = 'mint';
 
-        await decorateRecordForm(chain, projectId, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice, formattedAllowedAddresses);
+        await decorateRecordForm(chain, hook, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice, formattedAllowedAddresses);
       }
     }
 
-    // Change the project ID input on network change to the default.
+    // Change the hook input on network change to the default.
     postFormStateChainInput.addEventListener("change", async () => {
-      postFormStateProjectIdInput.value = resolveCollectionId(postFormStateChainInput.value);
+      postFormStateHookInput.value = resolveCollectionHookAddress(postFormStateChainInput.value);
 
       // Set the collection category value to the default if it hasn't changed.
       postFormStateNftCategoryInput.value = resolveCollectionCategory(postFormStateChainInput.value);
