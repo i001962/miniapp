@@ -264,6 +264,7 @@
             </div>
             <div id="fork-form-new-jb-error-message" class="form-error-message mobile-padding"></div>
             <button id="fork-form-new-jb-submit-button" class="form-button"><span id="fork-form-new-jb-submit-button-text" class="form-button-text">deploy collection</span><span id="fork-form-new-jb-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
+            <div id="fork-form-new-jb-success-message" class="form-success-message mobile-padding"></div>
           </details>
           <details>
             <summary class="form-toggle form-main-toggle">Extras</summary>
@@ -350,6 +351,7 @@
     const forkFormNewJbMaximumTotalSupplyInput = document.getElementById("fork-form-new-jb-maximum-total-supply-input");
     const forkFormNewJbAddressesInput = document.getElementById("fork-form-new-jb-addresses-input");
     const forkFormNewJbErrorMessage = document.getElementById("fork-form-new-jb-error-message");
+    const forkFormNewJbSuccessMessage = document.getElementById("fork-form-new-jb-success-message");
     const forkFormNewJbSubmitButton = document.getElementById("fork-form-new-jb-submit-button");
     const forkFormNewJbRevnetReveal = document.getElementById("fork-form-new-jb-revnet-reveal");
     const forkFormNewJbRevnetSplitInput = document.getElementById("fork-form-new-jb-revnet-split-input");
@@ -575,13 +577,16 @@ Number(forkFormNewJbRevnetSplitInput.value) > 100 || Number(forkFormNewJbRevnetS
       
       try {
         // Try to process the transaction.
-        const accepted = forkFormNewJbRevnetReveal.open ? await tx_deploy_revnet(name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, stage1AutomintTokenAmount, stage2AutomintTokenAmount, stage3AutomintTokenAmount, stage1InitialIssuanceAmount, stage2InitialIssuanceAmount, stage3InitialIssuanceAmount, stage1SplitPercent, stage2SplitPercent, stage3SplitPercent, stage1PriceIncreasePercent, stage2PriceIncreasePercent, stage3PriceIncreasePercent, stage1PriceIncreaseFrequency, stage2PriceIncreaseFrequency, stage3PriceIncreaseFrequency, stage1CashOutTaxRate, stage2CashOutTaxRate, stage3CashOutTaxRate, stage2StartsAtOrAfter, stage3StartsAtOrAfter, expectedChainId) : await tx_deploy_project(name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, expectedChainId);
+        const collectionAddress = forkFormNewJbRevnetReveal.open ? await tx_deploy_revnet(name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, stage1AutomintTokenAmount, stage2AutomintTokenAmount, stage3AutomintTokenAmount, stage1InitialIssuanceAmount, stage2InitialIssuanceAmount, stage3InitialIssuanceAmount, stage1SplitPercent, stage2SplitPercent, stage3SplitPercent, stage1PriceIncreasePercent, stage2PriceIncreasePercent, stage3PriceIncreasePercent, stage1PriceIncreaseFrequency, stage2PriceIncreaseFrequency, stage3PriceIncreaseFrequency, stage1CashOutTaxRate, stage2CashOutTaxRate, stage3CashOutTaxRate, stage2StartsAtOrAfter, stage3StartsAtOrAfter, expectedChainId) : await tx_deploy_project(name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, expectedChainId);
 
         // Show incompatible network if needed.
-        if (!accepted) { 
+        if (!collectionAddress) { 
           // Show the error message.
           forkFormNewJbErrorMessage.innerHTML = "The connected network isn't supported.";
           forkFormNewJbErrorMessage.style.display = "block";
+        } else {
+          forkFormNewJbSuccessMessage.innerHTML = `Success! ${collectionAddress} is your collection's address on ${forkFormChainInput.value}.`;
+          forkFormNewJbSuccessMessage.style.display = "block";
         }
 
         // Hide the loading animation.

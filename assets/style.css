@@ -974,6 +974,11 @@ details > summary:before {
 .form-error-message.warn {
   color: var(--alert-color);
 }
+.form-success-message {
+  margin-top: var(--spacing-3);
+  line-break: anywhere;
+  color: var(--foreground-primary-color);
+}
 .form-button {
   background: none;
   margin-top: var(--spacing-3);

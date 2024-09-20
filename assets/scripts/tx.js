@@ -35,5 +35,7 @@ const view = async (chainId, contractAddress, contractAbi, fn, params) => {
 const sign = async (contractAddress, contractAbi, fn, params) => {
     const contract = new ethers.Contract(contractAddress, contractAbi, await getSigner());
     console.log({ contract, fn , params });
-    return await contract[fn](...params);
+    const tx = await contract[fn](...params);
+    if (!tx) return false;
+    return await tx.wait();
 }

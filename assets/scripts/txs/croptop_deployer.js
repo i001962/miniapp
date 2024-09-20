@@ -50,6 +50,7 @@ const loansContract = (chainId) => {
   }
 }
 
+
 const croptopDeployerContractABI = [
 		{
 			"type": "constructor",
@@ -2712,6 +2713,317 @@ const revnetDeployerContractABI = [
 		}
 	];
 
+	const tiersHookDeployerABI = [
+		{
+			"type": "constructor",
+			"inputs": [
+				{
+					"name": "hook",
+					"type": "address",
+					"internalType": "contract JB721TiersHook"
+				},
+				{
+					"name": "store",
+					"type": "address",
+					"internalType": "contract IJB721TiersHookStore"
+				},
+				{
+					"name": "addressRegistry",
+					"type": "address",
+					"internalType": "contract IJBAddressRegistry"
+				},
+				{
+					"name": "trustedForwarder",
+					"type": "address",
+					"internalType": "address"
+				}
+			],
+			"stateMutability": "nonpayable"
+		},
+		{
+			"type": "function",
+			"name": "ADDRESS_REGISTRY",
+			"inputs": [],
+			"outputs": [
+				{
+					"name": "",
+					"type": "address",
+					"internalType": "contract IJBAddressRegistry"
+				}
+			],
+			"stateMutability": "view"
+		},
+		{
+			"type": "function",
+			"name": "HOOK",
+			"inputs": [],
+			"outputs": [
+				{
+					"name": "",
+					"type": "address",
+					"internalType": "contract JB721TiersHook"
+				}
+			],
+			"stateMutability": "view"
+		},
+		{
+			"type": "function",
+			"name": "STORE",
+			"inputs": [],
+			"outputs": [
+				{
+					"name": "",
+					"type": "address",
+					"internalType": "contract IJB721TiersHookStore"
+				}
+			],
+			"stateMutability": "view"
+		},
+		{
+			"type": "function",
+			"name": "deployHookFor",
+			"inputs": [
+				{
+					"name": "projectId",
+					"type": "uint256",
+					"internalType": "uint256"
+				},
+				{
+					"name": "deployTiersHookConfig",
+					"type": "tuple",
+					"internalType": "struct JBDeploy721TiersHookConfig",
+					"components": [
+						{
+							"name": "name",
+							"type": "string",
+							"internalType": "string"
+						},
+						{
+							"name": "symbol",
+							"type": "string",
+							"internalType": "string"
+						},
+						{
+							"name": "baseUri",
+							"type": "string",
+							"internalType": "string"
+						},
+						{
+							"name": "tokenUriResolver",
+							"type": "address",
+							"internalType": "contract IJB721TokenUriResolver"
+						},
+						{
+							"name": "contractUri",
+							"type": "string",
+							"internalType": "string"
+						},
+						{
+							"name": "tiersConfig",
+							"type": "tuple",
+							"internalType": "struct JB721InitTiersConfig",
+							"components": [
+								{
+									"name": "tiers",
+									"type": "tuple[]",
+									"internalType": "struct JB721TierConfig[]",
+									"components": [
+										{
+											"name": "price",
+											"type": "uint104",
+											"internalType": "uint104"
+										},
+										{
+											"name": "initialSupply",
+											"type": "uint32",
+											"internalType": "uint32"
+										},
+										{
+											"name": "votingUnits",
+											"type": "uint32",
+											"internalType": "uint32"
+										},
+										{
+											"name": "reserveFrequency",
+											"type": "uint16",
+											"internalType": "uint16"
+										},
+										{
+											"name": "reserveBeneficiary",
+											"type": "address",
+											"internalType": "address"
+										},
+										{
+											"name": "encodedIPFSUri",
+											"type": "bytes32",
+											"internalType": "bytes32"
+										},
+										{
+											"name": "category",
+											"type": "uint24",
+											"internalType": "uint24"
+										},
+										{
+											"name": "discountPercent",
+											"type": "uint8",
+											"internalType": "uint8"
+										},
+										{
+											"name": "allowOwnerMint",
+											"type": "bool",
+											"internalType": "bool"
+										},
+										{
+											"name": "useReserveBeneficiaryAsDefault",
+											"type": "bool",
+											"internalType": "bool"
+										},
+										{
+											"name": "transfersPausable",
+											"type": "bool",
+											"internalType": "bool"
+										},
+										{
+											"name": "useVotingUnits",
+											"type": "bool",
+											"internalType": "bool"
+										},
+										{
+											"name": "cannotBeRemoved",
+											"type": "bool",
+											"internalType": "bool"
+										},
+										{
+											"name": "cannotIncreaseDiscountPercent",
+											"type": "bool",
+											"internalType": "bool"
+										}
+									]
+								},
+								{
+									"name": "currency",
+									"type": "uint32",
+									"internalType": "uint32"
+								},
+								{
+									"name": "decimals",
+									"type": "uint8",
+									"internalType": "uint8"
+								},
+								{
+									"name": "prices",
+									"type": "address",
+									"internalType": "contract IJBPrices"
+								}
+							]
+						},
+						{
+							"name": "reserveBeneficiary",
+							"type": "address",
+							"internalType": "address"
+						},
+						{
+							"name": "flags",
+							"type": "tuple",
+							"internalType": "struct JB721TiersHookFlags",
+							"components": [
+								{
+									"name": "noNewTiersWithReserves",
+									"type": "bool",
+									"internalType": "bool"
+								},
+								{
+									"name": "noNewTiersWithVotes",
+									"type": "bool",
+									"internalType": "bool"
+								},
+								{
+									"name": "noNewTiersWithOwnerMinting",
+									"type": "bool",
+									"internalType": "bool"
+								},
+								{
+									"name": "preventOverspending",
+									"type": "bool",
+									"internalType": "bool"
+								}
+							]
+						}
+					]
+				}
+			],
+			"outputs": [
+				{
+					"name": "newHook",
+					"type": "address",
+					"internalType": "contract IJB721TiersHook"
+				}
+			],
+			"stateMutability": "nonpayable"
+		},
+		{
+			"type": "function",
+			"name": "isTrustedForwarder",
+			"inputs": [
+				{
+					"name": "forwarder",
+					"type": "address",
+					"internalType": "address"
+				}
+			],
+			"outputs": [
+				{
+					"name": "",
+					"type": "bool",
+					"internalType": "bool"
+				}
+			],
+			"stateMutability": "view"
+		},
+		{
+			"type": "function",
+			"name": "trustedForwarder",
+			"inputs": [],
+			"outputs": [
+				{
+					"name": "",
+					"type": "address",
+					"internalType": "address"
+				}
+			],
+			"stateMutability": "view"
+		},
+		{
+			"type": "event",
+			"name": "HookDeployed",
+			"inputs": [
+				{
+					"name": "projectId",
+					"type": "uint256",
+					"indexed": true,
+					"internalType": "uint256"
+				},
+				{
+					"name": "hook",
+					"type": "address",
+					"indexed": false,
+					"internalType": "contract IJB721TiersHook"
+				},
+				{
+					"name": "caller",
+					"type": "address",
+					"indexed": false,
+					"internalType": "address"
+				}
+			],
+			"anonymous": false
+		},
+		{
+			"type": "error",
+			"name": "ERC1167FailedCreateClone",
+			"inputs": []
+		}
+	];
 const tx_deploy_project = async (name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, chainId) => {
   const contract = croptopDeployerContract(chainId);
   if (!contract) return false;
@@ -2721,8 +3033,16 @@ const tx_deploy_project = async (name, symbol, owner, minimumPrice, minimumTotal
   const allowedPost = { hook: "0x0000000000000000000000000000000000000000", category: 0, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses};
   const accountingContextToAccept = { token:"0x000000000000000000000000000000000000EEEe", decimals: 18, currency: 61166 };
   const terminalConfiguration = { terminal, accountingContextsToAccept: [accountingContextToAccept] };
-  await sign(contract, croptopDeployerContractABI, "deployProjectFor", [owner, [terminalConfiguration], projectUri, [allowedPost], contractUri, name, symbol]);
-  return true;
+  const receipt = await sign(contract, croptopDeployerContractABI, "deployProjectFor", [owner, [terminalConfiguration], projectUri, [allowedPost], contractUri, name, symbol]);
+
+  if (!receipt) return false;
+  
+  const interface = new ethers.Interface(tiersHookDeployerABI);
+  const decodedLog = interface.parseLog(receipt.logs[0]);
+  console.log({ decodedLog });
+  const collectionAddress = decodedLog.args[1]; 
+  console.log({ collectionAddress });
+  return collectionAddress;
 }
 
 const tx_deploy_revnet = async (name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, stage1AutomintTokenAmount, stage2AutomintTokenAmount, stage3AutomintTokenAmount, stage1InitialIssuanceAmount, stage2InitialIssuanceAmount, stage3InitialIssuanceAmount, stage1SplitPercent, stage2SplitPercent, stage3SplitPercent, stage1PriceIncreasePercent, stage2PriceIncreasePercent, stage3PriceIncreasePercent, stage1PriceIncreaseFrequency, stage2PriceIncreaseFrequency, stage3PriceIncreaseFrequency, stage1CashOutTaxRate, stage2CashOutTaxRate, stage3CashOutTaxRate, stage2StartsAtOrAfter, stage3StartsAtOrAfter, chainId) => {
@@ -2764,6 +3084,12 @@ const tx_deploy_revnet = async (name, symbol, owner, minimumPrice, minimumTotalS
   const baseline721HookConfiguration = { name, symbol, baseUri, tokenUriResolver, contractUri, tiersConfig, reserveBeneficiary, flags };
   const hookConfiguration = {baseline721HookConfiguration, splitOperatorCanAdjustTiers: true, splitOperatorCanUpdateMetadata: true, splitOperatorCanMint: false, splitOperatorCanIncreaseDiscountPercent: true};
   const suckerDeploymentConfiguration = { deployerConfigurations: [], salt: "0x0000000000000000000000000000000000000000000000000000000000000000" };
-  await sign(contract, revnetDeployerContractABI, "deployWith721sFor", [0, revnetConfiguration, [terminalConfiguration], buybackHookConfiguration, suckerDeploymentConfiguration, hookConfiguration, [allowedPost]]);
-  return true;
+  const receipt = await sign(contract, revnetDeployerContractABI, "deployWith721sFor", [0, revnetConfiguration, [terminalConfiguration], buybackHookConfiguration, suckerDeploymentConfiguration, hookConfiguration, [allowedPost]]);
+  
+  if (!receipt) return false;
+  
+  const interface = new ethers.Interface(tiersHookDeployerABI);
+  const decodedLog = interface.parseLog(receipt.logs[0]);
+  const collectionAddress = decodedLog.args[1]; 
+  return collectionAddress;
 }
