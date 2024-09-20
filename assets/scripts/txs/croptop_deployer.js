@@ -2,12 +2,24 @@ const croptopDeployerContract = (chainId) => {
   switch (chainId) {
     case 11155111:
       return "0x1Fd03a75AaC42E952Bf46C230Dd2dc485b3d422A";
+    case 11155420:
+      return "0x1Fd03a75AaC42E952Bf46C230Dd2dc485b3d422A";
+    case 84532:
+      return "0x1Fd03a75AaC42E952Bf46C230Dd2dc485b3d422A";
+    case 421614:
+      return "0x1Fd03a75AaC42E952Bf46C230Dd2dc485b3d422A";
   }
 }
 
 const revnetDeployerContract = (chainId) => {
   switch (chainId) {
     case 11155111:
+      return "0x25bC5D5A708c2E426eF3a5196cc18dE6b2d5A3d1";
+    case 11155420:
+      return "0x25bC5D5A708c2E426eF3a5196cc18dE6b2d5A3d1";
+    case 84532:
+      return "0x25bC5D5A708c2E426eF3a5196cc18dE6b2d5A3d1";
+    case 421614:
       return "0x25bC5D5A708c2E426eF3a5196cc18dE6b2d5A3d1";
   }
 }
@@ -16,12 +28,24 @@ const terminalContract = (chainId) => {
   switch (chainId) {
     case 11155111:
       return "0x4DeF0AA5B9CA095d11705284221b2878731ab4EF";
+    case 11155420:
+      return "0x4DeF0AA5B9CA095d11705284221b2878731ab4EF";
+    case 84532:
+      return "0x4DeF0AA5B9CA095d11705284221b2878731ab4EF";
+    case 421614:
+      return "0x4DeF0AA5B9CA095d11705284221b2878731ab4EF";
   }
 }
 
 const loansContract = (chainId) => {
   switch (chainId) {
     case 11155111:
+      return "0xAd324D9F65F129e260Ae9F702B4bD57B9B0aE8F1";
+    case 11155420:
+      return "0xAd324D9F65F129e260Ae9F702B4bD57B9B0aE8F1";
+    case 84532:
+      return "0xAd324D9F65F129e260Ae9F702B4bD57B9B0aE8F1";
+    case 421614:
       return "0xAd324D9F65F129e260Ae9F702B4bD57B9B0aE8F1";
   }
 }
@@ -2690,7 +2714,6 @@ const revnetDeployerContractABI = [
 
 const tx_deploy_project = async (name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, chainId) => {
   const contract = croptopDeployerContract(chainId);
-  console.log({  contract });
   if (!contract) return false;
   const terminal = terminalContract(chainId);
   const projectUri = "QmaJzQjaFKxU2LLyqPTpZoGU47owQcmmvVCP1p4YqeuMUy";
@@ -2702,27 +2725,28 @@ const tx_deploy_project = async (name, symbol, owner, minimumPrice, minimumTotal
   return true;
 }
 
-const tx_deploy_revnet = async (name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, premintTokenAmount, stage1InitialIssuanceRate, stage2InitialIssuanceRate, stage3InitialIssuanceRate, stage1BoostRate, stage2BoostRate, stage3BoostRate, stage1PriceCeilingIncreasePercentage, stage2PriceCeilingIncreasePercentage, stage3PriceCeilingIncreasePercentage, stage1PriceCeilingIncreaseFrequency, stage2PriceCeilingIncreaseFrequency, stage3PriceCeilingIncreaseFrequency, stage1PriceFloorTaxIntensity, stage2PriceFloorTaxIntensity, stage3PriceFloorTaxIntensity, stage2StartsAtOrAfter, stage3StartsAtOrAfter, chainId) => {
+const tx_deploy_revnet = async (name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, stage1AutomintTokenAmount, stage2AutomintTokenAmount, stage3AutomintTokenAmount, stage1InitialIssuanceAmount, stage2InitialIssuanceAmount, stage3InitialIssuanceAmount, stage1SplitPercent, stage2SplitPercent, stage3SplitPercent, stage1PriceIncreasePercent, stage2PriceIncreasePercent, stage3PriceIncreasePercent, stage1PriceIncreaseFrequency, stage2PriceIncreaseFrequency, stage3PriceIncreaseFrequency, stage1CashOutTaxRate, stage2CashOutTaxRate, stage3CashOutTaxRate, stage2StartsAtOrAfter, stage3StartsAtOrAfter, chainId) => {
   const contract = revnetDeployerContract(chainId);
   if (!contract) return false;
   const terminal = terminalContract(chainId);
   const loans = loansContract(chainId);
   const projectUri = "QmaJzQjaFKxU2LLyqPTpZoGU47owQcmmvVCP1p4YqeuMUy";
   const contractUri = "";
-  const emptyBytes = '0x';
   const allowedPost = { hook: "0x0000000000000000000000000000000000000000", category: 0, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses};
   const accountingContextToAccept = { token:"0x000000000000000000000000000000000000EEEe", decimals: 18, currency: 61166 };
   const terminalConfiguration = { terminal, accountingContextsToAccept: [accountingContextToAccept] };
   const baseCurrency = 61166;
   const stage1StartsAtOrAfter = 1;
-  const autoMintStage1 = { chainId, count: premintTokenAmount, beneficiary: owner};
-  const stageConfiguration1 = {  startsAtOrAfter: stage1StartsAtOrAfter, splitPercent: stage1BoostRate, initialIssuance: stage1InitialIssuanceRate, issuanceDecayFrequency: stage1PriceCeilingIncreaseFrequency, issuanceDecayPercent: stage1PriceCeilingIncreasePercentage, cashOutTaxRate: stage1PriceFloorTaxIntensity, autoMints: [autoMintStage1], extraMetadata: "0x0000" };
+  const autoMintStage1 = stage1AutomintTokenAmount == 0 ? [] : [{ chainId, count: stage1AutomintTokenAmount, beneficiary: owner}];
+  const stageConfiguration1 = {  startsAtOrAfter: stage1StartsAtOrAfter, splitPercent: stage1SplitPercent, initialIssuance: stage1InitialIssuanceAmount, issuanceDecayFrequency: stage1PriceIncreaseFrequency, issuanceDecayPercent: stage1PriceIncreasePercent, cashOutTaxRate: stage1CashOutTaxRate, autoMints: autoMintStage1, extraMetadata: "0x0000" };
   const stageConfigurations = [stageConfiguration1];
   if (stage2StartsAtOrAfter != 0) {
-    stageConfigurations.push({startsAtOrAfter: stage2StartsAtOrAfter, splitPercent: stage2BoostRate, initialIssuance: stage2InitialIssuanceRate, issuanceDecayFrequency: stage2PriceCeilingIncreaseFrequency, issuanceDecayPercent: stage2PriceCeilingIncreasePercentage, cashOutTaxRate: stage2PriceFloorTaxIntensity, autoMints: [], extraMetadata: "0x0000"}); 
+  	const autoMintStage2 = stage2AutomintTokenAmount == 0 ? [] : [{ chainId, count: stage2AutomintTokenAmount, beneficiary: owner}];
+    stageConfigurations.push({startsAtOrAfter: stage2StartsAtOrAfter, splitPercent: stage2SplitPercent, initialIssuance: stage2InitialIssuanceAmount, issuanceDecayFrequency: stage2PriceIncreaseFrequency, issuanceDecayPercent: stage2PriceIncreasePercent, cashOutTaxRate: stage2CashOutTaxRate, autoMints: autoMintStage2, extraMetadata: "0x0000"}); 
   }
   if (stage3StartsAtOrAfter != 0) {
-    stageConfigurations.push({startsAtOrAfter: stage3StartsAtOrAfter, splitPercent: stage3BoostRate, initialIssuance: stage3InitialIssuanceRate, issuanceDecayFrequency: stage3PriceCeilingIncreaseFrequency, issuanceDecayPercent: stage3PriceCeilingIncreasePercentage, cashOutTaxRate: stage3PriceFloorTaxIntensity, autoMints: [], extraMetadata: "0x0000" }); 
+  	const autoMintStage3 = stage3AutomintTokenAmount == 0 ? [] : [{ chainId, count: stage3AutomintTokenAmount, beneficiary: owner}];
+    stageConfigurations.push({startsAtOrAfter: stage3StartsAtOrAfter, splitPercent: stage3SplitPercent, initialIssuance: stage3InitialIssuanceAmount, issuanceDecayFrequency: stage3PriceIncreaseFrequency, issuanceDecayPercent: stage3PriceIncreasePercent, cashOutTaxRate: stage3CashOutTaxRate, autoMints: autoMintStage3, extraMetadata: "0x0000" }); 
   }
   const description = { name, ticker: symbol, uri: projectUri, salt: "0x0000000000000000000000000000000000000000000000000000000000000000" };
   const loanSource = { token: "0x000000000000000000000000000000000000EEEe", terminal };
@@ -2740,8 +2764,6 @@ const tx_deploy_revnet = async (name, symbol, owner, minimumPrice, minimumTotalS
   const baseline721HookConfiguration = { name, symbol, baseUri, tokenUriResolver, contractUri, tiersConfig, reserveBeneficiary, flags };
   const hookConfiguration = {baseline721HookConfiguration, splitOperatorCanAdjustTiers: true, splitOperatorCanUpdateMetadata: true, splitOperatorCanMint: false, splitOperatorCanIncreaseDiscountPercent: true};
   const suckerDeploymentConfiguration = { deployerConfigurations: [], salt: "0x0000000000000000000000000000000000000000000000000000000000000000" };
-  console.log({name, symbol, owner, minimumPrice, minimumTotalSupply, maximumTotalSupply, allowedAddresses, premintTokenAmount, stage1InitialIssuanceRate, stage2InitialIssuanceRate, stage3InitialIssuanceRate, stage1BoostRate, stage2BoostRate, stage3BoostRate, stage1PriceCeilingIncreasePercentage, stage2PriceCeilingIncreasePercentage, stage3PriceCeilingIncreasePercentage, stage1PriceCeilingIncreaseFrequency, stage2PriceCeilingIncreaseFrequency, stage3PriceCeilingIncreaseFrequency, stage1PriceFloorTaxIntensity, stage2PriceFloorTaxIntensity, stage3PriceFloorTaxIntensity, stage2StartsAtOrAfter, stage3StartsAtOrAfter, chainId });
-  console.log([0, revnetConfiguration, [terminalConfiguration], buybackHookConfiguration, [], hookConfiguration, [allowedPost]]);
   await sign(contract, revnetDeployerContractABI, "deployWith721sFor", [0, revnetConfiguration, [terminalConfiguration], buybackHookConfiguration, suckerDeploymentConfiguration, hookConfiguration, [allowedPost]]);
   return true;
 }

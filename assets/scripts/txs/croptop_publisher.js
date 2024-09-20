@@ -2,6 +2,12 @@ const croptopPublisherContract = (chainId) => {
   switch (chainId) {
     case 11155111:
       return "0xDd0B2C80A18617F9428c1e9b096fE2DcE222d5F8";
+    case 11155420:
+      return "0xDd0B2C80A18617F9428c1e9b096fE2DcE222d5F8";
+    case 84532:
+      return "0xDd0B2C80A18617F9428c1e9b096fE2DcE222d5F8";
+    case 421614:
+      return "0xDd0B2C80A18617F9428c1e9b096fE2DcE222d5F8";
   }
 }
 
@@ -670,7 +676,7 @@ const croptopPublisherContractABI = [
 
 const tx_view_allowance = async (hook, category, chainId) => {
   const contract = croptopPublisherContract(chainId);
-  if (!contract) return [0, 0, 0];
+  if (!contract) return [0, 0, 0, []];
   return await view(chainId, contract, croptopPublisherContractABI, "allowanceFor", [hook, category]);
 }
 
@@ -678,10 +684,8 @@ const tx_view_tiers = async (hook, encodedIPFSUris, chainId) => {
   const contract = croptopPublisherContract(chainId);
   if (!contract) return [[0, 0, 0]];
   try {
-    console.log({  chainId, contract, croptopPublisherContractABI, hook, encodedIPFSUris});
     return await view(chainId, contract, croptopPublisherContractABI, "tiersFor", [hook, encodedIPFSUris]);
   } catch (e) {
-    console.log({  chainId, e });
     return [];  
   }
 }

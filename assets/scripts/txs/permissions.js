@@ -2,6 +2,12 @@ const permissionsContract = (chainId) => {
   switch (chainId) {
     case 11155111:
       return "0x4CDb4200e4E65a277676Cd5E8d3c7C7C4dA7fBe5";
+    case 11155420:
+      return "0x4CDb4200e4E65a277676Cd5E8d3c7C7C4dA7fBe5";
+    case 84532:
+      return "0x4CDb4200e4E65a277676Cd5E8d3c7C7C4dA7fBe5";
+    case 421614:
+      return "0x4CDb4200e4E65a277676Cd5E8d3c7C7C4dA7fBe5";
   }
 }
 

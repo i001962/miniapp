@@ -16,7 +16,7 @@
       "defaultValue": "",
       "description": "The Ethereum address of the curator of this collection where you'll receive rewards."
     },
-    "collectionHookAddress": {
+    "collectionAddress": {
       "name": "Ethereum Sepolia Collection Address",
       "type": "string",
       "defaultValue": "0x929B6c04fE40fb265Cd0AbB7928826DC965E540D",

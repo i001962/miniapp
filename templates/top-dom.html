@@ -113,13 +113,17 @@
     });
 
     // Event listener for mouseup - resets the flag on mouse up
-    forkModal.addEventListener("mouseup", () => {
+    forkModal.addEventListener("mouseup", (e) => {
+      if(isMouseDownOnInput && e.target.classList.contains("negative-space")) return;
       isMouseDownOnInput = false;
     });
 
     forkModal.addEventListener("click", (e) => {
       // Ignore if the click stared in a field.
-      if (isMouseDownOnInput) return;
+      if (isMouseDownOnInput) {
+        isMouseDownOnInput = false;
+        return;
+      }
 
       // Ignore if the clicked view shouldn't close the modal.
       if (!e.target.classList.contains("negative-space")) return;
