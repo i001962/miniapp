@@ -86,7 +86,7 @@ const resolveCollectionAddress = (chain) => {
   // use sepolia as default.
   switch (chain) {
     case "ethereum sepolia":
-      return env.collectionAddress || env.ethereumSepoliaCollectionAddress || cpnCollectionAddress(chain);
+      return env.ethereumMainnetCollectionAddress || env.ethereumSepoliaCollectionAddress || cpnCollectionAddress(chain);
     case "optimism sepolia":
       return env.optimismSepoliaCollectionAddress || env.ethereumSepoliaCollectionAddress || cpnCollectionAddress(chain);
     case "base sepolia":

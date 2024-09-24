@@ -179,16 +179,28 @@
       .then(data => {
         // Variables from user settings:
         //
-        // - collectionAddress
-        // - collectionCategory
         // - curatorAddress
-
+        // - collectionCategory
+        //
+        // - ethereumMainnetCollectionAddress
+        // - ethereumSepoliaCollectionAddress
+        // - optimismMainnetCollectionAddress
+        // - optimismSepoliaCollectionAddress
+        // - baseMainnetCollectionAddress
+        // - baseSepoliaCollectionAddress
+        // - arbitrumMainnetCollectionAddress
+        // - arbitrumSepoliaCollectionAddress
+        //
         // And RPC addresses:
         //
-        // - ethereumMainnetAddress
-        // - ethereumSepoliaAddress
-        // - optimismMainnetAddress
-        // - optimismSepoliaAddress
+        // - ethereumMainnetRPC
+        // - ethereumSepoliaRPC
+        // - optimismMainnetRPC
+        // - optimismSepoliaRPC
+        // - baseMainnetRPC
+        // - baseSepoliaRPC
+        // - arbitrumMainnetRPC
+        // - arbitrumSepoliaRPC
         env = {
           ...env,
           ...data

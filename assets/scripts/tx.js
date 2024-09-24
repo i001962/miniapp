@@ -3,7 +3,7 @@ const getProvider = (chainId) => {
     case 11155111: return new ethers.JsonRpcProvider(env.ethereumSepoliaRPC || "https://rpc.ankr.com/eth_sepolia");
     case 11155420: return new ethers.JsonRpcProvider(env.optimismSepoliaRPC || "https://rpc.ankr.com/optimism_sepolia");
     case 84532: return new ethers.JsonRpcProvider(env.baseSepoliaRPC || "https://rpc.ankr.com/base_sepolia");
-    case 421614: return new ethers.JsonRpcProvider(env.optimismSepoliaRPC || "https://rpc.ankr.com/arbitrum_sepolia");
+    case 421614: return new ethers.JsonRpcProvider(env.arbitrumSepoliaRPC || "https://rpc.ankr.com/arbitrum_sepolia");
     default: return new ethers.BrowserProvider(window.ethereum);
   }
 }
