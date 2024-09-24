@@ -168,7 +168,7 @@
     postFormStateChainInput.value = defaultChain;
     postFormStateCollectionCategoryInput.value = defaultCollectionCategory;
 
-    fetch("{{ assets_prefix }}templateSettings.json")
+    fetch("{{ assets_prefix }}templateSettings.json?t={{ build_timestamp }}")
       // only if response is 200 OK, parse the JSON
       .then(response => {
         if (!response.ok) {
