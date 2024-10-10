@@ -676,7 +676,7 @@ details > summary:before {
 #fork-form details .form-item {
   margin-top: var(--spacing-3);
 }
-#fork-form-chain  {
+#fork-form-new-jb-state-chain-env  {
   width: calc(var(--reduced-width1) / 2);
 }
 

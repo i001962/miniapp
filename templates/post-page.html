@@ -9,7 +9,7 @@
 </div>
 <div id="post-onchain" class="mobile-padding">
   <details id="post-form-collect-reveal">
-    <summary id="post-form-collect-toggle" class="form-toggle">mint</summary>
+    <summary id="post-form-collect-toggle" class="form-toggle">mint (wip)</summary>
     <div id="post-form-collect-container">
     <div class="form-section">
       <div class="form-item">
@@ -241,7 +241,7 @@
     postFormButton.style.display = "none";
 
     // Change the button text.
-    postFormButtonText.innerHTML = "mint";
+    postFormButtonText.innerHTML = "mint (wip)";
 
     // If the min and max total supplies are the same, hide the total supply field.
     if (formattedMinTotalSupply == formattedMaxTotalSupply) {
@@ -426,7 +426,7 @@
     }
 
     // Change the button text.
-    postFormButtonText.innerHTML = "mint";
+    postFormButtonText.innerHTML = "mint (wip)";
 
     // Disable the button.
     postFormButton.disabled = true;
@@ -743,7 +743,7 @@
           // Disable the button.
           postFormButton.disabled = true;
           postFormButton.style.display = "none";
-          postFormCollectToggle.innerHTML = 'mint';
+          postFormCollectToggle.innerHTML = 'mint (wip)';
           return;
         }
 
@@ -835,7 +835,7 @@
           // Hide and disable the button.
           postFormButton.disabled = true;
           postFormButton.style.display = "none";
-          postFormCollectToggle.innerHTML = 'mint';
+          postFormCollectToggle.innerHTML = 'mint (wip)';
           return;
         }
 
@@ -855,7 +855,7 @@
         // Get a reference to the allowance max total supply.
         const formattedAllowedAddresses = allowance[3];
 
-        postFormCollectToggle.innerHTML = 'mint';
+        postFormCollectToggle.innerHTML = 'mint (wip)';
 
         await decorateRecordForm(chain, collectionAddress, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice, formattedAllowedAddresses);
       }

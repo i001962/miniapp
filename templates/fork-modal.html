@@ -16,22 +16,9 @@
     </div>
     <div id="fork-form" class="form mobile-padding negative-space">
       <div class="form-body">
-        <div id="fork-form-chain" class="form-section">
-          <div class="form-item">
-            <div class="form-label">Chain</div>
-            <div class="form-value form-select-value">
-              <select id="fork-form-state-chain-input" name="chain">
-                <option value="ethereum sepolia">Ethereum Sepolia</option>
-                <option value="optimism sepolia">Optimism Sepolia</option>
-                <option value="arbitrum sepolia">Arbitrum Sepolia</option>
-                <option value="base sepolia">Base Sepolia</option>
-              </select>
-            </div>
-          </div>
-        </div>
         <div class="form-section">
           <details>
-            <summary class="form-toggle form-main-toggle">Create a collection</summary>
+            <summary class="form-toggle form-main-toggle">Create a collection (wip)</summary>
             <div class="form-section">
               <div class="form-section-description">Name and ticker are permanent.</div> 
               <div class="form-item">
@@ -262,12 +249,61 @@
                 </div>
               </details>
             </div>
+            <div id="fork-form-chain" class="form-section">
+              <div class="form-section-description">On which chains do you want to deploy your collection?</div>
+              <div class="form-item">
+                <div class="form-value form-select-value">
+                  <select id="fork-form-new-jb-state-chain-env" name="chain-env">
+                    <option value="production">Production</option>
+                    <option value="testnet">Testnet</option>
+                  </select>
+                </div>
+                <div class="form-value form-chain-checkbox-value">
+                  <div id="fork-form-new-jb-chain-production-options" class="chain-options">
+                    <div class="checkbox-option">
+                      <input type="checkbox" id="ethereum-mainnet" name="chain" value="ethereum mainnet">
+                      <label for="ethereum-mainnet">Ethereum Mainnet</label>
+                    </div>
+                    <div class="checkbox-option">
+                      <input type="checkbox" id="optimism-mainnet" name="chain" value="optimism mainnet">
+                      <label for="optimism-mainnet">Optimism Mainnet</label>
+                    </div>
+                    <div class="checkbox-option">
+                      <input type="checkbox" id="arbitrum-mainnet" name="chain" value="arbitrum mainnet">
+                      <label for="arbitrum-mainnet">Arbitrum Mainnet</label>
+                    </div>
+                    <div class="checkbox-option">
+                      <input type="checkbox" id="base-mainnet" name="chain" value="base mainnet">
+                      <label for="base-mainnet">Base Mainnet</label>
+                    </div>
+                  </div>
+                  <div id="fork-form-new-jb-chain-testnet-options" class="chain-options" style="display: none;">
+                    <div class="checkbox-option">
+                      <input type="checkbox" id="ethereum-sepolia" name="chain" value="ethereum sepolia">
+                      <label for="ethereum-sepolia">Ethereum Sepolia</label>
+                    </div>
+                    <div class="checkbox-option">
+                      <input type="checkbox" id="optimism-sepolia" name="chain" value="optimism sepolia">
+                      <label for="optimism-sepolia">Optimism Sepolia</label>
+                    </div>
+                    <div class="checkbox-option">
+                      <input type="checkbox" id="arbitrum-sepolia" name="chain" value="arbitrum sepolia">
+                      <label for="arbitrum-sepolia">Arbitrum Sepolia</label>
+                    </div>
+                    <div class="checkbox-option">
+                      <input type="checkbox" id="base-sepolia" name="chain" value="base sepolia">
+                      <label for="base-sepolia">Base Sepolia</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>           
             <div id="fork-form-new-jb-error-message" class="form-error-message mobile-padding"></div>
             <button id="fork-form-new-jb-submit-button" class="form-button"><span id="fork-form-new-jb-submit-button-text" class="form-button-text">deploy collection</span><span id="fork-form-new-jb-button-loading-animation" class="loading-animation button-loading-animation"></span></button> 
             <div id="fork-form-new-jb-success-message" class="form-success-message mobile-padding"></div>
           </details>
           <details>
-            <summary class="form-toggle form-main-toggle">Extras</summary>
+            <summary class="form-toggle form-main-toggle">Extras (wip)</summary>
             <details>
               <summary class="form-toggle form-main-toggle">Let Croptop post to your existing collection</summary>
               <div class="form-section">
@@ -339,6 +375,56 @@
     </div>
   </div>
 </div>
+<style>
+.form-chain-checkbox-value {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 520px;
+  height: 144px;
+  align-items: flex-start;
+}
+
+.chain-options {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.checkbox-option input[type="checkbox"] {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.checkbox-option label {
+  margin: 0;
+  cursor: pointer;
+  flex-grow: 1;
+  padding: 8px 12px;
+  background-color: #2a2a2a;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-option:hover label {
+  background-color: #3a3a3a;
+}
+
+/* Adjust the checkbox size and alignment */
+.checkbox-option input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 12px;
+}
+  </style>
 <script>
 
   const decorateNewJbForm = () => {
@@ -377,6 +463,9 @@
     const forkFormNewJbRevnetDurationInput3 = document.getElementById("fork-form-new-jb-revnet-duration-input-3");
     const forkFormNewJbRevnetStage2 = document.getElementById("fork-form-new-jb-revnet-stage-2");
     const forkFormNewJbRevnetStage3 = document.getElementById("fork-form-new-jb-revnet-stage-3");
+    const forkFormNewJbChainEnvSelect = document.getElementById('fork-form-new-jb-state-chain-env');
+    const forkFormNewJbChainProductionOptions = document.getElementById('fork-form-new-jb-chain-production-options');
+    const forkFormNewJbChainTestnetOptions = document.getElementById('fork-form-new-jb-chain-testnet-options');
 
     // Disable the button.
     forkFormNewJbSubmitButton.disabled = true;
@@ -390,6 +479,16 @@
       signer = (await getSigner()).address;
       forkFormNewJbProjectOwnerInput.value = signer;
     };
+
+    forkFormNewJbChainEnvSelect.addEventListener('change', function() {
+      if (this.value === 'production') {
+        forkFormNewJbChainProductionOptions.style.display = 'block';
+        forkFormNewJbChainTestnetOptions.style.display = 'none';
+      } else {
+        forkFormNewJbChainProductionOptions.style.display = 'none';
+        forkFormNewJbChainTestnetOptions.style.display = 'block';
+      }
+    });
 
     // Get Duration input 1, onchange either show or hide section 2 and 3.
     forkFormNewJbRevnetDurationInput.addEventListener("input", () => {
