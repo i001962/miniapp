@@ -3,10 +3,10 @@
   "description": "Publish and access indie content freely through .eth domains",
   "author": "Jango",
   "authorWebsite": "https://croptop.eth.sucks",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "idealItemsPerPage": 10,
   "generateIndexPagination": false,
-  "buildNumber": 586,
+  "buildNumber": 598,
   "generateNFTMetadata": true,
   "generateTagPages": true,
   "settings": {
@@ -22,7 +22,6 @@
       "defaultValue": "0",
       "description": "The collection's category where posts will be recorded."
     },
-    
     "ethereumMainnetCollectionAddress": {
       "name": "Ethereum Mainnet",
       "type": "string",
@@ -71,7 +70,6 @@
       "defaultValue": "",
       "description": ""
     },
-
     "ethereumMainnetRPC": {
       "name": "Ethereum Mainnet RPC",
       "type": "string",
@@ -128,7 +126,6 @@
       "description": "",
       "advanced": true
     },
-
     "highlightColor": {
       "name": "Highlight Color",
       "type": "string",
