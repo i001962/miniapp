@@ -30,7 +30,13 @@
     {% endif %}
 
     <div id="post-content" class="mobile-padding">
-    {{ content_html }}
+    {% if content_html.count > 0 %}
+      {{ content_html }}
+    {% else %}
+      {% if article.heroImageFilename %}
+      <img src="{{ article.heroImageFilename }}">
+      {% endif %}
+    {% endif %}
     </div>
   </div>
 </div>
