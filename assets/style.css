@@ -8,7 +8,7 @@
   --foreground-secondary-color: #EC017C;
   --border-color: rgba(162, 230, 52, 0.7);
   --border-secondary-color: #32CD32; 
-  --link-color: rgba(0,0,0,0);
+  --link-color: #efab1d;
   --alert-color: #efab1d;
   --icon-social-filter: invert(100%) sepia(0%) saturate(7460%) hue-rotate(186deg) brightness(107%) contrast(77%);
   --avatar-size-1: 3em;
@@ -45,11 +45,11 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background-color: #181424;
-    --background-secondary-color: #2a2a2a;
-    --background-color-opacity: rgba(23, 23, 23, 0.98);
-    --background-secondary-color-opacity: rgba(42, 42, 42, 0.7);
+    --background-secondary-color: #010513;
+    --background-color-opacity: #181424;
+    --background-secondary-color-opacity: #010513;
     --foreground-color: #C0B2F0;
-    --foreground-secondary-color: #010513;
+    --foreground-secondary-color:  #EC017C;
     --icon-social-filter: invert(24%) sepia(11%) saturate(0%) hue-rotate(188deg) brightness(95%) contrast(95%);
   }
 }
