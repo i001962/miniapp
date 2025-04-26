@@ -1,8 +1,8 @@
 {
-  "name": "Croptop",
+  "name": "Defifa Template",
   "description": "Publish and access indie content freely through .eth domains",
-  "author": "Jango",
-  "authorWebsite": "https://croptop.eth.sucks",
+  "author": "kmac",
+  "authorWebsite": "https://kmacb.eth.sucks",
   "version": "1.2.2",
   "idealItemsPerPage": 10,
   "generateIndexPagination": false,

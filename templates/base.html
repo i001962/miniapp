@@ -10,6 +10,29 @@
     <link rel="preload" href="{{ assets_prefix }}planet.json" as="fetch" type="application/json" crossorigin="anonymous">
     <link rel="preload" href="{{ assets_prefix }}rss.xml" as="fetch" type="application/rss+xml" crossorigin="anonymous">
     <title>{% block title %}{{ page_title|escape }}{% endblock %}</title>
+    <script type="module">
+      import { sdk } from 'https://esm.sh/@farcaster/frame-sdk';
+      async function inFrameContext() {
+          const links = document.querySelectorAll("a[href^='http']");
+          for (let link of links) {
+              link.addEventListener("click", (event) => {
+                  event.preventDefault();
+                  sdk.actions.openUrl(link.getAttribute("href"));
+              });
+          }
+          await sdk.actions.addFrame();
+      }
+  
+      window.onload = async () => {
+        try {
+          await sdk.actions.ready();
+          const ctx = await sdk.context;
+          ctx ? await inFrameContext() : FrameBar();
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    </script>
     <script>
       let userAgentRegex = /Planet\/\S*/;
       window.PLANET = {

@@ -130,6 +130,114 @@
   <audio id="post-cover-audio"></audio>
 </div>
 <div id="post-content" class="mobile-padding"></div>
+<div id="comments"></div>
+<script type="module">
+  import { sdk } from 'https://esm.sh/@farcaster/frame-sdk';
+
+  const PAGE_URL = window.location.href;
+  const CONTAINER = "comments";
+
+  FarcasterCommentsInit(PAGE_URL, CONTAINER);
+
+  async function setupLinksForFrame() {
+    const links = document.querySelectorAll("a[href^='http']");
+    for (const link of links) {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        sdk.actions.openUrl(link.getAttribute("href"));
+      });
+    }
+    await sdk.actions.addFrame();
+  }
+
+  window.onload = async () => {
+    try {
+      await sdk.actions.ready();
+      const ctx = await sdk.context;
+      if (ctx) {
+        await setupLinksForFrame();
+      } else {
+        FrameBar();
+      }
+    } catch (error) {
+      console.error("Frame SDK init failed:", error);
+    }
+  };
+
+  window.addEventListener("FarcasterCommentsLoaded", (evt) => {
+    const { containerId, root, replies } = evt.detail;
+    console.log("FarcasterCommentsLoaded ▶︎", containerId, root, replies);
+    const el = document.getElementById(containerId);
+    el.innerHTML = "";
+
+    if (!root) {
+      // Insert the Farcaster share button directly after #post-form-button
+      setTimeout(() => {
+        const postFormButton = document.getElementById("post-form-button");
+        if (postFormButton && !document.getElementById("farcaster-comment-button")) {
+          const shareBtn = document.createElement("button");
+          shareBtn.id = "farcaster-comment-button";
+          shareBtn.style.marginTop = "1rem";
+          shareBtn.innerText = "💬 Share to Farcaster to enable comments";
+          postFormButton.parentNode.insertBefore(shareBtn, postFormButton.nextSibling);
+        }
+        const button = document.getElementById("farcaster-comment-button");
+        if (button) {
+          button.onclick = async () => {
+            console.log("💬 Comment button clicked");
+            try {
+              await sdk.actions.ready(); // ensures sdk is initialized
+              const ctx = await sdk.context;
+              console.log("SDK Context:", ctx);
+
+              if (ctx) {
+                await sdk.actions.composeCast({
+                  text: PAGE_URL + ' [test] commenting system',
+                  embeds: [PAGE_URL],
+                  parent: {
+                    type: "url",
+                    url: PAGE_URL
+                  }
+                });
+                return;
+              } else {
+                throw new Error("Not in frame context");
+              } 
+            } catch (e) {
+              console.warn("Fallback to Warpcast due to error:", e.message);
+              window.open(
+                'https://warpcast.com/~/compose?text=' +
+                  PAGE_URL + ' [test] commenting system' +
+                  '&embeds[]=' +
+                  PAGE_URL +
+                  '&channelKey=' + PAGE_URL,
+                '_blank'
+              );
+            }
+          };
+        }
+      }, 0);
+      return;
+    }
+
+    el.innerHTML += `
+      <div class="comment-root">
+        <strong>${root.username}</strong>
+        <p>${root.text}</p>
+        <small>${new Date(root.timestamp).toLocaleString()}</small>
+      </div>
+    `;
+    replies.forEach(r => {
+      el.innerHTML += `
+        <div class="comment-reply" style="margin-left:20px">
+          <strong>${r.username}</strong>
+          <p>${r.text}</p>
+          <small>${new Date(r.timestamp).toLocaleString()}</small>
+        </div>
+      `;
+    });
+  });
+</script>
 <div id="post-attachments" class="mobile-padding"></div>
 <div id="post-aggregation" class="mobile-padding"></div>
 <script>

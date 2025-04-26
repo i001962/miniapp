@@ -1,3 +1,27 @@
+<script type="module">
+    import { sdk } from 'https://esm.sh/@farcaster/frame-sdk';
+
+    async function inFrameContext() {
+        const links = document.querySelectorAll("a[href^='http']");
+        for (let link of links) {
+            link.addEventListener("click", (event) => {
+                event.preventDefault();
+                sdk.actions.openUrl(link.getAttribute("href"));
+            });
+        }
+        await sdk.actions.addFrame();
+    }
+
+    window.onload = async () => {
+      try {
+        await sdk.actions.ready();
+        const ctx = await sdk.context;
+        ctx ? await inFrameContext() : FrameBar();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+</script>
 <!-- Open Graph Tags -->
 <meta property="og:type" content="website" />
 <meta property="og:title" content="{{ planet.name|escape }}" />
@@ -17,3 +41,17 @@
 <meta name="twitter:image" content="{{ og_image_url }}" />
 {% endif %}
 <!-- End Open Graph Tags -->
+<meta name="fc:frame" content='{
+    "version": "next",
+    "imageUrl": "{{ og_image_url }}",
+    "button": {
+      "title": "See my innie",
+      "action": {
+        "type": "launch_frame",
+        "name": "KMac has an innie App",
+        "url": "https://kmacb.eth.sucks",
+        "splashImageUrl": "https://kmacb.eth.sucks/avatar.png",
+        "splashBackgroundColor": "#010513"
+      }
+    }
+  }' />
