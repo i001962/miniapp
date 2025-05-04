@@ -1,0 +1,1118 @@
+{% extends 'base.html' %}
+{% block head %}
+{% include 'modules/head.html' %}
+{% include 'modules/planet_seo.html' %}
+{% endblock %}
+
+{% block dom_ready %}
+window.onpopstate = function(event) {
+  if (event.state) {
+    const postModal = document.getElementById("post-modal");
+    postModal.style.display = "none";
+  }
+};
+{% endblock %}
+
+{% block main %}
+<div id="body-dom">
+  <div id="body-header">
+    <div id="tags-container">
+      <div id="tags">
+        <div id="default-tag" class="tag"><span class="tag-text">all</span></div>
+        {% for tag in planet.tags %}
+        <div id="custom-tag-{{ tag }}" class="tag custom-tag"><span class="tag-text">{{ tag }}</span><span class="remove">×</span></div>
+        {% endfor %}
+      </div>
+    </div>
+    <div id="post-mode-button" class="post-mode-button"><span id="grid-post-mode-button" class="post-mode-button-icon post-mode-button-active"> </span>|<span id="list-post-mode-button" class="post-mode-button-icon"> ☰</span></div>
+  </div>
+  <div class="body-content">
+    <div id="post-frames-container"></div>
+    <div id="post-list-container"></div>
+    <div id="posts-loading-animation" class="body-loading-animation loading-animation"></div>
+  </div>
+</div>
+{% include './fork-modal.html' %}
+<div id="post-modal" class="modal negative-space">
+  <div class="modal-content body-content centered-content content-top-offset negative-space">
+    <div class="exit-button mobile-padding negative-space"><span class="exit-button-text negative-space">×</span></div>
+    {% include './post-page.html' %}
+  </div>
+</div>
+<script>
+  // Layout constants.
+  const horizontalMargin = 20;
+  const verticalMargin = 20;
+  const postFrameWidthClasses = ["post-frame-w1"]; //, "post-frame-w3", "post-frame-w3"];
+  const noScrollEffectEdgeDistance = 80;
+  const toggleNavVisibilityScrollThreshold = 50;
+  const pagingMargingBottom = 100;
+  const timeTillIdle = 2000;
+  const defaultPageSize = 200;
+
+  // Layout variables.
+  let posts = [];
+  let currentRow = 1;
+  let greatestRightInRow = 0;
+  let rows = [];
+  let lastScrollTop = 0;
+
+  // State variables.
+  let nextPageOffset = 0;
+  let canLoadNewPosts = true;
+  let hasDecoratedTags = false;
+  let activeTags = [];
+  let projectTags =  {};
+  let postMode = "frames";
+
+  const loadPostsState = async (encodedIPFSUris) => {
+    // Load tiers.
+    const postFormStateChainInput = document.getElementById("post-form-state-chain-input");
+    const postFormStateCollectionAddressInput = document.getElementById("post-form-state-collection-address-input");
+    const chain = postFormStateChainInput.value;
+    const collectionAddress = parseInt(postFormStateCollectionAddressInput.value);
+
+    const tiers = await tx_view_tiers(collectionAddress, encodedIPFSUris, resolveChainId(chain));
+
+    for (let i in tiers) {
+      const tier = tiers[i];
+      if (tier[0] == 0) continue;
+
+      // Set a chain object.
+      if (!tiersCache[chain]) tiersCache[chain] = {};
+
+      // Cache the value.
+      if (!tiersCache[chain][collectionAddress]) tiersCache[chain][collectionAddress] = {};
+      tiersCache[chain][collectionAddress][encodedIPFSUris[i]] = tier;
+    }
+  }
+
+  const decoratePostFrameState = (postFrame, collectionAddress, encodedIPFSUri) => {
+    const postFormStateChainInput = document.getElementById("post-form-state-chain-input");
+    const chain = postFormStateChainInput.value;
+
+    if (!tiersCache[chain]) tiersCache[chain] = {};
+    if (!tiersCache[chain][collectionAddress]) tiersCache[chain][collectionAddress] = {};
+    const tier = tiersCache[chain][collectionAddress][encodedIPFSUri];
+    if (!tier) return;
+
+    const state = postFrame.querySelector(".post-frame-state");
+
+    // Get a reference to the tier's remaining supply.
+    const formattedRemainingSupply = parseInt(tier[2].toString());
+    const formattedTotalSupply = parseInt(tier[3].toString());
+
+    // Set the content.
+    if (formattedTotalSupply > 0 && formattedRemainingSupply == 0) {
+      state.innerHTML = 'sold out';
+      state.classList.add("alert");
+    } else {
+      state.textContent = `${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } left`;
+    }
+  }
+
+  const decoratePostRowState = (postRow, collectionAddress, encodedIPFSUri) => {
+    const postFormStateChainInput = document.getElementById("post-form-state-chain-input");
+    const chain = postFormStateChainInput.value;
+
+    if (!tiersCache[chain]) tiersCache[chain] = {};
+    if (!tiersCache[chain][collectionAddress]) tiersCache[chain][collectionAddress] = {};
+    const tier = tiersCache[chain][collectionAddress][encodedIPFSUri];
+    if (!tier) return;
+
+    const state = postRow.querySelector(".post-row-state");
+
+    // Get a reference to the tier's remaining supply.
+    const formattedRemainingSupply = parseInt(tier[2].toString());
+    const formattedTotalSupply = parseInt(tier[3].toString());
+
+    // Set the content.
+    if (formattedTotalSupply > 0 && formattedRemainingSupply == 0) {
+      state.innerHTML = 'sold out';
+      state.classList.add("alert");
+    } else {
+      state.textContent = `${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } left`;
+    }
+  }
+
+  const decoratePostFrame = async (postFrame, post, postId, date, name, link, tags, content, coverImageSrc, coverVideoSrc, coverAudioSrc, coverAutogenerated) => {
+    const postFormStateCollectionAddressInput = document.getElementById("post-form-state-collection-address-input");
+    const collectionAddress = parseInt(postFormStateCollectionAddressInput.value);
+
+    // Set a default name if needed.
+    if (name === undefined || name === null || name === "") name = "untitled";
+
+    const postModal = document.getElementById("post-modal");
+
+    // Get references to frame elements that need decorating.
+    const subtitle = postFrame.querySelector(".post-frame-subtitle");
+    const title = postFrame.querySelector(".post-frame-title");
+    const frameImage = postFrame.querySelector("img");
+
+    // Set the frame and img's ID.
+    postFrame.id = 'frame-' + postId;
+    if (post.heroImageWidth && post.heroImageHeight) {
+      postFrame.setAttribute("data-mediaWidth", post.heroImageWidth);
+      postFrame.setAttribute("data-mediaHeight", post.heroImageHeight);
+    }
+
+    if (post.pinned && post.pinned > 0) {
+      const icon = document.createElement("div");
+      icon.innerHTML = "";
+      icon.classList.add("post-frame-pinned-icon");
+      postFrame.appendChild(icon);
+    }
+
+    const verb = content.length > 150 ? "read" : "see";
+
+    // Set the content.
+    title.innerHTML = name;
+    subtitle.innerHTML = `${date}${ (post.pinned && post.pinned > 0 ) ? '<span class="space">•</span>pinned' : "" }<span class="space">•</span><span class="post-frame-state">click to ${verb}</span>${ Object.keys(tags).length ? '<span class="space">•</span>' : "" }${Object.values(tags).map(tag => `<div class="tag">${tag}</div>`).join(" ")}`;
+
+    if (name == "✃") title.classList.add("bigger-font");
+
+    if (coverVideoSrc) {
+      const frameVideo = document.createElement("video");
+      const frameVideoCurrentTime = document.createElement("span");
+      const frameVideoDuration = document.createElement("span");
+      const frameVideoAnimation = document.createElement("span");
+      frameVideo.classList.add("post-frame-video");
+      frameVideoAnimation.id = 'frame-video-' + postId;
+      frameVideo.style.display = "block";
+      frameVideo.autoplay = false;
+      frameVideo.loop = true;
+      frameVideo.poster = "{{ assets_prefix }}" + postId + "/_videoThumbnail.png";
+      frameVideo.playsInline = true;
+      frameVideo.preload = "auto";
+      frameVideo.muted = true;  // So hover to play works. See https://developer.chrome.com/blog/autoplay/
+      // TODO: If user has interacted with the page, unmute.
+      frameVideo.controls = false;
+      // Mark videos with playback info.
+      subtitle.appendChild(document.createTextNode(" • "));
+      subtitle.appendChild(frameVideoAnimation);
+      subtitle.appendChild(frameVideoCurrentTime);
+      subtitle.appendChild(frameVideoDuration);
+      frameVideo.src = coverVideoSrc;
+      prepareAudioAnimation(frameVideoAnimation.id);
+      postFrame.appendChild(frameVideo);
+
+      const overlay = document.createElement("div");
+      overlay.innerHTML = "[▶]";
+      overlay.classList.add("overlay-play-icon");
+      postFrame.appendChild(overlay);
+
+      frameVideo.addEventListener('loadedmetadata', () => {
+        frameVideoDuration.textContent = formatPlayclock(frameVideo.duration);
+        frameVideoCurrentTime.textContent = ` ${formatPlayclock(frameVideo.currentTime)} / `;
+      });
+      frameVideo.addEventListener('timeupdate', () => {
+          frameVideoCurrentTime.textContent = ` ${formatPlayclock(frameVideo.currentTime)} / `;
+      });
+      let hideInfoAnimation;
+      frameVideo.addEventListener("mouseover", () => {
+        if (!frameVideo.paused) return;
+        frameVideo.play();
+        startAudioAnimation(frameVideoAnimation.id);
+      });
+      frameVideo.addEventListener("mousemove", () => {
+        postFrame.classList.remove("idle");
+        clearTimeout(hideInfoAnimation);
+        hideInfoAnimation = setTimeout(() => {
+          postFrame.classList.add("idle");
+        }, timeTillIdle);
+      });
+      frameVideo.addEventListener("mouseout", () => {
+        clearTimeout(hideInfoAnimation);
+        frameVideo.pause();
+        stopAudioAnimation(frameVideoAnimation.id);
+      });
+    } else if (coverAudioSrc) {
+      const frameAudioContainer = document.createElement("div");
+      const frameAudio = document.createElement("audio");
+      const frameAudioSource = document.createElement("source");
+      const frameAudioCurrentTime = document.createElement("span");
+      const frameAudioDuration = document.createElement("span");
+      const frameAudioAnimation = document.createElement("span");
+      frameAudioContainer.classList.add("post-frame-audio-container");
+      frameAudioCurrentTime.classList.add("post-frame-audio-play-clock");
+      frameAudioDuration.classList.add("post-frame-audio-play-clock");
+      frameAudioAnimation.id = 'frame-audio-' + postId;
+      frameAudio.autoplay = false;
+      frameAudio.loop = true;
+      frameAudio.muted = false;
+      frameAudio.controls = false;
+      subtitle.innerHTML = `${subtitle.innerHTML}`;
+      frameAudioSource.src = coverAudioSrc;
+      frameAudioSource.loading = "lazy";
+      frameAudio.appendChild(frameAudioSource);
+      frameAudioContainer.appendChild(frameAudio);
+      frameAudioContainer.appendChild(frameAudioAnimation);
+      frameAudioContainer.appendChild(frameAudioCurrentTime);
+      frameAudioContainer.appendChild(frameAudioDuration);
+      postFrame.appendChild(frameAudioContainer);
+      prepareAudioAnimation(frameAudioAnimation.id);
+      frameAudio.addEventListener('loadedmetadata', () => {
+        frameAudioDuration.textContent = formatPlayclock(frameAudio.duration);
+        frameAudioCurrentTime.textContent = ` ${formatPlayclock(frameAudio.currentTime)} / `;
+      });
+      frameAudio.addEventListener('timeupdate', () => {
+          frameAudioCurrentTime.textContent = ` ${formatPlayclock(frameAudio.currentTime)} / `;
+      });
+      frameAudioContainer.addEventListener("mouseover", () => {
+        if (!frameAudio.paused) return;
+        frameAudio.play();
+        startAudioAnimation(frameAudioAnimation.id);
+      });
+      frameAudioContainer.addEventListener("mouseout", () => {
+        frameAudio.pause();
+        stopAudioAnimation(frameAudioAnimation.id);
+      });
+
+      const overlay = document.createElement("div");
+      overlay.innerHTML = "[▶]";
+      overlay.classList.add("overlay-play-icon");
+      postFrame.appendChild(overlay);
+
+    } else if (coverImageSrc && !coverAutogenerated) {
+      const frameImage = document.createElement("img");
+      frameImage.classList.add("post-frame-image");
+      frameImage.style.display = "block";
+      frameImage.src = coverImageSrc;
+      frameImage.loading = "lazy";
+      postFrame.appendChild(frameImage);
+    } else {
+      const frameText = document.createElement("div");
+      frameText.classList.add("post-frame-text");
+      frameText.innerHTML = content.slice(0, 200).replace(/\n/g, "<br>");
+      postFrame.appendChild(frameText);
+    }
+
+    const encodedIPFSUri = await encodeIPFSUriFrom("{{ assets_prefix }}", postId);
+
+    // Summon a modal when the frame is clicked.
+    postFrame.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      // Show the modal.
+      postModal.style.display = "block";
+
+      toggleNavVisibility();
+
+      // Make the modal look right.
+      await decoratePostModal(post, postId, encodedIPFSUri, name, date, link, renderMarkdown(content), coverImageSrc, coverVideoSrc, coverAudioSrc, coverAutogenerated);
+
+      // Make the body not scrollable.
+      document.body.style.overflow = "hidden";
+    });
+
+    decoratePostFrameState(postFrame, collectionAddress, encodedIPFSUri);
+  }
+
+  const decoratePostRow = async (postRow, post, postId, date, name, link, tags, content, thumbnailImageSrc, thumbnailVideoSrc, thumbnailAudioSrc, thumbnailAutogenerated) => {
+    const postFormStateCollectionAddressInput = document.getElementById("post-form-state-collection-address-input");
+    const collectionAddress = parseInt(postFormStateCollectionAddressInput.value);
+
+    // Set a default name if needed.
+    if (name === undefined || name === null || name === "") name = "untitled";
+
+    const postModal = document.getElementById("post-modal");
+
+    // Get references to frame elements that need decorating.
+    const subtitle = postRow.querySelector(".post-row-subtitle");
+    const title = postRow.querySelector(".post-row-title");
+    const thumbnail = postRow.querySelector(".post-row-thumbnail");
+
+    const verb = content.length > 150 ? "read" : "see";
+
+    // Set the frame and img's ID.
+    postRow.id = 'row-' + postId;
+
+    // Set the content.
+    title.innerHTML = name;
+    subtitle.innerHTML = `${date} • <span class="post-row-state">click to ${verb}</span> ${ Object.keys(tags).length ? "•" : "" }${Object.values(tags).map(tag => `<div class="tag">${tag}</div>`).join(" ")}`;
+
+    if (name == "✃") title.classList.add("bigger-font");
+
+    if (thumbnailVideoSrc) {
+      const thumbnailVideo = document.createElement("video");
+      const thumbnailVideoCurrentTime = document.createElement("span");
+      const thumbnailVideoDuration = document.createElement("span");
+      const thumbnailVideoAnimation = document.createElement("span");
+      thumbnailVideo.classList.add("row-thumbnail-video");
+      thumbnailVideoAnimation.id = 'thumbnail-video-' + postId;
+      thumbnailVideo.style.display = "block"
+      thumbnailVideo.autoplay = false;
+      thumbnailVideo.loop = true;
+      thumbnailVideo.muted = false;
+      thumbnailVideo.controls = false;
+      // Mark videos with playback info.
+      subtitle.appendChild(document.createTextNode(" • "));
+      subtitle.appendChild(thumbnailVideoAnimation);
+      subtitle.appendChild(thumbnailVideoCurrentTime);
+      subtitle.appendChild(thumbnailVideoDuration);
+      prepareAudioAnimation(thumbnailVideoAnimation.id);
+      thumbnailVideo.src = thumbnailVideoSrc;
+      thumbnailVideo.loading = "lazy";
+      thumbnail.appendChild(thumbnailVideo);
+      thumbnailVideo.addEventListener('loadedmetadata', () => {
+        thumbnailVideoDuration.textContent = formatPlayclock(thumbnailVideo.duration);
+        thumbnailVideoCurrentTime.textContent = ` ${formatPlayclock(thumbnailVideo.currentTime)} / `;
+      });
+      thumbnailVideo.addEventListener('timeupdate', () => {
+          thumbnailVideoCurrentTime.textContent = ` ${formatPlayclock(thumbnailVideo.currentTime)} / `;
+      });
+      postRow.addEventListener("mouseover", () => {
+        if (!thumbnailVideo.paused) return;
+        thumbnailVideo.play();
+        startAudioAnimation(thumbnailVideoAnimation.id);
+      });
+      postRow.addEventListener("mouseout", () => {
+        thumbnailVideo.pause();
+        stopAudioAnimation(thumbnailVideoAnimation.id);
+      });
+    } else if (thumbnailAudioSrc) {
+      const rowAudioContainer = document.createElement("div");
+      const rowAudio = document.createElement("audio");
+      const rowAudioSource = document.createElement("source");
+      const rowAudioCurrentTime = document.createElement("span");
+      const rowAudioDuration = document.createElement("span");
+      const rowAudioAnimation = document.createElement("span");
+      rowAudioContainer.classList.add("post-row-audio-container");
+      rowAudioCurrentTime.classList.add("post-row-audio-play-clock");
+      rowAudioDuration.classList.add("post-row-audio-play-clock");
+      rowAudioAnimation.id = 'row-audio-' + postId;
+      rowAudio.autoplay = false;
+      rowAudio.loop = true;
+      rowAudio.muted = false;
+      rowAudio.controls = false;
+      subtitle.innerHTML = `${subtitle.innerHTML} • [▶]`
+      rowAudioSource.src = thumbnailAudioSrc;
+      rowAudioSource.loading = "lazy";
+      rowAudio.addEventListener('loadedmetadata', () => {
+        rowAudioDuration.textContent = formatPlayclock(rowAudio.duration);
+        rowAudioCurrentTime.textContent = ` ${formatPlayclock(rowAudio.currentTime)} / `;
+      });
+      rowAudio.addEventListener('timeupdate', () => {
+          rowAudioCurrentTime.textContent = ` ${formatPlayclock(rowAudio.currentTime)} / `;
+      });
+      rowAudio.appendChild(rowAudioSource);
+      rowAudioContainer.appendChild(rowAudio);
+      rowAudioContainer.appendChild(rowAudioAnimation);
+      rowAudioContainer.appendChild(rowAudioCurrentTime);
+      rowAudioContainer.appendChild(rowAudioDuration);
+      thumbnail.appendChild(rowAudioContainer);
+      prepareAudioAnimation(rowAudioAnimation.id);
+      postRow.addEventListener("mouseover", () => {
+        if (!rowAudio.paused) return;
+        rowAudio.play();
+        startAudioAnimation(rowAudioAnimation.id);
+      });
+      postRow.addEventListener("mouseout", () => {
+        rowAudio.pause();
+        stopAudioAnimation(rowAudioAnimation.id);
+      });
+    } else if (thumbnailImageSrc && !thumbnailAutogenerated) {
+      const thumbnailImage = document.createElement("img");
+      thumbnailImage.classList.add("row-thumbnail-image");
+      thumbnailImage.style.display = "block"
+      thumbnailImage.src = thumbnailImageSrc;
+      thumbnailImage.loading = "lazy";
+      thumbnail.appendChild(thumbnailImage);
+    } else {
+      const thumbnailTextContainer = document.createElement("div");
+      const thumbnailText = document.createElement("div");
+      thumbnailTextContainer.classList.add("post-row-thumbnail-text-container");
+      thumbnailText.classList.add("post-row-thumbnail-text");
+      thumbnailText.innerHTML = content.slice(0, 100).replace(/\n/g, "<br>");
+      thumbnailTextContainer.appendChild(thumbnailText)
+      thumbnail.appendChild(thumbnailTextContainer);
+    }
+
+    const encodedIPFSUri = await encodeIPFSUriFrom("{{ assets_prefix }}", postId);
+
+    // Summon a modal when the frame is clicked.
+    postRow.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      // Show the modal.
+      postModal.style.display = "block";
+
+      toggleNavVisibility();
+
+      // Make the modal look right.
+      await decoratePostModal(post, postId, encodedIPFSUri, name, date, link, renderMarkdown(content), thumbnailImageSrc, thumbnailVideoSrc, thumbnailAudioSrc, thumbnailAutogenerated);
+
+      // Make the body not scrollable.
+      document.body.style.overflow = "hidden";
+    });
+
+    decoratePostRowState(postRow, collectionAddress, encodedIPFSUri);
+  }
+
+  /// Load the frame contents.
+  const loadMedia = async (container) => {
+    const media = container.querySelector('img:first-of-type') || container.querySelector('video:first-of-type');
+    if (!media) return;
+    const mediaWidth = container.getAttribute("data-mediaWidth");
+    const mediaHeight = container.getAttribute("data-mediaHeight");
+    if (mediaWidth && mediaHeight) {
+      media.style.width = "100%";
+      media.style.aspectRatio = `${mediaWidth}/${mediaHeight}`;
+    }
+    return new Promise((resolve) => {
+      // Resolve if the image if done.
+      if (media.complete) return resolve();
+
+      if (mediaWidth && mediaHeight) return resolve();
+
+      const checkForDimensions = () => {
+        // Resolve if the img has dimensions.
+        if ((media.width || media.videoWidth) && (media.height || media.videoHeight)) return setTimeout(resolve, 500);
+        // Otherwise wait until the image has dimensions.
+        else
+          return requestAnimationFrame(checkForDimensions);
+      }
+
+      checkForDimensions();
+    });
+  }
+
+  /// Get the top.
+  const getTopTarget = (postFrame, row) => {
+    if (row == 1) {
+      const framesContainer = document.getElementById("post-frames-container");
+      return framesContainer.offsetTop;
+    }
+
+    let previousRow = rows[row - 2];
+    let candidatePostFrame;
+
+    for (let j = 0; j < previousRow.postFrameReferences.length; j++) {
+      let postFrameToCheck = previousRow.postFrameReferences[j];
+
+      if (
+        postFrame.left < postFrameToCheck.right + horizontalMargin &&
+        postFrame.right + horizontalMargin > postFrameToCheck.left &&
+        (candidatePostFrame == null || postFrameToCheck.bottom > candidatePostFrame.bottom)
+      ) candidatePostFrame = postFrameToCheck;
+      else if (j == previousRow.postFrameReferences.length - 1 && postFrame.left >= postFrameToCheck.right + horizontalMargin) {
+        return candidatePostFrame ? candidatePostFrame.bottom : getTopTarget(postFrame, row - 1);
+      }
+    }
+
+    if (!candidatePostFrame) {
+      console.log({ postFrame, row, previousRow });
+    }
+
+    return candidatePostFrame.bottom;
+  }
+
+  const framePost = () => {
+    const framesContainer = document.getElementById("post-frames-container");
+    const frame = document.createElement("div");
+    const infoContainer = document.createElement("div");
+    const info = document.createElement("div");
+    const title = document.createElement("div");
+    const subtitle = document.createElement("div");
+
+    frame.classList.add("post-frame");
+    infoContainer.classList.add("post-frame-info-container");
+    info.classList.add("post-frame-info");
+    subtitle.classList.add("post-frame-subtitle");
+    title.classList.add("post-frame-title");
+
+    // Get random width.
+    const widthClass = postFrameWidthClasses[Math.floor(Math.random() * postFrameWidthClasses.length)];
+    frame.classList.add(widthClass);
+
+    info.appendChild(title);
+    info.appendChild(subtitle);
+    infoContainer.appendChild(info);
+    frame.appendChild(infoContainer);
+    framesContainer.appendChild(frame);
+
+    return frame;
+  }
+
+  const listPost = () => {
+    const listContainer = document.getElementById("post-list-container");
+    const rowContainer = document.createElement("div");
+    const row = document.createElement("div");
+    const info = document.createElement("div");
+    const title = document.createElement("div");
+    const subtitle = document.createElement("div");
+    const thumbnail = document.createElement("div");
+
+    rowContainer.classList.add("post-row-container");
+    row.classList.add("post-row");
+    info.classList.add("post-row-info");
+    title.classList.add("post-row-title");
+    subtitle.classList.add("post-row-subtitle");
+    thumbnail.classList.add("post-row-thumbnail");
+
+    info.appendChild(title);
+    info.appendChild(subtitle);
+    row.appendChild(thumbnail);
+    row.appendChild(info);
+    rowContainer.appendChild(row);
+    listContainer.appendChild(rowContainer);
+
+    return row;
+  }
+
+  const positionAndShowPostFrame = async (postFrame) => {
+    await loadMedia(postFrame);
+
+    const rect = postFrame.getBoundingClientRect();
+    if (rect.left < greatestRightInRow) currentRow++;
+
+    greatestRightInRow = rect.right;
+
+    const heightDiff = rect.top - getTopTarget(rect, currentRow);
+    const newFrame = { left: rect.left, right: rect.right, bottom: rect.bottom - heightDiff + verticalMargin };
+
+    if (currentRow > rows.length) rows.push({ postFrameReferences: [newFrame] });
+    else rows[rows.length - 1].postFrameReferences.push(newFrame);
+
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const marginTop = window.getComputedStyle(postFrame).display == "block" ? 0 : heightDiff + scrollTop - verticalMargin;
+    postFrame.classList.add("post-frame-fade-in");
+
+    return new Promise((resolve) => {
+      if (marginTop) {
+        const handleEvent = (event) => {
+          if (event.propertyName === "margin-top") {
+            postFrame.removeEventListener("transitionend", handleEvent);
+            resolve();
+          }
+        };
+        postFrame.addEventListener("transitionend", handleEvent);
+        postFrame.style.marginTop = -marginTop + "px";
+      } else resolve();
+    });
+  }
+
+  const decoratePostModal = async (post, postId, encodedIPFSUri, name, date, link, content, imageSrc, videoSrc, audioSrc, coverAutogenerated) => {
+    // Get references to modal elements that need decorating.
+    const postModal = document.getElementById("post-modal");
+    const topDomShrinkWrapper = document.getElementById("top-dom-shrink-wrapper");
+    const headerContainer = document.getElementById("header-container");
+    const postFormErrorMessage= document.getElementById("post-form-error-message");
+    const recordPostForm = document.getElementById("record-post-form");
+    const collectPostForm = document.getElementById("collect-post-form");
+    const postImage = document.getElementById("post-cover-image");
+    const postVideo = document.getElementById("post-cover-video");
+    const postAudio = document.getElementById("post-cover-audio");
+    const postContent = document.getElementById("post-content");
+
+    requestAnimationFrame(() => {
+      const headerContainerHeight = headerContainer.offsetHeight;
+      const borderHeight = parseInt(topDomShrinkWrapper.style.borderBottomWidth, 10);
+      const paddingTop = headerContainerHeight + borderHeight;
+      postModal.style.paddingTop = paddingTop + 'px';
+      postModal.style.scrollPaddingTop = parseFloat(window.getComputedStyle(postModal).getPropertyValue('scroll-padding-top')) + paddingTop + "px";
+    });
+
+    // Track the modal in browse history.
+    history.pushState({ modalOpened: true, postId }, "", "?id=" + postId);
+
+    // Make sure the modal is closeable when clicking on empty space.
+    let activeElementOnClose;
+    postModal.addEventListener("mousedown", () => {
+      activeElementOnClose = document.activeElement;
+    });
+
+    let isMouseDownOnInput = false;
+
+    // Event listener for mousedown - sets the flag if mouse is down on an input, select, or textarea
+    postModal.addEventListener("mousedown", (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT" || e.target.tagName === "TEXTAREA") {
+        isMouseDownOnInput = true;
+      }
+    });
+
+    // Event listener for mouseup - resets the flag on mouse up
+    postModal.addEventListener("mouseup", (e) => {
+      if(isMouseDownOnInput && e.target.classList.contains("negative-space")) return;
+      isMouseDownOnInput = false;
+    });
+
+    // Close the modal.
+    postModal.addEventListener("click", (e) => {
+      // Ignore if the click stared in a field.
+      if (isMouseDownOnInput) return;
+
+      // Ignore if the clicked view shouldn't close the modal.
+      if (!e.target.classList.contains("negative-space")) return;
+
+      // Ignore if the clicked view comes while an input field is selected.
+      if (activeElementOnClose.tagName === "INPUT" || activeElementOnClose.tagName === "SELECT") return;
+
+      // Make the body scrollable.
+      document.body.style.overflow = "auto";
+
+      // If there's a video, pause it.
+      if (videoSrc) postVideo.pause();
+      // If there's audio, pause it.
+      if (audioSrc) postAudio.pause();
+
+      // Hide the RECORD form.
+      recordPostForm.style.display = "none";
+      // Hide the COLLECT form.
+      collectPostForm.style.display = "none";
+      // Hide the error message.
+      postFormErrorMessage.style.display = "none";
+      // Hide the content
+      postImage.style.display = "none"
+      postVideo.style.display = "none"
+      postContent.style.display = "none"
+
+      // Hide the modal.
+      postModal.style.display = "none";
+
+      toggleNavVisibility();
+
+      // Reset the view stack browsing state.
+      history.pushState({}, "", window.location.pathname);
+    });
+
+    // Show the post page.
+    await decoratePostPage(postId, name, date, link, content, imageSrc, videoSrc, audioSrc, encodedIPFSUri, coverAutogenerated);
+
+    await decorateAttachments(post);
+    await decorateAggregation(post);
+  }
+
+  const showPostFrames = async (newPosts) => {
+    const newPostFrames = newPosts.map((post) => {
+      // if post.hasVideo, use _videoThumbnail.png
+      // else use a random attachment
+      const coverImageName = post.hasVideo ? '_videoThumbnail.png' : post.hasAudio ? '_audioThumbnail.png' : post.heroImageFilename ? post.heroImageFilename : post.attachments.length && post.attachments[Math.floor(Math.random() * post.attachments.length)];
+      const coverImageSrc = coverImageName && './' + post.id + '/' + coverImageName;
+      const coverVideoSrc = post.hasVideo ? './' + post.id + '/' + post.videoFilename : null;
+      const coverAudioSrc = post.hasAudio ? './' + post.id + '/' + post.audioFilename : null;
+      const coverAutogenerated = coverImageName == "_cover.png";
+      const frame = framePost();
+      decoratePostFrame(frame, post, post.id, formatTimestamp(post.created), post.title, post.externalLink, post.tags, post.content, coverImageSrc, coverVideoSrc, coverAudioSrc, coverAutogenerated);
+      return frame;
+    });
+
+    for (const postFrame of newPostFrames)
+      await positionAndShowPostFrame(postFrame);
+  }
+
+  const showPostList = async (newPosts) => {
+    const newPostRows = newPosts.map((post) => {
+      // if post.hasVideo, use _videoThumbnail.png
+      // else use a random attachment
+      const thumbnailImageName = post.hasVideo ? '_videoThumbnail.png' : post.attachments.length && post.attachments[Math.floor(Math.random() * post.attachments.length)];
+      const thumbnailImageSrc = thumbnailImageName && './' + post.id + '/' + thumbnailImageName;
+      const thumbnailVideoSrc = post.hasVideo ? './' + post.id + '/' + post.videoFilename : null;
+      const thumbnailAudioSrc = post.hasAudio ? './' + post.id + '/' + post.audioFilename : null;
+      const thumbnailAutogenerated = thumbnailImageName == "_cover.png";
+      const row = listPost();
+      decoratePostRow(row, post, post.id, formatTimestamp(post.created), post.title, post.externalLink, post.tags, post.content, thumbnailImageSrc, thumbnailVideoSrc, thumbnailAudioSrc, thumbnailAutogenerated);
+      return row;
+    });
+  }
+
+  const showPosts = async (posts) => {
+    postMode == "frames" ? await showPostFrames(posts) : await showPostList(posts);
+    videoMobileScroll();
+  }
+
+  const videoMobileScroll = () => {
+    if (window.screen.availWidth <= 600) {
+      // Select all video elements on the page
+      const videos = document.querySelectorAll('video');
+
+      videos.forEach(video => {
+          video.muted = true; // Mute the video to avoid autoplay restrictions
+          video.loop = true; // Enable video looping
+
+          // Initially, hide the controls
+          video.controls = false;
+
+          // Show controls when hovering over the video
+          video.addEventListener('mouseover', function () {
+              video.controls = true;
+          });
+
+          // Hide controls when the mouse leaves the video
+          video.addEventListener('mouseout', function () {
+              video.controls = false;
+          });
+      });
+
+      // Function to play/pause videos based on visibility
+      const videoObserver = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+              const video = entry.target;
+              if (entry.isIntersecting) {
+                  // Video is in the viewport, start playing
+                  video.play().catch(error => {
+                      console.error("Video failed to play automatically:", error);
+                  });
+              } else {
+                  // Video is out of the viewport, pause playing
+                  video.pause();
+              }
+          });
+      }, {
+          threshold: 0.95 // Adjust this threshold if needed
+      });
+
+      // Observe each video
+      videos.forEach(video => {
+          videoObserver.observe(video);
+      });
+    }
+  }
+
+  const loadPosts = async (pageSize) => {
+    if (!canLoadNewPosts) return;
+
+    canLoadNewPosts = false;
+
+    startLoadingAnimation('posts-loading-animation');
+
+    const now = Math.floor(Date.now() / 1000);
+    const t = now - (now % 10);
+
+    const response = await fetch(
+      `{{ assets_prefix }}planet.json?t=${t}`
+    );
+    const data = await response.json();
+
+    // Decorate the header info
+    decorateHeader(data);
+
+    // Decorate the tags the first time around.
+    if (!hasDecoratedTags) {
+      projectTags = data.tags;
+      decorateTags();
+      // Setup body padding again after decorating tags.
+      setupBodyPadding();
+      hasDecoratedTags = true;
+    }
+
+    {% if tag_key %}
+      const articles = data['articles'].filter(article => article.tags && '{{ tag_key }}' in article.tags);
+    {% else %}
+      const articles = data['articles'];
+    {% endif %}
+
+    // Filter articles by tags.
+    const filteredPosts = !activeTags.length ? articles : articles.filter(article => activeTags.every(tag => article.tags[tag]));
+
+    // Get the current page.
+    const newPosts = filteredPosts.slice(nextPageOffset, nextPageOffset + pageSize);
+
+    posts = posts.concat(newPosts);
+
+    if (!newPosts.length) {
+      stopLoadingAnimation('posts-loading-animation');
+      return;
+    }
+
+    nextPageOffset += newPosts.length;
+
+    const encodedIPFSUris = await Promise.all(newPosts.map(async (post) => await encodeIPFSUriFrom("{{ assets_prefix }}", post.id)));
+
+    await loadPostsState(encodedIPFSUris);
+
+    stopLoadingAnimation('posts-loading-animation');
+
+    await showPosts(newPosts);
+
+    canLoadNewPosts = true;
+  }
+
+  const toggleNavVisibility = () => {
+    const topDomShrinkWrapper = document.getElementById('top-dom-shrink-wrapper');
+    const postModal = document.getElementById('post-modal');
+    const forkModal = document.getElementById('fork-modal');
+
+    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+    if (postModal.style.display == "block" || forkModal.style.display == "block") {
+      hideNav();
+      topDomShrinkWrapper.style.borderBottomWidth = "1px";
+    } else {
+      if (currentScrollTop <= 0) {
+        showNav();
+        topDomShrinkWrapper.style.borderBottomWidth = "0px";
+      } else {
+        topDomShrinkWrapper.style.borderBottomWidth = "1px";
+        if (Math.abs(currentScrollTop - lastScrollTop) < toggleNavVisibilityScrollThreshold) return;
+        if (lastScrollTop > noScrollEffectEdgeDistance && maxScrollTop - lastScrollTop > noScrollEffectEdgeDistance) {
+          if (currentScrollTop > lastScrollTop) hideNav();
+          else showNav();
+        }
+      }
+      lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    }
+  }
+
+  const pageMorePostsIfNeeded = () => {
+    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const maxScrollTop = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+    if (maxScrollTop - currentScrollTop < pagingMargingBottom) loadPosts(defaultPageSize, activeTags);
+  }
+
+  const didScroll = () => {
+    toggleNavVisibility();
+    pageMorePostsIfNeeded();
+  }
+
+  const setupPostMode = () => {
+    const framesContainer = document.getElementById("post-frames-container");
+    const listContainer = document.getElementById("post-list-container");
+    const postModeButton = document.getElementById("post-mode-button");
+
+    const toggleView = () => {
+      if (postMode == "frames") {
+        framesContainer.style.display = "block";
+        listContainer.style.display = "none";
+      } else {
+        framesContainer.style.display = "none";
+        listContainer.style.display = "block";
+      }
+    }
+
+    postModeButton.addEventListener('click', async () => {
+      const gridPostModeButton = document.getElementById("grid-post-mode-button");
+      const listPostModeButton = document.getElementById("list-post-mode-button");
+
+      const numberOfPostFrames = framesContainer.children.length;
+      const numberOfPostRows = listContainer.children.length;
+      if (postMode == "frames") {
+        postMode = "list";
+        listPostModeButton.classList.add("post-mode-button-active");
+        gridPostModeButton.classList.remove("post-mode-button-active");
+        // Load any necessary frames.
+        if (numberOfPostRows < numberOfPostFrames) await showPostList(posts.slice(numberOfPostRows));
+      } else {
+        postMode = "frames";
+        gridPostModeButton.classList.add("post-mode-button-active");
+        listPostModeButton.classList.remove("post-mode-button-active");
+        // Load any necessary frames.
+        if (numberOfPostFrames < numberOfPostRows) await showPostFrames(posts.slice(numberOfPostFrames));
+      }
+      toggleView();
+    });
+
+    toggleView();
+  }
+
+  const resetPage = async () => {
+    const framesContainer = document.getElementById("post-frames-container");
+    const listContainer = document.getElementById("post-list-container");
+
+    framesContainer.innerHTML = "";
+    listContainer.innerHTML = "";
+
+    posts = [];
+    nextPageOffset = 0;
+    currentRow = 1;
+    greatestRightInRow = 0;
+    rows = [];
+    lastScrollTop = 0;
+    canLoadNewPosts = true;
+    await loadPosts(defaultPageSize);
+  }
+
+  const decorateHeader = async (data) => {
+    // peers
+    let ipns = data.ipns;
+    const response = await fetch(
+      `https://www.pinnable.xyz/api/v0/ipfs/peers/${ipns}`
+    );
+    const peers = await response.json();
+    const peersCount = peers["peers"].length;
+    const peersCountLabel = document.getElementById("peers-count");
+    peersCountLabel.innerHTML = peersCount;
+
+    // page metrics
+    let featurePageMetrics = document.getElementById("feature-page-metrics");
+    let pageMetricsLink = document.getElementById("page-metrics-link");
+    if (data.plausibleEnabled && data.plausibleDomain && data.plausibleAPIServer) {
+      pageMetricsLink.href = `https://${data.plausibleAPIServer}/${data.plausibleDomain}`;
+      pageMetricsLink.target = "_blank";
+    } else {
+      if (featurePageMetrics) {
+        featurePageMetrics.remove();
+      }
+    }
+  }
+
+  const decorateTags = () => {
+    const tagsContainer = document.getElementById("tags-container");
+    const defaultTag = document.getElementById("default-tag");
+    const allCustomTags = tagsContainer.querySelectorAll('.custom-tag');
+    const tagsKey = 'tags';
+    const tagValuePrefix = "custom-tag-";
+
+    if (!Object.keys(projectTags).length) {
+      tagsContainer.style.display = "none";
+      return;
+    } else {
+      tagsContainer.style.display = "block";
+
+      const slider = document.getElementById("tags-container");
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+
+      slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        slider.classList.add('active');
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+      });
+      slider.addEventListener('mouseleave', () => {
+        isDown = false;
+        slider.classList.remove('active');
+      });
+      slider.addEventListener('mouseup', () => {
+        isDown = false;
+        slider.classList.remove('active');
+      });
+      slider.addEventListener('mousemove', (e) => {
+        if(!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 3; //scroll-fast
+        slider.scrollLeft = scrollLeft - walk;
+      });
+    }
+
+    // If no tags are active, set the default tag to active.
+    if (!activeTags.length) defaultTag.classList.add("active");
+    // Clear tags when the default is clicked.
+    defaultTag.addEventListener('click', (e) => {
+      // Prevent the default action
+      e.preventDefault();
+
+      // Nothing to do if the default is already selected.
+      if (defaultTag.classList.contains("active")) return;
+
+      // Make it active.
+      defaultTag.classList.add("active");
+
+      // No more active tags.
+      for (const customTag of allCustomTags)
+        if (customTag.classList.contains("active")) customTag.classList.remove("active");
+
+      activeTags = [];
+
+      // Get a reference to the current URL.
+      const url = new URL(window.location.href);
+
+      // Create the base URL (protocol + host + pathname)
+      const baseUrl = `${url.protocol}//${url.host}${url.pathname}`;
+
+      history.replaceState(null, "", baseUrl.toString());
+
+      // Reset the page.
+      resetPage();
+    });
+
+    // Loop through the project's tags to set up click behavior.
+    for (let tag of Array.from(allCustomTags)) {
+      // Get the tag value.
+      const tagValue = tag.id.replace(tagValuePrefix, "");
+
+      // Set the active tags.
+      if (activeTags.includes(tagValue)) tag.classList.add("active");
+
+      // Set the tag text.
+      tag.querySelector('.tag-text').innerHTML = projectTags[tagValue];
+
+      // Add/remove tag on click.
+      tag.addEventListener('click', (e) => {
+        // Prevent the default action
+        e.preventDefault();
+
+        // Get a reference to the current URL.
+        const url = new URL(window.location.href);
+
+        // If there weren't
+        if (!activeTags.length) defaultTag.classList.remove("active");
+
+        // Set the active tags.
+        if (activeTags.includes(tagValue)) {
+          tag.classList.remove("active");
+
+          if (activeTags.length == 1) {
+             return defaultTag.click();
+          } else {
+            // Get the values that'll be set after a click.
+            // Get a reference to tags not including the active one.
+            activeTags = activeTags.filter(activeTag => activeTag !== tagValue);
+
+            url.searchParams.delete(tagsKey);
+
+            // Set all tags except the active one.
+            for (const activeTag of activeTags) url.searchParams.append(tagsKey, activeTag);
+          }
+        } else {
+          tag.classList.add("active");
+
+          // Add a new parameter to the URL
+          url.searchParams.append(tagsKey, tagValue);
+          activeTags.push(tagValue);
+        }
+
+        history.pushState(null, "", url.toString());
+
+        // Reset the page.
+        resetPage();
+      });
+    }
+  }
+
+  const setupBodyPadding = () => {
+    const topDom = document.getElementById('top-dom');
+    const bodyDom = document.getElementById('body-dom');
+    bodyDom.style.paddingTop = topDom.offsetHeight + "px";
+    // Adjust scroll top to the offset.
+    document.documentElement.style.scrollPaddingTop = topDom.offsetHeight + "px";
+  }
+
+  // if there is ?id= in the url, open the object page.
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get('id');
+  if (id) {
+    const anchor = window.location.hash.substring(1);
+    if (anchor) {
+      window.location.href = './' + id + '/#' + anchor;
+    } else {
+      window.location.href = './' + id + '/';
+    }
+  } else {
+    activeTags = urlParams.getAll('tags');
+    window.addEventListener("scroll", didScroll);
+    loadSettings();
+    setupForking();
+    loadPosts(defaultPageSize);
+    setupPostMode();
+    setupBodyPadding();
+    adjustSubheaderPlacement();
+  }
+
+  let isUserScroll = false;
+  window.addEventListener('load', function() {
+    window.requestAnimationFrame(() => {
+      window.addEventListener('scroll', function() {
+        if (isUserScroll) didScroll();
+      });
+      window.requestAnimationFrame(() => {
+        isUserScroll = true;
+      });
+    });
+  });
+</script>
+{% endblock %}

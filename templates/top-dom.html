@@ -1,0 +1,177 @@
+<div id="top-dom">
+  <div id="top-dom-shrink-wrapper">
+    <div id="header-container">
+      {% if has_avatar == true %}
+      <img src="{{ assets_prefix }}avatar.png" width="72" height="72" id="header-avatar">
+      {% endif %}
+      <div id="header-info">
+        <!--<div id="header-treasury">Peers: <span class="value" id="peers-count">-</span><span class="spaced">•</span>Revenue: <span class="value">$420,00</span><span class="spaced">•</span>Mints:  <span class="value">69</span><span class="spaced">•</span><a href="" id="page-metrics-link">Page analytics</a></div>-->
+        <!--<div id="header-treasury">$BANNY<span class="spaced">•</span>Peers: <span class="value" id="peers-count">-</span><span class="spaced">•</span><a href="" id="page-metrics-link">Page analytics</a></div>-->
+        <div id="header-treasury">Peers: <span class="value" id="peers-count">-</span><span id="feature-page-metrics"><span class="spaced">•</span><a href="" id="page-metrics-link">Page analytics</a></span></div>
+        <div id="header-top">
+          <div id="header-title"><span id="header-title-button">{{ planet.name }}</span></div>
+          <div id="header-aux">
+            <div id="fork-button">$</div>
+            <a href="{{ assets_prefix }}rss.xml" target="_blank">
+              <div id="rss-button"></div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="subheader-container">
+      {% if page_description_html.count > 0 %}<div id="subheader-about">{{ page_description_html }}</div>{% endif %}
+      <div id="nav-container">
+        <div id="nav">
+          {% for item in site_navigation %}
+          <a href="{% if item.externalLink.count > 0 %}{{ item.externalLink }}{% else %}{{ assets_prefix }}{{ item.slug }}/{% endif %}" class="{% if article.slug == item.slug %}nav-current{% else %}nav-item{% endif %}"{% if item.externalLink.count > 0 %} target="_blank"{% endif %}>{{ item.title }}</a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+
+  const adjustSubheaderPlacement = () => {
+    const subheaderContainer = document.getElementById('subheader-container');
+    const headerAvatar = document.getElementById('header-avatar');
+
+    // If there's an avatar, shift the subheader's placement next to it.
+    if (headerAvatar) {
+      subheaderContainer.classList.add('shifted');
+    }
+  }
+
+  const showNav = () => {
+    const topDomShrinkWrapper = document.getElementById('top-dom-shrink-wrapper');
+    const headerTreasury = document.getElementById('header-treasury');
+    const subheaderAbout = document.getElementById('subheader-about');
+    const navContainer = document.getElementById('nav-container');
+    const nav = document.getElementById('nav');
+    const headerContainer = document.getElementById('header-container');
+    const subheaderContainer = document.getElementById('subheader-container');
+    const headerAvatar = document.getElementById('header-avatar');
+    const headerTitle = document.getElementById('header-title');
+    const headerAux = document.getElementById('header-aux');
+    navContainer.style.display = nav.children.length == 0 ? "none" :  "block";
+    if (headerTreasury) headerTreasury.style.display = "block";
+    if (subheaderAbout) subheaderAbout.style.display = "initial";
+    if (headerAvatar) headerAvatar.classList.remove("small");
+    headerTitle.classList.remove("small");
+    headerAux.classList.remove("small");
+    headerContainer.classList.remove("small");
+    topDomShrinkWrapper.style.height = headerContainer.offsetHeight + subheaderContainer.offsetHeight + parseInt(window.getComputedStyle(subheaderContainer).marginTop) + "px";
+  }
+
+  const hideNav = () => {
+    const topDom = document.getElementById('top-dom');
+    const topDomShrinkWrapper = document.getElementById('top-dom-shrink-wrapper');
+    const headerTreasury = document.getElementById('header-treasury');
+    const subheaderAbout = document.getElementById('subheader-about');
+    const navContainer = document.getElementById('nav-container');
+    const headerContainer = document.getElementById('header-container');
+    const subheaderContainer = document.getElementById('subheader-container');
+    const headerAvatar = document.getElementById('header-avatar');
+    const headerTitle = document.getElementById('header-title');
+    const headerAux = document.getElementById('header-aux');
+    navContainer.style.display = "none";
+    if (headerTreasury) headerTreasury.style.display = "none";
+    if (subheaderAbout) subheaderAbout.style.display = "none";
+    if (headerAvatar) headerAvatar.classList.add("small");
+    headerTitle.classList.add("small");
+    headerAux.classList.add("small");
+    headerContainer.classList.add("small");
+    topDomShrinkWrapper.style.height = headerContainer.offsetHeight + "px";
+  }
+
+  const decorateForkModal = () => {
+    // Get references to elements that need decorating.
+    const forkModal = document.getElementById("fork-modal");
+    const topDomShrinkWrapper = document.getElementById("top-dom-shrink-wrapper");
+
+    // Adjust the size.
+    requestAnimationFrame(() => {
+      forkModal.style.paddingTop = topDomShrinkWrapper.offsetHeight + 'px';
+      forkModal.style.scrollPaddingTop = parseFloat(window.getComputedStyle(forkModal).getPropertyValue('scroll-padding-top')) + topDomShrinkWrapper.offsetHeight + "px";
+      forkModal.style.height = `calc(100vh - (${topDomShrinkWrapper.offsetHeight + 'px'}))`;
+    });
+
+    // Make sure the modal is closeable when clicking on empty space.
+    let activeElementOnClose;
+    forkModal.addEventListener("mousedown", () => {
+      activeElementOnClose = document.activeElement;
+    });
+
+    let isMouseDownOnInput = false;
+
+    // Event listener for mousedown - sets the flag if mouse is down on an input, select, or textarea
+    forkModal.addEventListener("mousedown", (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT" || e.target.tagName === "TEXTAREA") {
+        isMouseDownOnInput = true;
+      }
+    });
+
+    // Event listener for mouseup - resets the flag on mouse up
+    forkModal.addEventListener("mouseup", (e) => {
+      if(isMouseDownOnInput && e.target.classList.contains("negative-space")) return;
+      isMouseDownOnInput = false;
+    });
+
+    forkModal.addEventListener("click", (e) => {
+      // Ignore if the click stared in a field.
+      if (isMouseDownOnInput) {
+        isMouseDownOnInput = false;
+        return;
+      }
+
+      // Ignore if the clicked view shouldn't close the modal.
+      if (!e.target.classList.contains("negative-space")) return;
+
+      // Ignore if the clicked view comes while an input, select, or textarea field is selected.
+      if (activeElementOnClose.tagName === "INPUT" || activeElementOnClose.tagName === "SELECT" || activeElementOnClose.tagName === "TEXTAREA") return;
+
+      // Make the body scrollable.
+      document.body.style.overflow = "auto";
+
+      // Hide the modal.
+      forkModal.style.display = "none";
+
+      toggleNavVisibility();
+    });
+
+    decorateNewJbForm();
+    decoratePermissionForm();
+    decorateAllowanceForm();
+  }
+
+  const setupForking = () => {
+    const forkModal = document.getElementById("fork-modal");
+    const forkButton = document.getElementById("fork-button");
+
+    // Summon a modal when the fork button is clicked.
+    forkButton.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      // Show the modal.
+      forkModal.style.display = "block";
+
+      toggleNavVisibility();
+
+      // Make the modal look right.
+      await decorateForkModal();
+
+      // Make the body not scrollable.
+      document.body.style.overflow = "hidden";
+    });
+  }
+
+  const titleButton = document.getElementById('header-title-button');
+  titleButton.addEventListener('click', () => {
+    {% if current_item_type == "blog" %}
+    window.location.href = '../';
+    {% else %}
+    window.location.href = './';
+    {% endif %}
+  });
+</script>
