@@ -212,3 +212,7 @@ the code will call an open hub to retrieve the casts that have the same parentUr
   });
 </script>
 ```html
+
+  "update-miniapps": "bash -c 'cd ~/Library/Containers/xyz.planetable.Planet/Data/Documents/Planet/Templates/miniapp && git pull'"
+
+cd ~/Library/Containers/xyz.planetable.Planet/Data/Documents/Planet/Templates/miniapp && git pull
