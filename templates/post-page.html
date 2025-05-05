@@ -9,28 +9,25 @@
 </div>
 <div id="post-onchain" class="mobile-padding">
   <details id="post-form-collect-reveal">
-    <summary id="post-form-collect-toggle" class="form-toggle">mint (wip)</summary>
+    <summary id="post-form-collect-toggle" class="form-toggle">memorialize</summary>
     <div id="post-form-collect-container">
     <div class="form-section">
       <div class="form-item">
         <div class="form-label">Chain</div>
         <div class="form-value form-select-value">
           <select id="post-form-state-chain-input" name="chain">
-            <option value="ethereum sepolia">Ethereum Sepolia</option>
-            <option value="optimism sepolia">Optimism Sepolia</option>
-            <option value="arbitrum sepolia">Arbitrum Sepolia</option>
-            <option value="base sepolia">Base Sepolia</option>
+            <!-- options will be added by JS -->
           </select>
         </div>
       </div>
-      <div id="collect-post-form" class="form negative-space">
+    <div id="collect-post-form" class="form negative-space">
         <span id="collect-post-form-header" class="form-header"></span>
         <div class="form-body">
-            <div class="form-item" style="visibility: hidden;">
+            <div class="form-item" style="display: none;">
               <div class="form-label">Collection address</div>
               <div class="form-value"><input type="text" placeholder="0x..." value="" id="post-form-state-collection-address-input" min="1"></div>
             </div>
-            <div class="form-item" style="visibility: hidden;">
+            <div class="form-item" style="display: none;">
               <div class="form-label">Collection category</div>
               <div class="form-value"><input type="number" value="" id="post-form-state-collection-category-input" min="1"></div>
             </div>
@@ -40,7 +37,7 @@
             <div class="form-section-description">Set the address that will get the copies you are paying for.</div>
             <div class="form-section">
               <div class="form-item">
-                <div class="form-label">Mint count</div>
+                <div class="form-label">Buying</div>
                 <div class="form-value">
                   <input type="number" value="1" id="collect-post-form-quantity-input" min="1">
                 </div>
@@ -69,11 +66,11 @@
         </div>
       </div>
       <div id="record-post-form" class="form negative-space">
-        <span class="form-header">Mint a first copy.</span>
+        <span class="form-header">Buy a first copy to memorialize it onchain.</span>
         <div class="form-body">
           <details id="record-post-form-options-reveal">
             <summary id="record-post-form-options-toggle" class="form-toggle form-main-toggle">options</summary>
-            <div class="form-section-description">As the first minter, you're in control. Set the price, how many editions of this post will be made available for collecting, and the address that will be sent its first copies that you are paying for.</div>
+            <div class="form-section-description">As the first buyer, you're in control. Set the price, how many copies will be made available for purchase, and the address that will be sent the first copies that you are buying.</div>
             <div class="form-section">
               <div class="form-item">
                 <div class="form-label">Price</div>
@@ -82,13 +79,13 @@
                 </div>
               </div>
               <div id="record-post-form-total-supply-field" class="form-item">
-                <div class="form-label">Total supply</div>
+                <div class="form-label">Copies</div>
                 <div class="form-value">
                   <input type="number" placeholder="10" value="" id="record-post-form-total-supply-input" min="1">
                 </div>
               </div>
               <div class="form-item">
-                <div class="form-label">Mint count</div>
+                <div class="form-label">Buying</div>
                 <div class="form-value">
                   <input type="number" value="1" id="record-post-form-quantity-input" min="1">
                 </div>
@@ -120,7 +117,7 @@
       </div>
       <div id="post-form-loading-animation" class="loading-animation"></div>
       <div id="post-form-error-message" class="form-error-message"></div>
-      <button id="post-form-button" class="form-button form-main-button"><span id="post-form-button-text" class="form-button-text">mint</span><span id="post-form-button-loading-animation" class="loading-animation button-loading-animation"></span></button>
+      <button id="post-form-button" class="form-button form-main-button"><span id="post-form-button-text" class="form-button-text">buy</span><span id="post-form-button-loading-animation" class="loading-animation button-loading-animation"></span></button>
     </div>
   </details>
 </div>
@@ -161,6 +158,7 @@
 
   /// Get admin settings.
   const loadSettings = () => {
+    const postFormErrorMessage = document.getElementById("post-form-error-message");
     const postFormStateChainInput = document.getElementById("post-form-state-chain-input");
     const postFormStateCollectionAddressInput = document.getElementById("post-form-state-collection-address-input");
     const postFormStateCollectionCategoryInput = document.getElementById("post-form-state-collection-category-input");
@@ -177,38 +175,64 @@
         return response.json();
       })
       .then(data => {
-        // Variables from user settings:
-        //
-        // - curatorAddress
-        // - collectionCategory
-        //
-        // - ethereumMainnetCollectionAddress
-        // - ethereumSepoliaCollectionAddress
-        // - optimismMainnetCollectionAddress
-        // - optimismSepoliaCollectionAddress
-        // - baseMainnetCollectionAddress
-        // - baseSepoliaCollectionAddress
-        // - arbitrumMainnetCollectionAddress
-        // - arbitrumSepoliaCollectionAddress
-        //
-        // And RPC addresses:
-        //
-        // - ethereumMainnetRPC
-        // - ethereumSepoliaRPC
-        // - optimismMainnetRPC
-        // - optimismSepoliaRPC
-        // - baseMainnetRPC
-        // - baseSepoliaRPC
-        // - arbitrumMainnetRPC
-        // - arbitrumSepoliaRPC
         env = {
           ...env,
           ...data
         };
         console.log({ env, data });
-        if (data.ethereumSepoliaCollectionAddress != null) postFormStateCollectionAddressInput.value = data.ethereumSepoliaCollectionAddress; // cant get this one to come thru
-        if (data.collectionAddress != null) postFormStateCollectionAddressInput.value = data.collectionAddress; // temp. this is the only property coming back
-        if (data.ethereumSepoliaCollectionCategory != null) postFormStateCollectionCategoryInput.value = Number(data.ethereumSepoliaCollectionCategory);
+        // Dynamically populate chain select with only chains that have a collection address
+        const chainOptions = [];
+        const chainMap = [
+          { key: 'ethereumMainnetCollectionAddress', label: 'Ethereum Mainnet', value: 'ethereum mainnet', category: data.ethereumMainnetCollectionCategory },
+          { key: 'optimismMainnetCollectionAddress', label: 'Optimism Mainnet', value: 'optimism mainnet', category: data.optimismMainnetCollectionCategory },
+          { key: 'arbitrumMainnetCollectionAddress', label: 'Arbitrum Mainnet', value: 'arbitrum mainnet', category: data.arbitrumMainnetCollectionCategory },
+          { key: 'baseMainnetCollectionAddress', label: 'Base Mainnet', value: 'base mainnet', category: data.baseMainnetCollectionCategory },
+          { key: 'ethereumSepoliaCollectionAddress', label: 'Ethereum Sepolia', value: 'ethereum sepolia', category: data.ethereumSepoliaCollectionCategory },
+          { key: 'optimismSepoliaCollectionAddress', label: 'Optimism Sepolia', value: 'optimism sepolia', category: data.optimismSepoliaCollectionCategory },
+          { key: 'arbitrumSepoliaCollectionAddress', label: 'Arbitrum Sepolia', value: 'arbitrum sepolia', category: data.arbitrumSepoliaCollectionCategory },
+          { key: 'baseSepoliaCollectionAddress', label: 'Base Sepolia', value: 'base sepolia', category: data.baseSepoliaCollectionCategory },
+        ];
+        chainMap.forEach(chain => {
+          if (data[chain.key]) {
+            chainOptions.push({
+              label: chain.label,
+              value: chain.value,
+              address: data[chain.key],
+              category: chain.category || data.collectionCategory || 0
+            });
+          }
+        });
+        // Clear and repopulate the select
+        postFormStateChainInput.innerHTML = '';
+        chainOptions.forEach(opt => {
+          const option = document.createElement('option');
+          option.value = opt.value;
+          option.textContent = opt.label;
+          postFormStateChainInput.appendChild(option);
+        });
+        // Set default values
+        if (chainOptions.length > 0) {
+          postFormStateChainInput.value = chainOptions[0].value;
+          postFormStateCollectionAddressInput.value = chainOptions[0].address;
+          postFormStateCollectionCategoryInput.value = chainOptions[0].category;
+        }
+        // Update address/category on chain change
+        postFormStateChainInput.onchange = async function() {
+          const selected = chainOptions.find(opt => opt.value === postFormStateChainInput.value);
+          if (selected) {
+            postFormStateCollectionAddressInput.value = selected.address;
+            postFormStateCollectionCategoryInput.value = selected.category;
+            // Auto-switch wallet to the selected chain
+            try {
+              await ensureWalletOnChain(resolveChainId(selected.value));
+              postFormErrorMessage.style.display = "none";
+            } catch (e) {
+              postFormErrorMessage.innerHTML = `Browser not connected to ${selected.label}.`;
+              postFormErrorMessage.classList.add("warn");
+              postFormErrorMessage.style.display = "block";
+            }
+          }
+        };
         if (data.highlightColor) highlightColor = data.highlightColor;
         const r = document.querySelector(':root');
         r.style.setProperty('--link-color', highlightColor);
@@ -241,7 +265,7 @@
     postFormButton.style.display = "none";
 
     // Change the button text.
-    postFormButtonText.innerHTML = "mint (wip)";
+    postFormButtonText.innerHTML = "memorialize";
 
     // If the min and max total supplies are the same, hide the total supply field.
     if (formattedMinTotalSupply == formattedMaxTotalSupply) {
@@ -274,7 +298,7 @@
         postFormButton.disabled = true;
         postFormButton.style.display = "block";
       } else if (Number(recordPostFormQuantityInput.value) > Number(recordPostFormTotalSupplyInput.value)) {
-        postFormErrorMessage.innerHTML = `The total supply is ${recordPostFormTotalSupplyInput.value}. Can't mint ${recordPostFormQuantityInput.value}.`;
+        postFormErrorMessage.innerHTML = `The total supply is ${recordPostFormTotalSupplyInput.value}. Can't buy ${recordPostFormQuantityInput.value}.`;
         postFormErrorMessage.classList.add("warn");
         postFormErrorMessage.style.display = "block";
         postFormButton.disabled = true;
@@ -420,13 +444,13 @@
 
     // Set the header text.
     if (formattedRemainingSupply == 1) {
-      collectPostFormHeader.innerHTML = `${formattedMintedSupply} minted, only 1 remaining edition of this file available for <span class="ether">Ξ</span>${formattedPrice}.`;
+      collectPostFormHeader.innerHTML = `${formattedMintedSupply} bought, only 1 remaining edition of this file available for <span class="ether">Ξ</span>${formattedPrice}.`;
     } else {
-      collectPostFormHeader.innerHTML = `${formattedMintedSupply} minted, ${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } editions remaining for <span class="ether">Ξ</span>${formattedPrice} each.`;
+      collectPostFormHeader.innerHTML = `${formattedMintedSupply} bought, ${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } editions remaining for <span class="ether">Ξ</span>${formattedPrice} each.`;
     }
 
     // Change the button text.
-    postFormButtonText.innerHTML = "mint (wip)";
+    postFormButtonText.innerHTML = "buy";
 
     // Disable the button.
     postFormButton.disabled = true;
@@ -440,9 +464,9 @@
       // Set error messages if the currently inputted values are too small.
       if (Number(collectPostFormQuantityInput.value) > formattedRemainingSupply) {
         if (formattedRemainingSupply == 1) {
-          postFormErrorMessage.innerHTML = `There is only 1 copy remaining. Can't mint ${collectPostFormQuantityInput.value}.`;
+          postFormErrorMessage.innerHTML = `There is only 1 copy remaining. Can't buy ${collectPostFormQuantityInput.value}.`;
         } else {
-          postFormErrorMessage.innerHTML = `There are only ${formattedRemainingSupply} copies remaining. Can't mint ${collectPostFormQuantityInput.value}.`;
+          postFormErrorMessage.innerHTML = `There are only ${formattedRemainingSupply} copies remaining. Can't buy ${collectPostFormQuantityInput.value}.`;
         }
         postFormErrorMessage.classList.add("warn");
         postFormErrorMessage.style.display = "block";
@@ -731,10 +755,12 @@
         // Check to see if there's a tier for this content.
         [tier] = await tx_view_tiers(collectionAddress, [encodedIPFSUri], resolveChainId(chain));
 
+        console.log({ tier });
+
         // If no tier, don't show the form.
         if (!tier) {
           // Show the error message.
-          postFormErrorMessage.innerHTML = "Browser not connected to the right blockchain.";
+          postFormErrorMessage.innerHTML = "-";
           postFormErrorMessage.classList.add("info");
           postFormErrorMessage.style.display = "block";
           // Hide the forms.
@@ -743,7 +769,7 @@
           // Disable the button.
           postFormButton.disabled = true;
           postFormButton.style.display = "none";
-          postFormCollectToggle.innerHTML = 'mint (wip)';
+          postFormCollectToggle.innerHTML = 'memorialize';
           return;
         }
 
@@ -792,9 +818,9 @@
         const formattedMintedSupply = formattedInitialSupply - formattedRemainingSupply;
 
         if (formattedRemainingSupply == 1) {
-          postFormCollectToggle.innerHTML = `${formattedMintedSupply} minted, only 1 remaining`;
+          postFormCollectToggle.innerHTML = `${formattedMintedSupply} bought, only 1 remaining`;
         } else {
-          postFormCollectToggle.innerHTML = `${formattedMintedSupply} minted, ${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } remaining`;
+          postFormCollectToggle.innerHTML = `${formattedMintedSupply} bought, ${formattedRemainingSupply > 10000000 ? "infinite" : formattedRemainingSupply } remaining`;
         }
 
         // Show the form.
@@ -826,7 +852,7 @@
         // Show an error message if there's no allowance set.
         if (formattedMinTotalSupply == 0) {
           // Show the error message.
-          postFormErrorMessage.innerHTML = `This site isn't accepting mints on ${chain} yet. Click "$" up top.`;
+          postFormErrorMessage.innerHTML = `This site isn't accepting buys on ${chain} yet. Click "$" up top.`;
           postFormErrorMessage.classList.add("info");
           postFormErrorMessage.style.display = "block";
           // Hide forms.
@@ -835,7 +861,7 @@
           // Hide and disable the button.
           postFormButton.disabled = true;
           postFormButton.style.display = "none";
-          postFormCollectToggle.innerHTML = 'mint (wip)';
+          postFormCollectToggle.innerHTML = 'memorialize';
           return;
         }
 
@@ -855,7 +881,7 @@
         // Get a reference to the allowance max total supply.
         const formattedAllowedAddresses = allowance[3];
 
-        postFormCollectToggle.innerHTML = 'mint (wip)';
+        postFormCollectToggle.innerHTML = 'memorialize';
 
         await decorateRecordForm(chain, collectionAddress, category, encodedIPFSUri, formattedMinTotalSupply, formattedMaxTotalSupply, formattedMinPrice, formattedAllowedAddresses);
       }

@@ -1,248 +1,274 @@
 const permissionsContract = (chainId) => {
   switch (chainId) {
+	case 1: // Ethereum Mainnet
+      return "0xf5ca295dc286a176e35ebb7833031fd95550eb14";
+    case 8453: // Base
+      return "0xf5ca295dc286a176e35ebb7833031fd95550eb14";
+    case 10: // Optimism
+      return "0xf5ca295dc286a176e35ebb7833031fd95550eb14";
+    case 42161: // Arbitrum
+      return "0xf5ca295dc286a176e35ebb7833031fd95550eb14";
     case 11155111:
-      return "0x4CDb4200e4E65a277676Cd5E8d3c7C7C4dA7fBe5";
+      return "0xf5ca295dc286a176e35ebb7833031fd95550eb14";
     case 11155420:
-      return "0x4CDb4200e4E65a277676Cd5E8d3c7C7C4dA7fBe5";
+      return "0xf5ca295dc286a176e35ebb7833031fd95550eb14";
     case 84532:
-      return "0x4CDb4200e4E65a277676Cd5E8d3c7C7C4dA7fBe5";
+      return "0xf5ca295dc286a176e35ebb7833031fd95550eb14";
     case 421614:
-      return "0x4CDb4200e4E65a277676Cd5E8d3c7C7C4dA7fBe5";
+      return "0xf5ca295dc286a176e35ebb7833031fd95550eb14";
   }
 }
 
 const permissionsContractABI = [
-		{
-			"type": "function",
-			"name": "WILDCARD_PROJECT_ID",
-			"inputs": [],
-			"outputs": [
-				{
-					"name": "",
-					"type": "uint256",
-					"internalType": "uint256"
-				}
-			],
-			"stateMutability": "view"
-		},
-		{
-			"type": "function",
-			"name": "hasPermission",
-			"inputs": [
-				{
-					"name": "operator",
-					"type": "address",
-					"internalType": "address"
-				},
-				{
-					"name": "account",
-					"type": "address",
-					"internalType": "address"
-				},
-				{
-					"name": "projectId",
-					"type": "uint256",
-					"internalType": "uint256"
-				},
-				{
-					"name": "permissionId",
-					"type": "uint256",
-					"internalType": "uint256"
-				},
-				{
-					"name": "includeRoot",
-					"type": "bool",
-					"internalType": "bool"
-				},
-				{
-					"name": "includeWildcardProjectId",
-					"type": "bool",
-					"internalType": "bool"
-				}
-			],
-			"outputs": [
-				{
-					"name": "",
-					"type": "bool",
-					"internalType": "bool"
-				}
-			],
-			"stateMutability": "view"
-		},
-		{
-			"type": "function",
-			"name": "hasPermissions",
-			"inputs": [
-				{
-					"name": "operator",
-					"type": "address",
-					"internalType": "address"
-				},
-				{
-					"name": "account",
-					"type": "address",
-					"internalType": "address"
-				},
-				{
-					"name": "projectId",
-					"type": "uint256",
-					"internalType": "uint256"
-				},
-				{
-					"name": "permissionIds",
-					"type": "uint256[]",
-					"internalType": "uint256[]"
-				},
-				{
-					"name": "includeRoot",
-					"type": "bool",
-					"internalType": "bool"
-				},
-				{
-					"name": "includeWildcardProjectId",
-					"type": "bool",
-					"internalType": "bool"
-				}
-			],
-			"outputs": [
-				{
-					"name": "",
-					"type": "bool",
-					"internalType": "bool"
-				}
-			],
-			"stateMutability": "view"
-		},
-		{
-			"type": "function",
-			"name": "permissionsOf",
-			"inputs": [
-				{
-					"name": "operator",
-					"type": "address",
-					"internalType": "address"
-				},
-				{
-					"name": "account",
-					"type": "address",
-					"internalType": "address"
-				},
-				{
-					"name": "projectId",
-					"type": "uint256",
-					"internalType": "uint256"
-				}
-			],
-			"outputs": [
-				{
-					"name": "",
-					"type": "uint256",
-					"internalType": "uint256"
-				}
-			],
-			"stateMutability": "view"
-		},
-		{
-			"type": "function",
-			"name": "setPermissionsFor",
-			"inputs": [
-				{
-					"name": "account",
-					"type": "address",
-					"internalType": "address"
-				},
-				{
-					"name": "permissionsData",
-					"type": "tuple",
-					"internalType": "struct JBPermissionsData",
-					"components": [
-						{
-							"name": "operator",
-							"type": "address",
-							"internalType": "address"
-						},
-						{
-							"name": "projectId",
-							"type": "uint56",
-							"internalType": "uint56"
-						},
-						{
-							"name": "permissionIds",
-							"type": "uint8[]",
-							"internalType": "uint8[]"
-						}
-					]
-				}
-			],
-			"outputs": [],
-			"stateMutability": "nonpayable"
-		},
-		{
-			"type": "event",
-			"name": "OperatorPermissionsSet",
-			"inputs": [
-				{
-					"name": "operator",
-					"type": "address",
-					"indexed": true,
-					"internalType": "address"
-				},
-				{
-					"name": "account",
-					"type": "address",
-					"indexed": true,
-					"internalType": "address"
-				},
-				{
-					"name": "projectId",
-					"type": "uint256",
-					"indexed": true,
-					"internalType": "uint256"
-				},
-				{
-					"name": "permissionIds",
-					"type": "uint8[]",
-					"indexed": false,
-					"internalType": "uint8[]"
-				},
-				{
-					"name": "packed",
-					"type": "uint256",
-					"indexed": false,
-					"internalType": "uint256"
-				},
-				{
-					"name": "caller",
-					"type": "address",
-					"indexed": false,
-					"internalType": "address"
-				}
-			],
-			"anonymous": false
-		},
-		{
-			"type": "error",
-			"name": "JBPermissions_PermissionIdOutOfBounds",
-			"inputs": [
-				{
-					"name": "permissionId",
-					"type": "uint256",
-					"internalType": "uint256"
-				}
-			]
-		},
-		{
-			"type": "error",
-			"name": "JBPermissions_Unauthorized",
-			"inputs": []
-		}
-	];
+	{
+		"inputs": [],
+		"name": "WILDCARD_PROJECT_ID",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "projectId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "permissionId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "includeRoot",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "includeWildcardProjectId",
+				"type": "bool"
+			}
+		],
+		"name": "hasPermission",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "projectId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "permissionIds",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "bool",
+				"name": "includeRoot",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "includeWildcardProjectId",
+				"type": "bool"
+			}
+		],
+		"name": "hasPermissions",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "projectId",
+				"type": "uint256"
+			}
+		],
+		"name": "permissionsOf",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "operator",
+						"type": "address"
+					},
+					{
+						"internalType": "uint64",
+						"name": "projectId",
+						"type": "uint64"
+					},
+					{
+						"internalType": "uint8[]",
+						"name": "permissionIds",
+						"type": "uint8[]"
+					}
+				],
+				"internalType": "struct JBPermissionsData",
+				"name": "permissionsData",
+				"type": "tuple"
+			}
+		],
+		"name": "setPermissionsFor",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "projectId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint8[]",
+				"name": "permissionIds",
+				"type": "uint8[]"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "packed",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "caller",
+				"type": "address"
+			}
+		],
+		"name": "OperatorPermissionsSet",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "JBPermissions_CantSetRootPermissionForWildcardProject",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "JBPermissions_NoZeroPermission",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "permissionId",
+				"type": "uint256"
+			}
+		],
+		"name": "JBPermissions_PermissionIdOutOfBounds",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "JBPermissions_Unauthorized",
+		"type": "error"
+	}
+];
 
-const tx_set_permissions = async (projectId, account, chainId) => {
-  const contract = permissionsContract(chainId);
-  if (!contract) return false;
-  const operator = croptopPublisherContract(chainId);
-  const permissionsData = { operator, projectId, permissionIds: [22] };
-  await sign(contract, permissionsContractABI, "setPermissionsFor", [account, permissionsData]);
-  return true;
+// Multi-chain set permissions
+const tx_set_permissions = async (owner, chainId) => {
+const operator = croptopPublisherContract(chainId);
+const permissionsData = { operator, projectId: 0, permissionIds: [20] };
+  const buildDeploymentData = async () => {
+    return [owner, permissionsData];
+  };
+
+  return handleDeployment(
+    [chainId],
+    buildDeploymentData,
+    permissionsContract,
+    permissionsContractABI,
+    "setPermissionsFor"
+  );
 }
