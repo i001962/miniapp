@@ -48,6 +48,10 @@ const resolveChainId = (value) => {
     case "optimism sepolia": return 11155420; 
     case "base sepolia": return 84532; 
     case "arbitrum sepolia": return 421614; 
+    case "ethereum mainnet": return 1;
+    case "optimism mainnet": return 10;
+    case "arbitrum mainnet": return 42161;
+    case "base mainnet": return 8453;
   }
 }
 
@@ -218,5 +222,9 @@ const startAudioAnimation = (audioAnimationId) => {
 const stopAudioAnimation = (audioAnimationId) => {
   const audioAnimation = document.getElementById(audioAnimationId);
   animationIntervals[audioAnimationId] = clearTimeout(animationIntervals[audioAnimationId]);
+}
+
+const generateSalt = () => {
+  return "0x" + [...crypto.getRandomValues(new Uint8Array(32))].map(x => x.toString(16).padStart(2, '0')).join("");
 }
 
